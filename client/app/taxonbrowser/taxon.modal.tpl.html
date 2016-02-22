@@ -1,0 +1,37 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header"><button type="button" class="close" ng-click="resetTaxon();$hide()">×</button>
+				<img ng-src="{{Icons.datamodel.get('taxon')}}" class="modal-icon"> <h4 class="modal-title">Taxon browser</h4></div>
+				<div class="modal-body">
+					<form >
+						<input type="text" class="form-control taxon-typeahead" ng-model="TaxonBrowserService.selectedTaxon" ng-model-options="{allowInvalid:true}" ng-options="taxon as taxon.FullName for taxon in getTaxon($viewValue)" placeholder="Enter taxon name" minLength="3" bs-typeahead>
+						<div class="form-group" ng-show="TaxonBrowserService.selectedTaxon !== undefined && TaxonBrowserService.selectedTaxon.constructor.name === 'Resource' && TaxonBrowserService.determinations.length > 1">
+							<label for="selectedDetermination" class="col-sm-6 control-label">Apply taxon to determination number: </label>
+						
+						<label class="radio-inline" ng-repeat="d in TaxonBrowserService.determinations" ng-show="d">
+						  <input type="radio" name="selectedDetermination" ng-model="TaxonBrowserService.selectedDetermination" value="{{d}}"> #{{d}}
+						</label>
+						</div>
+					</form>
+					<br>
+					<table ng-show="TaxonBrowserService.selectedTaxon !== undefined && TaxonBrowserService.selectedTaxon.constructor.name === 'Resource'" class="table modal-table">
+
+					  <tr class="modal-table"><td class="modal-table">Full taxon name:</td><td class="modal-table">{{TaxonBrowserService.selectedTaxon.FullName}}</td></tr>
+					  <tr class="modal-table"><td class="modal-table">Epithet :</td><td class="modal-table">{{TaxonBrowserService.selectedTaxon.Name}}</td></tr>
+					  <tr class="modal-table"><td class="modal-table">Author(s):</td><td class="modal-table"><i>{{TaxonBrowserService.selectedTaxon.Author}}</i></td></tr>
+					  <tr ng-show="TaxonBrowserService.selectedTaxon !== undefined && TaxonBrowserService.selectedTaxon.constructor.name === 'Resource'" class="modal-table"><td class="modal-table">Taxon rank:</td><td class="modal-table">{{getTaxonRankNameFromRankID(TaxonBrowserService.selectedTaxon.RankID)}}</td></tr>
+				
+					</table>
+				
+				<div class="modal-footer"><div class="col-md-6 taxon-footer-txt"><small class="text-muted">ctrl+x : close and select taxon <br> ctrl+z : close and discard taxon</small>
+				</div>
+					<div class="col-md-6">
+					<button type="button" class="btn btn-danger" ng-click="resetTaxon(); $hide()"> <i class="fa fa-times"></i> Don't use</button> 
+					<button type="button" class="btn btn-success" ng-click="TaxonBrowserService.taxonSelected(); $hide()"><i class="fa fa-check"></i> Use taxon</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
