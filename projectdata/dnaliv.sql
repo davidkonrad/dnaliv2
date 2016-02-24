@@ -2,10 +2,10 @@
 -- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Vært: localhost
--- Genereringstid: 11. 02 2016 kl. 16:26:11
--- Serverversion: 5.5.47-0ubuntu0.14.04.1-log
--- PHP-version: 5.5.9-1ubuntu4.14
+-- Host: localhost
+-- Generation Time: Feb 25, 2016 at 12:53 AM
+-- Server version: 5.5.44-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `dna`
+-- Database: `dnaliv`
 --
 
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `booking`
+-- Table structure for table `booking`
 --
 
 CREATE TABLE IF NOT EXISTS `booking` (
@@ -49,7 +49,30 @@ CREATE TABLE IF NOT EXISTS `booking` (
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `locality`
+-- Table structure for table `klasse`
+--
+
+CREATE TABLE IF NOT EXISTS `klasse` (
+  `klasse_id` int(11) NOT NULL,
+  `projekt_id` int(11) NOT NULL,
+  `institution` varchar(100) NOT NULL,
+  `adresse` varchar(100) NOT NULL,
+  `postnr` varchar(4) NOT NULL,
+  `kommune` varchar(25) NOT NULL,
+  `klassetrin` varchar(50) NOT NULL,
+  `fag` varchar(50) NOT NULL,
+  `laerer_navn` varchar(50) NOT NULL,
+  `laerer_tlf` varchar(50) NOT NULL,
+  `laerer_email` varchar(50) NOT NULL,
+  `antal_elever` int(11) NOT NULL,
+  `antal_laerer` int(11) NOT NULL,
+  PRIMARY KEY (`klasse_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `locality`
 --
 
 CREATE TABLE IF NOT EXISTS `locality` (
@@ -61,7 +84,29 @@ CREATE TABLE IF NOT EXISTS `locality` (
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `sample`
+-- Table structure for table `projekt`
+--
+
+CREATE TABLE IF NOT EXISTS `projekt` (
+  `projekt_id` int(11) NOT NULL AUTO_INCREMENT,
+  `projekt_kode` varchar(20) NOT NULL,
+  `timestamp_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`projekt_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+
+--
+-- Dumping data for table `projekt`
+--
+
+INSERT INTO `projekt` (`projekt_id`, `projekt_kode`, `timestamp_created`) VALUES
+(1, 'QWERTY', '2016-02-24 22:35:37'),
+(2, 'test', '2016-02-24 22:36:14'),
+(11, 'ÆØÅ', '2016-02-24 23:13:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sample`
 --
 
 CREATE TABLE IF NOT EXISTS `sample` (
@@ -79,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `sample` (
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `sample_taxon`
+-- Table structure for table `sample_taxon`
 --
 
 CREATE TABLE IF NOT EXISTS `sample_taxon` (
@@ -93,7 +138,7 @@ CREATE TABLE IF NOT EXISTS `sample_taxon` (
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `taxon`
+-- Table structure for table `taxon`
 --
 
 CREATE TABLE IF NOT EXISTS `taxon` (
@@ -105,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `taxon` (
 -- --------------------------------------------------------
 
 --
--- Struktur-dump for tabellen `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -116,18 +161,18 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Begrænsninger for dumpede tabeller
+-- Constraints for dumped tables
 --
 
 --
--- Begrænsninger for tabel `sample`
+-- Constraints for table `sample`
 --
 ALTER TABLE `sample`
   ADD CONSTRAINT `sample_ibfk_1` FOREIGN KEY (`locality_id`) REFERENCES `locality` (`_id`),
   ADD CONSTRAINT `sample_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`_id`);
 
 --
--- Begrænsninger for tabel `sample_taxon`
+-- Constraints for table `sample_taxon`
 --
 ALTER TABLE `sample_taxon`
   ADD CONSTRAINT `sample_taxon_ibfk_1` FOREIGN KEY (`sample_id`) REFERENCES `sample` (`_id`),
