@@ -31,12 +31,13 @@ module.exports = function(sequelize, DataTypes) {
         models.Specifyuser
 		  .hasMany(models.Workbench, {foreignKey : 'SpecifyUserID'}); 
 		
-		
+		/*
 		models.Specifyuser
 		  .hasMany(models.Spprincipal, {foreignKey: 'SpecifyUserID' , through: 'specifyuser_spprincipal'});
 		models.Spprincipal
 		  .hasMany(models.Specifyuser, {foreignKey: 'SpPrincipalID' , through: 'specifyuser_spprincipal'});
-		
+		*/
+
       }
 	  
 	},

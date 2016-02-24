@@ -9,10 +9,8 @@ var cluster = require('cluster');
 
 // Code to run if we're in the master process
 if (cluster.isMaster) {
-
  // Count the machine's CPUs
     var cpuCount = require('os').cpus().length;
-
     // Create a worker for each CPU
     for (var i = 0; i < cpuCount; i += 1) {
         cluster.fork();
@@ -29,12 +27,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
-
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
-
-
-
 
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
