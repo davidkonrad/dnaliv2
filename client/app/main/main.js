@@ -4,7 +4,7 @@ angular.module('dnalivApp')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'app/datasets/datasets.html',
+        templateUrl: 'app/main/main.html',
         controller: 'DatasetsCtrl'
       });
   });

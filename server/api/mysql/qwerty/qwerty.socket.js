@@ -4,21 +4,21 @@
 
 'use strict';
 
-var Projekt = require('./projekt.model');
+var Qwerty = require('./qwerty.model');
 
 exports.register = function(socket) {
-  Projekt.schema.post('save', function (doc) {
+  Qwerty.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Projekt.schema.post('remove', function (doc) {
+  Qwerty.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('projekt:save', doc);
+  socket.emit('qwerty:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('projekt:remove', doc);
+  socket.emit('qwerty:remove', doc);
 }

@@ -34,7 +34,7 @@ function isAuthenticated() {
         next();
       });
     })
-	.use(attachSpecifyUser());
+	//.use(attachSpecifyUser());
 }
 
 function attachSpecifyUser(){

@@ -20,10 +20,12 @@ fs.readdirSync(__dirname).filter(function(file) {
 }).forEach(function(dir) {
 	fs.readdirSync(path.join(__dirname, dir)).filter(function(file) {
 			if (file.indexOf(".model.js") > -1) {
-				console.log('XXXXXX');
+				//console.log('XXXXXX');
 				var model = sequelize.import(path.join(__dirname, dir, file));
 				var capitalizedModelName = model.name.charAt(0).toUpperCase() + model.name.slice(1);
 				db[capitalizedModelName] = model;
+
+				//console.log('model : ', model);
 			}
 		})
 });

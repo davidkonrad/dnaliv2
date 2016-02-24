@@ -1,52 +1,52 @@
 'use strict';
 var models = require('../');
 
-// Get list of projects
+// Get list of projekts
 exports.index = function(req, res) {
-  models.Project.findAll().then(function(project){
-  	return res.json(200, project);	
+  models.Projekt.findAll().then(function(projekt){
+  	return res.json(200, projekt);	
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Get a single project
+// Get a single projekt
 exports.show = function(req, res) {
-  models.Project.find(req.params.id).then(function(project){
-  	return res.json(200, project);	
+  models.Projekt.find(req.params.id).then(function(projekt){
+  	return res.json(200, projekt);	
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Creates a new project in the DB.
+// Creates a new projekt in the DB.
 exports.create = function(req, res) {
-  models.Project.create(req.body).then(function(project) {
-    return res.json(201, project);
+  models.Projekt.create(req.body).then(function(projekt) {
+    return res.json(201, projekt);
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Updates an existing project in the DB.
+// Updates an existing projekt in the DB.
 exports.update = function(req, res) {
-  models.Project.find(req.params.id).then(function(project){
-      if(!project) { return res.send(404); }  
-	  return project.updateAttributes(req.body);	  	
-  }).then(function(project){
-  	return res.json(200, project);
+  models.Projekt.find(req.params.id).then(function(projekt){
+      if(!projekt) { return res.send(404); }  
+	  return projekt.updateAttributes(req.body);	  	
+  }).then(function(projekt){
+  	return res.json(200, projekt);
   }).catch(function(err){
 	  handleError(res, err);
   });
   
 };
 
-// Deletes a project from the DB.
+// Deletes a projekt from the DB.
 exports.destroy = function(req, res) {
 	
-	models.Project.find(req.params.id).then(function(project){
-		if(!project) { return res.send(404); }
-		return project.destroy()
+	models.Projekt.find(req.params.id).then(function(projekt){
+		if(!projekt) { return res.send(404); }
+		return projekt.destroy()
 	}).then(function(){
 		return res.send(204);
 	}).catch(function(err){
@@ -55,11 +55,11 @@ exports.destroy = function(req, res) {
 	
 };
 
-// Describe project
+// Describe projekt
 exports.describe = function(req, res) {
-  models.Project.describe().then(function(project){
-	  console.log(project);
-  	return res.json(200, project);	
+  models.Projekt.describe().then(function(projekt){
+	  console.log(projekt);
+  	return res.json(200, projekt);	
   }).catch(function(err){
 	  handleError(res, err);
   });

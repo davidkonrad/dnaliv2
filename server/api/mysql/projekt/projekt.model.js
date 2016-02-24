@@ -2,6 +2,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
+/*
 	var Projekt = sequelize.define("projekt", {
     projekt_id: {
       type: DataTypes.INTEGER(11),
@@ -9,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    projekt_code: {
+    projekt_kode: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -22,6 +23,23 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'projekt',
     freezeTableName: true
   });
+*/
 
+	var Projekt = sequelize.define("projekt", {
+		projekt_id: {
+			type: DataTypes.INTEGER(11),
+			primaryKey: true,
+			autoIncrement: true,
+			allowNull: false
+		},
+    projekt_kode: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+	}, {
+		tableName: 'projekt',
+		timestamps: false,
+		freezeTableName: true
+	});
 	return Projekt;
 };
