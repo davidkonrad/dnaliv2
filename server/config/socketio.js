@@ -18,20 +18,7 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
-  require('../api/usersettings/usersettings.socket').register(socket);
- // require('../api/spprincipal/spprincipal.socket').register(socket);
-  //require('../api/discipline/discipline.socket').register(socket);
  // require('../api/collection/collection.socket').register(socket);
- // require('../api/taxon/taxon.socket').register(socket);
- // require('../api/taxontreedefitem/taxontreedefitem.socket').register(socket);
- // require('../api/workbench/workbench.socket').register(socket);
-//  require('../api/workbenchrow/workbenchrow.socket').register(socket);
- // require('../api/mysql/specifyuser/specifyuser.socket').register(socket);
-//  require('../api/mysql/agent/agent.socket').register(socket);
-//  require('../api/mysql/workbenchdataitem/workbenchdataitem.socket').register(socket);
-//  require('../api/mysql/workbenchtemplatemappingitem/workbenchtemplatemappingitem.socket').register(socket);
-//  require('../api/mysql/workbenchtemplate/workbenchtemplate.socket').register(socket);
-
  
   require('../api/mongo/thing/thing.socket').register(socket);
 }

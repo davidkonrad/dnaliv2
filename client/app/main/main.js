@@ -5,6 +5,6 @@ angular.module('dnalivApp')
     $routeProvider
       .when('/', {
         templateUrl: 'app/main/main.html',
-        controller: 'DatasetsCtrl'
+        controller: 'MainCtrl'
       });
   });

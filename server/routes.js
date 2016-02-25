@@ -12,13 +12,8 @@ module.exports = function(app) {
 	app.use('/api/projekt', require('./api/mysql/projekt'));
 
 	//MongoDB
-	//app.use('/api/specifymodels', require('./api/mongo/specifymodel'));
-	app.use('/api/things', require('./api/mongo/thing'));
 	app.use('/api/users', require('./api/mongo/user'));
 	
-	// File upload
-	//app.use('/api/fileupload',  require('./api/fileupload'));
-
 	app.use('/auth', require('./auth'));
 
 	// All undefined asset or api routes should return a 404
