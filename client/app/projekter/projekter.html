@@ -38,17 +38,22 @@
 		  </div>
 
 			<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
-			  <div class="panel panel-default" ng-repeat="inst in institutioner">
+			  <div class="panel panel-default" ng-repeat="klasse in klasser">
 			    <div class="panel-heading" role="tab">
 			      <h4 class="panel-title">
 			        <a bs-collapse-toggle>
-			          {{ inst.institutions_navn }}
+			          {{ klasse.institution }}
 			        </a>
 			      </h4>
 			    </div>
 			    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			      <div class="panel-body">
-			        {{ inst.institutions_navn }}
+							<form class="form-inline" role="form">
+							  <div class="form-group">
+							    <label for="projekt_kode">Institution</label>
+								    <input type="text" ng-model="klasse.institution" size="70" class="form-control" institution-typeahead ng-disabled="projectLoaded()">
+							  </div>
+							</form>
 			      </div>
 			    </div>
 			  </div>

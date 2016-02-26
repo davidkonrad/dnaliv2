@@ -38,9 +38,14 @@ angular.module('dnalivApp')
 		}
 
 		var getObj = function($resource, prefix) {
-			var prop, p = {};
+			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
+					prop, p = {};
 			for (prop in $resource) {
-				if (prop.indexOf(prefix) == 0) p[prop] = $resource[prop]
+				if (prefix) {
+					if (~prop.indexOf(prefix)) p[prop] = $resource[prop]
+				} else {
+					if (~exclude.indexOf(prop)) p[prop] = $resource[prop]
+				}
 			}
 			return p;
 		}
@@ -54,16 +59,19 @@ angular.module('dnalivApp')
 		}
 
 		$scope.saveProjekt = function() {
-			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt);
+			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt)
 		}
 
 		$scope.klasser = [
-				{ institutions_navn: '... ' }
+				{ institution: '... ' }
 		]
 
 		$scope.loadKlasser = function(projekt_id) {
-			Klasse.query({ id: projekt_id }).$promise.then(function(klasser) {	
-				console.log('XXX', klasser);
+			Klasse.query({ projekt_id: projekt_id }).$promise.then(function(klasser) {	
+				$scope.klasser = []
+				klasser.forEach(function(klasse) {
+					$scope.klasser.push(klasse);
+				})
 			})
 		}
 
