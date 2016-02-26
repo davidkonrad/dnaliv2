@@ -34,7 +34,7 @@
 				<button type="button" class="btn btn-primary" ng-disabled="projectLoaded()" title="Tilføj en ny klasse / institution">
 					<i class="fa fa-plus"></i>
 				</button>
-				<label>Klasser</label>
+				<label>Skoleklasse</label>
 		  </div>
 
 			<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
@@ -48,12 +48,73 @@
 			    </div>
 			    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
 			      <div class="panel-body">
-							<form class="form-inline" role="form">
+
+							<form class="form-horizontal">
 							  <div class="form-group">
-							    <label for="projekt_kode">Institution</label>
-								    <input type="text" ng-model="klasse.institution" size="70" class="form-control" institution-typeahead ng-disabled="projectLoaded()">
+							    <label class="col-sm-1 control-label">Institution</label>
+							    <div class="col-sm-7">
+								    <input type="text" ng-model="klasse.institution" class="form-control" institution-typeahead ng-disabled="projectLoaded()">
+							    </div>
 							  </div>
 							</form>
+
+							<form class="form-horizontal">
+							  <div class="form-group">
+							    <label class="col-sm-1 control-label">Adresse</label>
+							    <div class="col-sm-3">
+							    	<input type="text" ng-model="klasse.adresse" class="form-control" ng-disabled="projectLoaded()" placeholder="Adresse">
+									</div>
+							    <div class="col-sm-1">
+							    	<input type="text" ng-model="klasse.postnr" class="form-control" ng-disabled="projectLoaded()" placeholder="postnr">
+									</div>
+							    <div class="col-sm-3">
+							    	<input type="text" ng-model="klasse.kommune" class="form-control" ng-disabled="projectLoaded()" placeholder="Kommune">
+									</div>
+							  </div>
+							</form>
+
+							<form class="form-horizontal">
+							  <div class="form-group">
+							    <label class="col-sm-1 control-label">Antal elever</label>
+							    <div class="col-sm-1">
+								    <input type="number" class="form-control" placeholder="0" ng-disabled="projectLoaded()">
+									</div>
+							    <label class="col-sm-1 control-label">Antal lærere</label>
+							    <div class="col-sm-1">
+								    <input type="number" class="form-control" title="Antal elever" placeholder="0" ng-disabled="projectLoaded()">
+									</div>
+							  </div>
+							</form>
+
+							<form class="form-horizontal">
+							  <div class="form-group">
+							    <label class="col-sm-1 control-label">Lærer</label>
+							    <div class="col-sm-2">
+								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
+									</div>
+							    <label class="col-sm-1 control-label" style="width:30px;float:left;" >Tlf</label>
+							    <div class="col-sm-2">
+								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
+									</div>
+							    <label class="col-sm-1 control-label">Email</label>
+							    <div class="col-sm-2">
+								    <input type="email" class="form-control" placeholder="Email" ng-disabled="projectLoaded()">
+									</div>
+							  </div>
+							</form>
+
+
+							<form class="form-inline">
+							  <div class="form-group">
+							    <label>Lærer</label>
+							    <input type="text" class="form-control" placeholder="Lærers navn">
+								  </div>
+							  <div class="form-group">
+							    <label>Lærere</label>
+							    <input type="number" class="form-control" title="Antal elever" placeholder="0">
+							  </div>
+							</form>
+
 			      </div>
 			    </div>
 			  </div>

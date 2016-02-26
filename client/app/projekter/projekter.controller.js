@@ -16,7 +16,7 @@ angular.module('dnalivApp')
 			{
 				divider: true
 			}
-		] 
+		];
 
 		$scope.dropdown = dropdownTemplate;
 		$scope.projekt = {};

@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc directive
- * @name dnaApp.directive:institutionTypeahead
+ * @name dnalivApp.directive:institutionTypeahead
  * @description
- * # wetlandTypeahead
+ * # institutionTypeahead
  */
 angular.module('dnalivApp')
 	.directive('institutionTypeahead', function () {

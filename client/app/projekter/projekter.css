@@ -9,8 +9,13 @@
 a[role="tab"] {
 	cursor: pointer;
 }
+a[bs-collapse-toggle] {
+	cursor: pointer;
+}
 
+/*
 .datepicker.dropdown-menu button, .timepicker.dropdown-menu button {
   outline: 0;
   border: 0;
 }
+*/
