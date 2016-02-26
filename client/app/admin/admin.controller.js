@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['$scope', '$http', '$modal', 'Auth', 'User', 'SpecifyUser', 
-				function ($scope, $http, $modal, Auth, User, SpecifyUser) {
+  .controller('AdminCtrl', ['$scope', '$http', '$modal', 'Auth', 'User', 
+				function ($scope, $http, $modal, Auth, User) {
 
     // Use the User $resource to fetch all users
 	$scope.users = User.query();
@@ -51,7 +51,8 @@ angular.module('dnalivApp')
 			}
 		}
 	};
-		
+
+	/*		
 	SpecifyUser.query().$promise.then(function(specifyusers) {
 		angular.forEach(specifyusers, function(specifyuser) {
 			$scope.specifyusers.push({
@@ -82,6 +83,7 @@ angular.module('dnalivApp')
 		User.save(user);
 		$scope.users = User.query();
     };
+	*/
 
 }]);
 
