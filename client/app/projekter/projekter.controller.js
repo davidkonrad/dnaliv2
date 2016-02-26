@@ -48,6 +48,7 @@ angular.module('dnalivApp')
 		$scope.loadProjekt = function(projekt_id) {
 			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
 				$scope.projekt = getObj(projekt, 'projekt_')
+				$scope.loadKlasser(projekt.projekt_id)
 				document.querySelector('#projekt-kode').textContent = projekt.projekt_kode
 			})
 		}
@@ -56,8 +57,16 @@ angular.module('dnalivApp')
 			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt);
 		}
 
-		$scope.institutioner = [
+		$scope.klasser = [
 				{ institutions_navn: '... ' }
 		]
+
+		$scope.loadKlasser = function(projekt_id) {
+			Klasse.query({ id: projekt_id }).$promise.then(function(klasser) {	
+				console.log('XXX', klasser);
+			})
+		}
+
+
 
   }]);

@@ -2,8 +2,6 @@
 
 describe('Controller: MainCtrl', function () {
 
-	console.log('PROJEKT projekt.controller.spec');
-
   // load the controller's module
   beforeEach(module('dnalivApp'));
   beforeEach(module('socketMock'));
