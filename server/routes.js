@@ -10,6 +10,7 @@ module.exports = function(app) {
 
 	app.use('/api/test', require('./api/mysql/test'));
 	app.use('/api/projekt', require('./api/mysql/projekt'));
+	app.use('/api/klasse', require('./api/mysql/klasse'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

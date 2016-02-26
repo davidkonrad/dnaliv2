@@ -11,7 +11,7 @@ function splice(str, pos, insert) {
 	return str.substr(0, pos) + insert + str.substr(pos)
 }
 
-angular.module('dnaApp')
+angular.module('dnalivApp')
 	.directive('wetlandTypeahead', function () {
 		return {
 		restrict: 'A',

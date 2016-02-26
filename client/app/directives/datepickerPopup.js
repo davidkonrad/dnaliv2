@@ -7,7 +7,7 @@
  * # datepickerPopup
  * ensures the date field in the datepicker initially has the right format, like dd/MM/yyyy
  */
-angular.module('dnaApp')
+angular.module('dnalivApp')
 	.directive('datepickerPopup', function (){
 		return {
 			restrict: 'EAC',

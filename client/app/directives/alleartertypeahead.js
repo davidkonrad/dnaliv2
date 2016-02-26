@@ -6,7 +6,7 @@
  * @description
  * # allearterTypeahead
  */
-angular.module('dnaApp')
+angular.module('dnalivApp')
   .directive('allearterTypeahead', function () {
     return {
       restrict: 'A',

@@ -1,36 +1,63 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', function ($scope, $http, Auth, Projekt) {
+  .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', 'Klasse', function ($scope, $http, Auth, Projekt, Klasse) {
+
+		Klasse.query().$promise.then(function(klasser) {	
+			console.log(klasser)
+		})
 
 		var dropdownTemplate = [
-					{ text: "Opret nyt projekt",
-						click: "createProject()",
-						active: true
-					}, {
-						divider: true
-		}] 
+			{ 
+				text: "Opret nyt projekt",
+				click: "createProjekt()",
+				active: true
+			}, 
+			{
+				divider: true
+			}
+		] 
 
 		$scope.dropdown = dropdownTemplate;
-		$scope.projekt = {
-			projekt_kode : '',
-			projekt_tid : '10',
-			projekt_dato : ''
-		}
+		$scope.projekt = {};
+		$scope.projectLoaded = function() {
+			return !angular.isDefined($scope.projekt.projekt_kode)
+    }
 
 		Projekt.query().$promise.then(function(projekter) {	
 				$scope.projekter = projekter;
-
 				$scope.dropdown = dropdownTemplate;
-
 				projekter.forEach(function(projekt) {
-					$scope.dropdown.push({ text: projekt.projekt_kode, href: '#' })
+					$scope.dropdown.push({ text: projekt.projekt_kode, click: 'loadProjekt('+projekt.projekt_id+')' })
 				})
 		})
 
-		$scope.createProject = function() {
+		$scope.createProjekt = function() {
 			var kode = prompt('Projekt kode: ', '');
 			if (kode != '') Projekt.save({ projekt_kode: kode })
 		}
+
+		var getObj = function($resource, prefix) {
+			var prop, p = {};
+			for (prop in $resource) {
+				if (prop.indexOf(prefix) == 0) p[prop] = $resource[prop]
+			}
+			return p;
+		}
+
+		$scope.loadProjekt = function(projekt_id) {
+			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
+				$scope.projekt = getObj(projekt, 'projekt_')
+				document.querySelector('#projekt-name').text(projekt.projekt_kode)
+			})
+		}
+
+		$scope.saveProjekt = function() {
+			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt);
+		}
+
+		$scope.institutioner = [
+				{ institutions_navn: '... ' }
+		]
 
   }]);

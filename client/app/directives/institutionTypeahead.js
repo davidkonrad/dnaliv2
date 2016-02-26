@@ -6,7 +6,7 @@
  * @description
  * # wetlandTypeahead
  */
-angular.module('dnaApp')
+angular.module('dnalivApp')
 	.directive('institutionTypeahead', function () {
 		return {
 		restrict: 'A',

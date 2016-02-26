@@ -6,7 +6,7 @@
  * @description
  * # activeLink
  */
-angular.module('dnaApp')
+angular.module('dnalivApp')
 	.directive('setParentActive', ['$location', function($location) {
 		return {
 			restrict: 'A',

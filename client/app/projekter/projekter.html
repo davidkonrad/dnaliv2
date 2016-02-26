@@ -1,8 +1,8 @@
 <div class="container">
 
-	<div xclass="form-control">
-		<button type="button" class="btn btn-default" ng-model="action" bs-dropdown="dropdown">
-			Vælg projekt&nbsp;<span class="caret"></span>
+	<div class="form-group">
+		<button type="button" class="btn btn-default" style="width:150px;text-align:left;" ng-model="action" bs-dropdown="dropdown">
+			<span id="projekt-name">Rediger projekt</span>&nbsp;&nbsp;<span class="caret"></span>
 		</button>
    
 	</div>
@@ -10,36 +10,49 @@
 	<br>
 
 	<div bs-tabs>
-
 					
 		<div bs-pane data-title="Generelt">
 			<br>
 			<form class="form-inline" role="form">
 			  <div class="form-group">
 			    <label for="projekt_kode">Projekt kode:</label>
-			    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode">
+			    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
 			  </div>
 			  <div class="form-group">
 			    <label for="projekt_dato">Dato: </label>
-			    <input type="text" ng-model="projekt.projekt_dato" class="form-control" size="8" id="projekt_dato" bs-datepicker>
+			    <input type="text" ng-model="projekt.projekt_dato" class="form-control" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
 			  </div>
 			  <div class="form-group">
-			    <label for="projekt_tid">Tidspunkt: </label>
-			    <input type="text" ng-model="projekt.projekt_tid" class="form-control" size="8" id="projekt_tid" bs-timepicker data-time-format="HH:mm:ss" data-time-type="number" data-min-time="10:00:00" data-max-time="13:30:00" data-autoclose="1" name="time2" >
+			    <label for="projekt_tidspunkt">Tidspunkt: </label>
+			    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control" size="8" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-time-type="number" ng-disabled="projectLoaded()">
 			  </div>
 
-			  <button type="submit" class="btn btn-default">Gem</button>
+			  <button type="submit" class="btn btn-default" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
 			</form>
 
-		</div>
+			<br>
+		  <div class="form-group">
+				<label>Klasse / institution</label>
+				<button type="button" class="btn btn-default">	<i class="fa fa-plus"></i></button>
+		  </div>
 
-		<div bs-pane data-title="Prøver">
-			sddfsfsdf
-		</div>
+<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
+  <div class="panel panel-default" ng-repeat="inst in institutioner">
+    <div class="panel-heading" role="tab">
+      <h4 class="panel-title">
+        <a bs-collapse-toggle>
+          {{ inst.institutions_navn }}
+        </a>
+      </h4>
+    </div>
+    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+      <div class="panel-body">
+        {{ inst.institutions_navn }}
+      </div>
+    </div>
+  </div>
+</div>
 
-
-
-	</div>
 
 	<br>
 	<br>
