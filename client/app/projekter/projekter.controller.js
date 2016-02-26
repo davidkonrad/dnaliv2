@@ -48,7 +48,7 @@ angular.module('dnalivApp')
 		$scope.loadProjekt = function(projekt_id) {
 			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
 				$scope.projekt = getObj(projekt, 'projekt_')
-				document.querySelector('#projekt-name').text(projekt.projekt_kode)
+				document.querySelector('#projekt-kode').textContent = projekt.projekt_kode
 			})
 		}
 
