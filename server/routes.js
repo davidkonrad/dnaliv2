@@ -13,10 +13,10 @@ module.exports = function(app) {
 	app.use('/api/klasse', require('./api/mysql/klasse'));
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
 	app.use('/api/fag', require('./api/mysql/fag'));
+	app.use('/api/taxon', require('./api/mysql/taxon'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));
-	
 	app.use('/auth', require('./auth'));
 
 	// All undefined asset or api routes should return a 404

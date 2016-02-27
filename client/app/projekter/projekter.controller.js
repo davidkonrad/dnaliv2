@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag',
-	function ($scope, $http, Auth, Projekt, Klasse, Klassetrin, Fag) {
+  .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 
+	function ($scope, $http, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon) {
 
 		var dropdownTemplate = [
 			{ 
@@ -92,6 +92,9 @@ angular.module('dnalivApp')
 			console.log($scope.fag);
 		})
 
+		Taxon.query().$promise.then(function(taxons) {	
+			console.log('Taxon', taxons);
+		})
 
 
   }]);

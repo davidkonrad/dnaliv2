@@ -8,7 +8,6 @@ angular.module('dnalivApp', [
   'btford.socket-io',
 	'mgcrea.ngStrap', 
 	'smart-table',
-	'lrDragNDrop',
 	'xeditable',
 	'cfp.hotkeys',
 	'LocalStorageModule',
