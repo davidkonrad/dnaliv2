@@ -12,6 +12,7 @@ module.exports = function(app) {
 	app.use('/api/projekt', require('./api/mysql/projekt'));
 	app.use('/api/klasse', require('./api/mysql/klasse'));
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
+	app.use('/api/fag', require('./api/mysql/fag'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

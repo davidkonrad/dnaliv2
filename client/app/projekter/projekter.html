@@ -107,13 +107,15 @@
 							  <div class="form-group">
 							    <label class="col-sm-1 control-label">Klassetrin</label>
 							    <div class="col-sm-2">
-										<select ng-disabled="projectLoaded()" class="form-control">
+										<select ng-disabled="projectLoaded()" class="form-control"	>
 											<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
 										</select>
 									</div>
 							    <label class="col-sm-1 control-label no-padding-right no-padding-left" style="width:40px;float:left;">Fag</label>
 							    <div class="col-sm-3">
-								    <input type="text" class="form-control" title="Vælg fag" placeholder="Vælg fag" ng-disabled="projectLoaded()">
+										<select ng-disabled="projectLoaded()" class="form-control"	>
+											<option ng-repeat="f in fag" value="{{ f.fag_id }}">{{ f.fag_navn }}</option>
+										</select>
 									</div>
 							  </div>
 							</form>
