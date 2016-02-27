@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     projekt_dato: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     projekt_tidspunkt: {
       type: DataTypes.DATE,

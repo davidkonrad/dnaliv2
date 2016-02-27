@@ -21,6 +21,10 @@ label {
 	white-space: nowrap;
 }
 
+.form-group {
+	margin-bottom: 5px;
+}
+
 /**
 * Bootstrap Fonts
 */

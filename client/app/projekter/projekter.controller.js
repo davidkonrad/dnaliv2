@@ -34,7 +34,12 @@ angular.module('dnalivApp')
 
 		$scope.createProjekt = function() {
 			var kode = prompt('Projekt kode: ', '');
-			if (kode != '') Projekt.save({ projekt_kode: kode })
+			if (kode != '') Projekt.save({ projekt_id: '' }, { projekt_kode: kode });
+			/*
+			.$promise.then(function(x) {	
+				console.log(x)
+			})
+			*/
 		}
 
 		var getObj = function($resource, prefix) {

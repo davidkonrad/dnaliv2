@@ -75,6 +75,23 @@
 
 							<form class="form-horizontal">
 							  <div class="form-group">
+							    <label class="col-sm-1 control-label">Lærer</label>
+							    <div class="col-sm-2">
+								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
+									</div>
+							    <label class="col-sm-1 control-label" style="width:30px;float:left;" >Tlf</label>
+							    <div class="col-sm-1">
+								    <input type="text" class="form-control" placeholder="Telefon" style="width:100px;" ng-disabled="projectLoaded()">
+									</div>
+							    <label class="col-sm-1 control-label" style="width:90px;float:left;padding-right:0px;">Email</label>
+							    <div class="col-sm-2">
+								    <input type="email" class="form-control" placeholder="Email" ng-disabled="projectLoaded()">
+									</div>
+							  </div>
+							</form>
+
+							<form class="form-horizontal">
+							  <div class="form-group">
 							    <label class="col-sm-1 control-label">Antal elever</label>
 							    <div class="col-sm-1">
 								    <input type="number" class="form-control" placeholder="0" ng-disabled="projectLoaded()">
@@ -88,30 +105,14 @@
 
 							<form class="form-horizontal">
 							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Lærer</label>
-							    <div class="col-sm-2">
-								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
+							    <label class="col-sm-1 control-label">Klassetrin</label>
+							    <div class="col-sm-1">
+								    <input type="number" class="form-control" placeholder="0" ng-disabled="projectLoaded()">
 									</div>
-							    <label class="col-sm-1 control-label" style="width:30px;float:left;" >Tlf</label>
-							    <div class="col-sm-2">
-								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
+							    <label class="col-sm-1 control-label">Fag</label>
+							    <div class="col-sm-1">
+								    <input type="number" class="form-control" title="Antal elever" placeholder="0" ng-disabled="projectLoaded()">
 									</div>
-							    <label class="col-sm-1 control-label">Email</label>
-							    <div class="col-sm-2">
-								    <input type="email" class="form-control" placeholder="Email" ng-disabled="projectLoaded()">
-									</div>
-							  </div>
-							</form>
-
-
-							<form class="form-inline">
-							  <div class="form-group">
-							    <label>Lærer</label>
-							    <input type="text" class="form-control" placeholder="Lærers navn">
-								  </div>
-							  <div class="form-group">
-							    <label>Lærere</label>
-							    <input type="number" class="form-control" title="Antal elever" placeholder="0">
 							  </div>
 							</form>
 
