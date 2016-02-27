@@ -4,21 +4,21 @@
 
 'use strict';
 
-var Qwerty = require('./qwerty.model');
+var Klassetrin = require('./klassetrin.model');
 
 exports.register = function(socket) {
-  Qwerty.schema.post('save', function (doc) {
+  Klassetrin.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Qwerty.schema.post('remove', function (doc) {
+  Klassetrin.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('qwerty:save', doc);
+  socket.emit('klassetrin:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('qwerty:remove', doc);
+  socket.emit('klassetrin:remove', doc);
 }

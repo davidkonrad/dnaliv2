@@ -2,19 +2,23 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-	var Qwerty = sequelize.define("qwerty", {
-		project_id: {
+	var Klassetrin = sequelize.define("klassetrin", {
+		klassetrin_id: {
 			type: DataTypes.INTEGER(11),
 			primaryKey: true,
 			autoIncrement: true,
 			allowNull: false
-		}	
+		},
+    klassetrin_navn: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }	
 	}, {
-		tableName: 'projekt',
+		tableName: 'klassetrin',
 		timestamps: false,
 		freezeTableName: true
 
 	});
 
-	return Qwerty;
+	return Klassetrin;
 };

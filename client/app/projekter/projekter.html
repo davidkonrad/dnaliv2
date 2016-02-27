@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="font-size:90%;"	>
 
 	<div class="form-group">
 		<button type="button" class="btn btn-default" style="width:150px;text-align:left;" ng-model="action" bs-dropdown="dropdown">
@@ -14,15 +14,15 @@
 			<br>
 			<form class="form-inline" role="form">
 			  <div class="form-group">
-			    <label for="projekt_kode">Projekt kode:</label>
+			    <label for="projekt_kode">Projekt kode&nbsp;</label>
 			    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
 			  </div>
 			  <div class="form-group">
-			    <label for="projekt_dato">Dato: </label>
+			    <label for="projekt_dato">Dato&nbsp;</label>
 			    <input type="text" ng-model="projekt.projekt_dato" class="form-control" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
 			  </div>
 			  <div class="form-group">
-			    <label for="projekt_tidspunkt">Tidspunkt: </label>
+			    <label for="projekt_tidspunkt">Tidspunkt&nbsp;</label>
 			    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control" size="8" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-time-type="number" ng-disabled="projectLoaded()">
 			  </div>
 
@@ -61,13 +61,13 @@
 							<form class="form-horizontal">
 							  <div class="form-group">
 							    <label class="col-sm-1 control-label">Adresse</label>
-							    <div class="col-sm-3">
+							    <div class="col-sm-4">
 							    	<input type="text" ng-model="klasse.adresse" class="form-control" ng-disabled="projectLoaded()" placeholder="Adresse">
 									</div>
-							    <div class="col-sm-1">
-							    	<input type="text" ng-model="klasse.postnr" class="form-control" ng-disabled="projectLoaded()" placeholder="postnr">
+							    <div class="col-sm-1 no-padding-left no-padding-right">
+							    	<input type="text" ng-model="klasse.postnr" class="form-control" ng-disabled="projectLoaded()" placeholder="Postnr.">
 									</div>
-							    <div class="col-sm-3">
+							    <div class="col-sm-2">
 							    	<input type="text" ng-model="klasse.kommune" class="form-control" ng-disabled="projectLoaded()" placeholder="Kommune">
 									</div>
 							  </div>
@@ -79,12 +79,12 @@
 							    <div class="col-sm-2">
 								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
 									</div>
-							    <label class="col-sm-1 control-label" style="width:30px;float:left;" >Tlf</label>
-							    <div class="col-sm-1">
-								    <input type="text" class="form-control" placeholder="Telefon" style="width:100px;" ng-disabled="projectLoaded()">
+							    <label class="col-sm-1 control-label no-padding-left no-padding-right" style="width:30px;float:left;" >Tlf.</label>
+							    <div class="col-sm-1 no-padding-right">
+								    <input type="text" class="form-control" placeholder="Telefon" style="width:85px;" ng-disabled="projectLoaded()">
 									</div>
-							    <label class="col-sm-1 control-label" style="width:90px;float:left;padding-right:0px;">Email</label>
-							    <div class="col-sm-2">
+							    <label class="col-sm-1 control-label no-padding-left no-padding-right" style="width:51px;float:left;">Email</label>
+							    <div class="col-sm-3 no-padding-right">
 								    <input type="email" class="form-control" placeholder="Email" ng-disabled="projectLoaded()">
 									</div>
 							  </div>
@@ -106,12 +106,14 @@
 							<form class="form-horizontal">
 							  <div class="form-group">
 							    <label class="col-sm-1 control-label">Klassetrin</label>
-							    <div class="col-sm-1">
-								    <input type="number" class="form-control" placeholder="0" ng-disabled="projectLoaded()">
+							    <div class="col-sm-2">
+										<select ng-disabled="projectLoaded()" class="form-control">
+											<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
+										</select>
 									</div>
-							    <label class="col-sm-1 control-label">Fag</label>
-							    <div class="col-sm-1">
-								    <input type="number" class="form-control" title="Antal elever" placeholder="0" ng-disabled="projectLoaded()">
+							    <label class="col-sm-1 control-label no-padding-right no-padding-left" style="width:40px;float:left;">Fag</label>
+							    <div class="col-sm-3">
+								    <input type="text" class="form-control" title="Vælg fag" placeholder="Vælg fag" ng-disabled="projectLoaded()">
 									</div>
 							  </div>
 							</form>

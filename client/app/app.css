@@ -12,6 +12,11 @@
 	user-select: none;
 }
 
+.navbar-brand {
+	font-weight: bold;
+	text-shadow: 1px 2px #e2e2e2;
+}
+
 input[type="number"] {
 	width: 70px;
 	max-width: 70px;
@@ -25,6 +30,15 @@ label {
 	margin-bottom: 5px;
 }
 
+.no-padding-left {
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+.no-padding-right {
+	padding-right: 0px;
+	margin-right: 0px;
+}
 /**
 * Bootstrap Fonts
 */
