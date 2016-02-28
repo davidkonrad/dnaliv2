@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 27, 2016 at 01:07 PM
+-- Generation Time: Feb 28, 2016 at 09:50 PM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -192,8 +192,37 @@ CREATE TABLE IF NOT EXISTS `taxon` (
   `taxon_navn_dk` varchar(100) DEFAULT NULL,
   `taxon_artsgruppe` varchar(50) DEFAULT NULL,
   `taxon_basisliste` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`taxon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`taxon_id`),
+  UNIQUE KEY `taxon_navn` (`taxon_navn`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+
+--
+-- Dumping data for table `taxon`
+--
+
+INSERT INTO `taxon` (`taxon_id`, `taxon_navn`, `taxon_navn_dk`, `taxon_artsgruppe`, `taxon_basisliste`) VALUES
+(1, 'Perca fluviatilis', 'Aborre', 'Fisk', 0),
+(2, 'Abramis brama', 'Brasen', 'Fisk', 0),
+(3, 'Misgurnus fossilis', 'Dyndsmerling', 'Fisk', 1),
+(4, 'Anguilla anguilla', 'Ål', 'Fisk', 0),
+(5, 'Esox lucius', 'Gedde', 'Fisk', 1),
+(6, 'Ctenopharyngodon idella', 'Græskarpe', 'Fisk', 0),
+(7, 'Carassius carassius', 'Karusse', 'Fisk', 0),
+(8, 'Cobitis taenia', 'Pigsmerling', 'Fisk', 1),
+(9, 'Rutilus rutilus', 'Skalle', 'Fisk', 1),
+(10, 'Gasterosteus aculeatus', 'Trepigget hundestejle', 'Fisk', 1),
+(11, 'Dytiscus latissimus', 'Bred vandkalv', 'Biller', 1),
+(12, 'Graphoderus bilineatus', 'Lys skivevandkalv', 'Biller', 1),
+(13, 'Leucorrhinia pectoralis', 'Stor kærguldsmed', 'Guldsmede', 1),
+(14, 'Astacus astacus', 'Flodkrebs', 'Tibenede krebsdyr', 1),
+(15, 'Pacifastacus leniusculus', 'Signalkrebs', 'Tibenede krebsdyr', 1),
+(16, 'Bufotes variabilis', 'Grønbroget tudse', 'Padder', 1),
+(17, 'Pelobates fuscus', 'Løgfrø', 'Padder', 1),
+(18, 'Hyla arborea', 'Løvfrø', 'Padder', 1),
+(19, 'Rana arvalis', 'Spidssnudet frø', 'Padder', 1),
+(20, 'Lissotriton vulgaris', 'Lille vandsalamander', 'Padder', 1),
+(21, 'Triturus cristatus', 'Stor vandsalamander', 'Padder', 1),
+(22, 'Rana temporaria', 'Butsnudet frø', 'Padder', 1);
 
 -- --------------------------------------------------------
 
