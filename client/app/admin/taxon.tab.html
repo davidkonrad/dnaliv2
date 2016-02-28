@@ -1,0 +1,55 @@
+<style>
+td.check-col {
+	color:red;
+	max-width: 40px !important;
+	width: 40px !important;
+	text-align: right;
+}
+table {
+	max-width: 600px !important;
+	
+</style>
+
+<table class="table table-condensed" >
+	<thead>
+		<tr>
+			<th></th>
+			<th>Navn</th>
+			<th>Dansk navn</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td class="check-col"><input type="checkbox"></td>
+			<td>Mark</td>
+			<td>Otto</td>
+		</tr>
+		<tr>
+			<td colspan="3">qwerty</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox"></td>
+			<td>Mark</td>
+			<td>Otto</td>
+		</tr>
+		<tr>
+			<td colspan="3" class="danger">qwerty</td>
+		</tr>
+		<tr>
+			<td>
+				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste">
+					<i class="fa fa-plus"></i>
+				</button>
+			</td>
+			<td>
+				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control">
+			</td>
+			<td>
+				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon">
+			</td>
+		</tr>
+
+	</tbody>
+
+</table>
+

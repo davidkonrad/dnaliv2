@@ -7,24 +7,28 @@
  * # allearterTypeahead
  */
 angular.module('dnalivApp')
-  .directive('allearterTypeahead', function () {
+  .directive('allearterTypeahead', function ($parse) {
     return {
       restrict: 'A',
-			link: function postLink(scope, element) {
+			scope : {
+				taxon : '=atTaxon'
+			},
+			link: function postLink(scope, element, attrs) {
+				var dansk = attrs.allearterTypeahead == 'dk';
 				$(element).typeahead({
-					afterSelect: function (item) {
-						console.log('allearter selected', item);
+					displayText: function(item) {
+						return dansk ? item.Dansk_navn : item.Videnskabeligt_navn;
+					},
+					afterSelect: function(item) {
+						scope.taxon.Videnskabeligt_navn = item.Videnskabeligt_navn;
+						scope.taxon.Dansk_navn = item.Dansk_navn;
+						scope.$apply()
 					}, 
 					items : 20,
 					source: function(query, process) {
-						var url='proxy.php?url=http://allearter-databasen.dk/api/?get=arter&query='+query;
-						return $.get(url, {}, function (data) {
-							data=JSON.parse(data);
-							var liste=[];
-							for (var i=0;i<data.allearter.length;i++) {
-								liste.push(data.allearter[i].Videnskabeligt_navn);
-							}
-							return process(liste);
+						var url='http://allearter-databasen.dk/api/?get=arter&query='+query;
+						return $.get(url, {}, function(data) {
+							return process(data.allearter);
 						})
 					}
 				})
