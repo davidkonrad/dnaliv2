@@ -23,8 +23,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     taxon_basisliste: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: '0'
+      allowNull: false
     }
 	}, {
 		tableName: 'taxon',

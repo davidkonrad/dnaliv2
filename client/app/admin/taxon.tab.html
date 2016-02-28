@@ -42,28 +42,6 @@ b.dk {
 </script>
 
 <table class="table table-condensed" >
-	<thead>
-		<tr>
-			<th></th>
-			<th>Navn</th>
-			<th>Dansk navn</th>
-		</tr>
-	</thead>
-  <tbody ng-repeat="(artsgruppe, arter) in taxons">
-		<tr class="active">
-			<td colspan="4">{{ artsgruppe }}</td>
-		</tr>
-		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
-			<td class="check-col"><input type="checkbox"></td>
-			<td>{{ art.taxon_navn }}</td>
-			<td>{{ art.taxon_navn_dk }}</td>
-			<td style="text-align:right;">
-				<button type="button" class="btn btn-primary btn-xs" title="">
-					&nbsp;<i class="fa fa-info"></i>&nbsp;
-				</button>
-			</td>
-		</tr>
-  </tbody>
 
 	<tbody>
 		<tr class="success">
@@ -84,8 +62,30 @@ b.dk {
 				</button>
 			</td>
 		</tr>
-
 	</tbody>
+
+	<thead>
+		<tr>
+			<th></th>
+			<th>Navn</th>
+			<th>Dansk navn</th>
+		</tr>
+	</thead>
+  <tbody ng-repeat="(artsgruppe, arter) in taxons">
+		<tr class="active">
+			<td colspan="4">{{ artsgruppe }}</td>
+		</tr>
+		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
+			<td class="check-col"><input type="checkbox" ng-model="art.taxon_basisliste" title="Medtag i basisliste" ng-click="basislisteToggle(art)"></td>
+			<td>{{ art.taxon_navn }}</td>
+			<td>{{ art.taxon_navn_dk }}</td>
+			<td style="text-align:right;">
+				<button type="button" class="btn btn-primary btn-xs" title="">
+					&nbsp;<i class="fa fa-info"></i>&nbsp;
+				</button>
+			</td>
+		</tr>
+  </tbody>
 
 </table>
 

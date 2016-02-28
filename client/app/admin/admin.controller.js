@@ -8,7 +8,12 @@ angular.module('dnalivApp')
 				$scope.taxons = {};
 				taxons.forEach(function(taxon) {
 					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
-					$scope.taxons[taxon.taxon_artsgruppe].push({ taxon_navn: taxon.taxon_navn, taxon_navn_dk: taxon.taxon_navn_dk });
+					$scope.taxons[taxon.taxon_artsgruppe].push({ 
+						taxon_id: taxon.taxon_id,
+						taxon_navn: taxon.taxon_navn, 
+						taxon_navn_dk: taxon.taxon_navn_dk,
+						taxon_basisliste: taxon.taxon_basisliste 
+					})
 				})
 			})
 		}
@@ -19,9 +24,7 @@ angular.module('dnalivApp')
 
 		$scope.loadArtInfo = function() {
 			$.get('http://allearter-databasen.dk/api/?get=art&query='+$scope.taxon.Videnskabeligt_navn, function(art) {
-				console.log(art);
 				$scope.artInfo = art.allearter[0];
-				console.log($scope.artInfo);
 			})
 		}
 
@@ -42,6 +45,10 @@ angular.module('dnalivApp')
 			})
 		}
 		
+		$scope.basislisteToggle = function(taxon) {
+			Taxon.update({ taxon_id: taxon.taxon_id }, taxon);
+		}
+
 
 }]);
 
