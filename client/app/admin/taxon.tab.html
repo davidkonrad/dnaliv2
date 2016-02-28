@@ -3,7 +3,7 @@ td.check-col {
 	color:red;
 	max-width: 40px !important;
 	width: 40px !important;
-	text-align: right;
+	text-align: center;
 }
 table {
 	max-width: 600px !important;
@@ -50,23 +50,23 @@ b.dk {
 		</tr>
 	</thead>
   <tbody ng-repeat="(artsgruppe, arter) in taxons">
-		<tr>
-			<td colspan="4" class="danger">{{ artsgruppe }}</td>
+		<tr class="active">
+			<td colspan="4">{{ artsgruppe }}</td>
 		</tr>
 		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
 			<td class="check-col"><input type="checkbox"></td>
 			<td>{{ art.taxon_navn }}</td>
 			<td>{{ art.taxon_navn_dk }}</td>
-			<td>
-				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste">
-					<i class="fa fa-info"></i>
+			<td style="text-align:right;">
+				<button type="button" class="btn btn-primary btn-xs" title="">
+					&nbsp;<i class="fa fa-info"></i>&nbsp;
 				</button>
 			</td>
 		</tr>
   </tbody>
 
 	<tbody>
-		<tr>
+		<tr class="success">
 			<td>
 				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste" ng-click="taxonCreate()">
 					<i class="fa fa-plus"></i>
