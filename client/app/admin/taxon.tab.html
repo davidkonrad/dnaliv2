@@ -7,8 +7,39 @@ td.check-col {
 }
 table {
 	max-width: 600px !important;
-	
+}	
+
+td.info-head {
+	font-size: 90%;
+	padding-right: 7px;
+}
+td.info-content {
+	white-space: nowrap;
+}
+b.dk {
+	font-weight: normal;
+	text-transform: lowercase;
+	color: navy;
+}
 </style>
+
+<script type="text/ng-template" id="popover.taxon.html">
+  <div class="popover" style="width:300px;">
+  <div class="arrow"></div>
+  <div class="popover-content" ng-model="content">
+		<table>
+			<tr><td class="info-content" colspan="2">Artsgruppe: {{ artInfo.Artsgruppe_dk }}</td></tr>
+			<tr><td class="info-head">Rige</td><td class="info-content"><em> {{ artInfo.Rige | lowercase }}</em>  <b class="dk">{{ artInfo.Rige_dk }}</b></td></tr>
+			<tr><td class="info-head">Række</td><td class="info-content"><em>{{ artInfo.Raekke | lowercase}}</em>  <b class="dk">{{ artInfo.Raekke_dk }}</b></td></tr>
+			<tr><td class="info-head">Orden</td><td class="info-content"><em>{{ artInfo.Orden | lowercase}}</em>  <b class="dk">{{ artInfo.Orden_dk }}</b></td></tr>
+			<tr><td class="info-head">Klasse</td><td class="info-content"><em>{{ artInfo.Klasse | lowercase}}</em>  <b class="dk">{{ artInfo.Klasse_dk }}</b></td></tr>
+			<tr><td class="info-head">Familie</td><td class="info-content"><em>{{ artInfo.Familie | lowercase}}</em>  <b class="dk">{{ artInfo.Familie_dk }}</b></td></tr>
+			<tr><td class="info-head">Slægt</td><td class="info-content"><em>{{ artInfo.Slaegt | lowercase}}</em>  <b class="dk">{{ artInfo.Slaegt_dk }}</b></td></tr>
+
+		</table>
+  </div>
+</div>
+</script>
 
 <table class="table table-condensed" >
 	<thead>
@@ -18,26 +49,26 @@ table {
 			<th>Dansk navn</th>
 		</tr>
 	</thead>
-	<tbody>
+  <tbody ng-repeat="(artsgruppe, arter) in taxons">
 		<tr>
+			<td colspan="4" class="danger">{{ artsgruppe }}</td>
+		</tr>
+		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
 			<td class="check-col"><input type="checkbox"></td>
-			<td>Mark</td>
-			<td>Otto</td>
-		</tr>
-		<tr>
-			<td colspan="3">qwerty</td>
-		</tr>
-		<tr>
-			<td><input type="checkbox"></td>
-			<td>Mark</td>
-			<td>Otto</td>
-		</tr>
-		<tr>
-			<td colspan="3" class="danger">qwerty</td>
-		</tr>
-		<tr>
+			<td>{{ art.taxon_navn }}</td>
+			<td>{{ art.taxon_navn_dk }}</td>
 			<td>
 				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste">
+					<i class="fa fa-info"></i>
+				</button>
+			</td>
+		</tr>
+  </tbody>
+
+	<tbody>
+		<tr>
+			<td>
+				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste" ng-click="taxonCreate()">
 					<i class="fa fa-plus"></i>
 				</button>
 			</td>
@@ -46,6 +77,11 @@ table {
 			</td>
 			<td>
 				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon">
+			</td>
+			<td>
+				<button type="button" class="btn btn-primary current-taxon" bs-popover data-trigger="hover" data-html="true" data-template-url="popover.taxon.html">
+					<i class="fa fa-info"></i>
+				</button>
 			</td>
 		</tr>
 

@@ -1,27 +1,46 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['$scope', '$http', '$popover', 'Auth', 'User', function ($scope, $http, $popover, Auth, User) {
+  .controller('AdminCtrl', ['$scope', '$http', 'Taxon', function ($scope, $http, Taxon) {
 
-    // Use the User $resource to fetch all users
-		$scope.users = User.query();
+		$scope.reloadTaxons = function() {
+			Taxon.query().$promise.then(function(taxons) {	
+				$scope.taxons = {};
+				taxons.forEach(function(taxon) {
+					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
+					$scope.taxons[taxon.taxon_artsgruppe].push({ taxon_navn: taxon.taxon_navn, taxon_navn_dk: taxon.taxon_navn_dk });
+				})
+			})
+		}
+		$scope.reloadTaxons();
 
-		$scope.popover = {};
+		$scope.artInfo = {};
 		$scope.taxon = { Videnskabeligt_navn : '' };
 
-		$scope.loadArtsInfo = function() {
+		$scope.loadArtInfo = function() {
 			$.get('http://allearter-databasen.dk/api/?get=art&query='+$scope.taxon.Videnskabeligt_navn, function(art) {
 				console.log(art);
-				$scope.popover = $popover(angular.element('#new-taxon'), {title: 'My Title', content: 'My Content', trigger: 'manual'});
-				$scope.popover.$promise.then($scope.popover.show);
+				$scope.artInfo = art.allearter[0];
+				console.log($scope.artInfo);
 			})
 		}
 
-		$scope.$watch('taxon', function() {
-			console.log('taxon', $scope.taxon);
-			$scope.loadArtsInfo()
+		$scope.$watch('taxon', function(a, b) {
+			if (a.Videnskabeligt_navn != b.Videnskabeligt_navn) {
+				$scope.loadArtInfo()
+			}
 		}, true)
 
+		$scope.taxonCreate = function() {
+			Taxon.save({ taxon_id: '' }, {
+				taxon_navn: $scope.artInfo.Videnskabeligt_navn,
+				taxon_navn_dk: $scope.artInfo.Dansk_navn,
+				taxon_artsgruppe: $scope.artInfo.Artsgruppe_dk,
+				taxon_basisliste: 1
+			}).$promise.then(function(taxon) {	
+				$scope.reloadTaxons();
+			})
+		}
 		
 
 }]);

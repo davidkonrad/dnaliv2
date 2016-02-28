@@ -5,17 +5,19 @@ module.exports = function(sequelize, DataTypes) {
     sample_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
+      primaryKey: true,
       references: {
-        model: 'sample',
-        key: '_id'
+        model: '',
+        key: ''
       }
     },
     taxon_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
+      primaryKey: true,
       references: {
-        model: 'taxon',
-        key: '_id'
+        model: '',
+        key: ''
       }
     },
     present: {
