@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
 		},
     projekt_id: {
       type: DataTypes.INTEGER(11),
+			primaryKey: true,
       allowNull: false
     },
     institution: {

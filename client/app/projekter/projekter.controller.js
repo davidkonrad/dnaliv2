@@ -4,39 +4,32 @@ angular.module('dnalivApp')
   .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 
 	function ($scope, $http, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon) {
 
-		var dropdownTemplate = [
-			{ 
-				text: "Opret nyt projekt",
-				click: "createProjekt()",
-				active: true
-			}, 
-			{
-				divider: true
-			}
-		];
-
-		$scope.dropdown = dropdownTemplate;
 		$scope.projekt = {};
+		$scope.projekter = [];
 		$scope.projectLoaded = function() {
 			return !angular.isDefined($scope.projekt.projekt_kode)
     }
 
 		Projekt.query().$promise.then(function(projekter) {	
-				$scope.projekter = projekter;
-				$scope.dropdown = dropdownTemplate;
-				projekter.forEach(function(projekt) {
-					$scope.dropdown.push({ text: projekt.projekt_kode, click: 'loadProjekt('+projekt.projekt_id+')' })
-				})
+			$scope.projekter = projekter.map(function(projekt) {
+				return projekt
+			})
+			$('.projekt-typeahead').typeahead({
+				source: $scope.projekter,
+				displayText: function(item) {
+					return item.projekt_kode
+				},
+				afterSelect: function(item) {
+					$scope.loadProjekt(item.projekt_id)
+				}
+			})
 		})
 
 		$scope.createProjekt = function() {
 			var kode = prompt('Projekt kode: ', '');
-			if (kode != '') Projekt.save({ projekt_id: '' }, { projekt_kode: kode });
-			/*
-			.$promise.then(function(x) {	
-				console.log(x)
+			if (kode != '') Projekt.save({ projekt_id: '' }, { projekt_kode: kode }).$promise.then(function(projekt) {	
+				$scope.loadProjekt(projekt.projekt_id)
 			})
-			*/
 		}
 
 		var getObj = function($resource, prefix) {
@@ -56,7 +49,7 @@ angular.module('dnalivApp')
 			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
 				$scope.projekt = getObj(projekt, 'projekt_')
 				$scope.loadKlasser(projekt.projekt_id)
-				document.querySelector('#projekt-kode').textContent = projekt.projekt_kode
+				document.querySelector('.projekt-typeahead').value = projekt.projekt_kode
 			})
 		}
 
@@ -70,9 +63,8 @@ angular.module('dnalivApp')
 
 		$scope.loadKlasser = function(projekt_id) {
 			Klasse.query({ projekt_id: projekt_id }).$promise.then(function(klasser) {	
-				$scope.klasser = []
-				klasser.forEach(function(klasse) {
-					$scope.klasser.push(klasse);
+				$scope.klasser = klasser.filter(function(klasse) {
+					if (klasse.projekt_id == projekt_id) return klasse
 				})
 			})
 		}

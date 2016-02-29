@@ -1,8 +1,10 @@
 <div class="container" style="font-size:90%;"	>
 
-	<div class="form-group">
-		<button type="button" class="btn btn-default" style="width:150px;text-align:left;" ng-model="action" bs-dropdown="dropdown">
-			<span id="projekt-kode">Rediger projekt</span>&nbsp;&nbsp;<span class="caret"></span>
+	<div class="form-inline form-group">
+		<label>Projekt kode: </label>
+		<input type="text" class="projekt-typeahead form-control input-sm" placeholder="Kode ..">
+		<button type="button" class="btn btn-primary btn-sm" title="Opret projekt" ng-click="createProjekt()">
+			<i class="fa fa-plus"></i>
 		</button>
 	</div>
 

@@ -5,7 +5,7 @@ var models = require('../');
 // Get list of klasses
 exports.index = function(req, res) {
 
-  models.Klasse.findAll().then(function(klasse){
+models.Klasse.findAll().then(function(klasse){
   	return res.json(200, klasse);	
   }).catch(function(err){
 	  handleError(res, err);

@@ -1,28 +1,28 @@
-			<br>
-			<form class="form-inline" role="form">
-			  <div class="form-group">
-			    <label for="projekt_kode">Projekt kode&nbsp;</label>
-			    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
-			  </div>
-			  <div class="form-group">
-			    <label for="projekt_dato">Dato&nbsp;</label>
-			    <input type="text" ng-model="projekt.projekt_dato" class="form-control" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
-			  </div>
-			  <div class="form-group">
-			    <label for="projekt_tidspunkt">Tidspunkt&nbsp;</label>
-			    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control" size="8" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-time-type="number" ng-disabled="projectLoaded()">
-			  </div>
+<br>
+<form class="form-inline" role="form">
+  <div class="form-group">
+    <label for="projekt_kode">Projekt kode&nbsp;</label>
+    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
+  </div>
+  <div class="form-group">
+    <label for="projekt_dato">Dato&nbsp;</label>
+    <input type="text" ng-model="projekt.projekt_dato" class="form-control" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
+  </div>
+  <div class="form-group">
+    <label for="projekt_tidspunkt">Tidspunkt&nbsp;</label>
+    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control" size="8" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-time-type="number" ng-disabled="projectLoaded()">
+  </div>
 
-			  <button type="submit" class="btn btn-primary" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
-			</form>
+  <button type="submit" class="btn btn-primary" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
+</form>
 
-			<br>
-		  <div class="form-group">
-				<button type="button" class="btn btn-primary" ng-disabled="projectLoaded()" title="Tilføj en ny klasse / institution">
-					<i class="fa fa-plus"></i>
-				</button>
-				<label>Skoleklasse</label>
-		  </div>
+<br>
+<div class="form-group">
+	<button type="button" class="btn btn-primary btn-sm" ng-disabled="projectLoaded()" title="Tilføj en ny klasse / institution">
+		<i class="fa fa-plus"></i>
+	</button>
+	<label>Skoleklasse</label>
+</div>
 
 			<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
 			  <div class="panel panel-default" ng-repeat="klasse in klasser">
