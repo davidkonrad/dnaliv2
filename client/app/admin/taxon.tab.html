@@ -8,9 +8,13 @@ td.check-col {
 table {
 	max-width: 600px !important;
 }	
+td.artsgruppe {
+	font-size: 90%;
+	padding: 0px;
+}
 
 td.info-head {
-	font-size: 90%;
+	font-size: 80%;
 	padding-right: 7px;
 }
 td.info-content {
@@ -69,11 +73,12 @@ b.dk {
 			<th></th>
 			<th>Navn</th>
 			<th>Dansk navn</th>
+			<th></th>
 		</tr>
 	</thead>
   <tbody ng-repeat="(artsgruppe, arter) in taxons">
 		<tr class="active">
-			<td colspan="4">{{ artsgruppe }}</td>
+			<td colspan="4" class="artsgruppe">{{ artsgruppe }}</td>
 		</tr>
 		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
 			<td class="check-col"><input type="checkbox" ng-model="art.taxon_basisliste" title="Medtag i basisliste" ng-click="basislisteToggle(art)"></td>
