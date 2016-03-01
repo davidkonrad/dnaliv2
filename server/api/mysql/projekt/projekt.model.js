@@ -19,9 +19,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     projekt_tidspunkt: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: '09:09:00'
+      defaultValue: '10:00'
     }
 
 	}, {

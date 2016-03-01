@@ -30,7 +30,7 @@ angular.module('dnalivApp')
 							for (var i in resp.data) {
 								//console.log(resp.data[i].type, resp.data[i].subtype);
 								if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
-									console.log(resp.data[i]);
+									//console.log(resp.data[i]);
 									newData.push(resp.data[i].presentationString);
 								}
 							}			

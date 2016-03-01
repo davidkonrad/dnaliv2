@@ -1,19 +1,62 @@
+<!--
+fieldset {
+	border: 1px solid #dadada !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow:  0px 0px 0px 0px #000;
+  box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+        width:auto;
+        padding:0 10px;
+        border-bottom:none;
+    }
+
+-->
+<style>
+fieldset {
+	border: 1px solid #ebebeb !important;
+	padding: 0 1em 1em 1em !important;
+	margin: 0 0 0.5em 0 !important;
+	-webkit-box-shadow:  0px 0px 0px 0px #000;
+  box-shadow:  0px 0px 0px 0px #000;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+legend {
+        font-size: 100% !important;
+        xxfont-weight: bold !important;
+        text-align: left !important;
+        width:auto;
+        xpadding:0 10px;
+				margin-bottom: 5px;
+        border-bottom:none;
+    }
+.float-right {
+	float: right;
+}
+</style>
 <br>
 <form class="form-inline" role="form">
   <div class="form-group">
     <label for="projekt_kode">Projekt kode&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_kode" class="form-control" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
+    <input type="text" ng-model="projekt.projekt_kode" class="form-control input-sm" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
   </div>
   <div class="form-group">
     <label for="projekt_dato">Dato&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_dato" class="form-control" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
+    <input type="text" ng-model="projekt.projekt_dato" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
   </div>
   <div class="form-group">
-    <label for="projekt_tidspunkt">Tidspunkt&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control" size="8" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-time-type="number" ng-disabled="projectLoaded()">
+    <label for="projekt_tidspunkt">Tid&nbsp;</label>
+    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control input-sm" size="5" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-model-time-format="HH:mm:ss" data-time-type="string" ng-disabled="projectLoaded()">
   </div>
 
-  <button type="submit" class="btn btn-primary" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
+  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
 </form>
 
 <br>
@@ -21,94 +64,94 @@
 	<button type="button" class="btn btn-primary btn-sm" ng-click="createKlasse()" ng-disabled="projectLoaded()" title="Tilføj en ny klasse / institution">
 		<i class="fa fa-plus"></i>
 	</button>
-	<label>Skoleklasse</label>
+	<label>&nbsp;Klasser</label>
 </div>
 
-			<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
-			  <div class="panel panel-default" ng-repeat="klasse in klasser">
-			    <div class="panel-heading" role="tab">
-			      <h4 class="panel-title">
-			        <a bs-collapse-toggle>
-			          {{ klasse.institution }}
-			        </a>
-			      </h4>
-			    </div>
-			    <div class="panel-collapse" role="tabpanel" bs-collapse-target>
-			      <div class="panel-body">
+<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
+	<div class="panel panel-default" ng-repeat="klasse in klasser" data-klasse-id="{{ klasse.klasse_id }}" >
 
-							<form class="form-horizontal">
-							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Institution</label>
-							    <div class="col-sm-7">
-								    <input type="text" ng-model="klasse.institution" class="form-control" institution-typeahead ng-disabled="projectLoaded()">
-							    </div>
-							  </div>
-							</form>
+		<div class="panel-heading" role="tab">
+			<h4 class="panel-title">
+				<a bs-collapse-toggle>
+					{{ klasse.institution }}
+				</a>
+				<button type="button" class="btn btn-primary btn-xs float-right" ng-show="klasseIsEdited(klasse.klasse_id)" title="Gem ændringer">
+					Gem ændringer
+				</button>
+			</h4>
+		</div>
 
-							<form class="form-horizontal">
-							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Adresse</label>
-							    <div class="col-sm-4">
-							    	<input type="text" ng-model="klasse.adresse" class="form-control" ng-disabled="projectLoaded()" placeholder="Adresse">
-									</div>
-							    <div class="col-sm-1 no-padding-left no-padding-right">
-							    	<input type="text" ng-model="klasse.postnr" class="form-control" ng-disabled="projectLoaded()" placeholder="Postnr.">
-									</div>
-							    <div class="col-sm-2">
-							    	<input type="text" ng-model="klasse.kommune" class="form-control" ng-disabled="projectLoaded()" placeholder="Kommune">
-									</div>
-							  </div>
-							</form>
+		<div class="panel-collapse collapse" role="tabpanel" bs-collapse-target>
+			<div class="panel-body">
 
-							<form class="form-horizontal">
-							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Lærer</label>
-							    <div class="col-sm-2">
-								    <input type="text" class="form-control" placeholder="Navn" ng-disabled="projectLoaded()">
-									</div>
-							    <label class="col-sm-1 control-label no-padding-left no-padding-right" style="width:30px;float:left;" >Tlf.</label>
-							    <div class="col-sm-1 no-padding-right">
-								    <input type="text" class="form-control" placeholder="Telefon" style="width:85px;" ng-disabled="projectLoaded()">
-									</div>
-							    <label class="col-sm-1 control-label no-padding-left no-padding-right" style="width:51px;float:left;">Email</label>
-							    <div class="col-sm-3 no-padding-right">
-								    <input type="email" class="form-control" placeholder="Email" ng-disabled="projectLoaded()">
-									</div>
-							  </div>
-							</form>
+				<fieldset>
+					<legend>Institution</legend>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-sm-7">
+								<input type="text" ng-model="klasse.institution" class="form-control input-sm" institution-typeahead ng-disabled="projectLoaded()" placeholder="Navn">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-4">
+								<input type="text" ng-model="klasse.adresse" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Adresse">
+							</div>
+							<div class="col-sm-1">
+								<input type="text" ng-model="klasse.postnr" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Postnr.">
+							</div>
+							<div class="col-sm-2">
+								<input type="text" ng-model="klasse.kommune" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Kommune">
+							</div>
+						</div>
+					</form>
+				</fieldset>
 
-							<form class="form-horizontal">
-							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Antal elever</label>
-							    <div class="col-sm-1">
-								    <input type="number" class="form-control" placeholder="0" ng-disabled="projectLoaded()">
-									</div>
-							    <label class="col-sm-1 control-label">Antal lærere</label>
-							    <div class="col-sm-1">
-								    <input type="number" class="form-control" title="Antal elever" placeholder="0" ng-disabled="projectLoaded()">
-									</div>
-							  </div>
-							</form>
+				<fieldset>
+					<legend>Lærer</legend>
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-sm-3">
+						    <input type="text" class="form-control input-sm" placeholder="Navn" ng-disabled="projectLoaded()">
+							</div>
+							<div class="col-sm-2">
+						    <input type="text" class="form-control input-sm" placeholder="Telefon" ng-disabled="projectLoaded()">
+							</div>
+							<div class="col-sm-3">
+						    <input type="email" class="form-control input-sm" placeholder="Email" ng-disabled="projectLoaded()">
+							</div>
+						</div>
+					</form>
+				</fieldset>
 
-							<form class="form-horizontal">
-							  <div class="form-group">
-							    <label class="col-sm-1 control-label">Klassetrin</label>
-							    <div class="col-sm-2">
-										<select ng-disabled="projectLoaded()" class="form-control"	>
-											<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
-										</select>
-									</div>
-							    <label class="col-sm-1 control-label no-padding-right no-padding-left" style="width:40px;float:left;">Fag</label>
-							    <div class="col-sm-3">
-										<select ng-disabled="projectLoaded()" class="form-control"	>
-											<option ng-repeat="f in fag" value="{{ f.fag_id }}">{{ f.fag_navn }}</option>
-										</select>
-									</div>
-							  </div>
-							</form>
+				
+				<fieldset>
+					<legend>Deltagere</legend>
+					<form class="form-horizontal">
+						<div class="form-group">
+					    <div class="col-sm-3">
+								<select ng-disabled="projectLoaded()" class="form-control input-sm">
+									<option>Vælg fag</option>
+									<option ng-repeat="f in fag" value="{{ f.fag_id }}">{{ f.fag_navn }}</option>
+								</select>
+							</div>
+					    <div class="col-sm-2">
+								<select ng-disabled="projectLoaded()" class="form-control input-sm">
+									<option>Klassetrin</option>
+									<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
+								</select>
+							</div>
+					    <div class="col-sm-1">
+						    <input type="number" ng-model="klasse.antal_elever" class="form-control input-sm" placeholder="0" ng-disabled="projectLoaded()">
+							</div>
+					    <div class="col-sm-1">
+						    <input type="number"  ng-model="klasse.antal_laerer" class="form-control input-sm" placeholder="0" ng-disabled="projectLoaded()">
+							</div>
+						</div>
+					</form>
+				</fieldset>
 
-			      </div>
-			    </div>
-			  </div>
 			</div>
+		</div>
+	</div>
+</div>
 
