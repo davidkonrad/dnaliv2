@@ -46,7 +46,7 @@ exports.update = function(req, res) {
 // Deletes a klasse from the DB.
 exports.destroy = function(req, res) {
 	
-	models.Klasse.find(req.params.id).then(function(klasse){
+models.Klasse.find(req.params.id).then(function(klasse){
 		if(!klasse) { return res.send(404); }
 		return klasse.destroy()
 	}).then(function(){

@@ -4,6 +4,19 @@ angular.module('dnalivApp')
   .controller('ProjektCtrl', ['$scope', '$http', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 
 	function ($scope, $http, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon) {
 
+		var getObj = function($resource, prefix) {
+			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
+					prop, p = {};
+			for (prop in $resource) {
+				if (prefix) {
+					if (~prop.indexOf(prefix)) p[prop] = $resource[prop]
+				} else {
+					if (~exclude.indexOf(prop)) p[prop] = $resource[prop]
+				}
+			}
+			return p;
+		}
+
 		$scope.projekt = {};
 		$scope.projekter = [];
 		$scope.projectLoaded = function() {
@@ -32,19 +45,6 @@ angular.module('dnalivApp')
 			})
 		}
 
-		var getObj = function($resource, prefix) {
-			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
-					prop, p = {};
-			for (prop in $resource) {
-				if (prefix) {
-					if (~prop.indexOf(prefix)) p[prop] = $resource[prop]
-				} else {
-					if (~exclude.indexOf(prop)) p[prop] = $resource[prop]
-				}
-			}
-			return p;
-		}
-
 		$scope.loadProjekt = function(projekt_id) {
 			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
 				$scope.projekt = getObj(projekt, 'projekt_')
@@ -66,6 +66,15 @@ angular.module('dnalivApp')
 				$scope.klasser = klasser.filter(function(klasse) {
 					if (klasse.projekt_id == projekt_id) return klasse
 				})
+			})
+		}
+
+		$scope.createKlasse = function() {
+			
+			Klasse.save({ klasse_id: '' }, { projekt_id: $scope.projekt.projekt_id }).$promise.then(function(klasse) {
+			//Klasse.describe().$promise.then(function(klasse) {		
+				$scope.loadKlasser($scope.projekt.projekt_id)
+				console.log(klasse);
 			})
 		}
 

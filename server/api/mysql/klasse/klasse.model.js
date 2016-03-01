@@ -11,52 +11,52 @@ module.exports = function(sequelize, DataTypes) {
 		},
     projekt_id: {
       type: DataTypes.INTEGER(11),
-			primaryKey: true,
       allowNull: false
     },
     institution: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+			defaultValue: '< ikke udfyldt >'
     },
     adresse: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     postnr: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     kommune: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     klassetrin: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     fag: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     laerer_navn: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     laerer_tlf: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     laerer_email: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     antal_elever: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
+      allowNull: true
     },
     antal_laerer: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
+      allowNull: true
     }
 	},
   {
@@ -69,70 +69,4 @@ module.exports = function(sequelize, DataTypes) {
 	return Klasse;
 };
 
-/*
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('klasse', {
-    klasse_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: '',
-        key: ''
-      }
-    },
-    projekt_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false
-    },
-    institution: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    adresse: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    postnr: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    kommune: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    klassetrin: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    fag: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    laerer_navn: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    laerer_tlf: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    laerer_email: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    antal_elever: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false
-    },
-    antal_laerer: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false
-    }
-  }, {
-    tableName: 'klasse',
-    freezeTableName: true
-  });
-};
-*/
