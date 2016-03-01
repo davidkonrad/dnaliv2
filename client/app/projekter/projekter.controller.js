@@ -17,6 +17,10 @@ angular.module('dnalivApp')
 			return p;
 		}
 
+		$scope.klasser = [
+				{ institution: '... ' }
+		];
+
 		$scope.projekt = {};
 		$scope.projekter = [];
 		$scope.projectLoaded = function() {
@@ -65,13 +69,8 @@ angular.module('dnalivApp')
 	 * Save current projekt
 	 */
 		$scope.saveProjekt = function() {
-			console.log($scope.projekt);
 			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt)
 		}
-
-		$scope.klasser = [
-				{ institution: '... ' }
-		]
 
 	/**
 	 * Reload and filter the klasser array
@@ -88,20 +87,29 @@ angular.module('dnalivApp')
 			})
 		}
 
-		$scope.$watch('klasser', function(oldValue, newValue) {
-			var fields = ['adresse', 'antal_elever', 'antal_laerer', 'fag', 'institution', 'klassetrin', 
-										'kommune', 'laerer_email', 'laerer_navn', 'laerer_tlf', 'postnr'];
-			
-			console.log(oldValue, newValue);			
-		}, false)
-
+	/**
+	 * Returns a pure klasse literal
+	 * @param {int} klasse_id - unique klasse_id of the klasse
+	 */
 		$scope.getKlasseObj = function(klasse_id) {
-			console.log(klasse_id, $scope.klasser);
 			return $scope.klasser.filter(function(klasse) {
 				if (klasse.klasse_id == klasse_id) return klasse
 			})[0]
 		}
 
+	/**
+	 * Save changes to a klasse
+	 * @param {int} klasse_id - unique klasse_id of the klasse
+	 */
+		$scope.saveKlasse = function(klasse_id) {
+			var klasse = $scope.getKlasseObj(klasse_id)
+			Klasse.update({ klasse_id: klasse.klasse_id }, klasse)
+		}
+
+	/**
+	 * Check if content of a klasse is changed
+	 * @param {int} klasse_id - unique klasse_id of the klasse
+	 */
 		$scope.klasseIsEdited = function(klasse_id) {
 			var panel = document.querySelector('[data-klasse-id="'+klasse_id+'"]');
 			if (panel) {
@@ -112,7 +120,6 @@ angular.module('dnalivApp')
 			}
 		}
 			
-						
 	/**
 	 * Attach a new klasse to the current projekt
 	 */

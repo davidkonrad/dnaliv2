@@ -17,6 +17,7 @@ angular.module('dnalivApp')
 		restrict: 'A',
 		link: function postLink(scope, element, attrs) {
 			$(element).typeahead({
+				showHintOnFocus: true,
 				afterSelect: function (item) {
 					console.log('wetland selected', item);
 				}, 
@@ -35,15 +36,12 @@ angular.module('dnalivApp')
 									types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump']
 							for (var i in resp.data) {
 								if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
-									//console.log(resp.data[i]);
-									//caption = ;
-									//caption = resp.data[i].presentationString.splice(resp.data[i].presentationString.indexOf('('), resp.data[i].subtype);
-									//newData.push(resp.data[i].presentationString);
 									caption = splice(resp.data[i].presentationString, 
 																	 resp.data[i].presentationString.indexOf('(')+1,
 																	 resp.data[i].subtype+', ');
 									data.push(caption);
 								} else {
+									//TODO, stop checking for types
 									console.log(resp.data[i].subtype);
 								}
 							}			

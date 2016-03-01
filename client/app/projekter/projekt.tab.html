@@ -75,7 +75,7 @@ legend {
 				<a bs-collapse-toggle>
 					{{ klasse.institution }}
 				</a>
-				<button type="button" class="btn btn-primary btn-xs float-right" ng-show="klasseIsEdited(klasse.klasse_id)" title="Gem ændringer">
+				<button type="button" class="btn btn-primary btn-xs float-right" ng-click="saveKlasse(klasse.klasse_id)" ng-show="klasseIsEdited(klasse.klasse_id)" title="Gem ændringer">
 					Gem ændringer
 				</button>
 			</h4>
@@ -87,7 +87,7 @@ legend {
 				<fieldset>
 					<legend>Institution</legend>
 					<form class="form-horizontal">
-						<div class="form-group">
+						<div class="form-group ">
 							<div class="col-sm-7">
 								<input type="text" ng-model="klasse.institution" class="form-control input-sm" institution-typeahead ng-disabled="projectLoaded()" placeholder="Navn">
 							</div>
