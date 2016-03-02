@@ -13,7 +13,16 @@ angular.module('dnalivApp')
 		link: function postLink(scope, element, attrs) {
 			$(element).typeahead({
 				afterSelect: function (item) {
-					console.log('wetland selected', item);
+					console.log('institution selected', item);
+
+					var login = "davidkonrad", 
+							password = "nhmdzm",
+							url = 'https://services.kortforsyningen.dk/Geosearch?search=*'+item+'*&resources=adresser&limit=10&login='+login+'&password='+password;
+
+				    $.getJSON(url, function(resp) {
+								console.log(resp);
+						})
+
 				}, 
 				items : 20,
 			  source: function(query, process) {
@@ -28,9 +37,10 @@ angular.module('dnalivApp')
 							var newData = [],
 									types = ['gymnasium', 'uddannelsescenter', 'privatskoleFriskole', 'folkeskole', 'universitet', 'specialskole']
 							for (var i in resp.data) {
+								console.log(resp.data[i]);
 								//console.log(resp.data[i].type, resp.data[i].subtype);
 								if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
-									//console.log(resp.data[i]);
+									console.log(resp.data[i]);
 									newData.push(resp.data[i].presentationString);
 								}
 							}			

@@ -11,12 +11,8 @@ angular.module('dnalivApp', [
 	'xeditable',
 	'cfp.hotkeys',
 	'LocalStorageModule',
-	'angularFileUpload',
-
-	//
-	//'ui.bootstrap',
+	'angular-inview',
 	'leaflet-directive',
-
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
