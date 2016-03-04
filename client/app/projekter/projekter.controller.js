@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProjektCtrl', ['$scope', '$http', '$timeout', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', '$tab', 
-	function ($scope, $http, $timeout, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon, $tab) { 
+  .controller('ProjektCtrl', ['$scope', '$http', '$timeout', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Projekt_taxon', 
+	function ($scope, $http, $timeout, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon, Projekt_taxon) { 
 
 		var getObj = function($resource, prefix) {
 			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
@@ -71,6 +71,7 @@ angular.module('dnalivApp')
 		$scope.loadProjekt = function(projekt_id) {
 			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
 				$scope.projekt = getObj(projekt, 'projekt_')
+				$scope.loadProjektTaxons();
 				$scope.loadKlasser(projekt.projekt_id)
 				document.querySelector('.projekt-typeahead').value = projekt.projekt_kode
 			})
@@ -114,6 +115,7 @@ angular.module('dnalivApp')
 	 */
 		$scope.saveKlasse = function(klasse_id) {
 			var klasse = $scope.getKlasseObj(klasse_id)
+			console.log(klasse);
 			Klasse.update({ klasse_id: klasse.klasse_id }, klasse)
 		}
 
@@ -154,11 +156,63 @@ angular.module('dnalivApp')
 			})
 		})
 
-		Taxon.query().$promise.then(function(taxons) {	
-			//console.log('Taxon', taxons);
+		$scope.loadProjektTaxons = function() {
+			Projekt_taxon.query({ projekt_id: $scope.projekt_projekt_id }).$promise.then(function(projekt_taxons) {	
+				$scope.projektTaxons = [];
+				projekt_taxons.forEach(function(item) {
+					if (item.projekt_id == $scope.projekt.projekt_id) $scope.projektTaxons.push(item);
+				})
+				$scope.loadTaxons();
+			})
+		}
+
+		$scope.taxonIsIncluded = function(taxon_id) {
+			var result =  { is_included: false, projekt_taxon_id: false };
+			for (var i=0;i<$scope.projektTaxons.length; i++) {
+				var item = $scope.projektTaxons[i];
+				if (item.taxon_id == taxon_id) {
+					result.is_included = item.is_included;
+					result.projekt_taxon_id = item.projekt_taxon_id;
+					return result;
+				}
+			}
+			return result;
+		}
+
+		$scope.loadTaxons = function() {
+			Taxon.query().$promise.then(function(taxons) {	
+				$scope.taxons = {};
+				taxons.forEach(function(taxon) {
+					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
+					$scope.taxons[taxon.taxon_artsgruppe].push({ 
+						taxon_id: taxon.taxon_id,
+						taxon_navn: taxon.taxon_navn, 
+						taxon_navn_dk: taxon.taxon_navn_dk,
+						taxon_basisliste: taxon.taxon_basisliste,
+						projekt: $scope.taxonIsIncluded(taxon.taxon_id)
+					})
+				})
+				console.log($scope.taxons);
+			})
+		}
+	
+		$scope.projektTaxonToggle = function(art) {
+			console.log(art);
+			if (art.projekt.is_included) {
+				if (art.projekt.projekt_taxon_id) {
+					Projekt_taxon.update({ projekt_taxon_id: art.projekt.projekt_taxon_id, is_included: true })
+				} else {
+					Projekt_taxon.save({ projekt_taxon_id: ''}, { projekt_id: $scope.projekt.projekt_id, taxon_id: art.taxon_id })
+				}
+			} else {
+				Projekt_taxon.update({ projekt_taxon_id: art.projekt.projekt_taxon_id, is_included: false})
+			}
+		}
+
+		Projekt_taxon.query({ projekt_id: $scope.projekt_projekt_id} ).$promise.then(function(projekt_taxons) {	
+			//console.log('pt', projekt_taxons);
 		})
 
-		
 	/*
 	 * lokalitet map
    */
@@ -262,6 +316,6 @@ angular.module('dnalivApp')
 	}
 		*/
 
-		console.log($scope);
+		//console.log($scope);
 
   }]);

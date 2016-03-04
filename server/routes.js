@@ -14,6 +14,7 @@ module.exports = function(app) {
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
 	app.use('/api/fag', require('./api/mysql/fag'));
 	app.use('/api/taxon', require('./api/mysql/taxon'));
+	app.use('/api/projekt_taxon', require('./api/mysql/projekt_taxon'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));
