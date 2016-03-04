@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Feb 28, 2016 at 09:50 PM
+-- Generation Time: Mar 04, 2016 at 08:42 AM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `klasse` (
   `institution` varchar(100) NOT NULL,
   `adresse` varchar(100) NOT NULL,
   `postnr` varchar(4) NOT NULL,
+  `by` varchar(30) NOT NULL,
   `kommune` varchar(25) NOT NULL,
   `klassetrin` varchar(50) NOT NULL,
   `fag` varchar(50) NOT NULL,
@@ -66,16 +67,26 @@ CREATE TABLE IF NOT EXISTS `klasse` (
   `laerer_email` varchar(50) NOT NULL,
   `antal_elever` int(11) NOT NULL,
   `antal_laerer` int(11) NOT NULL,
-  PRIMARY KEY (`klasse_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  PRIMARY KEY (`klasse_id`),
+  KEY `projekt_id` (`projekt_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `klasse`
 --
 
-INSERT INTO `klasse` (`klasse_id`, `projekt_id`, `institution`, `adresse`, `postnr`, `kommune`, `klassetrin`, `fag`, `laerer_navn`, `laerer_tlf`, `laerer_email`, `antal_elever`, `antal_laerer`) VALUES
-(1, 1, '234434', '', '', '', '', '', '', '', '', 0, 0),
-(2, 1, 'asdasdasd', '', '', '', '', '', '', '', '', 0, 0);
+INSERT INTO `klasse` (`klasse_id`, `projekt_id`, `institution`, `adresse`, `postnr`, `by`, `kommune`, `klassetrin`, `fag`, `laerer_navn`, `laerer_tlf`, `laerer_email`, `antal_elever`, `antal_laerer`) VALUES
+(1, 1, 'Asferg Skole (Folkeskole i Fårup)', 'ssssqqqqfff', 'sss', '', 'sss', '2', '2', 'ss', 'sss', '', 45, 45),
+(2, 1, 'As Friskole (Friskole i Juelsminde)', '', '', '', '', '', '', '', '', '', 0, 0),
+(3, 1, '', '', '', '', '', '', '', '', '', '', 0, 0),
+(4, 1, '', '', '', '', '', '', '', '', '', '', 0, 0),
+(5, 1, '< ikke udfyldt >', '', '', '', '', '', '', '', '', '', 0, 0),
+(6, 19, '< ikke udfyldt >', '', '', '', '', '', '', '', '', '', 0, 0),
+(7, 19, '< ikke udfyldt >', '', '', '', '', '', '', '', '', '', 0, 0),
+(8, 14, '< ikke udfyldt >', '', '', '', '', '', '', '', '', '', 0, 0),
+(9, 11, 'As Friskole (Friskole i Juelsminde)', 'ssdfsd', 'sdf', '', '', '', '', '', '', '', 0, 0),
+(10, 13, 'Afdeling for Eskimologi og Arktiske Studier (Universitet i København K)', '', '', '', '', '', '', '', '', '', 0, 0),
+(11, 20, 'Asferg Skole (Folkeskole i Fårup)', '', '', '', '', '', '', '', '', '', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -123,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `projekt` (
   `projekt_dato` date NOT NULL,
   `projekt_tidspunkt` time NOT NULL DEFAULT '09:09:00',
   PRIMARY KEY (`projekt_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `projekt`
@@ -133,7 +144,15 @@ INSERT INTO `projekt` (`projekt_id`, `projekt_kode`, `timestamp_created`, `proje
 (1, 'QWERTYaaa', '2016-02-26 20:28:46', '2016-05-17', '19:00:00'),
 (2, 'test', '2016-02-26 18:15:35', '2016-05-31', '00:00:00'),
 (11, 'ÆØÅ', '2016-02-26 17:56:59', '2015-12-27', '00:00:00'),
-(12, 'sdadad', '2016-02-27 00:56:38', '0000-00-00', '09:09:00');
+(12, 'sdadad', '2016-03-01 18:17:14', '2016-03-01', '00:00:00'),
+(13, 'aaaaa', '2016-02-29 22:25:57', '0000-00-00', '09:09:00'),
+(14, 'werwer', '2016-03-02 19:44:12', '2016-03-06', '09:09:00'),
+(15, 'yyyy', '2016-02-29 22:28:40', '0000-00-00', '09:09:00'),
+(16, 'erer', '2016-02-29 22:30:04', '0000-00-00', '09:09:00'),
+(17, 'dfgdfg', '2016-02-29 22:30:36', '0000-00-00', '09:09:00'),
+(18, 'fsdfsdf', '2016-02-29 22:31:44', '0000-00-00', '09:09:00'),
+(19, 'AK81', '2016-03-01 18:22:36', '2016-03-06', '22:55:00'),
+(20, 'MMMM', '2016-03-04 07:31:17', '2016-03-01', '07:00:00');
 
 -- --------------------------------------------------------
 
@@ -145,8 +164,48 @@ CREATE TABLE IF NOT EXISTS `projekt_taxon` (
   `projekt_taxon_id` int(11) NOT NULL AUTO_INCREMENT,
   `projekt_id` int(11) NOT NULL,
   `taxon_id` int(11) NOT NULL,
+  `is_included` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`projekt_taxon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+
+--
+-- Dumping data for table `projekt_taxon`
+--
+
+INSERT INTO `projekt_taxon` (`projekt_taxon_id`, `projekt_id`, `taxon_id`, `is_included`) VALUES
+(1, 11, 3, 1),
+(2, 11, 5, 1),
+(3, 11, 8, 1),
+(4, 11, 8, 1),
+(5, 2, 5, 0),
+(6, 2, 8, 1),
+(7, 2, 3, 0),
+(8, 2, 9, 1),
+(9, 1, 5, 1),
+(10, 1, 8, 1),
+(11, 1, 9, 1),
+(12, 1, 5, 1),
+(13, 1, 3, 1),
+(14, 1, 8, 1),
+(15, 1, 9, 1),
+(16, 1, 3, 1),
+(17, 1, 3, 1),
+(18, 1, 5, 1),
+(19, 1, 3, 1),
+(20, 1, 8, 1),
+(21, 1, 3, 1),
+(22, 1, 11, 1),
+(23, 1, 12, 1),
+(24, 1, 13, 1),
+(25, 1, 14, 1),
+(26, 1, 15, 1),
+(27, 13, 3, 1),
+(28, 13, 5, 1),
+(29, 13, 8, 1),
+(30, 20, 3, 1),
+(31, 20, 5, 1),
+(32, 20, 8, 1),
+(33, 20, 9, 1);
 
 -- --------------------------------------------------------
 
