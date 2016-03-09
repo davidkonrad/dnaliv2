@@ -1,6 +1,6 @@
 {
   "name": "dnalivApp",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "server/app.js",
   "dependencies": {
     "express": "~4.0.0",
@@ -97,15 +97,15 @@
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
   "private": true,
-  "description": "> A web based tool for cleaning, manipulating and entering natural history collection data in a Specify/MySQL database",
+  "description": "DNA & Liv",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NHMD/DataTool"
+    "url": "https://github.com/davidkonrad/dnaliv2"
   },
   "author": "",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/NHMD/DataTool/issues"
+    "url": "https://github.com/davidkonrad/dnaliv2/issues"
   },
-  "homepage": "https://github.com/NHMD/DataTool"
+  "homepage": "http://snm.ku.dk/skole-og-gymnasietjenesten/gymnasier/undervisning/dnaogliv/"
 }

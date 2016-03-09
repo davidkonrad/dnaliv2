@@ -7,8 +7,6 @@ angular.module('dnalivApp', [
   'ngRoute',
   'btford.socket-io',
 	'mgcrea.ngStrap', 
-	'smart-table',
-	'xeditable',
 	'cfp.hotkeys',
 	'LocalStorageModule',
 	'angular-inview',
@@ -50,10 +48,8 @@ angular.module('dnalivApp', [
     };
   })
 
-  .run(function ($rootScope, $location, Auth, editableOptions) {
+  .run(function ($rootScope, $location, Auth) {
 	 
-	 editableOptions.theme = 'bs3'; // bootstrap3 theme.
-    // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$routeChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
         if (next.authenticate && !loggedIn) {

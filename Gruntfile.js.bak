@@ -308,14 +308,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       options: {
         // This should be the name of your apps angular module
-        module: 'dnalivApp',
-
-app: {
-    options: {
-      prefix: '/'
-    }
-  },
-
+        module: 'specifyDataCleanerApp',
         htmlmin: {
           collapseBooleanAttributes: true,
           collapseWhitespace: true,
@@ -359,7 +352,7 @@ app: {
             '.htaccess',
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
-						'assets/images/**/**',
+			'assets/images/**/**',
             'assets/fonts/**/*',
             'index.html'
           ]
@@ -616,7 +609,7 @@ app: {
     'copy:dist',
     'cdnify',
     'cssmin',
-    'uglify', 
+    'uglify',
     'rev',
     'usemin'
   ]);

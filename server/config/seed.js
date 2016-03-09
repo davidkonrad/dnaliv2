@@ -43,9 +43,9 @@ User.find({}).remove(function() {
 	specifyUserId: 1     
   }, {
     provider: 'local',
-    name: 'thomas',
-    email: 'thomas@ku.dk',
-    password: 'pass',
+    name: 'andreas',
+    email: 'andreas@ku.dk',
+    password: 'kelager',
 	role: 'Manager', 
 	specifyAgentIds: [1, 3],
 	specifyUserId: 2
