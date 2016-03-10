@@ -1,12 +1,13 @@
 'use strict';
 
+console.log(process.env);
 // Production specific configuration
 // =================================
 module.exports = {
   // Server IP
   ip:       process.env.OPENSHIFT_NODEJS_IP ||
             process.env.IP ||
-            '127.0.0.1', //undefined,
+            undefined,
 
   // Server port
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
@@ -22,15 +23,16 @@ module.exports = {
 						database : 	'dnaliv'
   },
   mysql: {
-		/*
 	  host: process.env.OPENSHIFT_MYSQL_DB_HOST,
 	  port: process.env.OPENSHIFT_MYSQL_DB_PORT,
 	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-		*/
+	  database: 'dnaliv'
+		/*
 	  database: 'dnaliv',
-	  username: 'root',
-	  password: 'dadk'
-  },
-  tempuploaddir: process.env.OPENSHIFT_DATA_DIR+'/uploads/'
+	  username: 'adminEjemRCv',
+	  password: 'zUiTXC-8IQa2'
+		*/
+  }
+
 };

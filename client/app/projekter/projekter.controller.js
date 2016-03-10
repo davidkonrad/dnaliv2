@@ -24,20 +24,6 @@ angular.module('dnalivApp')
     }
 		$scope.klasser = [{ institution: '... ' }	];
 
-		/*
-		$scope.activeTab = 'lokalitet';
-		$scope.$watch('activeTab', function() {
-			console.log($scope.activeTab);
-		}, true)
-		$timeout(function() {
-			$scope.activeTab = 'generelt';
-		},500)
-		*/
-
-		$timeout(function() {
-			//$scope.initializeMap();
-		})
-
 		Projekt.query().$promise.then(function(projekter) {	
 			$scope.projekter = projekter.map(function(projekt) {
 				return projekt
@@ -216,106 +202,158 @@ angular.module('dnalivApp')
 	/*
 	 * lokalitet map
    */
+
+/*var kmsticket = new VisStedet.Ticket();
+
+map.on('baselayerchange', function (e) {
+    if (e.name === 'Skærmkort') {
+        matrikelkort.setParams({
+            styles: 'sorte_centroider,sorte_skel,default'
+        });
+    } else if (e.name === 'Flyfoto') {
+        matrikelkort.setParams({
+            styles: 'gule_centroider,gule_skel,Gul_OptagetVej,default'
+        });
+    }
+});
+
+map.setView(L.latLng(55.9, 11.8), 1);
+*/
+		var pass = 	'login=davidkonrad&password=nhmdzm&';
 		$scope.map = false;
 		$scope.initializeMap = function() {
 			if ($scope.map && $scope.map._leaflet_id) { 
 				$scope.map.invalidateSize();
 				return
 			}
+			
 			$scope.map = L.map('map');
+
+/*
+
+$scope.map.on('baselayerchange', function (e) {
+    if (e.name === 'Skærmkort') {
+        matrikelkort.setParams({
+            styles: 'sorte_centroider,sorte_skel,default'
+        });
+    } else if (e.name === 'Flyfoto') {
+        matrikelkort.setParams({
+            styles: 'gule_centroider,gule_skel,Gul_OptagetVej,default'
+        });
+    }
+});
+*/
+
+		var ortofoto = new L.tileLayer('http://{s}.services.kortforsyningen.dk/orto_foraar?'+pass+'request=GetTile&version=1.0.0&service=WMTS&Layer=orto_foraar&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}', {
+			attribution: 'Geodatastyrelsen',
+	    continuousWorld: true,
+  	  maxZoom: 14,
+  	  zoom: function () {
+        var zoom = $scope.map.getZoom();
+        if (zoom < 10)
+           return 'L0' + zoom;
+        else
+           return 'L' + zoom;
+  	  }
+		});
+
+		var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?' + pass + 'request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}', {
+	    attribution: 'Geodatastyrelsen',
+	    continuousWorld: true,
+	    maxZoom: 14,
+	    zoom: function() {
+        var zoom = $scope.map.getZoom();
+        if (zoom < 10)
+            return 'L0' + zoom;
+        else
+            return 'L' + zoom;
+	    }
+		}).addTo($scope.map);
+
+		$scope.baselayers = {
+	    "Flyfoto": ortofoto,
+	    "Skærmkort": skaermKort
+		};
+
+		L.control.layers($scope.baselayers).addTo($scope.map);
+	  $scope.map.addLayer(ortofoto);
+		$scope.map.setView(L.latLng(-63.30460696647067, 231.29616513848302), 5);
+		//$scope.map.setView(L.latLng(-63.30460696647067, 231.29616513848302), 5);
+		$scope.map.setZoom(2);
+
+		var polygon = L.polygon([
+	    [-64.509, 231.08],
+	    [-51.503, 0.06],
+	    [-61.51, 213.047]
+		]).addTo($scope.map);
+
+		 // $scope.map.addLayer(ortofoto);
+
+/*
 			var protocol  = ("https:" == document.location.protocol) ? "https" : "http";
 			var osmUrl=protocol + '://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 		  var osmAttrib='Map data &copy; OpenStreetMap contributors';
 		  var osm = new L.TileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
 			$scope.map.setView(new L.LatLng(55.0014602722233, 14.9985934015052),16);
 		  $scope.map.addLayer(osm);
-
+  */
+ 
 		  $scope.map.on('click', function(e) {
 				console.log(e);
 			})
 				
 		}
 
-		/*
-		$scope.mapOptions = {
-	    center: {
-	      lat: 56,
-	      lng: 11.5,
-	      zoom: 7
-	    },
-	    drawControl: true,
-	    markers: {},
-			attributionControl: true,
-	    layers: {
-	      baselayers: {
-	        osm: {
-	          name: 'Kort',
-	          url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-	          type: 'xyz'
-	        },
-	        topo_25: {
-          name: "DK 4cm kort",
-          type: 'wms',
-          visible: true,
-          url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-          layerOptions: {
-            layers: "topo25_klassisk",
-            servicename: "topo25",
-            version: "1.1.1",
-            request: "GetMap",
-            format: "image/jpeg",
-            service: "WMS",
-            styles: "default",
-            exceptions: "application/vnd.ogc.se_inimage",
-            jpegquality: "80",
-            attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-            //ticket: KMS.getTicket()
-          }
-        },
-        luftfoto: {
-          name: "DK luftfoto",
-          type: 'wms',
-          visible: true,
-          url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-          layerOptions: {
-            layers: "orto_foraar",
-            servicename: "orto_foraar",
-            version: "1.1.1",
-            request: "GetMap",
-            format: "image/jpeg",
-            service: "WMS",
-            styles: "default",
-            exceptions: "application/vnd.ogc.se_inimage",
-            jpegquality: "80",
-            attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-            //ticket: KMS.getTicket()
-          }
-        },
-        WorldImagery: {
-          name: 'WorldImagery',
-          url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
-          type: 'xyz',
-          visible: true,
-          layerOptions: {
-            token: 'Fa8k0Foc5-cHunXdR4tEkZi-D4Ir0lwassp-4ZVZtQA6FeUHLz5knK6Rbpi-qT_BoyuNZh4SWDFD3YoaBlpr39RXyt5i43ptwtLpSImYNFZ0T8g3g-2fwahONMcc7aYlFAD9o3WOOE7TW0MTngKX1w..', //ArcGis.getTicket(),
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          }
-        },
-        WorldTopoMap: {
-          name: 'WorldTopoMap',
-          url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png',
-          type: 'xyz',
-          visible: true,
-          layerOptions: {
-            token: 'Fa8k0Foc5-cHunXdR4tEkZi-D4Ir0lwassp-4ZVZtQA6FeUHLz5knK6Rbpi-qT_BoyuNZh4SWDFD3YoaBlpr39RXyt5i43ptwtLpSImYNFZ0T8g3g-2fwahONMcc7aYlFAD9o3WOOE7TW0MTngKX1w..', //ArcGis.getTicket(),
-            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
-          }
-        }
-      }
-    }
-	}
-		*/
+		$scope.extractLatLng = function(geometryWkt) {
+			var latLngs = geometryWkt.match(/(\d+).(\d+)/g)	
+			return L.latLng(latLngs[1], latLngs[0])
+		}
 
-		//console.log($scope);
+		$scope.wetland = {};
+		$scope.$watch('wetland', function() {
+			console.log('WWWW', arguments);
+		}, true)
+
+		$scope.initWetland = function() {
+		$('#lokalitet').typeahead({
+			displayText: function(item) {
+				return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
+			},
+			afterSelect: function(item) {
+				//geometryWkt
+				//console.log(item.geometryWkt.match(/^\d+/g));
+				console.log($scope.extractLatLng(item.geometryWkt));
+				$scope.wetland = item;
+				var popup = L.popup()
+			    //.setLatLng(L.latLng(-63.30460696647067, 231.29616513848302))
+					.setLatLng($scope.extractLatLng(item.geometryWkt))
+			    .setContent('<p>Hello world!<br />This is a nice popup.</p>')
+			    .openOn($scope.map);
+			}, 
+			items : 20,
+		  source: function(query, process) {
+				//TODO: run service with tickets instead of hardcoded username / password
+				var login = "davidkonrad", 
+						password = "nhmdzm",
+						url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&crs=EPSG:4326&resources=stednavne_v2&limit=100&login='+login+'&password='+password;
+	
+		    return $.getJSON(url, function(resp) {
+					var data = [], 
+							caption = '', 
+							types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump']
+
+					console.log(resp);
+					for (var i in resp.data) {
+						if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
+							data.push(resp.data[i]);
+						} else {
+							//console.log(resp.data[i].subtype);
+						}
+					}			
+					return process(data);		
+		    })
+		  }
+		})
+	}
 
   }]);

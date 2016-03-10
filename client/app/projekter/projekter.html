@@ -14,11 +14,15 @@ input.wetland {
 <div class="container" style="font-size:90%;"	>
 
 	<div class="form-inline form-group">
-		<label>Projekt kode&nbsp;&nbsp;</label>
-		<input type="text" class="projekt-typeahead form-control input-sm" placeholder="Kode .." onclick="this.value = ''">
-		<button type="button" class="btn btn-primary btn-sm" title="Opret projekt" ng-click="createProjekt()">
-			<i class="fa fa-plus"></i>
-		</button>
+		<label>Booking kode&nbsp;&nbsp;</label>
+		<div class="input-group">
+			<input type="text" class="projekt-typeahead form-control input-sm" placeholder="Kode .." onclick="this.value = ''">
+			<span class="input-group-btn">
+				<button type="button" title="Opret ny booking" class="btn btn-primary btn-sm" title="Opret projekt" ng-click="createProjekt()">
+					<i class="fa fa-plus"></i>
+				</button>
+			</span>
+		</div>
 	</div>
 
 	<br>
@@ -34,20 +38,9 @@ input.wetland {
 		</div>
 
 		<div bs-pane data-title="Lokalitet">
-			<br>
-			<form class="form-horizontal">
-				<div class="form-group ">
-					<div class="col-sm-7">
-						<input type="text" class="form-control input-sm wetland" xxstyle="width:400px;" id="lokalitet" placeholder="Sø, å, mose ..." wetland-typeahead>
-						<!--
-						<button class="btn btn-primary">Gem</button>
-						-->
-						<div id="map" style="height:400px;width:100%" in-view="initializeMap()"></div>
-					</div>
-				</div>
-			</form>
-
+			<div ng-include="'app/projekter/lokalitet.tab.html'"></div>		
 		</div>
+
 	</div>
 
 	<br>
