@@ -281,26 +281,17 @@ $scope.map.on('baselayerchange', function (e) {
 		//$scope.map.setView(L.latLng(-63.30460696647067, 231.29616513848302), 5);
 		$scope.map.setZoom(2);
 
+		/*
 		var polygon = L.polygon([
 	    [-64.509, 231.08],
 	    [-51.503, 0.06],
 	    [-61.51, 213.047]
 		]).addTo($scope.map);
+		*/
 
-		 // $scope.map.addLayer(ortofoto);
-
-/*
-			var protocol  = ("https:" == document.location.protocol) ? "https" : "http";
-			var osmUrl=protocol + '://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		  var osmAttrib='Map data &copy; OpenStreetMap contributors';
-		  var osm = new L.TileLayer(osmUrl, {maxZoom: 18, attribution: osmAttrib});
-			$scope.map.setView(new L.LatLng(55.0014602722233, 14.9985934015052),16);
-		  $scope.map.addLayer(osm);
-  */
- 
-		  $scope.map.on('click', function(e) {
-				console.log(e);
-			})
+	  $scope.map.on('click', function(e) {
+			//console.log(e);
+		})
 				
 		}
 
@@ -320,9 +311,6 @@ $scope.map.on('baselayerchange', function (e) {
 				return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
 			},
 			afterSelect: function(item) {
-				//geometryWkt
-				//console.log(item.geometryWkt.match(/^\d+/g));
-				console.log($scope.extractLatLng(item.geometryWkt));
 				$scope.wetland = item;
 				var popup = L.popup()
 			    //.setLatLng(L.latLng(-63.30460696647067, 231.29616513848302))
@@ -333,21 +321,46 @@ $scope.map.on('baselayerchange', function (e) {
 			items : 20,
 		  source: function(query, process) {
 				//TODO: run service with tickets instead of hardcoded username / password
-				var login = "davidkonrad", 
-						password = "nhmdzm",
-						url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&crs=EPSG:4326&resources=stednavne_v2&limit=100&login='+login+'&password='+password;
+				var pass = "&login=davidkonrad&password=nhmdzm",
+						url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&crs=EPSG:4326&resources=stednavne_v2&limit=100'+pass;
 	
 		    return $.getJSON(url, function(resp) {
 					var data = [], 
-							caption = '', 
-							types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump']
+							caption = '',
+							//TODO, remov - for curiosity only 
+							noWater = ['spredtBebyggelse', 'bydel', 'by', 'gård', 'sten', 'bro', 'hus', 'kløft', 'andenBygning', 'dal', 
+												'museumSamling', 'agerMark', 'eng', 'hede', 'gravhøj', 'højdedrag', 'bakke', 'campingsplads', 'slugt',
+												'kirkeProtestantisk', 'hal', 'skovPlantage', 'stadion', 'vejrmølle', 'udsigtstårn', 'golfbane', 
+												'folkeskole', 'folkehøjskole', 'turistbureau', 'vejbro', 'mindesten', 'langdysse', 'specialskole',
+												'voldVoldsted', 'privatskoleFriskole', 'kommunekontor', 'dyrepark', 'grænsestenGrænsepæl', 'hotel',
+												'andenSeværdighed', 'udsigtspunkt', 'tog', 'boplads', 'øgruppe', 'fagskole', 'fyrtårn', 'blomsterpark',
+												'universitet', 'professionshøjskole', 'kursuscenter', 'uddannelsescenter', 'zoologiskHave',
+												'kirkeAndenKristen', 'herregård', 'storby', 'kolonihave', 'land', 'gravsted', 'kraftvarmeværk', 
+												'undersøiskGrund', 'odde', 'klint', 'halvø', 'rådhus', 'skydebane', 'flyveplads', 'parkAnlæg', 'ø',
+												'sommerhusområde', 'goKartbane', 'dysse', 'løb', 'ruin', 'reservat', 'mindreLufthavn', 'pynt', 'hage',
+												'gymnasium', 'industriområde', 'feriecenter', 'efterskoleUngdomsskole', 'kristen', 'rastepladsMedService',
+												'klippeIOverfladen', 'rastepladsUdenService', 'sommerhusområdedel', 'røse', 'køretekniskAnlæg', 
+												'runddysse', 'landingsplads', 'fængsel', 'bilfærge', 'næs', 'højBanke', 'jættestue', 'vandrerhjem',
+												'sandKlit', 'vandkraftværk', 'hule', 'trafikhavn', 'vindmøllepark', 'fæstningsanlæg', 'motorbane',
+												'strand', 'vej', 'hospital', 'båke', 'skanse', 'runesten', 'vikingeborg', 'slot', 'historiskMindeHistoriskAnlæg',
+												'veteranjernbane', 'cykelbane', 'terminal', 'bredning', 'motorvejskryds', 'skær', 'skibssætning', 
+												'skræntNaturlig', 'motocrossbane', 'forlystelsespark', 'marsk', 'personfærge', 'svæveflyveplads',
+												'hundevæddeløbsbane', 'varde', 'primærRingvej', 'sekundærRingvej', 'restriktionsareal', 'landsdel',
+												'overskylledeSten', 'vejkryds', 'lavning', 'arboret', 'løvtræ', 'bautasten', 'bautasten', 
+												'sti', 'plads', 'heliport', 'hestevæddeløbsbane', 'ledLåge', 'ås', 'observatorium', 'fiskerihavn',
+												'sejlløb', 'nor', 'tomt'
+											],
+							types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump',
+											//doubtful matches
+											'bugt', 'strandpost', 'lystbådehavn', 'sund', 'vandmølle', 'tørtVedLavvande', 'botaniskHave'
+											]
 
-					console.log(resp);
+					//console.log(resp);
 					for (var i in resp.data) {
 						if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
 							data.push(resp.data[i]);
 						} else {
-							//console.log(resp.data[i].subtype);
+							if (!~noWater.indexOf(resp.data[i].subtype)) console.log(resp.data[i].subtype);
 						}
 					}			
 					return process(data);		
