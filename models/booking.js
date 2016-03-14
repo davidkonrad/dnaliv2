@@ -8,64 +8,25 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    institution: {
+    sagsNo: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    date: {
+    status: {
+      type: DataTypes.INTEGER(1),
+      allowNull: false
+    },
+    timestamp_created: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 'CURRENT_TIMESTAMP'
     },
-    time: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    klassetrin: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    adresse: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    postnr: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    by: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    kommune: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    laerer_navn: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    laerer_email: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    learer_tlf: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    fag: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    elever_antal: {
+    periode: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    laerer_antal: {
+    aar_periode: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
-    },
-    kommentar: {
-      type: DataTypes.TEXT,
       allowNull: false
     }
   }, {

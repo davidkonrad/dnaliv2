@@ -3,9 +3,9 @@
 angular.module('dnalivApp')
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/projekter', {
-        templateUrl: 'app/projekter/projekter.html',
-        controller: 'ProjektCtrl'
+      .when('/bookings', {
+        templateUrl: 'app/bookings/bookings.html',
+        controller: 'BookingCtrl'
       });
   });
 

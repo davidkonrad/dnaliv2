@@ -1,18 +1,22 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('klasse', {
+  return sequelize.define('booking_klasse', {
     klasse_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    projekt_id: {
+    booking_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    institution: {
+    status: {
+      type: DataTypes.INTEGER(1),
+      allowNull: false
+    },
+    institutionsnavn: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -24,7 +28,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    by: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     kommune: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    region: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -55,9 +67,29 @@ module.exports = function(sequelize, DataTypes) {
     antal_laerer: {
       type: DataTypes.INTEGER(11),
       allowNull: false
+    },
+    KuvertProeverAfsendt: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    Proevermodtaget: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    DatoForBesoeg: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    DatoForBooking: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    DatoForEkst: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   }, {
-    tableName: 'klasse',
+    tableName: 'booking_klasse',
     freezeTableName: true
   });
 };

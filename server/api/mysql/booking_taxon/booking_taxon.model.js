@@ -3,14 +3,14 @@
 
 module.exports = function(sequelize, DataTypes) {
 
-	var Projekt_taxon = sequelize.define("projekt_taxon", {
-		projekt_taxon_id: {
+	var Booking_taxon = sequelize.define("booking_taxon", {
+		booking_taxon_id: {
 			type: DataTypes.INTEGER(11),
 			primaryKey: true,
 			autoIncrement: true,
 			allowNull: false
 		},
-    projekt_id: {
+    booking_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
@@ -24,9 +24,9 @@ module.exports = function(sequelize, DataTypes) {
     }
 
 	}, {
-		tableName: 'projekt_taxon',
+		tableName: 'booking_taxon',
 		timestamps: false,
 		freezeTableName: true
 	});
-	return Projekt_taxon;
+	return Booking_taxon;
 };

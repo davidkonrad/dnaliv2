@@ -1,14 +1,14 @@
 'use strict';
 
-describe('Service: Projekt_taxon', function () {
+describe('Service: Booking_taxon', function () {
 
   // load the service's module
   beforeEach(module('dnalivAppApp'));
 
   // instantiate service
   var Projekt;
-  beforeEach(inject(function (_ProjektTaxon_) {
-    Projekt_taxon = _ProjektTaxon_;
+  beforeEach(inject(function (_BookingTaxon_) {
+    Projekt_taxon = _BookingTaxon_;
   }));
 
   it('should do something', function () {

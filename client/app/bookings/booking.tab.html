@@ -22,24 +22,24 @@ legend {
 <br>
 <form class="form-inline" role="form">
   <div class="form-group">
-    <label for="projekt_kode">Projekt kode&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_kode" class="form-control input-sm" size="10" id="projekt_kode" ng-disabled="projectLoaded()">
+    <label for="sagsNo">sagsNo&nbsp;</label>
+    <input type="text" ng-model="booking.sagsNo" class="form-control input-sm" size="10" id="sagsNo" ng-disabled="bookingLoaded()">
   </div>
   <div class="form-group">
     <label for="projekt_dato">Dato&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_dato" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="projectLoaded()">
+    <input type="text" ng-model="projekt.projekt_dato" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="bookingLoaded()">
   </div>
   <div class="form-group">
     <label for="projekt_tidspunkt">Tid&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control input-sm" size="5" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-model-time-format="HH:mm:ss" data-time-type="string" ng-disabled="projectLoaded()">
+    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control input-sm" size="5" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-model-time-format="HH:mm:ss" data-time-type="string" ng-disabled="bookingLoaded()">
   </div>
 
-  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="projectLoaded()" ng-click="saveProjekt()"	>Gem</button>
+  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveProjekt()"	>Gem</button>
 </form>
 
 <br>
 <div class="form-group">
-	<button type="button" class="btn btn-primary btn-sm" ng-click="createKlasse()" ng-disabled="projectLoaded()" title="Tilføj en ny klasse / institution">
+	<button type="button" class="btn btn-primary btn-sm" ng-click="createKlasse()" ng-disabled="bookingLoaded()" title="Tilføj en ny klasse / institution">
 		<i class="fa fa-plus"></i>
 	</button>
 	<label>&nbsp;Klasser</label>
@@ -51,7 +51,7 @@ legend {
 		<div class="panel-heading" role="tab">
 			<h4 class="panel-title">
 				<a bs-collapse-toggle>
-					{{ klasse.institution }}
+					{{ klasse.institutionsnavn }}
 				</a>
 				<button type="button" class="btn btn-primary btn-xs float-right" ng-click="saveKlasse(klasse.klasse_id)" ng-show="klasseIsEdited(klasse.klasse_id)" title="Gem ændringer">
 					Gem ændringer
@@ -67,18 +67,18 @@ legend {
 					<form class="form-horizontal">
 						<div class="form-group ">
 							<div class="col-sm-7">
-								<input type="text" ng-model="klasse.institution" class="form-control input-sm" institution-typeahead ng-disabled="projectLoaded()" placeholder="Navn">
+								<input type="text" ng-model="klasse.institutionsnavn" class="form-control input-sm" institution-typeahead ng-disabled="bookingLoaded()" placeholder="Navn">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-4">
-								<input type="text" ng-model="klasse.adresse" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Adresse">
+								<input type="text" ng-model="klasse.adresse" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Adresse">
 							</div>
 							<div class="col-sm-1">
-								<input type="text" ng-model="klasse.postnr" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Postnr.">
+								<input type="text" ng-model="klasse.postnr" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Postnr.">
 							</div>
 							<div class="col-sm-2">
-								<input type="text" ng-model="klasse.kommune" class="form-control input-sm" ng-disabled="projectLoaded()" placeholder="Kommune">
+								<input type="text" ng-model="klasse.kommune" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Kommune">
 							</div>
 						</div>
 					</form>
@@ -89,13 +89,13 @@ legend {
 					<form class="form-horizontal">
 						<div class="form-group">
 							<div class="col-sm-3">
-						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_navn" placeholder="Navn" ng-disabled="projectLoaded()">
+						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_navn" placeholder="Navn" ng-disabled="bookingLoaded()">
 							</div>
 							<div class="col-sm-2">
-						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_tlf" placeholder="Telefon" ng-disabled="projectLoaded()">
+						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_tlf" placeholder="Telefon" ng-disabled="bookingLoaded()">
 							</div>
 							<div class="col-sm-3">
-						    <input type="email" class="form-control input-sm" ng-model="klasse.laerer_email" placeholder="Email" ng-disabled="projectLoaded()">
+						    <input type="email" class="form-control input-sm" ng-model="klasse.laerer_email" placeholder="Email" ng-disabled="bookingLoaded()">
 							</div>
 						</div>
 					</form>
@@ -107,22 +107,22 @@ legend {
 					<form class="form-horizontal">
 						<div class="form-group">
 					    <div class="col-sm-3">
-								<select ng-disabled="projectLoaded()" class="form-control input-sm" ng-model="klasse.fag">
+								<select ng-disabled="bookingLoaded()" class="form-control input-sm" ng-model="klasse.fag">
 									<option>Vælg fag</option>
 									<option ng-repeat="f in fag" value="{{ f.fag_id }}">{{ f.fag_navn }}</option>
 								</select>
 							</div>
 					    <div class="col-sm-2">
-								<select ng-disabled="projectLoaded()" class="form-control input-sm" ng-model="klasse.klassetrin">
+								<select ng-disabled="bookingLoaded()" class="form-control input-sm" ng-model="klasse.klassetrin">
 									<option>Klassetrin</option>
 									<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
 								</select>
 							</div>
 					    <div class="col-sm-1">
-						    <input type="number" ng-model="klasse.antal_elever" class="form-control input-sm" placeholder="0" ng-disabled="projectLoaded()">
+						    <input type="number" ng-model="klasse.antalElever" class="form-control input-sm" placeholder="0" ng-disabled="bookingLoaded()">
 							</div>
 					    <div class="col-sm-1">
-						    <input type="number"  ng-model="klasse.antal_laerer" class="form-control input-sm" placeholder="0" ng-disabled="projectLoaded()">
+						    <input type="number"  ng-model="klasse.antalLaerer" class="form-control input-sm" placeholder="0" ng-disabled="bookingLoaded()">
 							</div>
 						</div>
 					</form>

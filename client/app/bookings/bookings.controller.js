@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProjektCtrl', ['$scope', '$http', '$timeout', 'Auth', 'Projekt', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Projekt_taxon', 
-	function ($scope, $http, $timeout, Auth, Projekt, Klasse, Klassetrin, Fag, Taxon, Projekt_taxon) { 
+  .controller('BookingCtrl', ['$scope', '$http', '$timeout', 'Auth', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
+	function ($scope, $http, $timeout, Auth, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
 
 		var getObj = function($resource, prefix) {
 			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
@@ -11,77 +11,78 @@ angular.module('dnalivApp')
 				if (prefix) {
 					if (~prop.indexOf(prefix)) p[prop] = $resource[prop]
 				} else {
-					if (~exclude.indexOf(prop)) p[prop] = $resource[prop]
+					if (!~exclude.indexOf(prop)) p[prop] = $resource[prop]
 				}
 			}
 			return p;
 		}
 
-		$scope.projekt = {};
-		$scope.projekter = [];
+		$scope.booking = {};
+		$scope.bookings = [];
 		$scope.projectLoaded = function() {
-			return !angular.isDefined($scope.projekt.projekt_kode)
+			return !angular.isDefined($scope.booking.booking_kode)
     }
 		$scope.klasser = [{ institution: '... ' }	];
 
-		Projekt.query().$promise.then(function(projekter) {	
-			$scope.projekter = projekter.map(function(projekt) {
-				return projekt
+		Booking.query().$promise.then(function(bookings) {	
+			$scope.bookings = bookings.map(function(booking) {
+				return booking
 			})
-			$('.projekt-typeahead').typeahead({
+			$('.booking-typeahead').typeahead({
 				showHintOnFocus: true,
-				source: $scope.projekter,
+				source: $scope.bookings,
 				displayText: function(item) {
-					return item.projekt_kode
+					return item.sagsNo
 				},
 				afterSelect: function(item) {
-					$scope.loadProjekt(item.projekt_id)
+					$scope.loadBooking(item.booking_id)
 				}
 			})
 		})
 
 	/**
-	 * Create a new projekt and load it
+	 * Create a new booking and load it
 	 */
-		$scope.createProjekt = function() {
-			var kode = prompt('Projekt kode: ', '');
-			if (kode != '') Projekt.save({ projekt_id: '' }, { projekt_kode: kode }).$promise.then(function(projekt) {	
-				$scope.loadProjekt(projekt.projekt_id)
+		$scope.createBooking = function() {
+			var kode = prompt('SagsNo: ', '');
+			if (kode != '') Booking.save({ booking_id: '' }, { booking_kode: kode }).$promise.then(function(booking) {	
+				$scope.loadBooking(booking.booking_id)
 			})
 		}
 
 	/**
-	 * Load a projekt
-	 * @param {int} projekt_id - unique projekt_id of the projekt
+	 * Load a booking
+	 * @param {int} booking_id - unique booking_id of the booking
 	 */
-		$scope.loadProjekt = function(projekt_id) {
-			Projekt.get({ id: projekt_id }).$promise.then(function(projekt) {	
-				$scope.projekt = getObj(projekt, 'projekt_')
-				$scope.loadProjektTaxons();
-				$scope.loadKlasser(projekt.projekt_id)
-				document.querySelector('.projekt-typeahead').value = projekt.projekt_kode
+		$scope.loadBooking = function(booking_id) {
+			Booking.get({ id: booking_id }).$promise.then(function(booking) {	
+				$scope.booking = getObj(booking)
+				$scope.loadBookingTaxons();
+				$scope.loadKlasser(booking.booking_id)
+				document.querySelector('.booking-typeahead').value = booking.sagsNo
 			})
 		}
 
 	/**
-	 * Save current projekt
+	 * Save current booking
 	 */
-		$scope.saveProjekt = function() {
-			Projekt.update({ projekt_id: $scope.projekt.projekt_id }, $scope.projekt)
+		$scope.saveBooking = function() {
+			Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
 		}
 
 	/**
 	 * Reload and filter the klasser array
-	 * @param {int} projekt_id - unique projekt_id of the projekt
+	 * @param {int} booking_id - unique booking_id of the booking
 	 */
-		$scope.loadKlasser = function(projekt_id) {
-			Klasse.query({ projekt_id: projekt_id }).$promise.then(function(klasser) {	
+		$scope.loadKlasser = function(booking_id) {
+			Klasse.query({ booking_id: booking_id }).$promise.then(function(klasser) {	
 				$scope.klasser = klasser.filter(function(klasse) {
-					if (klasse.projekt_id == projekt_id) {
+					if (klasse.booking_id == booking_id) {
 						klasse.edited = false
 						return klasse
 					}
 				})
+				console.log('loadklasser', $scope.klasser)
 			})
 		}
 
@@ -120,11 +121,11 @@ angular.module('dnalivApp')
 		}
 			
 	/**
-	 * Attach a new klasse to the current projekt
+	 * Attach a new klasse to the current booking
 	 */
 		$scope.createKlasse = function() {
-			Klasse.save({ klasse_id: '' }, { projekt_id: $scope.projekt.projekt_id }).$promise.then(function(klasse) {
-				$scope.loadKlasser($scope.projekt.projekt_id)
+			Klasse.save({ klasse_id: '' }, { booking_id: $scope.booking.booking_id }).$promise.then(function(klasse) {
+				$scope.loadKlasser($scope.booking.booking_id)
 			})
 		}
 
@@ -142,23 +143,23 @@ angular.module('dnalivApp')
 			})
 		})
 
-		$scope.loadProjektTaxons = function() {
-			Projekt_taxon.query({ projekt_id: $scope.projekt_projekt_id }).$promise.then(function(projekt_taxons) {	
-				$scope.projektTaxons = [];
-				projekt_taxons.forEach(function(item) {
-					if (item.projekt_id == $scope.projekt.projekt_id) $scope.projektTaxons.push(item);
+		$scope.loadBookingTaxons = function() {
+			Booking_taxon.query({ booking_id: $scope.booking_booking_id }).$promise.then(function(booking_taxons) {	
+				$scope.bookingTaxons = [];
+				booking_taxons.forEach(function(item) {
+					if (item.booking_id == $scope.booking.booking_id) $scope.bookingTaxons.push(item);
 				})
 				$scope.loadTaxons();
 			})
 		}
 
 		$scope.taxonIsIncluded = function(taxon_id) {
-			var result =  { is_included: false, projekt_taxon_id: false };
-			for (var i=0;i<$scope.projektTaxons.length; i++) {
-				var item = $scope.projektTaxons[i];
+			var result =  { is_included: false, booking_taxon_id: false };
+			for (var i=0;i<$scope.bookingTaxons.length; i++) {
+				var item = $scope.bookingTaxons[i];
 				if (item.taxon_id == taxon_id) {
 					result.is_included = item.is_included;
-					result.projekt_taxon_id = item.projekt_taxon_id;
+					result.booking_taxon_id = item.booking_taxon_id;
 					return result;
 				}
 			}
@@ -175,36 +176,35 @@ angular.module('dnalivApp')
 						taxon_navn: taxon.taxon_navn, 
 						taxon_navn_dk: taxon.taxon_navn_dk,
 						taxon_basisliste: taxon.taxon_basisliste,
-						projekt: $scope.taxonIsIncluded(taxon.taxon_id)
+						booking: $scope.taxonIsIncluded(taxon.taxon_id)
 					})
 				})
 				console.log($scope.taxons);
 			})
 		}
 	
-		$scope.projektTaxonToggle = function(art) {
+		$scope.bookingTaxonToggle = function(art) {
 			console.log(art);
-			if (art.projekt.is_included) {
-				if (art.projekt.projekt_taxon_id) {
-					Projekt_taxon.update({ projekt_taxon_id: art.projekt.projekt_taxon_id, is_included: true })
+			if (art.booking.is_included) {
+				if (art.booking.booking_taxon_id) {
+					Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: true })
 				} else {
-					Projekt_taxon.save({ projekt_taxon_id: ''}, { projekt_id: $scope.projekt.projekt_id, taxon_id: art.taxon_id })
+					Booking_taxon.save({ booking_taxon_id: ''}, { booking_id: $scope.booking.booking_id, taxon_id: art.taxon_id })
 				}
 			} else {
-				Projekt_taxon.update({ projekt_taxon_id: art.projekt.projekt_taxon_id, is_included: false})
+				Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: false})
 			}
 		}
 
-		Projekt_taxon.query({ projekt_id: $scope.projekt_projekt_id} ).$promise.then(function(projekt_taxons) {	
-			//console.log('pt', projekt_taxons);
+		Booking_taxon.query({ booking_id: $scope.booking_booking_id} ).$promise.then(function(booking_taxons) {	
+			//console.log('pt', booking_taxons);
 		})
 
 	/*
 	 * lokalitet map
    */
 
-/*var kmsticket = new VisStedet.Ticket();
-
+/*
 map.on('baselayerchange', function (e) {
     if (e.name === 'Skærmkort') {
         matrikelkort.setParams({

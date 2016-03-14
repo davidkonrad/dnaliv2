@@ -9,12 +9,12 @@ var errors = require('./components/errors');
 module.exports = function(app) {
 
 	app.use('/api/test', require('./api/mysql/test'));
-	app.use('/api/projekt', require('./api/mysql/projekt'));
+	app.use('/api/booking', require('./api/mysql/booking'));
 	app.use('/api/klasse', require('./api/mysql/klasse'));
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
 	app.use('/api/fag', require('./api/mysql/fag'));
 	app.use('/api/taxon', require('./api/mysql/taxon'));
-	app.use('/api/projekt_taxon', require('./api/mysql/projekt_taxon'));
+	app.use('/api/booking_taxon', require('./api/mysql/booking_taxon'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

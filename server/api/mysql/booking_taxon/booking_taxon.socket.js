@@ -4,21 +4,21 @@
 
 'use strict';
 
-var Projekt_taxon = require('./projekt_taxon.model');
+var Booking_taxon = require('./booking_taxon.model');
 
 exports.register = function(socket) {
-  Projekt_taxon.schema.post('save', function (doc) {
+  Booking_taxon.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Projekt_taxon.schema.post('remove', function (doc) {
+  Booking_taxon.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('projekt_taxon:save', doc);
+  socket.emit('booking_taxon:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('projekt_taxon:remove', doc);
+  socket.emit('booking_taxon:remove', doc);
 }

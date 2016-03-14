@@ -2,6 +2,7 @@
 
 
 module.exports = function(sequelize, DataTypes) {
+
 	var Klasse = sequelize.define("klasse", {
 		klasse_id: {
 			type: DataTypes.INTEGER(11),
@@ -9,14 +10,18 @@ module.exports = function(sequelize, DataTypes) {
 			autoIncrement: true,
 			allowNull: false
 		},
-    projekt_id: {
+    booking_id: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
+			primaryKey: true,
+      allowNull: true
     },
-    institution: {
+    status: {
+      type: DataTypes.INTEGER(1),
+      allowNull: true
+    },
+    institutionsnavn: {
       type: DataTypes.STRING,
-      allowNull: true,
-			defaultValue: '< ikke udfyldt >'
+      allowNull: true
     },
     adresse: {
       type: DataTypes.STRING,
@@ -26,7 +31,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    by: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     kommune: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    region: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -38,35 +51,67 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    laerer_navn: {
+    laererNavn: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    laerer_tlf: {
+    laererTlf: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    laerer_email: {
+    laererEmail: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    antal_elever: {
+    antalElever: {
       type: DataTypes.INTEGER(11),
       allowNull: true
     },
-    antal_laerer: {
+    antalLaerer: {
       type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    KuvertProeverAfsendt: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    Proevermodtaget: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    DatoForBesoeg: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    DatoForBooking: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    DatoForEkst: {
+      type: DataTypes.DATE,
       allowNull: true
     }
-	},
-  {
-		tableName: 'klasse',
+
+  }, {
+		tableName: 'booking_klasse',
 		timestamps: false,
-		freezeTableName: true
+		freezeTableName: true,
+
+		classMethods: {
+			associate: function(models) {
+				console.log('klasse', models);
+				models.Klasse
+					.belongsToMany(models.Booking, {
+						foreignKey: 'booking_id'
+					});
+			
+			}
+		}
 
 	});
 
 	return Klasse;
+
 };
 
 

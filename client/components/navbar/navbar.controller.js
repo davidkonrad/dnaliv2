@@ -3,14 +3,6 @@
 angular.module('dnalivApp')
 	.controller('NavbarCtrl', function($rootScope, $scope, $location, Auth) {
 
-		$scope.menu = [{
-			'title': 'Projekter',
-			'link': '/projekter'
-		}, {
-			'title': 'Administration',
-			'link': '/'
-		}];
-
 		$scope.isCollapsed = true;
 		$scope.isLoggedIn = Auth.isLoggedIn;
 		$scope.isAdmin = Auth.isAdmin;

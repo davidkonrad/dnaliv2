@@ -1,18 +1,18 @@
 'use strict';
 
-describe('Service: Projekt', function () {
+describe('Service: Booking', function () {
 
   // load the service's module
   beforeEach(module('dnalivAppApp'));
 
   // instantiate service
-  var Projekt;
-  beforeEach(inject(function (_Projekt_) {
-    Projekt = _Projekt_;
+  var Booking;
+  beforeEach(inject(function (_Booking_) {
+    Booking = _Booking_;
   }));
 
   it('should do something', function () {
-    expect(!!Projekt).toBe(true);
+    expect(!!Booking).toBe(true);
   });
 
 });

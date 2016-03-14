@@ -7,7 +7,7 @@ var auth = require('../../../auth/auth.service');
 var router = express.Router();
 router.get('/fields/', auth.isAuthenticated(),controller.describe);
 router.get('/:id', auth.isAuthenticated(), controller.index);
-router.get('/:projekt_id', auth.isAuthenticated(), controller.index);
+router.get('/:booking_id', auth.isAuthenticated(), controller.index);
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);

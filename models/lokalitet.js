@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('locality', {
+  return sequelize.define('lokalitet', {
     _id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'locality',
+    tableName: 'lokalitet',
     freezeTableName: true
   });
 };
