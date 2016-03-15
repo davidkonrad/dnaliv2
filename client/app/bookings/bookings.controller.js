@@ -34,6 +34,7 @@ angular.module('dnalivApp')
 				displayText: function(item) {
 					return item.sagsNo
 				},
+				items: 20,
 				afterSelect: function(item) {
 					$scope.loadBooking(item.booking_id)
 				}
@@ -57,6 +58,7 @@ angular.module('dnalivApp')
 		$scope.loadBooking = function(booking_id) {
 			Booking.get({ id: booking_id }).$promise.then(function(booking) {	
 				$scope.booking = getObj(booking)
+				console.log($scope.booking);
 				$scope.loadBookingTaxons();
 				$scope.loadKlasser(booking.booking_id)
 				document.querySelector('.booking-typeahead').value = booking.sagsNo
@@ -79,6 +81,7 @@ angular.module('dnalivApp')
 				$scope.klasser = klasser.filter(function(klasse) {
 					if (klasse.booking_id == booking_id) {
 						klasse.edited = false
+						//klasse.DatoForBooking = Date.parse('2014-09-19')
 						return klasse
 					}
 				})
@@ -102,8 +105,17 @@ angular.module('dnalivApp')
 	 */
 		$scope.saveKlasse = function(klasse_id) {
 			var klasse = $scope.getKlasseObj(klasse_id)
-			console.log(klasse);
+			//console.log(klasse);
 			Klasse.update({ klasse_id: klasse.klasse_id }, klasse)
+
+			var panel = document.querySelector('[data-klasse-id="'+klasse_id+'"]');
+			if (panel) {
+				var i=0, inputs = panel.querySelectorAll('input');
+				for (i; i<inputs.length; i++) {
+					angular.element(inputs[i]).removeClass('ng-dirty')
+				}
+			}
+
 		}
 
 	/**

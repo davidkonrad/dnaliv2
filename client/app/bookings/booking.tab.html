@@ -18,22 +18,39 @@ legend {
 .float-right {
 	float: right;
 }
+
+.no-pad {
+	padding-left: 1px !important;
+	padding-right: 1px !important;
+}
+.no-pad-l {
+	padding-left: 1px !important;
+}
+.no-pad-r {
+	padding-right: 1px !important;
+}
+label {
+	font-weight: normal;
+}
 </style>
 <br>
+
+
+
+<!--- --->
 <form class="form-inline" role="form">
   <div class="form-group">
-    <label for="sagsNo">sagsNo&nbsp;</label>
+    <label for="sagsNo">sagsnr.&nbsp;</label>
     <input type="text" ng-model="booking.sagsNo" class="form-control input-sm" size="10" id="sagsNo" ng-disabled="bookingLoaded()">
   </div>
   <div class="form-group">
-    <label for="projekt_dato">Dato&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_dato" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" id="projekt_dato" bs-datepicker ng-disabled="bookingLoaded()">
+    <label for="aar_periode">Årsperiode</label>
+    <input type="text" ng-model="booking.aar_periode" class="form-control input-sm" size="3" id="aar_periode" ng-disabled="bookingLoaded()">
   </div>
   <div class="form-group">
-    <label for="projekt_tidspunkt">Tid&nbsp;</label>
-    <input type="text" ng-model="projekt.projekt_tidspunkt" class="form-control input-sm" size="5" id="projekt_tidspunkt" bs-timepicker data-time-format="HH:mm" data-model-time-format="HH:mm:ss" data-time-type="string" ng-disabled="bookingLoaded()">
+    <label for="periode">Periode</label>
+    <input type="text" ng-model="booking.periode" class="form-control input-sm" size="3" id="periode" ng-disabled="bookingLoaded()">
   </div>
-
   <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveProjekt()"	>Gem</button>
 </form>
 
@@ -63,23 +80,63 @@ legend {
 			<div class="panel-body">
 
 				<fieldset>
+					<legend>Oversigt</legend>
+					<br>
+					<form class="form-inline">
+						<div class="form-group">
+					  	<label for="status">Status</label>
+							<select class="form-control input-sm" ng-model="klasse.status">
+								<option value="-1">Aflyst</option>
+								<option value="0">Ikke bekræftet</option>
+								<option value="1">Bekræftet</option>
+							</select>
+					  	<label for="status">Dato booking</label>
+					    <input type="text" ng-model="klasse.DatoForBooking" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
+
+					  	<label for="status">Dato Besøg</label>
+					    <input type="text" ng-model="klasse.DatoForBesoeg" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
+
+					  	<label for="status">Dato Ekst.</label>							
+					    <input type="text" ng-model="klasse.DatoForEkst" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
+						</div>
+						<br><br>
+						<div class="form-group">
+							<div class="checkbox">
+								<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
+						  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
+							</div>
+							&nbsp;&nbsp;
+							<div class="checkbox">
+								<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
+						  	<label for="Proevermodtaget">Prøver modtaget</label>
+							</div>
+
+						</div>
+					</form>
+				</fieldset>
+
+				<fieldset>
 					<legend>Institution</legend>
 					<form class="form-horizontal">
 						<div class="form-group ">
-							<div class="col-sm-7">
+							<div class="col-sm-5">
 								<input type="text" ng-model="klasse.institutionsnavn" class="form-control input-sm" institution-typeahead ng-disabled="bookingLoaded()" placeholder="Navn">
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-sm-4">
+							<div class="col-sm-2 no-pad-r">
 								<input type="text" ng-model="klasse.adresse" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Adresse">
 							</div>
-							<div class="col-sm-1">
+							<div class="col-sm-1 no-pad-l no-pad-r">
 								<input type="text" ng-model="klasse.postnr" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Postnr.">
 							</div>
-							<div class="col-sm-2">
+							<div class="col-sm-2 no-pad-l no-pad-r">
 								<input type="text" ng-model="klasse.kommune" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Kommune">
 							</div>
+							<div class="col-sm-2 no-pad-l">
+								<input type="text" ng-model="klasse.region" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Region">
+							</div>
+
 						</div>
 					</form>
 				</fieldset>
@@ -88,14 +145,14 @@ legend {
 					<legend>Lærer</legend>
 					<form class="form-horizontal">
 						<div class="form-group">
-							<div class="col-sm-3">
-						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_navn" placeholder="Navn" ng-disabled="bookingLoaded()">
+							<div class="col-sm-3 no-pad-r">
+						    <input type="text" class="form-control input-sm" ng-model="klasse.laererNavn" placeholder="Navn" ng-disabled="bookingLoaded()">
 							</div>
-							<div class="col-sm-2">
-						    <input type="text" class="form-control input-sm" ng-model="klasse.laerer_tlf" placeholder="Telefon" ng-disabled="bookingLoaded()">
+							<div class="col-sm-2 no-pad">
+						    <input type="text" class="form-control input-sm" ng-model="klasse.laererTlf" placeholder="Telefon" ng-disabled="bookingLoaded()">
 							</div>
-							<div class="col-sm-3">
-						    <input type="email" class="form-control input-sm" ng-model="klasse.laerer_email" placeholder="Email" ng-disabled="bookingLoaded()">
+							<div class="col-sm-2 no-pad">
+						    <input type="email" class="form-control input-sm" ng-model="klasse.laererEmail" placeholder="Email" ng-disabled="bookingLoaded()">
 							</div>
 						</div>
 					</form>
@@ -103,30 +160,33 @@ legend {
 
 				
 				<fieldset>
-					<legend>Deltagere</legend>
+					<legend>Klasse</legend>
 					<form class="form-horizontal">
 						<div class="form-group">
-					    <div class="col-sm-3">
+					    <div class="col-sm-2 no-pad-r">
 								<select ng-disabled="bookingLoaded()" class="form-control input-sm" ng-model="klasse.fag">
-									<option>Vælg fag</option>
-									<option ng-repeat="f in fag" value="{{ f.fag_id }}">{{ f.fag_navn }}</option>
+									<option>{{ klasse.fag }}</option>
+									<option ng-repeat="f in fag" value="{{ f.fag_navn }}">{{ f.fag_navn }}</option>
 								</select>
 							</div>
-					    <div class="col-sm-2">
+					    <div class="col-sm-1 no-pad">
 								<select ng-disabled="bookingLoaded()" class="form-control input-sm" ng-model="klasse.klassetrin">
-									<option>Klassetrin</option>
-									<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_id }}">{{ klasse.klassetrin_navn }}</option>
+									<option>{{ klasse.klassetrin }}</option>
+									<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_navn }}">{{ klasse.klassetrin_navn }}</option>
 								</select>
 							</div>
-					    <div class="col-sm-1">
+					    <div class="col-sm-1 no-pad">
 						    <input type="number" ng-model="klasse.antalElever" class="form-control input-sm" placeholder="0" ng-disabled="bookingLoaded()">
 							</div>
-					    <div class="col-sm-1">
-						    <input type="number"  ng-model="klasse.antalLaerer" class="form-control input-sm" placeholder="0" ng-disabled="bookingLoaded()">
+					    <div class="col-sm-1 no-pad">
+						    <input type="number" ng-model="klasse.antalLaerer" class="form-control input-sm" placeholder="0" ng-disabled="bookingLoaded()">
 							</div>
+							<br><br>
+							&nbsp;&nbsp;&nbsp;<label id="kommentarer">Kommentarer :</label>
 						</div>
 					</form>
 				</fieldset>
+
 
 			</div>
 		</div>

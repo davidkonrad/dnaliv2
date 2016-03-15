@@ -65,8 +65,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'booking',
 		timestamps: false,
-    freezeTableName: true,
+    freezeTableName: true
 
+		/*
 		classMethods: {
 			associate: function(models) {
 				console.log('booking', models);
@@ -88,6 +89,7 @@ module.exports = function(sequelize, DataTypes) {
 					})
 			  }
 		}
+		*/
 	})	
 
 	return Booking
