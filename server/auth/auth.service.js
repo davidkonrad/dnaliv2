@@ -28,17 +28,17 @@ function isAuthenticated() {
     .use(function(req, res, next) {
       User.findById(req.user._id, function (err, user) {
         if (err) return next(err);
-        if (!user) return res.sendStatus(401); //dadk send()
-
-        req.user = user;
+        //if (!user) return res.sendStatus(401); //dadk send()
+				if (!user && res.sendStatus) return res.sendStatus(401); //dadk send()
+				req.user = user;
         next();
       });
     })
 	//.use(attachSpecifyUser());
 }
 
+/*
 function attachSpecifyUser(){
-	
 	return compose()
 	.use(function(req, res, next){
 		specifydb.Specifyuser.find(req.user.specifyUserId).then(function(specifyuser){
@@ -49,13 +49,13 @@ function attachSpecifyUser(){
 		});
 	});
 }
+*/
 
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
 function hasRole(roleRequired) {
   if (!roleRequired) throw new Error('Required role needs to be set');
-
   return compose()
     .use(isAuthenticated())
     .use(function meetsRequirements(req, res, next) {
@@ -89,3 +89,4 @@ exports.isAuthenticated = isAuthenticated;
 exports.hasRole = hasRole;
 exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
+

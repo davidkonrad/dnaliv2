@@ -12,15 +12,15 @@ module.exports = function(sequelize, DataTypes) {
 		},
     booking_id: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
+      allowNull: true
     },
     taxon_id: {
       type: DataTypes.INTEGER(11),
-      allowNull: false
+      allowNull: true
     },
 		is_included: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: true
     }
 
 	}, {
@@ -28,5 +28,6 @@ module.exports = function(sequelize, DataTypes) {
 		timestamps: false,
 		freezeTableName: true
 	});
+
 	return Booking_taxon;
 };

@@ -95,19 +95,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
 		tableName: 'booking_klasse',
 		timestamps: false,
-		freezeTableName: true,
-
-		classMethods: {
-			associate: function(models) {
-				console.log('klasse', models);
-				models.Klasse
-					.belongsToMany(models.Booking, {
-						foreignKey: 'booking_id'
-					});
+		freezeTableName: true
 			
-			}
-		}
-
 	});
 
 	return Klasse;

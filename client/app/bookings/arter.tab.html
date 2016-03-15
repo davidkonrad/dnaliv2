@@ -82,7 +82,7 @@ b.dk {
 			<td colspan="4" class="artsgruppe">{{ artsgruppe }}</td>
 		</tr>
 		<tr ng-repeat="(index, art) in taxons[artsgruppe]" ng-show="art.taxon_basisliste == 1">
-		<td class="check-col"><input type="checkbox" ng-model="art.projekt.is_included" ng-checked="art.projekt.is_included" title="Medtag art i projekt" ng-click="projektTaxonToggle(art)"></td>
+		<td class="check-col"><input type="checkbox" ng-model="art.booking.is_included" ng-checked="art.booking.is_included" title="Medtag art i projekt" ng-click="bookingTaxonToggle(art)"></td>
 			<td>{{ art.taxon_navn }}</td>
 			<td>{{ art.taxon_navn_dk }}</td>
 			<td style="text-align:right;">

@@ -46,7 +46,7 @@ angular.module('dnalivApp')
 	 */
 		$scope.createBooking = function() {
 			var kode = prompt('SagsNo: ', '');
-			if (kode != '') Booking.save({ booking_id: '' }, { booking_kode: kode }).$promise.then(function(booking) {	
+			if (kode != '') Booking.save({ booking_id: '' }, { sagsNo: kode }).$promise.then(function(booking) {	
 				$scope.loadBooking(booking.booking_id)
 			})
 		}
@@ -199,11 +199,14 @@ angular.module('dnalivApp')
 			console.log(art);
 			if (art.booking.is_included) {
 				if (art.booking.booking_taxon_id) {
+					console.log('toggle 1');
 					Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: true })
 				} else {
+					console.log('toggle 2');
 					Booking_taxon.save({ booking_taxon_id: ''}, { booking_id: $scope.booking.booking_id, taxon_id: art.taxon_id })
 				}
 			} else {
+					console.log('toggle 3');
 				Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: false})
 			}
 		}
