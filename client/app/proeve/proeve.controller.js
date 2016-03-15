@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$http', function ($scope, $http, Taxon) {
+  .controller('ProeveCtrl', ['$scope', '$http', function ($scope, $http, Taxon) {
 
 		/*
 		$scope.reloadTaxons = function() {
