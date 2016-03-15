@@ -2,10 +2,10 @@
 -- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Mar 15, 2016 at 06:29 AM
--- Server version: 5.5.44-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.13
+-- Vært: localhost
+-- Genereringstid: 15. 03 2016 kl. 15:31:31
+-- Serverversion: 5.5.47-0ubuntu0.14.04.1-log
+-- PHP-version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `booking`
+-- Struktur-dump for tabellen `booking`
 --
 
 CREATE TABLE IF NOT EXISTS `booking` (
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS `booking` (
   `periode` int(11) NOT NULL,
   `aar_periode` int(11) NOT NULL,
   PRIMARY KEY (`booking_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=243 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=246 ;
 
 --
--- Dumping data for table `booking`
+-- Data dump for tabellen `booking`
 --
 
 INSERT INTO `booking` (`booking_id`, `sagsNo`, `status`, `timestamp_created`, `periode`, `aar_periode`) VALUES
@@ -282,12 +282,12 @@ INSERT INTO `booking` (`booking_id`, `sagsNo`, `status`, `timestamp_created`, `p
 (239, 'F13-029', 0, '2016-03-15 04:51:33', 4, 2),
 (240, 'F13-030', 0, '2016-03-15 04:51:34', 4, 2),
 (241, 'F14-001', 0, '2016-03-15 04:51:34', 4, 2),
-(242, '', 0, '2016-03-15 04:51:34', 0, 0);
+(245, 'qwerty', 0, '0000-00-00 00:00:00', 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `booking_klasse`
+-- Struktur-dump for tabellen `booking_klasse`
 --
 
 CREATE TABLE IF NOT EXISTS `booking_klasse` (
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS `booking_klasse` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=274 ;
 
 --
--- Dumping data for table `booking_klasse`
+-- Data dump for tabellen `booking_klasse`
 --
 
 INSERT INTO `booking_klasse` (`klasse_id`, `booking_id`, `status`, `institutionsnavn`, `adresse`, `postnr`, `by`, `kommune`, `region`, `klassetrin`, `fag`, `laererNavn`, `laererTlf`, `laererEmail`, `antalElever`, `antalLaerer`, `KuvertProeverAfsendt`, `Proevermodtaget`, `SendtInfoMailTilLaerer`, `UdtraekFraFiskedatabasen`, `DatoForBesoeg`, `DatoForBooking`, `DatoForEkst`) VALUES
@@ -601,7 +601,7 @@ INSERT INTO `booking_klasse` (`klasse_id`, `booking_id`, `status`, `institutions
 -- --------------------------------------------------------
 
 --
--- Table structure for table `booking_kommentar`
+-- Struktur-dump for tabellen `booking_kommentar`
 --
 
 CREATE TABLE IF NOT EXISTS `booking_kommentar` (
@@ -614,7 +614,7 @@ CREATE TABLE IF NOT EXISTS `booking_kommentar` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `booking_taxon`
+-- Struktur-dump for tabellen `booking_taxon`
 --
 
 CREATE TABLE IF NOT EXISTS `booking_taxon` (
@@ -623,12 +623,28 @@ CREATE TABLE IF NOT EXISTS `booking_taxon` (
   `taxon_id` int(11) NOT NULL,
   `is_included` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`booking_taxon_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
+
+--
+-- Data dump for tabellen `booking_taxon`
+--
+
+INSERT INTO `booking_taxon` (`booking_taxon_id`, `booking_id`, `taxon_id`, `is_included`) VALUES
+(1, 10, 1, 1),
+(2, 10, 3, 1),
+(3, 10, 5, 1),
+(4, 10, 8, 1),
+(5, 10, 9, 1),
+(6, 10, 23, 1),
+(7, 245, 5, 1),
+(8, 245, 3, 1),
+(9, 245, 8, 1),
+(10, 245, 9, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fag`
+-- Struktur-dump for tabellen `fag`
 --
 
 CREATE TABLE IF NOT EXISTS `fag` (
@@ -638,7 +654,7 @@ CREATE TABLE IF NOT EXISTS `fag` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `fag`
+-- Data dump for tabellen `fag`
 --
 
 INSERT INTO `fag` (`fag_id`, `fag_navn`) VALUES
@@ -654,7 +670,7 @@ INSERT INTO `fag` (`fag_id`, `fag_navn`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `klassetrin`
+-- Struktur-dump for tabellen `klassetrin`
 --
 
 CREATE TABLE IF NOT EXISTS `klassetrin` (
@@ -664,7 +680,7 @@ CREATE TABLE IF NOT EXISTS `klassetrin` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `klassetrin`
+-- Data dump for tabellen `klassetrin`
 --
 
 INSERT INTO `klassetrin` (`klassetrin_id`, `klassetrin_navn`) VALUES
@@ -675,7 +691,7 @@ INSERT INTO `klassetrin` (`klassetrin_id`, `klassetrin_navn`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `klasse_kommentar`
+-- Struktur-dump for tabellen `klasse_kommentar`
 --
 
 CREATE TABLE IF NOT EXISTS `klasse_kommentar` (
@@ -686,7 +702,7 @@ CREATE TABLE IF NOT EXISTS `klasse_kommentar` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=80 ;
 
 --
--- Dumping data for table `klasse_kommentar`
+-- Data dump for tabellen `klasse_kommentar`
 --
 
 INSERT INTO `klasse_kommentar` (`klasse_kommentar_id`, `klasse_id`, `kommentar`) VALUES
@@ -773,7 +789,7 @@ INSERT INTO `klasse_kommentar` (`klasse_kommentar_id`, `klasse_id`, `kommentar`)
 -- --------------------------------------------------------
 
 --
--- Table structure for table `klasse_lokalitet`
+-- Struktur-dump for tabellen `klasse_lokalitet`
 --
 
 CREATE TABLE IF NOT EXISTS `klasse_lokalitet` (
@@ -789,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `klasse_lokalitet` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=274 ;
 
 --
--- Dumping data for table `klasse_lokalitet`
+-- Data dump for tabellen `klasse_lokalitet`
 --
 
 INSERT INTO `klasse_lokalitet` (`klasse_lokalitet_id`, `booking_id`, `klasse_id`, `navn`, `X_GPS`, `Y_GPS`, `latitude`, `longitude`) VALUES
@@ -1070,7 +1086,20 @@ INSERT INTO `klasse_lokalitet` (`klasse_lokalitet_id`, `booking_id`, `klasse_id`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sample`
+-- Struktur-dump for tabellen `proeve`
+--
+
+CREATE TABLE IF NOT EXISTS `proeve` (
+  `proeve_id` int(11) NOT NULL AUTO_INCREMENT,
+  `proeve_nummer` varchar(40) DEFAULT NULL,
+  `indsamlingsdato` datetime DEFAULT NULL,
+  PRIMARY KEY (`proeve_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur-dump for tabellen `sample`
 --
 
 CREATE TABLE IF NOT EXISTS `sample` (
@@ -1088,7 +1117,7 @@ CREATE TABLE IF NOT EXISTS `sample` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sample_taxon`
+-- Struktur-dump for tabellen `sample_taxon`
 --
 
 CREATE TABLE IF NOT EXISTS `sample_taxon` (
@@ -1102,7 +1131,7 @@ CREATE TABLE IF NOT EXISTS `sample_taxon` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `taxon`
+-- Struktur-dump for tabellen `taxon`
 --
 
 CREATE TABLE IF NOT EXISTS `taxon` (
@@ -1116,7 +1145,7 @@ CREATE TABLE IF NOT EXISTS `taxon` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
--- Dumping data for table `taxon`
+-- Data dump for tabellen `taxon`
 --
 
 INSERT INTO `taxon` (`taxon_id`, `taxon_navn`, `taxon_navn_dk`, `taxon_artsgruppe`, `taxon_basisliste`) VALUES
@@ -1147,7 +1176,7 @@ INSERT INTO `taxon` (`taxon_id`, `taxon_navn`, `taxon_navn_dk`, `taxon_artsgrupp
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Struktur-dump for tabellen `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
