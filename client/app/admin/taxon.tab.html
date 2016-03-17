@@ -45,7 +45,16 @@ b.dk {
 </div>
 </script>
 
+<br>
 <table class="table table-condensed" >
+	<thead>
+		<tr>
+			<th></th>
+			<th>Navn</th>
+			<th>Dansk navn</th>
+			<th></th>
+		</tr>
+	</thead>
 
 	<tbody>
 		<tr class="success">
@@ -68,14 +77,7 @@ b.dk {
 		</tr>
 	</tbody>
 
-	<thead>
-		<tr>
-			<th></th>
-			<th>Navn</th>
-			<th>Dansk navn</th>
-			<th></th>
-		</tr>
-	</thead>
+
   <tbody ng-repeat="(artsgruppe, arter) in taxons">
 		<tr class="active">
 			<td colspan="4" class="artsgruppe">{{ artsgruppe }}</td>
