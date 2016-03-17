@@ -9,12 +9,12 @@
   </div>
 
   <div class="form-group">
-    <label for="DatoForBooking">Booking dato</label>
+    <label for="DatoForBooking">Dato booking</label>
     <input type="text" ng-model="booking.DatoForBooking" bs-datepicker data-date-language="da" data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBooking" ng-disabled="bookingLoaded()">
   </div>
 
   <div class="form-group">
-    <label for="DatoForBesoeg">Besøg dato</label>
+    <label for="DatoForBesoeg">Dato besøg</label>
     <input type="text" ng-model="booking.DatoForBesoeg" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" ng-disabled="bookingLoaded()">
   </div>
 
@@ -60,10 +60,12 @@
 					<form class="form-inline">
 						<div class="form-group">
 					  	<label for="status">Status</label>
-							<select class="form-control input-sm" ng-model="klasse.status">
+							<select class="form-control input-sm" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status">
+							<!--
 								<option value="-1">Aflyst</option>
 								<option value="0">Ikke bekræftet</option>
 								<option value="1">Bekræftet</option>
+							-->
 							</select>
 					  	<label for="status">Dato booking</label>
 					    <input type="text" ng-model="klasse.DatoForBooking" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">

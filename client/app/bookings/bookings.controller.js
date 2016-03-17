@@ -4,6 +4,10 @@ angular.module('dnalivApp')
   .controller('BookingCtrl', ['$scope', '$routeParams', '$http', '$timeout', 'Auth', 'Utils', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
 	function ($scope, $routeParams, $http, $timeout, Auth, Utils, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
 
+		$scope.statusOptions = [{ "value": -1, "text": "Aflyst" }, 
+														{ "value": 0, "text": "Ikke bekræftet" }, 
+														{ "value": 1, "text": "Bekræftet" }];
+
 		$scope.booking = {};
 		$scope.bookings = [];
 		$scope.projectLoaded = function() {
@@ -135,7 +139,7 @@ angular.module('dnalivApp')
 	 * Attach a new klasse to the current booking
 	 */
 		$scope.createKlasse = function() {
-			Klasse.save({ klasse_id: '' }, { booking_id: $scope.booking.booking_id }).$promise.then(function(klasse) {
+			Klasse.save({ klasse_id: '' }, { booking_id: $scope.booking.booking_id, institutionsnavn: '< mangler >' }).$promise.then(function(klasse) {
 				$scope.loadKlasser($scope.booking.booking_id)
 			})
 		}
