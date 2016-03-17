@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('BookingCtrl', ['$scope', '$http', '$timeout', 'Auth', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
-	function ($scope, $http, $timeout, Auth, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
+  .controller('BookingCtrl', ['$scope', '$routeParams', '$http', '$timeout', 'Auth', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
+	function ($scope, $routeParams, $http, $timeout, Auth, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
 
 		var getObj = function($resource, prefix) {
 			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
@@ -39,6 +39,10 @@ angular.module('dnalivApp')
 					$scope.loadBooking(item.booking_id)
 				}
 			})
+			//load booking if we have /:id
+			if ($routeParams.id) {
+				$scope.loadBookingBySagsNo($routeParams.id)
+			}
 		})
 
 	/**
@@ -56,6 +60,7 @@ angular.module('dnalivApp')
 	 * @param {int} booking_id - unique booking_id of the booking
 	 */
 		$scope.loadBooking = function(booking_id) {
+			console.log(booking_id)
 			Booking.get({ id: booking_id }).$promise.then(function(booking) {	
 				$scope.booking = getObj(booking)
 				console.log($scope.booking);
@@ -64,6 +69,17 @@ angular.module('dnalivApp')
 				document.querySelector('.booking-typeahead').value = booking.sagsNo
 			})
 		}
+
+	/**
+	 * Load a booking by sagsNo
+	 * @param {string} sagsNo - sagsNo of the booking
+	 */
+		$scope.loadBookingBySagsNo = function(sagsNo) {
+			$scope.bookings.forEach(function(booking) {
+				if (booking.sagsNo == sagsNo) $scope.loadBooking(booking.booking_id);
+			})
+		}
+
 
 	/**
 	 * Save current booking

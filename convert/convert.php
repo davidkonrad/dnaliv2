@@ -137,8 +137,10 @@ class Convert extends Db {
 		$SQL='select * from booking where sagsNo = "'.$record['SagsNo'].'"';
 		$id = $this->getValue($SQL);
 		if (!$id) {
-			$SQL='insert into booking (sagsNo, aar_periode, periode) values('.
+			$SQL='insert into booking (sagsNo, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
 				$this->q($record['SagsNo']) .
+				$this->q($record['DatoForBookning']) .
+				$this->q($record['DatoForBesoeg']) .
 				$this->q($record['Aar_periode']) .
 				$this->q($record['Periode'], false) .
 			')';

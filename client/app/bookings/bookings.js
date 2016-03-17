@@ -6,7 +6,12 @@ angular.module('dnalivApp')
       .when('/bookings', {
         templateUrl: 'app/bookings/bookings.html',
         controller: 'BookingCtrl'
+      })
+      .when('/bookings/:id', {
+        templateUrl: 'app/bookings/bookings.html',
+        controller: 'BookingCtrl'
       });
+
   });
 
 

@@ -21,7 +21,7 @@ class Db {
 			$this->database = 'dnaliv';
 			$this->hostname = 'localhost';
 			$this->username = 'root';
-			$this->password = 'dadk';
+			$this->password = 'zoo';
 		}
 
 		try {

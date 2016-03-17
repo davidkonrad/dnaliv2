@@ -45,6 +45,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    DatoForBooking: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    DatoForBesoeg: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     status: {
       type: DataTypes.INTEGER(1),
       allowNull: true
@@ -66,30 +74,6 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'booking',
 		timestamps: false,
     freezeTableName: true
-
-		/*
-		classMethods: {
-			associate: function(models) {
-				console.log('booking', models);
-				models.Booking.hasMany(models.Klasse, {foreignKey : 'booking_id'});
-			}
-		},
-
-		instanceMethods: {
-			getKlasser: function(models, user) {
-				consol.elog('ok');
-				return sequelize.query('SELECT * FROM booking_klasse WHERE booking_id =:booking_id; ', models.Klasse, 
-					{
-							raw: true
-					}, {
-							booking_id: this.booking_id
-					})
-					.then(function(klasser) {
-						return sequelize.Promise.resolve(klasser)
-					})
-			  }
-		}
-		*/
 	})	
 
 	return Booking

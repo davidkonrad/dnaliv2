@@ -21,7 +21,10 @@
     "leaflet-providers": "~1.1.7",
     "proj4": "*",
     "proj4leaflet": "*",
-    "angular-inview": "^1.5.6"
+    "angular-inview": "^1.5.6",
+		"datatables" : "~1.10.9",
+		"angular-datatables" : "*"
+
 
   },
   "devDependencies": {
