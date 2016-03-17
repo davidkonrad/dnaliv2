@@ -1,21 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('BookingCtrl', ['$scope', '$routeParams', '$http', '$timeout', 'Auth', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
-	function ($scope, $routeParams, $http, $timeout, Auth, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
-
-		var getObj = function($resource, prefix) {
-			var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
-					prop, p = {};
-			for (prop in $resource) {
-				if (prefix) {
-					if (~prop.indexOf(prefix)) p[prop] = $resource[prop]
-				} else {
-					if (!~exclude.indexOf(prop)) p[prop] = $resource[prop]
-				}
-			}
-			return p;
-		}
+  .controller('BookingCtrl', ['$scope', '$routeParams', '$http', '$timeout', 'Auth', 'Utils', 'Booking', 'Klasse', 'Klassetrin', 'Fag', 'Taxon', 'Booking_taxon', 
+	function ($scope, $routeParams, $http, $timeout, Auth, Utils, Booking, Klasse, Klassetrin, Fag, Taxon, Booking_taxon) { 
 
 		$scope.booking = {};
 		$scope.bookings = [];
@@ -62,7 +49,7 @@ angular.module('dnalivApp')
 		$scope.loadBooking = function(booking_id) {
 			console.log(booking_id)
 			Booking.get({ id: booking_id }).$promise.then(function(booking) {	
-				$scope.booking = getObj(booking)
+				$scope.booking = Utils.getObj(booking)
 				console.log($scope.booking);
 				$scope.loadBookingTaxons();
 				$scope.loadKlasser(booking.booking_id)

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Booking', 'Klasse', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',  
-		function ($scope, $location, Booking, Klasse, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Booking', 'Klasse', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',  
+		function ($scope, $location, Utils, Booking, Klasse, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 		
 		Klasse.query().$promise.then(function(klasser) {	
 			$scope.klasser = klasser.map(function(klasse) {
@@ -11,8 +11,9 @@ angular.module('dnalivApp')
 			Booking.query().$promise.then(function(bookings) {	
 				$scope.bookings = bookings.map(function(booking) {
 					booking.klasser = $scope.getKlasser(booking.booking_id)
-					return booking
+					return Utils.getObj(booking)
 				})
+				console.log($scope.bookings)
 			})
 		})
 
@@ -26,8 +27,10 @@ angular.module('dnalivApp')
 			})
 			return klasser
 		}
-					
+		
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
+			//.withOption('data', $scope.bookings)
+			//.withDataProp('')
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
 			.withOption('initComplete', function() {
@@ -56,7 +59,7 @@ angular.module('dnalivApp')
 	        "sSortAscending":  ": activate to sort column ascending",
 	        "sSortDescending": ": activate to sort column descending"
 		    }
-		});
+		})
 
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
@@ -66,14 +69,14 @@ angular.module('dnalivApp')
     ];  
 
 		$scope.bookingColumnDefs = [
-        DTColumnDefBuilder.newColumnDef([1,2]).renderWith(function(data, type, full) {
-					var d = new Date(data);
-					if (!isNaN(d.getTime())) {
-						return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
-					} else {
-						return '-'
-					}
-				})
+      DTColumnDefBuilder.newColumnDef([1,2]).renderWith(function(data, type, full) {
+				var d = new Date(data);
+				if (!isNaN(d.getTime())) {
+					return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
+				} else {
+					return '-'
+				}
+			})
     ]
 
 		$scope.showBooking = function(sagsNo) {
