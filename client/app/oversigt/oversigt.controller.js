@@ -13,7 +13,6 @@ angular.module('dnalivApp')
 					booking.klasser = $scope.getKlasser(booking.booking_id)
 					return Utils.getObj(booking)
 				})
-				console.log($scope.bookings)
 			})
 		})
 
@@ -21,7 +20,7 @@ angular.module('dnalivApp')
 			var klasser = '';
 			$scope.klasser.forEach(function(klasse) {
 				if (klasse.booking_id == booking_id) {
-					if (klasser != '') klasser += ' / ';
+					if (klasser != '') klasser += ' · ';
 					klasser += klasse.klassetrin+' '+klasse.fag+', '+klasse.institutionsnavn
 				}
 			})
@@ -29,13 +28,12 @@ angular.module('dnalivApp')
 		}
 		
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
-			//.withOption('data', $scope.bookings)
-			//.withDataProp('')
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
+				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage({
 		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",

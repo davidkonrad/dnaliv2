@@ -1,6 +1,5 @@
 <div class="container">
 
-	<h4>Bookings</h4>
 	<table datatable="ng" dt-options="bookingOptions" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
 		<tbody>
 			<tr ng-repeat="booking in bookings" ng-dblclick="showBooking(booking.sagsNo)" >

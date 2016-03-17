@@ -1,57 +1,32 @@
 <style>
-fieldset {
-	border: 1px solid #ebebeb !important;
-	padding: 0 1em 1em 1em !important;
-	margin: 0 0 0.5em 0 !important;
-	-webkit-box-shadow:  0px 0px 0px 0px #000;
-  box-shadow:  0px 0px 0px 0px #000;
-	padding-bottom: 5px;
-	margin-bottom: 5px;
-}
-legend {
-	font-size: 100% !important;
-	text-align: left !important;
-	width:auto;
-	margin-bottom: 5px;
-	border-bottom:none;
-}
-.float-right {
-	float: right;
-}
-
-.no-pad {
-	padding-left: 1px !important;
-	padding-right: 1px !important;
-}
-.no-pad-l {
-	padding-left: 1px !important;
-}
-.no-pad-r {
-	padding-right: 1px !important;
-}
-label {
-	font-weight: normal;
-}
 </style>
 <br>
 
-
-
-<!--- --->
 <form class="form-inline" role="form">
   <div class="form-group">
-    <label for="sagsNo">sagsnr.&nbsp;</label>
+    <label for="sagsNo">Sagsnr.&nbsp;</label>
     <input type="text" ng-model="booking.sagsNo" class="form-control input-sm" size="10" id="sagsNo" ng-disabled="bookingLoaded()">
   </div>
+
+  <div class="form-group">
+    <label for="DatoForBooking">Booking dato</label>
+    <input type="text" ng-model="booking.DatoForBooking" bs-datepicker data-date-language="da" data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBooking" ng-disabled="bookingLoaded()">
+  </div>
+
+  <div class="form-group">
+    <label for="DatoForBesoeg">Besøg dato</label>
+    <input type="text" ng-model="booking.DatoForBesoeg" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" ng-disabled="bookingLoaded()">
+  </div>
+
   <div class="form-group">
     <label for="aar_periode">Årsperiode</label>
-    <input type="text" ng-model="booking.aar_periode" class="form-control input-sm" size="3" id="aar_periode" ng-disabled="bookingLoaded()">
+    <input type="number" ng-model="booking.aar_periode" class="form-control input-sm" size="1" id="aar_periode" ng-disabled="bookingLoaded()">
   </div>
   <div class="form-group">
     <label for="periode">Periode</label>
-    <input type="text" ng-model="booking.periode" class="form-control input-sm" size="3" id="periode" ng-disabled="bookingLoaded()">
+    <input type="number" ng-model="booking.periode" class="form-control input-sm" size="1" id="periode" ng-disabled="bookingLoaded()">
   </div>
-  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveProjekt()"	>Gem</button>
+  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveBooking()"	>Gem</button>
 </form>
 
 <br>
@@ -136,7 +111,6 @@ label {
 							<div class="col-sm-2 no-pad-l">
 								<input type="text" ng-model="klasse.region" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Region">
 							</div>
-
 						</div>
 					</form>
 				</fieldset>
@@ -158,7 +132,6 @@ label {
 					</form>
 				</fieldset>
 
-				
 				<fieldset>
 					<legend>Klasse</legend>
 					<form class="form-horizontal">
@@ -186,7 +159,6 @@ label {
 						</div>
 					</form>
 				</fieldset>
-
 
 			</div>
 		</div>

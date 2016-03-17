@@ -47,10 +47,8 @@ angular.module('dnalivApp')
 	 * @param {int} booking_id - unique booking_id of the booking
 	 */
 		$scope.loadBooking = function(booking_id) {
-			console.log(booking_id)
 			Booking.get({ id: booking_id }).$promise.then(function(booking) {	
 				$scope.booking = Utils.getObj(booking)
-				console.log($scope.booking);
 				$scope.loadBookingTaxons();
 				$scope.loadKlasser(booking.booking_id)
 				document.querySelector('.booking-typeahead').value = booking.sagsNo
@@ -72,6 +70,7 @@ angular.module('dnalivApp')
 	 * Save current booking
 	 */
 		$scope.saveBooking = function() {
+			console.log('save');
 			Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
 		}
 
@@ -84,11 +83,9 @@ angular.module('dnalivApp')
 				$scope.klasser = klasser.filter(function(klasse) {
 					if (klasse.booking_id == booking_id) {
 						klasse.edited = false
-						//klasse.DatoForBooking = Date.parse('2014-09-19')
 						return klasse
 					}
 				})
-				console.log('loadklasser', $scope.klasser)
 			})
 		}
 
@@ -118,7 +115,6 @@ angular.module('dnalivApp')
 					angular.element(inputs[i]).removeClass('ng-dirty')
 				}
 			}
-
 		}
 
 	/**
@@ -168,6 +164,11 @@ angular.module('dnalivApp')
 			})
 		}
 
+	/**
+	 * Returns object containing status of the taxon (included or not included)
+	 * and the booking_taxon_id as well, if it exists.
+	 * @param {int} taxon_id - taxon_id for specie in the Taxon tabke
+	 */
 		$scope.taxonIsIncluded = function(taxon_id) {
 			var result =  { is_included: false, booking_taxon_id: false };
 			for (var i=0;i<$scope.bookingTaxons.length; i++) {
@@ -197,19 +198,19 @@ angular.module('dnalivApp')
 				console.log($scope.taxons);
 			})
 		}
-	
+
+	/**
+	 * Toggles a taxon for the current booking
+	 * @param {object} art - A single art resource from the ng-modelled booking taxons
+	 */
 		$scope.bookingTaxonToggle = function(art) {
-			console.log(art);
 			if (art.booking.is_included) {
 				if (art.booking.booking_taxon_id) {
-					console.log('toggle 1');
 					Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: true })
 				} else {
-					console.log('toggle 2');
 					Booking_taxon.save({ booking_taxon_id: ''}, { booking_id: $scope.booking.booking_id, taxon_id: art.taxon_id })
 				}
 			} else {
-					console.log('toggle 3');
 				Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: false})
 			}
 		}
