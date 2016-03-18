@@ -1,6 +1,5 @@
 'use strict';
 
-
 module.exports = function(sequelize, DataTypes) {
 	var Proeve = sequelize.define("proeve", {
     proeve_id: {
@@ -42,6 +41,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     Mailadresse: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    Lokalitet: {
       type: DataTypes.STRING,
       allowNull: true
     },
