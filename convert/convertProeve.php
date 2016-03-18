@@ -2,15 +2,20 @@
 
 include('Db.php');
 
-class Convert extends Db {
+class ConvertProeve extends Db {
 	private $file = '';
+	private $dataset = '';
 	
-	public function __construct($file) {
+	public function __construct($file, $dataset) {
 		parent::__construct();
 
-		$this->$file = $file;
-		mysql_set_charset('utf8');
+		$this->file = $file;
+		$this->dataset = $dataset;
 
+		mysql_set_charset('utf8');
+  }
+
+	public function run() {
 		if (($handle = fopen($this->file, "r")) !== false) {
 			$this->fieldNames = fgetcsv($handle, 1000, ',');
 
@@ -34,86 +39,33 @@ class Convert extends Db {
 				print_r($array);
 				echo '</pre>';
 
-				$bookingId = $this->getBookingId($array);
-				echo $bookingId.'<br>';
+				$ngUl = isset($array['ngUl']) ? $array['ngUl'] : '';
 
-				$pb = explode(' ',$array['Postnummer']);
-				$postnr = isset($pb[0]) ? $pb[0] : '';
-				$by = isset($pb[1]) ? $pb[1] : '';
-
-				$kf = explode(' ',$array['Klasse']);
-				$klassetrin = isset($kf[0]) ? $kf[0] : false;
-				$fag = isset($kf[1]) ? $kf[1] : false;
-
-				$SQL='insert into booking_klasse (booking_id, status, adresse, postnr, `by`, kommune, region, institutionsnavn, laererNavn, '.
-								'laererTlf, laererEmail, antalElever, antalLaerer, fag, klassetrin, DatoForBesoeg, DatoForBooking, DatoForEkst, '.
-								'SendtInfoMailTilLaerer, UdtraekFraFiskedatabasen) values('. 
-
-					$this->q($bookingId) .
-					$this->q($this->statusToNum($array['Status'])) .
-					$this->q($array['Adresse']) .
-					$this->q($postnr) .
-					$this->q($by) .
-					$this->q($array['Kommune']) .
-					$this->q($array['Region']) .
-					$this->q($array['Institutionsnavn']) .
-					$this->q($array['Laerer']) .
-					$this->q($array['LaererTlf']) .
+				$SQL='insert into proeve (proeve_nr, indsamlingsdato, GPS_X, GPS_Y, Lat, `Long` , Analyseret, Indsamler, Mailadresse, '.
+											'ProeverModtaget, DatoForEkst, ElueretI, ngUl, AntalKuverter, SNM_Adresse, kommentar, dataset) values('.
+					$this->q($array['ProeveID']) .
+					$this->q($array['DatoForIndsamling']) .
+					$this->q($array['GPS_X']) .
+					$this->q($array['GPS_Y']) .
+					$this->q($array['Lat']) .
+					$this->q($array['Lon']) .
+					$this->q($array['Analyseret']) .
+					$this->q($array['Indsamler']) .
 					$this->q($array['Mailadresse']) .
-					$this->q($array['AntalElever']) .					
-					$this->q($array['AntalLaerer']) .
-					$this->q($fag) .
-					$this->q($klassetrin) .
-					$this->q($array['DatoForBesoeg']) .		
-					$this->q($array['DatoForBookning']) .		
+					$this->q($array['ProeverModtaget']) .
 					$this->q($array['DatoForEkst']) .
-					$this->q($array['SendtInfoMailTilLaerer']) .		
-					$this->q($array['UdtraekFraFiskedatabasen'], false) .		
-
+					$this->q($array['ElueretI']) .
+					$this->q($ngUl) .
+					$this->q($array['AntalKuverter']) .
+					$this->q($array['SNM_Adresse']) .
+					$this->q($array['Kommentar']) .
+					$this->q($this->dataset, false) .
 				')';
 
-				echo '<br>'.$SQL.'<br>';
+				echo $SQL.'<br>';
+
 				$this->exec($SQL);
-			
-				$klasseId = mysql_insert_id();
-
-				//insert lokalitet
-				$SQL='insert into klasse_lokalitet (klasse_id, booking_id, navn, X_GPS, Y_GPS, latitude, longitude) values('.
-					$this->q($bookingId) .
-					$this->q($klasseId) .
-					$this->q($array['Lokalitet']) .
-					$this->q($array['X_GPS']) .
-					$this->q($array['Y_GPS']) .
-					$this->q($array['Latitude']) .
-					$this->q($array['Longitude'], false) .
-				')';
-
-				echo '<br>'.$SQL.'<br>';
-				$this->exec($SQL);
-
-				//insert kommentar
-				if ($array['Kommentarer'] != '') {
-					$SQL='insert into klasse_kommentar (klasse_id, kommentar) values('.
-						$this->q($klasseId) .
-						$this->q($array['Kommentarer'], false) .
-					')';
-					$this->exec($SQL);
-				}
-	
-				//$this->records[]=$array;
-				$count++;
 			}
-		}
-	}
-
-	private function statusToNum($status) {
-		switch ($status) {
-			case 'Bekræftet' :
-					return 1; break;
-			case 'Aflyst' :
-					return -1; break;
-			default :
-					return 0; break;
 		}
 	}
 
@@ -124,33 +76,18 @@ class Convert extends Db {
 		$this->exec($SQL);
 	}
 
-	private function emptyTables() {
-		$this->resetTable('booking');
-		$this->resetTable('booking_klasse');
-		$this->resetTable('booking_taxon');
-		$this->resetTable('klasse_lokalitet');
-		$this->resetTable('klasse_kommentar');
+	public function emptyTables() {
+		$this->resetTable('proeve');
 	}
 
-	private function getBookingId($record) {
-		$SQL='select * from booking where sagsNo = "'.$record['SagsNo'].'"';
-		$id = $this->getValue($SQL);
-		if (!$id) {
-			$SQL='insert into booking (sagsNo, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
-				$this->q($record['SagsNo']) .
-				$this->q($record['DatoForBookning']) .
-				$this->q($record['DatoForBesoeg']) .
-				$this->q($record['Aar_periode']) .
-				$this->q($record['Periode'], false) .
-			')';
-			$this->exec($SQL);
-			$id = mysql_insert_id();
-		}
-		return $id;
-	}
 				
 }
 
-$convert = new Convert();
+$convert = new ConvertProeve('../projectdata/snm2014.csv', 'SNM2014');
+$convert->emptyTables();
+$convert->run();
+
+$convert = new ConvertProeve('../projectdata/snm2015.csv', 'SNM2015');
+$convert->run();
 
 ?>

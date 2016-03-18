@@ -1,4 +1,4 @@
-"Lokalitet","GPS","GPS","Lat","Lon","Dato for indsamling","Prøve-ID","Analyseret","Indsamler","Mailadresse","Antal kuverter","SNM-adresse","Kuvert afsendt","Prøver modtaget","Dato for ekst.","Elueret i","Kommentar"
+"Lokalitet","GPS_X","GPS_Y","Lat","Lon","DatoForIndsamling","ProeveID","Analyseret","Indsamler","Mailadresse","AntalKuverter","SNM_Adresse","KuvertAfsendt","ProeverModtaget","DatoForEkst","ElueretI","Kommentar"
 "Allerød Søpark",,,55.856805,12.33108,7/27/2014,"DL_SNM_2014_0001",,"Katja Toft","ktoft@snm.ku.dk",,,,,8/26/2014,"2 x 50 µl EB",
 "Botanisk have dam",,,55.687438,12.5747,7/24/2014,"DL_SNM_2014_0002",,"Leise Fjeldberg",,2,"BH, Øster Farimagsgade 2B",6/10/2014,,8/26/2014,"2 x 50 µl EB",
 "Botanisk have Sø",,,55.686172,12.574429,7/24/2014,"DL_SNM_2014_0003",,"Leise Fjeldberg",,2,"BH, Øster Farimagsgade 2B",6/10/2014,,8/26/2014,"2 x 50 µl EB",
