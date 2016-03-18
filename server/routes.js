@@ -15,6 +15,7 @@ module.exports = function(app) {
 	app.use('/api/fag', require('./api/mysql/fag'));
 	app.use('/api/taxon', require('./api/mysql/taxon'));
 	app.use('/api/booking_taxon', require('./api/mysql/booking_taxon'));
+	app.use('/api/proeve', require('./api/mysql/proeve'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

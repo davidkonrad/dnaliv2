@@ -12,6 +12,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    DatoForBesoeg: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    DatoForBooking: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     status: {
       type: DataTypes.INTEGER(1),
       allowNull: false

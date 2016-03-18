@@ -48,23 +48,23 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    laerer_navn: {
+    laererNavn: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    laerer_tlf: {
+    laererTlf: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    laerer_email: {
+    laererEmail: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    antal_elever: {
+    antalElever: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    antal_laerer: {
+    antalLaerer: {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
@@ -75,6 +75,14 @@ module.exports = function(sequelize, DataTypes) {
     Proevermodtaget: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    SendtInfoMailTilLaerer: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
+    },
+    UdtraekFraFiskedatabasen: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
     },
     DatoForBesoeg: {
       type: DataTypes.DATE,
