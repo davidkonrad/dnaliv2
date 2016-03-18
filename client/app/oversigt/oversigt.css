@@ -18,7 +18,7 @@ td {
 }
 th {
 	white-space: nowrap;
-	padding-left: 4px !important;
+	padding-left: 10px !important;
 	padding-right: 30px !important;
 }
 .inject-control {
@@ -28,4 +28,6 @@ th {
 	float: none;
 	clear: none;
 }
-
+.btn-status {
+	width: 90px;
+}
