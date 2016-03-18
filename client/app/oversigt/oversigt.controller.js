@@ -48,29 +48,7 @@ angular.module('dnalivApp')
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
 				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
-			.withLanguage({
-		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",
-		    "sInfo":           "Viser _START_ til _END_ af _TOTAL_ rækker",
-		    "sInfoEmpty":      "Viser 0 til 0 af 0 rækker",
-  		  "sInfoFiltered":   "(filtreret ud af _MAX_ rækker ialt)",
-  		  "sInfoPostFix":    "",
-  		  "sInfoThousands":  ",",
-		    "sLengthMenu":     "Vis _MENU_ rækker",
-		    "sLoadingRecords": "Loading...",
-		    "sProcessing":     "Processing...",
-		    "sSearch":         "Filtrer:",
-		    "sZeroRecords":    "No matching records found",
-		    "oPaginate": {
-	        "sFirst":    "Første",
-	        "sLast":     "Sidste",
-	        "sNext":     "Næste",
-	        "sPrevious": "Forrige"
-		    },
-		    "oAria": {
-	        "sSortAscending":  ": activate to sort column ascending",
-	        "sSortDescending": ": activate to sort column descending"
-		    }
-		})
+			.withLanguage(Utils.dataTables_daDk)
 
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
