@@ -21,8 +21,6 @@ angular.module('dnalivApp')
 			var status = 0;
 			$scope.klasser.forEach(function(klasse) {
 				if (klasse.booking_id == booking_id) {
-					//console.log(klasse)
-					//if klasse.status is any different from 1, bekræftwet, then return 0 - ikke bekæftet
 					status = klasse.status
 				}
 			})

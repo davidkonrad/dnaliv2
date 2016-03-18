@@ -15,6 +15,15 @@ class ConvertProeve extends Db {
 		mysql_set_charset('utf8');
   }
 
+	private function fixDate($date) {
+		$d = explode('/', $date);
+		if (count($d)==3) {
+			return $d[2].'-'.$d[0].'-'.$d[1];
+		} else {
+			return false;
+		}
+	}
+
 	public function run() {
 		if (($handle = fopen($this->file, "r")) !== false) {
 			$this->fieldNames = fgetcsv($handle, 1000, ',');
@@ -41,19 +50,20 @@ class ConvertProeve extends Db {
 
 				$ngUl = isset($array['ngUl']) ? $array['ngUl'] : '';
 
-				$SQL='insert into proeve (proeve_nr, indsamlingsdato, GPS_X, GPS_Y, Lat, `Long` , Analyseret, Indsamler, Mailadresse, '.
+				$SQL='insert into proeve (proeve_nr, Lokalitet, indsamlingsdato, GPS_X, GPS_Y, Lat, `Long` , Analyseret, Indsamler, Mailadresse, '.
 											'ProeverModtaget, DatoForEkst, ElueretI, ngUl, AntalKuverter, SNM_Adresse, kommentar, dataset) values('.
 					$this->q($array['ProeveID']) .
-					$this->q($array['DatoForIndsamling']) .
+					$this->q($array['Lokalitet']) .
+					$this->q($this->fixDate($array['DatoForIndsamling'])) .
 					$this->q($array['GPS_X']) .
 					$this->q($array['GPS_Y']) .
 					$this->q($array['Lat']) .
 					$this->q($array['Lon']) .
-					$this->q($array['Analyseret']) .
+					$this->q($this->fixDate($array['Analyseret'])) .
 					$this->q($array['Indsamler']) .
 					$this->q($array['Mailadresse']) .
-					$this->q($array['ProeverModtaget']) .
-					$this->q($array['DatoForEkst']) .
+					$this->q($this->fixDate($array['ProeverModtaget'])) .
+					$this->q($this->fixDate($array['DatoForEkst'])) .
 					$this->q($array['ElueretI']) .
 					$this->q($ngUl) .
 					$this->q($array['AntalKuverter']) .

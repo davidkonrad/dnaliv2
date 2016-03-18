@@ -1,5 +1,15 @@
 <div class="container">
 
-<h1>Prøver</h1>
-	
+	<table datatable="ng" dt-options="proeveOptions" dt-columns="proeveColumns" dt-column-defs="proeveColumnDefs">
+		<tbody>
+			<tr ng-repeat="proeve in proever" ng-dblclick="showProeve(proeve.proeve_nr)" >
+				<td> {{ proeve.proeve_nr }} </td>
+				<td> {{ proeve.dataset }} </td>
+				<td> {{ proeve.indsamlingsdato }} </td>
+				<td> {{ proeve.Indsamler }} </td>
+			</tr>
+		</tbody>
+	</table>
+
+
 </div>
