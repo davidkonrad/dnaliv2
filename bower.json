@@ -22,7 +22,8 @@
 		"proj4leaflet": "0.7.2",
     "angular-inview": "^1.5.6",
 		"datatables" : "~1.10.9",
-		"angular-datatables" : "*"
+		"angular-datatables" : "*",
+		"Wicket": "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

@@ -1,9 +1,13 @@
 'use strict';
 
+/**
+	http://spatialreference.org/ref/epsg/etrs89-utm-zone-32n/
+	
+**/
+
 angular.module('dnalivApp')
   .factory('Geo', function() {
 		return {
-			//var pi = 3.14159265358979;
 
 	    /* Ellipsoid model constants (actual values here are for WGS84) */
 	    sm_a: 6378137.0,
@@ -482,9 +486,9 @@ angular.module('dnalivApp')
 	    },	
 
 	    /*
-	    * btnToGeographic_OnClick
+	    * EPSG25832_to_WGS84
 	    *
-	    * Called when the btnToGeographic button is clicked.
+	    * 
 	    *
 	    */
 	    EPSG25832_to_WGS84: function(x, y, zone, sh) {

@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', 'Geo', function ($scope, Geo) {
+  .controller('MainCtrl', ['$scope', 'Geo', 'Utils', function ($scope, Geo, Utils) {
 
-		var latLng = Geo.EPSG25832_to_WGS84(610198.39,6103572.47)
-		console.log('aaa', latLng);
+		var wkt = new Wkt.Wkt();
 
 		var pass = 	'login=davidkonrad&password=nhmdzm&';
 		$scope.map = false;
@@ -71,7 +70,7 @@ angular.module('dnalivApp')
 		}
 
 		$scope.extractLatLng = function(geometryWkt) {
-			console.log(geometryWkt);
+			//console.log(geometryWkt);
 			var latLngs = geometryWkt.match(/(\d+).(\d+)/g)	
 			var latLng = Geo.EPSG25832_to_WGS84(latLngs[0], latLngs[1])
 			return L.latLng(latLng.lng, latLng.lat)
@@ -82,71 +81,45 @@ angular.module('dnalivApp')
 			console.log('WWWW', arguments);
 		}, true)
 
-		console.log(L);
-
 		$scope.initWetland = function() {
-		$('#lokalitet').typeahead({
-			displayText: function(item) {
-				return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
-			},
-			afterSelect: function(item) {
-				console.log($scope.extractLatLng(item.geometryWkt), item);
-				var latLng = $scope.extractLatLng(item.geometryWkt)
-				//var epsg900913 = new L.Proj('EPSG:900913');
-				//var epsg2232 = new L.Proj('EPSG:2232');
-				
-				$scope.map.setView(latLng, 10);
-
-				$scope.wetland = item;
-				var popup = L.popup()
-			    //.setLatLng(L.latLng(-63.30460696647067, 231.29616513848302))
-					.setLatLng(latLng)
-			    .setContent('<p>Hello world!<br />This is a nice popup.</p>')
-			    .openOn($scope.map);
-			}, 
-			items : 20,
-		  source: function(query, process) {
+			$('#lokalitet').typeahead({
+				displayText: function(item) {
+					return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
+				},
+				afterSelect: function(item) {
+					wkt.read(item.geometryWkt);
+					for (var p in wkt.components) {
+						var a = wkt.components[p].map(function(xy) {
+							//Geo.EPSG25832_to_WGS84(latLngs[0], latLngs[1])
+							var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+							return [latLng.lng, latLng.lat]
+						})
+						console.log(a);
+						L.polygon(a).addTo($scope.map);
+					}
+					//console.log(wkt.components);
+					var latLng = $scope.extractLatLng(item.geometryWkt)
+					$scope.map.setView(latLng, 10);
+					$scope.wetland = item;
+					var popup = L.popup()
+				    //.setLatLng(L.latLng(-63.30460696647067, 231.29616513848302))
+						.setLatLng(latLng)
+				    .setContent('<p>Hello world!<br />This is a nice popup.</p>')
+				    .openOn($scope.map);
+				}, 
+				items : 20,
+			  source: function(query, process) {
 				//TODO: run service with tickets instead of hardcoded username / password
 				var pass = "&login=davidkonrad&password=nhmdzm",
 						url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&resources=stednavne_v2&limit=100'+pass;
 	
 		    return $.getJSON(url, function(resp) {
-					var data = [], 
-							caption = '',
-							//TODO, remov - for curiosity only 
-							noWater = ['spredtBebyggelse', 'bydel', 'by', 'gård', 'sten', 'bro', 'hus', 'kløft', 'andenBygning', 'dal', 
-												'museumSamling', 'agerMark', 'eng', 'hede', 'gravhøj', 'højdedrag', 'bakke', 'campingsplads', 'slugt',
-												'kirkeProtestantisk', 'hal', 'skovPlantage', 'stadion', 'vejrmølle', 'udsigtstårn', 'golfbane', 
-												'folkeskole', 'folkehøjskole', 'turistbureau', 'vejbro', 'mindesten', 'langdysse', 'specialskole',
-												'voldVoldsted', 'privatskoleFriskole', 'kommunekontor', 'dyrepark', 'grænsestenGrænsepæl', 'hotel',
-												'andenSeværdighed', 'udsigtspunkt', 'tog', 'boplads', 'øgruppe', 'fagskole', 'fyrtårn', 'blomsterpark',
-												'universitet', 'professionshøjskole', 'kursuscenter', 'uddannelsescenter', 'zoologiskHave',
-												'kirkeAndenKristen', 'herregård', 'storby', 'kolonihave', 'land', 'gravsted', 'kraftvarmeværk', 
-												'undersøiskGrund', 'odde', 'klint', 'halvø', 'rådhus', 'skydebane', 'flyveplads', 'parkAnlæg', 'ø',
-												'sommerhusområde', 'goKartbane', 'dysse', 'løb', 'ruin', 'reservat', 'mindreLufthavn', 'pynt', 'hage',
-												'gymnasium', 'industriområde', 'feriecenter', 'efterskoleUngdomsskole', 'kristen', 'rastepladsMedService',
-												'klippeIOverfladen', 'rastepladsUdenService', 'sommerhusområdedel', 'røse', 'køretekniskAnlæg', 
-												'runddysse', 'landingsplads', 'fængsel', 'bilfærge', 'næs', 'højBanke', 'jættestue', 'vandrerhjem',
-												'sandKlit', 'vandkraftværk', 'hule', 'trafikhavn', 'vindmøllepark', 'fæstningsanlæg', 'motorbane',
-												'strand', 'vej', 'hospital', 'båke', 'skanse', 'runesten', 'vikingeborg', 'slot', 'historiskMindeHistoriskAnlæg',
-												'veteranjernbane', 'cykelbane', 'terminal', 'bredning', 'motorvejskryds', 'skær', 'skibssætning', 
-												'skræntNaturlig', 'motocrossbane', 'forlystelsespark', 'marsk', 'personfærge', 'svæveflyveplads',
-												'hundevæddeløbsbane', 'varde', 'primærRingvej', 'sekundærRingvej', 'restriktionsareal', 'landsdel',
-												'overskylledeSten', 'vejkryds', 'lavning', 'arboret', 'løvtræ', 'bautasten', 'bautasten', 
-												'sti', 'plads', 'heliport', 'hestevæddeløbsbane', 'ledLåge', 'ås', 'observatorium', 'fiskerihavn',
-												'sejlløb', 'nor', 'tomt'
-											],
-							types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump',
-											//doubtful matches
-											'bugt', 'strandpost', 'lystbådehavn', 'sund', 'vandmølle', 'tørtVedLavvande', 'botaniskHave'
-											]
-
-					//console.log(resp);
+					var data = [], caption = '';
 					for (var i in resp.data) {
-						if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
+						if (~Utils.aeWaterTypes.indexOf(resp.data[i].type) || ~Utils.aeWaterTypes.indexOf(resp.data[i].subtype)) {
 							data.push(resp.data[i]);
 						} else {
-							if (!~noWater.indexOf(resp.data[i].subtype)) console.log(resp.data[i].subtype);
+							if (!~Utils.aeNoWater.indexOf(resp.data[i].subtype)) console.log(resp.data[i].subtype);
 						}
 					}			
 					return process(data);		
