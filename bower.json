@@ -19,13 +19,10 @@
     "moment": "~2.9.0",
     "angular-leaflet-directive": "~0.7.7",
     "leaflet-providers": "~1.1.7",
-    "proj4": "*",
-    "proj4leaflet": "*",
+		"proj4leaflet": "0.7.2",
     "angular-inview": "^1.5.6",
 		"datatables" : "~1.10.9",
 		"angular-datatables" : "*"
-
-
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

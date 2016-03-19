@@ -16,6 +16,15 @@ angular.module('dnalivApp')
 				return p;
 			},
 
+			fixDate : function(date) {
+				var d = new Date(date);
+				if (!isNaN(d.getTime())) {
+					return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
+				} else {
+					return '-'
+				}
+			},
+
 			dataTables_daDk : {
 		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",
 		    "sInfo":           "Viser _START_ til _END_ af _TOTAL_ rækker",
@@ -38,17 +47,7 @@ angular.module('dnalivApp')
 	        "sSortAscending":  ": activate to sort column ascending",
 	        "sSortDescending": ": activate to sort column descending"
 		    }
-			},
-
-			fixDate : function(date) {
-				var d = new Date(date);
-				if (!isNaN(d.getTime())) {
-					return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
-				} else {
-					return '-'
-				}
 			}
-
 
 		}
 	});
