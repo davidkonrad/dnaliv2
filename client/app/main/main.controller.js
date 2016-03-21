@@ -1,17 +1,32 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', 'Geo', 'Utils', function ($scope, Geo, Utils) {
+  .controller('MainCtrl', ['$scope', 'Geo', 'Utils', '$timeout', '$modal', function($scope, Geo, Utils, $timeout, $modal) {
 
-		var wkt = new Wkt.Wkt();
+		$scope.showModal = function() {
+			$modal({
+				title: 'My Title', 
+				templateUrl: 'app/main/lokalitet.modal.html',
+				backdrop: 'static',
+				show: true
+			})
+			$timeout(function() {
+				$scope.initWetland()
+				$scope.initializeMap()
+			}, 300)
+		}
 
-		var pass = 	'login=davidkonrad&password=nhmdzm&';
 		$scope.map = false;
 		$scope.initializeMap = function() {
+			$scope.wkt = $scope.wkt || new Wkt.Wkt();
+
+			/*
 			if ($scope.map && $scope.map._leaflet_id) { 
+				console.log('INVALIDATE');
 				$scope.map.invalidateSize();
 				return
 			}
+			*/
 
 			var crs = new L.Proj.CRS.TMS('EPSG:25832',
 		    '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs', [120000, 5900000, 1000000, 6500000], {
@@ -21,7 +36,7 @@ angular.module('dnalivApp')
 			$scope.map = new L.Map('map', { crs: crs });
 			//$scope.map = new L.Map('map');
 
-			var luftFoto = new L.tileLayer('http://{s}.services.kortforsyningen.dk/orto_foraar?'+pass+'request=GetTile&version=1.0.0&service=WMTS&Layer=orto_foraar&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}', {
+			var luftFoto = new L.tileLayer('http://{s}.services.kortforsyningen.dk/orto_foraar?request=GetTile&version=1.0.0&service=WMTS&Layer=orto_foraar&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 				attribution: 'Geodatastyrelsen',
 		    continuousWorld: true,
   		  maxZoom: 14,
@@ -34,7 +49,7 @@ angular.module('dnalivApp')
   		  }
 			});
 
-			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?' + pass + 'request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}', {
+			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 		    attribution: 'Geodatastyrelsen',
 		    continuousWorld: true,
 		    maxZoom: 14,
@@ -75,9 +90,9 @@ angular.module('dnalivApp')
 				},
 				afterSelect: function(item) {
 					console.log(item);
-					wkt.read(item.geometryWkt);
-					for (var p in wkt.components) {
-						var a = wkt.components[p].map(function(xy) {
+					$scope.wkt.read(item.geometryWkt);
+					for (var p in $scope.wkt.components) {
+						var a = $scope.wkt.components[p].map(function(xy) {
 							var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
 							return [latLng.lng, latLng.lat]
 						})
@@ -87,7 +102,10 @@ angular.module('dnalivApp')
 						console.log(center);
 						var popup = new L.popup()
 							.setLatLng(center) 
-					    .setContent('<h3>'+ item.skrivemaade_officiel + '</h3>')
+					    .setContent(
+								'<h4>' + item.skrivemaade_officiel + '</h4>' +
+								'<p>'  + item.skrivemaade_officiel + '</p>' 
+							)
 					    .openOn($scope.map);
 
 					}
@@ -95,32 +113,28 @@ angular.module('dnalivApp')
 					$scope.map.setView(center, 8, {
 				    reset: true
 					});
-					//$scope.map.setView(center);
-					//$scope.map.setZoom(7);
 				}, 
 				items : 20,
 			  source: function(query, process) {
-				//TODO: run service with tickets instead of hardcoded username / password
-				var pass = "&login=davidkonrad&password=nhmdzm",
-						url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&resources=stednavne_v2&limit=100'+pass;
-	
-		    return $.getJSON(url, function(resp) {
-					var data = [], caption = '';
-					for (var i in resp.data) {
-						if (~Utils.aeWaterTypes.indexOf(resp.data[i].type) || ~Utils.aeWaterTypes.indexOf(resp.data[i].subtype)) {
-							data.push(resp.data[i]);
-						} else {
-							if (!~Utils.aeNoWater.indexOf(resp.data[i].subtype)) {
-								//TODO stop logging unknown ae types
-								console.log(resp.data[i].subtype);
+					//TODO: run service with tickets instead of hardcoded username / password
+					var url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&resources=stednavne_v2&limit=100'+Utils.aePass;
+			    return $.getJSON(url, function(resp) {
+						var data = [], caption = '';
+						for (var i in resp.data) {
+							if (~Utils.aeWaterTypes.indexOf(resp.data[i].type) || ~Utils.aeWaterTypes.indexOf(resp.data[i].subtype)) {
+								data.push(resp.data[i]);
+							} else {
+								if (!~Utils.aeNoWater.indexOf(resp.data[i].subtype)) {
+									//TODO stop logging unknown ae types
+									console.log(resp.data[i].subtype);
+								}
 							}
-						}
-					}			
-					return process(data);		
-		    })
-		  }
-		})
-	}
-
+						}			
+						return process(data);		
+			    })
+			  }
+			})
+		}
+		
 
   }]);

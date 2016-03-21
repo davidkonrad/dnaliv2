@@ -1,0 +1,50 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Lokalitet</h4>
+			</div>
+			<div class="modal-body">
+
+			<div class="col-md-4">
+				<div class="input-group">
+					<input type="text" class="form-control input-sm wetland" id="lokalitet" placeholder="Sø, å, mose ..." xxwetland-typeahead="wetland" in-view="initWetland()">
+					<span class="input-group-btn">
+						<button role="button" class="btn btn-primary btn-sm">Gem</button>
+          </span>
+					<span class="input-group-btn">
+						<input type="checkbox">
+          </span>
+				</div>
+			</div>
+
+			<div class="col-md-5">
+        <div class="input-group">
+					<input type="text" class="form-control">
+						<span class="input-group-btn">
+							<span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+
+			<form class="form-horizontal">
+				<div zzclass="form-group">
+					<div class="col-sm-12">
+						<div id="map" style="height:60vh;width:100%;"></div>
+					</div>
+				</div>
+			</form>
+
+				
+				<div class="modal-footer"><div class="col-md-6 taxon-footer-txt"><small class="text-muted">ctrl+f : show / hide this window</small>
+				</div>
+					<div class="col-md-6">
+					<button type="button" class="btn btn-danger" ng-click="$hide()"> <i class="fa fa-times"></i> Close</button> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -75,7 +75,8 @@ angular.module('dnalivApp')
 			aeWaterTypes: ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump',
 											//doubtful matches
 											'bugt', 'strandpost', 'lystbådehavn', 'sund', 'vandmølle', 'tørtVedLavvande', 'botaniskHave'
-											]
+											],
+			aePass: "&login=davidkonrad&password=nhmdzm"
 
 
 		}
