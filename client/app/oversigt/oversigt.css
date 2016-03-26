@@ -15,6 +15,7 @@ th.action, td.action {
 td {
 	white-space: nowrap;
 	cursor: pointer;
+	vertical-align: top;
 }
 th {
 	white-space: nowrap;
@@ -31,3 +32,19 @@ th {
 .btn-status {
 	width: 90px;
 }
+tbody tr:hover {
+	background-color: #ebebeb !important;
+}
+
+.no-select {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+td.may-break {
+	xxwhite-space: normal;
+	white-space: pre-wrap;
+}
+

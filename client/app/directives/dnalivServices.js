@@ -3,6 +3,7 @@
 angular.module('dnalivApp')
   .factory('Utils', function() {
 		return {
+
 			getObj: function($resource, prefix) {
 				var exclude = ['$promise','$resolved','toJSON','$get','$save','$query','$remove','$delete','$update'],
 						prop, p = {};
@@ -19,9 +20,9 @@ angular.module('dnalivApp')
 			fixDate : function(date) {
 				var d = new Date(date);
 				if (!isNaN(d.getTime())) {
-					return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
+					return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear();
 				} else {
-					return '-'
+					return '' //'?'
 				}
 			},
 
@@ -48,6 +49,13 @@ angular.module('dnalivApp')
 	        "sSortDescending": ": activate to sort column descending"
 		    }
 			},
+
+			//status options map
+			statusOptions: [
+				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
+				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
+				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
+			],
 
 			//administrative enheder
 			aeNoWater : ['spredtBebyggelse', 'bydel', 'by', 'gård', 'sten', 'bro', 'hus', 'kløft', 'andenBygning', 'dal', 

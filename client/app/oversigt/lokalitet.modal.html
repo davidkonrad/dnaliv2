@@ -1,0 +1,68 @@
+<style>
+.modal-body {
+	padding: 0px;
+	padding-top: 5px;
+}
+.typeahead {
+	z-index:10000;
+}
+.checkbox input[type="checkbox"] {
+	margin-left: 0px;
+}
+</style>
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title"><strong> {{ booking.sagsNo }}</strong> - {{ klasse.klasse_id ? " - " : "" }} Lokalitet </h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-inline" role="form" style="margin-left:10px;margin-bottom:5px;">
+				  <div class="form-group">
+						<input type="text" class="form-control input-sm wetland" size="50" id="lokalitet_wetland" placeholder="Sø, å, mose ...">
+				  </div>
+				  <div class="form-group">
+				    <label for="lat">Lat.</label>
+				    <input type="text" ng-model="lokalitet.latitude" class="form-control input-sm" size="5" id="lat" ng-disabled="lokalitetLoaded()">
+				  </div>
+				  <div class="form-group">
+				    <label for="lng">Lng.</label>
+				    <input type="text" ng-model="lokalitet.longitude" class="form-control input-sm" size="5" id="lng" ng-disabled="lokalitetLoaded()">
+				  </div>
+				  <div class="form-group">
+				    <label for="x_gps">XGPS</label>
+				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="5" id="x_gps" ng-disabled="lokalitetLoaded()">
+				  </div>
+				  <div class="form-group">
+				    <label for="y_gps">XGPS</label>
+				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="5" id="y_gps" ng-disabled="lokalitetLoaded()">
+				  </div>
+					<button role="button" class="btn btn-primary btn-sm">Gem</button>
+
+				</form>
+
+				<form class="form-horizontal">
+					<div zzclass="form-group">
+						<div class="col-sm-12">
+							<div id="map" style="height:60vh;width:100%;"></div>
+						</div>
+					</div>
+				</form>
+	
+			</div>
+		
+			<div class="modal-footer">
+				<span class="checkbox" style="float:left;">
+					<input type="checkbox" ng-model="lokalitet.locked" id="locked">
+					<label for="locked">Låst</label>
+				</span>
+				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i> Luk</button> 
+			</div>
+
+		</div>
+	</div>
+</div>
+

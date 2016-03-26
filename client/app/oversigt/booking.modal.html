@@ -49,10 +49,15 @@ table.klasse {
 				  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveBooking()"	>Gem</button>
 				</form>
 
+				<br>
+
 				<form class="form-inline" role="form">
 				  <div class="form-group">
-				    <label for="sagsNo">Sagsnr.&nbsp;</label>
-				    <input type="text" ng-model="booking.sagsNo" class="form-control input-sm" size="10" id="sagsNo" ng-disabled="bookingLoaded()">
+				    <label for="lokalitet">Lokalitet</label>
+				    <input type="text" ng-model="booking.lokalitetsNavn" class="form-control input-sm" size="60" id="lokalitet" ng-disabled="bookingLoaded()">
+						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(booking.lokalitet_id)">
+								<i class="fa fa-edit"></i>
+						</button>
 				  </div>
 				</form>
 
@@ -64,7 +69,7 @@ table.klasse {
 					<label>&nbsp;Tilføj klasse</label>
 				</div>
 
-<! -->
+<!-- -->
 				<table class="col-sm-12 klasse">
 					<tbody>
 						<tr ng-repeat="klasse in bookingKlasser">
@@ -73,7 +78,7 @@ table.klasse {
 									<i class="fa fa-edit"></i>
 								</button>
 							</td>
-							<td ng-dblclick="showKlasse(klasse.klasse_id)">
+							<td ng-dblclick="showKlasse(klasse.klasse_id)" class="no-select">
 								{{ klasse.institutionsnavn }} {{ klasse.klassetrin }} {{ klasse.fag }}
 							</td>
 						</tr>

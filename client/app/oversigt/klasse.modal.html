@@ -4,68 +4,39 @@
 			
 			<div class="modal-header">
 				<button type="button" class="close" ng-click="$hide()">×</button>
-				<h4 class="modal-title"><strong>{{ klasse.institutionsnavn }}</strong> </h4>
+				<h4 class="modal-title"><strong>{{ booking.sagsNo }}</strong> - {{ klasse.institutionsnavn }} </h4>
 			</div>
 			<div class="modal-body">
 
-<!--
-<div class="panel-group" ng-model="panels.activePanel" role="tablist" aria-multiselectable="true" bs-collapse>
-	<div class="panel panel-default" ng-repeat="klasse in bookingKlasser" data-klasse-id="{{ klasse.klasse_id }}" >
+				<form class="form-inline" role="form" style="margin-left:10px;margin-bottom:5px;">
+				  <div class="form-group">
+				    <label for="status">Status</label>
+						<select class="form-control input-sm" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status"></select>
+				  </div>
 
-		<div class="panel-heading" role="tab">
-			<h4 class="panel-title">
-				<a bs-collapse-toggle>
-					{{ klasse.institutionsnavn }}
-				</a>
-				<button type="button" class="btn btn-primary btn-xs float-right" ng-click="saveKlasse(klasse.klasse_id)" ng-show="klasseIsEdited(klasse.klasse_id)" title="Gem ændringer">
-					Gem ændringer
-				</button>
-			</h4>
-		</div>
+				  <div class="form-group">
+				  	<label for="status">Dato booking</label>
+				    <input type="text" ng-model="klasse.DatoForBooking" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
 
-		<div class="panel-collapse collapse" role="tabpanel" bs-collapse-target>
-			<div class="panel-body">
+				  	<label for="status">Dato Besøg</label>
+				    <input type="text" ng-model="klasse.DatoForBesoeg" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
+				  </div>
 
-				<fieldset>
-					<legend>Oversigt</legend>
+					<div class="checkbox">
+						<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
+				  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
+					</div>
+					&nbsp;&nbsp;
+					<div class="checkbox">
+						<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
+				  	<label for="Proevermodtaget">Prøver modtaget</label>
+					</div>
+
 					<br>
-					<form class="form-inline">
-						<div class="form-group">
-					  	<label for="status">Status</label>
-							<select class="form-control input-sm" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status">
-							</select>
-					  	<label for="status">Dato booking</label>
-					    <input type="text" ng-model="klasse.DatoForBooking" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
-
-					  	<label for="status">Dato Besøg</label>
-					    <input type="text" ng-model="klasse.DatoForBesoeg" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
-
-					  	<label for="status">Dato Ekst.</label>							
-					    <input type="text" ng-model="klasse.DatoForEkst" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
-						</div>
-						<br><br>
-						<div class="form-group">
-							<div class="checkbox">
-								<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
-						  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
-							</div>
-							&nbsp;&nbsp;
-							<div class="checkbox">
-								<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
-						  	<label for="Proevermodtaget">Prøver modtaget</label>
-							</div>
-
-						</div>
-					</form>
-				</fieldset>
-
-				<fieldset>
-					<legend>Institution</legend>
-					<form class="form-horizontal">
-						<div class="form-group ">
-							<div class="col-sm-5">
-								<input type="text" ng-model="klasse.institutionsnavn" class="form-control input-sm" institution-typeahead ng-disabled="bookingLoaded()" placeholder="Navn">
-							</div>
+					<div class="form-group">
+				  	<label for="status">Dato Besøg</label>
+						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm" institution-typeahead ng-disabled="bookingLoaded()" placeholder="Institutionsnavn" id="institution">
+					</div>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-2 no-pad-r">
@@ -81,6 +52,13 @@
 								<input type="text" ng-model="klasse.region" class="form-control input-sm" ng-disabled="bookingLoaded()" placeholder="Region">
 							</div>
 						</div>
+
+
+				</form>
+
+				<fieldset>
+					<legend>Institution</legend>
+					<form class="form-horizontal">
 					</form>
 				</fieldset>
 
@@ -130,21 +108,9 @@
 				</fieldset>
 
 			</div>
-		</div>
-	</div>
-</div>
--->
-
-
-			</div>
 			
 			<div class="modal-footer">
-				<hr>	
-				<div xclass="col-md-6">
-					<button type="button" class="btn btn-primary" ng-click="$hide()"> 
-						<i class="fa fa-ok"></i>Luk
-					</button> 
-				</div>
+				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>
 		</div>
 	</div>

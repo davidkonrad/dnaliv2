@@ -1,8 +1,7 @@
 <style>
-tbody tr:hover {
-	background-color: #ebebeb !important;
-}
+
 </style>
+
 
 <div class="container">
 
@@ -11,9 +10,9 @@ tbody tr:hover {
 			<tr ng-repeat="booking in bookings" ng-dblclick="showBooking(booking.sagsNo)" >
 				<td> {{ booking.sagsNo }} </td>
 				<td> {{ booking.status }} </td>
-				<td> {{ booking.DatoForBooking }} </td>
-				<td> {{ booking.DatoForBesoeg }} </td>
-				<td> {{ booking.klasser }} </td>
+				<td> {{ booking.DatoForBooking_fixed }} </td>
+				<td> {{ booking.DatoForBesoeg_fixed }} </td>
+				<td class="may-break"> {{ booking.klasser }} </td>
 			</tr>
 		</tbody>
 	</table>

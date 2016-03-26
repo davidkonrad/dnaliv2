@@ -20,14 +20,6 @@ angular.module('dnalivApp')
 		$scope.initializeMap = function() {
 			$scope.wkt = $scope.wkt || new Wkt.Wkt();
 
-			/*
-			if ($scope.map && $scope.map._leaflet_id) { 
-				console.log('INVALIDATE');
-				$scope.map.invalidateSize();
-				return
-			}
-			*/
-
 			var crs = new L.Proj.CRS.TMS('EPSG:25832',
 		    '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs', [120000, 5900000, 1000000, 6500000], {
         resolutions: [1638.4, 819.2, 409.6, 204.8, 102.4, 51.2, 25.6, 12.8, 6.4, 3.2, 1.6, 0.8, 0.4, 0.2, 0.1]
