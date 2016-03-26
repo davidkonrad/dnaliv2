@@ -93,7 +93,7 @@ module.exports = function(sequelize, DataTypes) {
     }
 
   }, {
-		tableName: 'booking_klasse',
+		tableName: 'klasse',
 		timestamps: false,
 		freezeTableName: true
 			

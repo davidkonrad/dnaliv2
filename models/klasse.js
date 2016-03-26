@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('booking_klasse', {
+  return sequelize.define('klasse', {
     klasse_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -97,7 +97,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     }
   }, {
-    tableName: 'booking_klasse',
+    tableName: 'klasse',
     freezeTableName: true
   });
 };

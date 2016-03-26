@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Booking', 'Klasse', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',  
-		function ($scope, $location, Utils, Booking, Klasse, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Booking', 'Klasse', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal',  
+		function ($scope, $location, Utils, Booking, Klasse, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal) {
 		
 		Klasse.query().$promise.then(function(klasser) {	
 			$scope.klasser = klasser.map(function(klasse) {
@@ -68,18 +68,53 @@ angular.module('dnalivApp')
       DTColumnDefBuilder.newColumnDef([2,3]).renderWith(function(data, type, full) {
 				var d = new Date(data);
 				if (!isNaN(d.getTime())) {
-					return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth()+1)).slice(-2) + '/' + d.getFullYear();
+					return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + d.getFullYear();
 				} else {
-					return '-'
+					return '?'
 				}
 			})
     ]
 
-		$scope.showBooking = function(sagsNo) {
-			$location.path('bookings/'+sagsNo)
+		$scope.setBooking = function(sagsNo) {
+			$scope.bookings.forEach(function(booking) {
+				if (booking.sagsNo == sagsNo) {
+					$scope.booking = booking
+					$scope.setBookingKlasser(booking.booking_id)
+					return
+				}
+			})
+		}
+			
+		$scope.setBookingKlasser = function(booking_id) {
+			$scope.bookingKlasser = []
+			$scope.klasser.forEach(function(klasse) {	
+				if (klasse.booking_id == booking_id) {
+					klasse.edited = false
+					$scope.bookingKlasser.push(klasse)
+				}
+			})
 		}
 
+		$scope.showBooking = function(sagsNo) {
+			$scope.setBooking(sagsNo)
+			$modal({
+				scope: $scope,
+				templateUrl: 'app/oversigt/booking.modal.html',
+				backdrop: 'static',
+				show: true
+			})
+			//$location.path('bookings/'+sagsNo)
+		}
 
+		$scope.showKlasse = function(klasse_id) {
+			console.log(klasse_id);
+			$modal({
+				scope: $scope,
+				templateUrl: 'app/oversigt/klasse.modal.html',
+				backdrop: 'static',
+				show: true
+			})
+		}
 
 }]);
 

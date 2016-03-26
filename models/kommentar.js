@@ -1,23 +1,27 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('user', {
-    _id: {
+  return sequelize.define('kommentar', {
+    kommentar_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING,
+    type_id: {
+      type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING,
+    relation_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false
+    },
+    kommentar: {
+      type: DataTypes.TEXT,
       allowNull: false
     }
   }, {
-    tableName: 'user',
+    tableName: 'kommentar',
     freezeTableName: true
   });
 };

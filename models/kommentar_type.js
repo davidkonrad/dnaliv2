@@ -1,19 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('lokalitet', {
-    _id: {
+  return sequelize.define('kommentar_type', {
+    type_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
+    relation: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     }
   }, {
-    tableName: 'lokalitet',
+    tableName: 'kommentar_type',
     freezeTableName: true
   });
 };

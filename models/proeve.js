@@ -12,6 +12,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    Lokalitet: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     indsamlingsdato: {
       type: DataTypes.DATE,
       allowNull: true
