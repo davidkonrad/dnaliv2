@@ -6,10 +6,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    navn: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     X_GPS: {
       type: DataTypes.STRING,
       allowNull: true
@@ -31,8 +27,27 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: '0'
     },
+    showPolygon: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
+    },
+    showMarker: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
+    },
+    showPopup: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
+    },
     geometryWkt: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    type: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     subtype: {
@@ -40,6 +55,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     presentationString: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    skrivemaade: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    skrivemaade_officiel: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    skrivemaader_uofficiel: {
       type: DataTypes.STRING,
       allowNull: true
     }

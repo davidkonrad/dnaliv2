@@ -94,6 +94,7 @@ angular.module('dnalivApp')
 				if (booking.sagsNo == sagsNo) {
 					$scope.booking = booking
 					$scope.setBookingKlasser(booking.booking_id)
+					$scope.setBookingLokalitet(booking.lokalitet_id)
 					return
 				}
 			})
@@ -116,6 +117,20 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.setBookingLokalitet = function(lokalitet_id) {
+			$scope.lokalitet = {
+				locked: false,
+				showMarker: true,
+				showPolygon: true,
+				showPopup: true
+			}
+			$scope.lokaliteter.forEach(function(lokalitet) {
+				if (lokalitet.lokalitet_id == lokalitet_id) {
+					$scope.lokalitet = lokalitet
+				}
+			})
+		}
+			
 		$scope.showBooking = function(sagsNo) {
 			$scope.setBooking(sagsNo)
 			$modal({
@@ -158,11 +173,6 @@ angular.module('dnalivApp')
 		$scope.lokalitet = {}
 		$scope.map = false
 		$scope.wkt = new Wkt.Wkt()
-		$scope.lokalitet = {
-			locked: false,
-			showMarker: true,
-			showPopup: true
-		}
 
 		Lokalitet.query().$promise.then(function(lokaliteter) {	
 			$scope.lokaliteter = lokaliteter.map(function(lokalitet) {
@@ -179,17 +189,19 @@ angular.module('dnalivApp')
 			})
 			$timeout(function() {
 				initWetland($scope, Utils, Geo)
-				initializeMap($scope, Utils)
+				initializeMap($scope, Utils, Geo)
 			}, 250)
 		}
 	
 		$scope.saveLokalitet = function() {
 			if ($scope.lokalitetLoaded()) {
-				console.log('update lokalitet')
 				Lokalitet.update( { lokalitet_id: $scope.lokalitet.lokalitet_id }, $scope.lokalitet)
 			} else {
-				console.log('save	 lokalitet')
-				Lokalitet.save( { lokalitet_id: '' }, $scope.lokalitet)
+				Lokalitet.save( { lokalitet_id: '' }, $scope.lokalitet).$promise.then(function(lokalitet) {	
+					$scope.booking.lokalitet_id = lokalitet.lokalitet_id
+					Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
+					$scope.lokalitet.locked = true
+				})
 			}		
 		}
 

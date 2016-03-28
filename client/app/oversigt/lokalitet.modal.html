@@ -48,10 +48,13 @@ span.map-tool {
 
 					<label for="showMarker" title="Skjul / Vis lokalitetsmarkør"><i class="fa fa-map-marker"></i></label>
 					<input type="checkbox" ng-model="lokalitet.showMarker" ng-change="showMarker()" id="showMarker">
-					&nbsp;&nbsp;
-
+					&nbsp;
 					<label for="showPopup" title="Skjul / vis beskrivelse"><i class="fa fa-comment-o"></i></label>  
 					<input type="checkbox" ng-model="lokalitet.show" id="showPopup" xxng-change="showMarker()">
+					&nbsp;
+					<label for="showPolygon" title="Skjul / vis polygon"><i class="fa fa-hand-lizard-o"></i></label>  
+					<input type="checkbox" ng-model="lokalitet.showPolygon" ng-change="showPolygon()" id="showPolygon">
+
 				</span>
 
 			</div>
@@ -59,23 +62,23 @@ span.map-tool {
 
 				<form class="form-inline" role="form" style="margin-left:10px;margin-bottom:5px;">
 				  <div class="form-group">
-						<input type="text" class="form-control input-sm wetland" size="50" id="lokalitet_wetland" placeholder="Sø, å, mose ...">
+						<input type="text" class="form-control input-sm wetland" size="50" ng-model="lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ...">
 				  </div>
 				  <div class="form-group">
 				    <label for="lat">Lat.</label>
-				    <input type="text" ng-model="lokalitet.latitude" class="form-control input-sm sm-pad" size="10" id="lat" ng-disabled="lokalitetLoaded()">
+				    <input type="text" ng-model="lokalitet.latitude" class="form-control input-sm sm-pad" size="13" id="lat" ng-disabled="lokalitet.locked">
 				  </div>
 				  <div class="form-group">
 				    <label for="lng">Lng.</label>
-				    <input type="text" ng-model="lokalitet.longitude" class="form-control input-sm sm-pad" size="10" id="lng" ng-disabled="lokalitetLoaded()">
+				    <input type="text" ng-model="lokalitet.longitude" class="form-control input-sm sm-pad" size="13" id="lng" ng-disabled="lokalitet.locked">
 				  </div>
 				  <div class="form-group">
 				    <label for="x_gps">XGPS</label>
-				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="5" id="x_gps" ng-disabled="lokalitetLoaded()">
+				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="5" id="x_gps" ng-disabled="lokalitet.locked">
 				  </div>
 				  <div class="form-group">
 				    <label for="y_gps">XGPS</label>
-				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="5" id="y_gps" ng-disabled="lokalitetLoaded()">
+				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="5" id="y_gps" ng-disabled="lokalitet.locked">
 				  </div>
 					<button role="button" class="btn btn-primary btn-sm" ng-click="saveLokalitet()">Gem</button>
 
@@ -92,16 +95,6 @@ span.map-tool {
 			</div>
 		
 			<div class="modal-footer">
-				<span class="checkbox" style="float:left;">
-					<input type="checkbox" ng-model="lokalitet.locked" id="locked">
-					<label for="locked">Låst</label>
-				</span>
-
-				<span class="checkbox" style="float:left;">
-					<button type="button" class="btn btn-default"> <i class="fa fa-map-marker"></i></button>
-					<button type="button" class="btn btn-default"> <i class="fa fa-comment-o"></i></button>  
-				</span>
-
 				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i> Luk</button> 
 			</div>
 

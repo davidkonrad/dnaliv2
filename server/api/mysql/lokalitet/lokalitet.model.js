@@ -9,10 +9,6 @@ module.exports = function(sequelize, DataTypes) {
 			autoIncrement: true,
 			allowNull: false
 		},
-    navn: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
     X_GPS: {
       type: DataTypes.STRING,
       allowNull: true
@@ -23,19 +19,38 @@ module.exports = function(sequelize, DataTypes) {
     },
     latitude: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     longitude: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     locked: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: '0'
+    },
+    showPolygon: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
+    },
+    showMarker: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
+    },
+    showPopup: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: '1'
     },
     geometryWkt: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    type: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     subtype: {
@@ -45,7 +60,19 @@ module.exports = function(sequelize, DataTypes) {
     presentationString: {
       type: DataTypes.STRING,
       allowNull: true
-    }	
+    },
+    skrivemaade: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    skrivemaade_officiel: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    skrivemaader_uofficiel: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
 	}, {
 		tableName: 'lokalitet',
 		timestamps: false,

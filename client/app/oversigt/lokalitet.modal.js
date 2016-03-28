@@ -1,6 +1,19 @@
 'use strict';
 
-function initializeMap($scope, Utils) {
+
+
+function geometryWktPolygon($scope, Geo, geometryWkt) {
+	$scope.wkt.read(geometryWkt);
+	for (var p in $scope.wkt.components) {
+		var a = $scope.wkt.components[p].map(function(xy) {
+			var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+			return [latLng.lng, latLng.lat]
+		})
+	}
+	return L.polygon(a).addTo($scope.map)
+}
+
+function initializeMap($scope, Utils, Geo) {
 
 	var crs = new L.Proj.CRS.TMS('EPSG:25832',
     '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs', [120000, 5900000, 1000000, 6500000], {
@@ -14,12 +27,12 @@ function initializeMap($scope, Utils) {
     continuousWorld: true,
 	  maxZoom: 14,
 	  zoom: function () {
-      var zoom = $scope.map.getZoom();
-      if (zoom < 10)
-         return 'L0' + zoom;
-      else
-         return 'L' + zoom;
- 		  }
+			var zoom = $scope.map.getZoom();
+			if (zoom < 10)
+				return 'L0' + zoom;
+			else
+				return 'L' + zoom;
+			}
 	})
 
 	var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
@@ -41,9 +54,19 @@ function initializeMap($scope, Utils) {
 	}
 
 	L.control.layers($scope.baselayers).addTo($scope.map);
-  $scope.map.addLayer(luftFoto);
-	$scope.map.setView(L.latLng(55.9, 11.8), 1);
-	$scope.map.setZoom(5);
+
+	var center = $scope.lokalitetLoaded() 
+				? L.latLng($scope.lokalitet.latitude, $scope.lokalitet.longitude) 
+				: L.latLng(55.9, 11.8)
+
+	if ($scope.lokalitetLoaded()) {
+	  $scope.map.addLayer(luftFoto);
+		$scope.map.setView(center, 11);
+		$scope.lokalitetPolygon = geometryWktPolygon($scope, Geo, $scope.lokalitet.geometryWkt)
+	} else {
+	  $scope.map.addLayer(skaermKort);
+		$scope.map.setView(center, 1);
+	}
 
 	/**
 		populate $scope with some event listeners and functions
@@ -65,13 +88,12 @@ function initializeMap($scope, Utils) {
 	$scope.map.on('zoomend', function(e) {
 	})
 
-	$scope.lokalitetMarker = L.marker([1,1], {
+	$scope.lokalitetMarker = L.marker(center, {
 		draggable: true
 	})
 	.addTo($scope.map)
 	.on('dragend', function(e) {
 		if (!$scope.lokalitet.locked) {
-			console.log(e);
 			$scope.setLokalitetLatLng(e.target._latlng) 
 		} else {
 			$scope.lokalitetMarker.setLatLng({ 
@@ -89,6 +111,14 @@ function initializeMap($scope, Utils) {
 		}
 	}
 
+	$scope.showPolygon = function() {
+		if ($scope.lokalitet.showPolygon) {
+			$scope.lokalitetPolygon.setOpacity(1)
+		} else {
+			$scope.lokalitetPolygon.setOpacity(0)
+		}
+	}
+
 	$scope.centerMarker = function() {
 		$scope.map.setView(L.latLng($scope.lokalitet.latitude, $scope.lokalitet.longitude), 11)
 	}
@@ -98,7 +128,6 @@ function initializeMap($scope, Utils) {
 	})
 
 }
-
 
 function initWetland($scope, Utils, Geo) {
 	$scope.wetland = {};
@@ -112,28 +141,18 @@ function initWetland($scope, Utils, Geo) {
 		},
 		afterSelect: function(item) {
 			Utils.mergeObj($scope.lokalitet, item);
-			console.log($scope.lokalitet)
-			$scope.wkt.read(item.geometryWkt);
-			for (var p in $scope.wkt.components) {
-				var a = $scope.wkt.components[p].map(function(xy) {
-					var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
-					return [latLng.lng, latLng.lat]
-				})
+			$scope.lokalitetPolygon = geometryWktPolygon($scope, Geo, item.geometryWkt)
+			var center = $scope.lokalitetPolygon.getBounds().getCenter()
+			$scope.setLokalitetLatLng(center) 
+			$scope.lokalitetMarker.setLatLng(center)
+			var popup = new L.popup()
+				.setLatLng(center) 
+		    .setContent(
+					'<h4>' + item.skrivemaade_officiel + '</h4>' +
+					'<p>'  + item.skrivemaade_officiel + '</p>' 
+				)
+		    .openOn($scope.map);
 
-				var poly = L.polygon(a).addTo($scope.map)
-				var center = poly.getBounds().getCenter()
-
-				$scope.setLokalitetLatLng(center) 
-				$scope.lokalitetMarker.setLatLng(center)
-			
-				var popup = new L.popup()
-					.setLatLng(center) 
-			    .setContent(
-						'<h4>' + item.skrivemaade_officiel + '</h4>' +
-						'<p>'  + item.skrivemaade_officiel + '</p>' 
-					)
-			    .openOn($scope.map);
-			}
 			$scope.map.fitBounds(poly.getBounds(), { maxZoom: 10 } ) //.draw()??
 			/* far better than $scope.map.setView(center, 8, { reset: true	}) */
 		}, 

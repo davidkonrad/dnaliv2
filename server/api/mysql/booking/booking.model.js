@@ -69,6 +69,10 @@ module.exports = function(sequelize, DataTypes) {
     aar_periode: {
       type: DataTypes.INTEGER(11),
       allowNull: true
+    },
+		lokalitet_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
     }
   }, {
     tableName: 'booking',
