@@ -17,6 +17,13 @@ angular.module('dnalivApp')
 				return p;
 			},
 
+			mergeObj: function(toObject, srcObject, overwrite) {
+				srcObject = this.getObj(srcObject)
+				for (var p in srcObject) {
+					toObject[p] = srcObject[p]
+				}
+			},
+
 			fixDate : function(date) {
 				var d = new Date(date);
 				if (!isNaN(d.getTime())) {

@@ -2,53 +2,51 @@
 var models = require('../');
 
 
-// Get list of qwertys
+// Get list of lokalitets
 exports.index = function(req, res) {
-
-  models.Qwerty.findAll().then(function(qwerty){
-  	return res.json(200, qwerty);	
+  models.Lokalitet.findAll().then(function(lokalitet){
+  	return res.json(200, lokalitet);	
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Get a single qwerty
+// Get a single lokalitet
 exports.show = function(req, res) {
-  models.Qwerty.find(req.params.id).then(function(qwerty){
-  	return res.json(200, qwerty);	
+  models.Lokalitet.find(req.params.id).then(function(lokalitet){
+  	return res.json(200, lokalitet);	
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Creates a new qwerty in the DB.
+// Creates a new lokalitet in the DB.
 exports.create = function(req, res) {
-  models.Qwerty.create(req.body).then(function(qwerty) {
-    return res.json(201, qwerty);
+  models.Lokalitet.create(req.body).then(function(lokalitet) {
+    return res.json(201, lokalitet);
   }).catch(function(err){
 	  handleError(res, err);
   });
 };
 
-// Updates an existing qwerty in the DB.
+// Updates an existing lokalitet in the DB.
 exports.update = function(req, res) {
-  models.Qwerty.find(req.params.id).then(function(qwerty){
-      if(!qwerty) { return res.send(404); }  
-	  return qwerty.updateAttributes(req.body);	  	
-  }).then(function(qwerty){
-  	return res.json(200, qwerty);
+  models.Lokalitet.find(req.params.id).then(function(lokalitet){
+      if(!lokalitet) { return res.send(404); }  
+	  return lokalitet.updateAttributes(req.body);	  	
+  }).then(function(lokalitet){
+  	return res.json(200, lokalitet);
   }).catch(function(err){
 	  handleError(res, err);
   });
   
 };
 
-// Deletes a qwerty from the DB.
+// Deletes a lokalitet from the DB.
 exports.destroy = function(req, res) {
-	
-	models.Qwerty.find(req.params.id).then(function(qwerty){
-		if(!qwerty) { return res.send(404); }
-		return qwerty.destroy()
+	models.Lokalitet.find(req.params.id).then(function(lokalitet){
+		if(!lokalitet) { return res.send(404); }
+		return lokalitet.destroy()
 	}).then(function(){
 		return res.send(204);
 	}).catch(function(err){
@@ -57,11 +55,10 @@ exports.destroy = function(req, res) {
 	
 };
 
-// Describe qwerty
+// Describe lokalitet
 exports.describe = function(req, res) {
-  models.Qwerty.describe().then(function(qwerty){
-	  console.log(qwerty);
-  	return res.json(200, qwerty);	
+  models.Lokalitet.describe().then(function(lokalitet){
+  	return res.json(200, lokalitet);	
   }).catch(function(err){
 	  handleError(res, err);
   });

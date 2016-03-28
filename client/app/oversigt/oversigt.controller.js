@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'DTOptionsBuilder', 
-															'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout',  
+  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+															'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout',  
 
-		function ($scope, $location, Utils, Geo, Booking, Klasse, DTOptionsBuilder, 
-							DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
+	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, 
+						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
@@ -54,10 +54,15 @@ angular.module('dnalivApp')
 		
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
-      .withDisplayLength(50)
+      .withDisplayLength(10)
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
+				var input = document.querySelector('.dataTables_filter input')
+				input.className += 'form-control inject-control'
+				input.style.padding = '5px'
+				input.placeholder = 'skriv ..'
+				//input.setFocus() ??? 
 				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
@@ -150,12 +155,20 @@ angular.module('dnalivApp')
 		/**
 			Lokalitet
 		**/
+		$scope.lokalitet = {}
 		$scope.map = false
-		$scope.wkt = $scope.wkt || new Wkt.Wkt()
+		$scope.wkt = new Wkt.Wkt()
 		$scope.lokalitet = {
 			locked: false,
-			latitude: 'xyz'
+			showMarker: true,
+			showPopup: true
 		}
+
+		Lokalitet.query().$promise.then(function(lokaliteter) {	
+			$scope.lokaliteter = lokaliteter.map(function(lokalitet) {
+				return lokalitet
+			})
+		})
 
 		$scope.showLokalitet = function(lokalitet_id) {
 			$modal({
@@ -171,12 +184,17 @@ angular.module('dnalivApp')
 		}
 	
 		$scope.saveLokalitet = function() {
-			if (typeof $scope.lokalitet.lookalitet_id == 'number') {
-			}
+			if ($scope.lokalitetLoaded()) {
+				console.log('update lokalitet')
+				Lokalitet.update( { lokalitet_id: $scope.lokalitet.lokalitet_id }, $scope.lokalitet)
+			} else {
+				console.log('save	 lokalitet')
+				Lokalitet.save( { lokalitet_id: '' }, $scope.lokalitet)
+			}		
 		}
 
 		$scope.lokalitetLoaded = function() {
-			return false
+			return typeof $scope.lokalitet.lokalitet_id == 'number'
 		}
 
 }]);

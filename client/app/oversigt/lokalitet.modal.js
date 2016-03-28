@@ -1,7 +1,6 @@
 'use strict';
 
 function initializeMap($scope, Utils) {
-	$scope.map = false;
 
 	var crs = new L.Proj.CRS.TMS('EPSG:25832',
     '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs', [120000, 5900000, 1000000, 6500000], {
@@ -46,16 +45,60 @@ function initializeMap($scope, Utils) {
 	$scope.map.setView(L.latLng(55.9, 11.8), 1);
 	$scope.map.setZoom(5);
 
+	/**
+		populate $scope with some event listeners and functions
+	**/
+	$scope.setLokalitetLatLng = function(latlng) {
+		document.querySelector('#lat').value = latlng.lat
+		document.querySelector('#lng').value = latlng.lng
+		$scope.lokalitet.latitude = latlng.lat
+		$scope.lokalitet.longitude = latlng.lng
+	}
+
   $scope.map.on('click', function(e) {
 		if (!$scope.lokalitet.locked) {
-			document.querySelector('#lat').value = e.latlng.lat
-			document.querySelector('#lng').value = e.latlng.lng
-			$scope.lokalitet.latitude = e.latlng.lat
-			$scope.lokalitet.longitude = e.latlng.lng
+			$scope.setLokalitetLatLng(e.latlng) 
+			$scope.lokalitetMarker.setLatLng(e.latlng)
 		}
 	})
-	
+
+	$scope.map.on('zoomend', function(e) {
+	})
+
+	$scope.lokalitetMarker = L.marker([1,1], {
+		draggable: true
+	})
+	.addTo($scope.map)
+	.on('dragend', function(e) {
+		if (!$scope.lokalitet.locked) {
+			console.log(e);
+			$scope.setLokalitetLatLng(e.target._latlng) 
+		} else {
+			$scope.lokalitetMarker.setLatLng({ 
+				lat: $scope.lokalitet.latitude,
+				lng: $scope.lokalitet.longitude
+			})
+		}
+	})
+
+	$scope.showMarker = function() {
+		if ($scope.lokalitet.showMarker) {
+			$scope.lokalitetMarker.setOpacity(1)
+		} else {
+			$scope.lokalitetMarker.setOpacity(0)
+		}
+	}
+
+	$scope.centerMarker = function() {
+		$scope.map.setView(L.latLng($scope.lokalitet.latitude, $scope.lokalitet.longitude), 11)
+	}
+
+	$scope.$watch('lokalitet.locked', function() {
+		document.querySelector('#lokalitet_wetland').readOnly = $scope.lokalitet.locked
+	})
+
 }
+
 
 function initWetland($scope, Utils, Geo) {
 	$scope.wetland = {};
@@ -68,7 +111,8 @@ function initWetland($scope, Utils, Geo) {
 			return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
 		},
 		afterSelect: function(item) {
-			console.log(item);
+			Utils.mergeObj($scope.lokalitet, item);
+			console.log($scope.lokalitet)
 			$scope.wkt.read(item.geometryWkt);
 			for (var p in $scope.wkt.components) {
 				var a = $scope.wkt.components[p].map(function(xy) {
@@ -76,9 +120,12 @@ function initWetland($scope, Utils, Geo) {
 					return [latLng.lng, latLng.lat]
 				})
 
-				var poly = L.polygon(a).addTo($scope.map);
-				var center = poly.getBounds().getCenter();
+				var poly = L.polygon(a).addTo($scope.map)
+				var center = poly.getBounds().getCenter()
 
+				$scope.setLokalitetLatLng(center) 
+				$scope.lokalitetMarker.setLatLng(center)
+			
 				var popup = new L.popup()
 					.setLatLng(center) 
 			    .setContent(
@@ -87,15 +134,11 @@ function initWetland($scope, Utils, Geo) {
 					)
 			    .openOn($scope.map);
 			}
-
-			$scope.map.setView(center, 8, {
-		    reset: true
-			})
-
+			$scope.map.fitBounds(poly.getBounds(), { maxZoom: 10 } ) //.draw()??
+			/* far better than $scope.map.setView(center, 8, { reset: true	}) */
 		}, 
 		items : 20,
 	  source: function(query, process) {
-			//TODO: run service with tickets instead of hardcoded username / password
 			var url = 'https://services.kortforsyningen.dk/Geosearch?search='+query+'*&resources=stednavne_v2&limit=100'+Utils.aePass;
 	    return $.getJSON(url, function(resp) {
 				var data = [], caption = '';

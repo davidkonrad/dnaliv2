@@ -1,17 +1,14 @@
-'use strict';
-
+/* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-	var Lokalitet = sequelize.define("lokalitet", {
-		lokalitet_id: {
-			type: DataTypes.INTEGER(11),
-			primaryKey: true,
-			autoIncrement: true,
-			allowNull: false
-		},
+  return sequelize.define('lokalitet', {
+    lokalitet_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false
+    },
     navn: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     X_GPS: {
       type: DataTypes.STRING,
@@ -23,15 +20,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     latitude: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     longitude: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: false
     },
     locked: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: '0'
     },
     geometryWkt: {
@@ -45,13 +42,9 @@ module.exports = function(sequelize, DataTypes) {
     presentationString: {
       type: DataTypes.STRING,
       allowNull: true
-    }	
-	}, {
-		tableName: 'lokalitet',
-		timestamps: false,
-		freezeTableName: true
-
-	});
-
-	return Lokalitet;
+    }
+  }, {
+    tableName: 'lokalitet',
+    freezeTableName: true
+  });
 };
