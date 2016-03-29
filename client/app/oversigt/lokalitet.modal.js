@@ -10,7 +10,10 @@ function geometryWktPolygon($scope, Geo, geometryWkt) {
 			return [latLng.lng, latLng.lat]
 		})
 	}
-	return L.polygon(a).addTo($scope.map)
+	return L.polygon(a, {
+		fillColor: '#FFFF00',
+		color: '#FFFF00'
+	}).addTo($scope.map)
 }
 
 function initializeMap($scope, Utils, Geo) {
@@ -113,9 +116,9 @@ function initializeMap($scope, Utils, Geo) {
 
 	$scope.showPolygon = function() {
 		if ($scope.lokalitet.showPolygon) {
-			$scope.lokalitetPolygon.setOpacity(1)
+			$scope.map.addLayer($scope.lokalitetPolygon)
 		} else {
-			$scope.lokalitetPolygon.setOpacity(0)
+			$scope.map.removeLayer($scope.lokalitetPolygon)
 		}
 	}
 
@@ -153,7 +156,7 @@ function initWetland($scope, Utils, Geo) {
 				)
 		    .openOn($scope.map);
 
-			$scope.map.fitBounds(poly.getBounds(), { maxZoom: 10 } ) //.draw()??
+			$scope.map.fitBounds($scope.lokalitetPolygon.getBounds(), { maxZoom: 10 } )
 			/* far better than $scope.map.setView(center, 8, { reset: true	}) */
 		}, 
 		items : 20,

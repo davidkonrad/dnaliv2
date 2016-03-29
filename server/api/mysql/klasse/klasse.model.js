@@ -12,7 +12,10 @@ module.exports = function(sequelize, DataTypes) {
 		},
     booking_id: {
       type: DataTypes.INTEGER(11),
-			primaryKey: true,
+      allowNull: true
+    },
+    lokalitet_id: {
+      type: DataTypes.INTEGER(11),
       allowNull: true
     },
     status: {

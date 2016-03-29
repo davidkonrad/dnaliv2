@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin',
 															'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout',  
 
-	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, 
+	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin,
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
+
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
@@ -151,7 +152,7 @@ angular.module('dnalivApp')
 			$scope.klasser.forEach(function(klasse) {
 				if (klasse.klasse_id == klasse_id) {
 					$scope.klasse = klasse
-					return
+					$scope.setKlasseLokalitet()
 				}
 			})
 		}
@@ -166,6 +167,43 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.saveKlasse = function() {
+			Klasse.update({ klasse_id: $scope.klasse.klasse_id }, $scope.klasse)
+			var form = document.querySelector('#klasse-form');
+			if (form) {
+				var i=0, inputs = form.querySelectorAll('input');
+				for (i; i<inputs.length; i++) {
+					angular.element(inputs[i]).removeClass('ng-dirty')
+				}
+			}
+		}
+
+		$scope.setKlasseLokalitet = function() {
+			$scope.klasse.lokalitetNavn = 'Samme som booking lokalitet'
+			$scope.lokalitet = {
+				locked: false,
+				showMarker: true,
+				showPolygon: true,
+				showPopup: true
+			}
+			if (!$scope.klasse.lokalitet_id) return
+			$scope.lokaliteter.forEach(function(lokalitet) {
+				if (lokalitet.lokalitet_id == $scope.klasse.lokalitet_id) {
+					$scope.klasse.lokalitetNavn = lokalitet.presentationString
+					$scope.lokalitet = lokalitet
+				}
+			})
+		}
+
+		$scope.klasseIsEdited = function() {
+			var form = document.querySelector('#klasse-form');
+			if (form) {
+				var i=0, inputs = form.querySelectorAll('input');
+				for (i; i<inputs.length; i++) {
+					if (angular.element(inputs[i]).hasClass('ng-dirty')) return true
+				}
+			}
+		}
 
 		/**
 			Lokalitet
@@ -198,8 +236,14 @@ angular.module('dnalivApp')
 				Lokalitet.update( { lokalitet_id: $scope.lokalitet.lokalitet_id }, $scope.lokalitet)
 			} else {
 				Lokalitet.save( { lokalitet_id: '' }, $scope.lokalitet).$promise.then(function(lokalitet) {	
-					$scope.booking.lokalitet_id = lokalitet.lokalitet_id
-					Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
+					//TODO, obviosly we need a real solution for this
+					if (~document.querySelector('#klasse-form').length) {
+						$scope.klasse.lokalitet_id = lokalitet.lokalitet_id
+						Klasse.update({ klasse_id: $scope.klasse.klasse_id }, $scope.klasse)
+					} else {
+						$scope.booking.lokalitet_id = lokalitet.lokalitet_id
+						Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
+					}
 					$scope.lokalitet.locked = true
 				})
 			}		
@@ -209,5 +253,22 @@ angular.module('dnalivApp')
 			return typeof $scope.lokalitet.lokalitet_id == 'number'
 		}
 
+	
+		/**
+			lookup lists
+		**/
+		Fag.query().$promise.then(function(fag) {	
+			$scope.fag = fag.map(function(f) {
+				return f
+			})
+		})
+
+		Klassetrin.query().$promise.then(function(klassetrin) {	
+			$scope.klassetrin = klassetrin.map(function(k) {
+				return k
+			})
+		})
+
+		
 }]);
 

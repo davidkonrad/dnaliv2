@@ -10,7 +10,7 @@
 	margin-left: 0px;
 }
 input.sm-pad {
-	padding-left: 1px;
+	padding-left: 3px;
 	padding-right: 1px;
 }
 .checkbox input[type="checkbox"] {
@@ -19,7 +19,7 @@ input.sm-pad {
 }
 span.map-tool {
 	float: right;
-	right: 120px;
+	right: 100px;
 	display: inline-block;
 	position: relative;
 	margin: 0px;
@@ -36,7 +36,7 @@ span.map-tool {
 			
 			<div class="modal-header">
 				<button type="button" class="close" ng-click="$hide()">×</button>
-				<h4 class="modal-title"	style="display:inline-block;"><strong> {{ booking.sagsNo }}</strong> - {{ klasse.klasse_id ? " - " : "" }} Lokalitet </h4>
+				<h4 class="modal-title"	style="display:inline-block;"><strong> {{ booking.sagsNo }}</strong> {{ klasse.institutionsnavn }} Lokalitet </h4>
 
 				<span class="checkbox no-select map-tool">
 					<label for="locked" title="Lås kort og lokalitetsmarkør">Låst</label>
@@ -52,7 +52,7 @@ span.map-tool {
 					<label for="showPopup" title="Skjul / vis beskrivelse"><i class="fa fa-comment-o"></i></label>  
 					<input type="checkbox" ng-model="lokalitet.show" id="showPopup" xxng-change="showMarker()">
 					&nbsp;
-					<label for="showPolygon" title="Skjul / vis polygon"><i class="fa fa-hand-lizard-o"></i></label>  
+					<label for="showPolygon" title="Skjul / vis polygon"><i class="fa fa-crosshairs"></i></label>  
 					<input type="checkbox" ng-model="lokalitet.showPolygon" ng-change="showPolygon()" id="showPolygon">
 
 				</span>
@@ -61,27 +61,23 @@ span.map-tool {
 			<div class="modal-body">
 
 				<form class="form-inline" role="form" style="margin-left:10px;margin-bottom:5px;">
-				  <div class="form-group">
+				  <div cl	ass="form-group">
 						<input type="text" class="form-control input-sm wetland" size="50" ng-model="lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ...">
-				  </div>
-				  <div class="form-group">
+
 				    <label for="lat">Lat.</label>
 				    <input type="text" ng-model="lokalitet.latitude" class="form-control input-sm sm-pad" size="13" id="lat" ng-disabled="lokalitet.locked">
-				  </div>
-				  <div class="form-group">
+
 				    <label for="lng">Lng.</label>
 				    <input type="text" ng-model="lokalitet.longitude" class="form-control input-sm sm-pad" size="13" id="lng" ng-disabled="lokalitet.locked">
-				  </div>
-				  <div class="form-group">
-				    <label for="x_gps">XGPS</label>
-				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="5" id="x_gps" ng-disabled="lokalitet.locked">
-				  </div>
-				  <div class="form-group">
-				    <label for="y_gps">XGPS</label>
-				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="5" id="y_gps" ng-disabled="lokalitet.locked">
-				  </div>
-					<button role="button" class="btn btn-primary btn-sm" ng-click="saveLokalitet()">Gem</button>
 
+				    <label for="x_gps">xgps</label>
+				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="4" id="x_gps" ng-disabled="lokalitet.locked">
+
+				    <label for="y_gps">ygps</label>
+				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="4" id="y_gps" ng-disabled="lokalitet.locked">
+
+						<button role="button" class="btn btn-primary btn-sm" ng-click="saveLokalitet()">Gem</button>
+				  </div>
 				</form>
 
 				<form class="form-horizontal">
