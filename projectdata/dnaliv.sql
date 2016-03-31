@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 29, 2016 at 08:29 AM
+-- Generation Time: Mar 31, 2016 at 08:29 AM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `booking` (
   `aar_periode` int(11) NOT NULL,
   `lokalitet_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`booking_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=243 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=253 ;
 
 --
 -- Dumping data for table `booking`
@@ -285,7 +285,17 @@ INSERT INTO `booking` (`booking_id`, `sagsNo`, `DatoForBesoeg`, `DatoForBooking`
 (239, 'F13-029', '0000-00-00 00:00:00', '2014-05-28 00:00:00', 0, '2016-03-18 06:23:34', 4, 2, NULL),
 (240, 'F13-030', '0000-00-00 00:00:00', '2014-10-01 00:00:00', 0, '2016-03-18 06:23:34', 4, 2, NULL),
 (241, 'F14-001', '0000-00-00 00:00:00', '2014-08-04 00:00:00', 0, '2016-03-18 06:23:35', 4, 2, NULL),
-(242, 'aaaa', '2016-05-04 22:00:00', '2016-02-28 23:00:00', 0, '2016-03-26 09:04:21', 0, 0, NULL);
+(242, 'aaaa', '2016-05-04 22:00:00', '2016-02-28 23:00:00', 0, '2016-03-26 09:04:21', 0, 0, NULL),
+(243, 'QWERTY', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(244, 'rrrrrrr', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(245, 'bbbb', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(246, 'yyyyyyyy', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(247, 'yyyy', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(248, 'oooooo', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(249, 'jjjjj', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(250, 'kkk', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(251, 'jjjj', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL),
+(252, 'hhh', NULL, NULL, 0, '0000-00-00 00:00:00', 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -1107,7 +1117,7 @@ CREATE TABLE IF NOT EXISTS `kommentar_type` (
   `type_id` int(11) NOT NULL AUTO_INCREMENT,
   `relation` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `kommentar_type`
@@ -1116,7 +1126,9 @@ CREATE TABLE IF NOT EXISTS `kommentar_type` (
 INSERT INTO `kommentar_type` (`type_id`, `relation`) VALUES
 (1, 'booking'),
 (2, 'klasse'),
-(3, 'proeve');
+(3, 'proeve'),
+(4, 'resultat'),
+(5, 'lokalitet');
 
 -- --------------------------------------------------------
 
@@ -1372,6 +1384,35 @@ INSERT INTO `proeve` (`proeve_id`, `proeve_nr`, `Lokalitet`, `indsamlingsdato`, 
 (181, 'DL_SNM_2015_037', 'Hejresøen, Amager Fælled', '2015-09-27', '', '', '55.575111', '12.557691', '0000-00-00', 'Tonni Eilersen', 'teilersen@snm.ku.dk', '2015-10-02', '0000-00-00', '', '', '', 0, '', 'SNM2015'),
 (182, 'DL_SNM_2015_038', 'Sydamager naturreservat', '2015-09-27', '', '', '55.591459', '12.538586', '0000-00-00', 'Tonni Eilersen', 'teilersen@snm.ku.dk', '2015-10-02', '0000-00-00', '', '', '', 0, '', 'SNM2015'),
 (183, 'DL_SNM_2015_039', 'Furesøen', '2015-11-26', '', '', '', '', '0000-00-00', 'Mette Grøn', 'meddi@hotmail.com', '2015-11-26', '0000-00-00', '', '', '', 0, 'Der er to ens prøver.', 'SNM2015');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resultat`
+--
+
+CREATE TABLE IF NOT EXISTS `resultat` (
+  `resultat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `booking_id` int(11) NOT NULL,
+  `proeve_id` int(11) NOT NULL,
+  PRIMARY KEY (`resultat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resultat_taxon`
+--
+
+CREATE TABLE IF NOT EXISTS `resultat_taxon` (
+  `resultat_taxon_id` int(11) NOT NULL AUTO_INCREMENT,
+  `resultat_id` int(11) NOT NULL,
+  `taxon_id` int(11) NOT NULL,
+  `positiv` tinyint(1) NOT NULL DEFAULT '0',
+  `negativ` tinyint(1) NOT NULL DEFAULT '0',
+  `eDNA` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`resultat_taxon_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
