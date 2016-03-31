@@ -3,7 +3,7 @@
 angular.module('dnalivApp')
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/oversigt', {
+      .when('/bookings', {
         templateUrl: 'app/oversigt/oversigt.html',
         controller: 'OversigtCtrl'
       });

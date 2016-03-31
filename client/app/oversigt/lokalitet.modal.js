@@ -1,6 +1,13 @@
 'use strict';
 
+/**
+	an ugly way to isolate code from the main controller
+**/
 
+
+if (L.Icon.Default.imagePath == undefined) {
+	L.Icon.Default.imagePath = 'bower_components/leaflet/dist/images'
+}
 
 function geometryWktPolygon($scope, Geo, geometryWkt) {
 	$scope.wkt.read(geometryWkt);

@@ -11,7 +11,8 @@ angular.module('dnalivApp', [
 	'LocalStorageModule',
 	'angular-inview',
 	'leaflet-directive',
-	'datatables'
+	'datatables',
+	'datatables.buttons'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

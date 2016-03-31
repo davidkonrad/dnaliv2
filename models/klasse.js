@@ -12,6 +12,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
+    lokalitet_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
     status: {
       type: DataTypes.INTEGER(1),
       allowNull: false

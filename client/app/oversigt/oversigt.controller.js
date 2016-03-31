@@ -7,30 +7,32 @@ angular.module('dnalivApp')
 	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin,
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
 
-
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
 
-		Klasse.query().$promise.then(function(klasser) {	
-			$scope.klasser = klasser.map(function(klasse) {
-				return klasse
-			})
-			Booking.query().$promise.then(function(bookings) {	
-				$scope.bookings = bookings.map(function(booking) {
-					booking.klasser = $scope.getKlasser(booking.booking_id)
-					booking.status = $scope.getStatus(booking.booking_id)
+		$scope.reloadData = function() {
+			Klasse.query().$promise.then(function(klasser) {	
+				$scope.klasser = klasser.map(function(klasse) {
+					return klasse
+				})
+				Booking.query().$promise.then(function(bookings) {	
+					$scope.bookings = bookings.map(function(booking) {
+						booking.klasser = $scope.getKlasser(booking.booking_id)
+						booking.status = $scope.getStatus(booking.booking_id)
+	
+						//instead of render methods, improve load speed
+						booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
+						booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
 
-					//instead of render methods, improve load speed
-					booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
-					booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
-
-					return Utils.getObj(booking)
+						return Utils.getObj(booking)
+					})
 				})
 			})
-		})
+		}
+		$scope.reloadData()
 
 		$scope.getStatus = function(booking_id) {
 			var status = 0;
@@ -53,6 +55,20 @@ angular.module('dnalivApp')
 			return klasser
 		}
 		
+		$scope.createBooking = function() {
+			var sagsNo = prompt('SagsNo: ', '');
+			if (sagsNo != '') Booking.save({ booking_id: '' }, { sagsNo: sagsNo }).$promise.then(function(booking) {	
+				$scope.newSagsNo = sagsNo
+				$scope.reloadData()
+				/*
+				$timeout(function() {
+					console.log('ok')
+					$scope.inputFilter = sagsNo
+				}, 150)
+				*/
+			})
+		}
+
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(10)
@@ -63,11 +79,43 @@ angular.module('dnalivApp')
 				input.className += 'form-control inject-control'
 				input.style.padding = '5px'
 				input.placeholder = 'skriv ..'
-				//input.setFocus() ??? 
+
+				$scope.inputFilter = input
+
+				//set filter to newly inserted sagsno
+				if ($scope.newSagsNo) {
+					input.value = $scope.newSagsNo
+					$(input).trigger('keyup')
+					$scope.newSagsNo = false
+				}
+
+				//TODO, make the button plugin work properly in angular
+				//append a create button
+				var $button = $('<button></button>')
+						.addClass('new-booking btn btn-primary btn-xs')
+						.text('Ny booking')
+						.click(function() { $scope.createBooking() })
+						.insertAfter('.dataTables_length')	
+				
 				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
-
+			/*
+			 .withButtons([
+            'columnsToggle',
+            'colvis',
+            'copy',
+            'print',
+            'excel',
+            {
+                text: 'Some button',
+                key: '1',
+                action: function (e, dt, node, config) {
+                    alert('Button activated');
+                }
+            }
+        ]);
+			*/
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('status').withTitle('Status').renderWith(function(data, type, full) {
@@ -90,9 +138,9 @@ angular.module('dnalivApp')
 		/**
 			bookings
 		**/
-		$scope.setBooking = function(sagsNo) {
+		$scope.setBooking = function(booking_id) {
 			$scope.bookings.forEach(function(booking) {
-				if (booking.sagsNo == sagsNo) {
+				if (booking.booking_id == booking_id) {
 					$scope.booking = booking
 					$scope.setBookingKlasser(booking.booking_id)
 					$scope.setBookingLokalitet(booking.lokalitet_id)
@@ -132,8 +180,8 @@ angular.module('dnalivApp')
 			})
 		}
 			
-		$scope.showBooking = function(sagsNo) {
-			$scope.setBooking(sagsNo)
+		$scope.showBooking = function(booking_id) {
+			$scope.setBooking(booking_id)
 			$modal({
 				scope: $scope,
 				templateUrl: 'app/oversigt/booking.modal.html',
