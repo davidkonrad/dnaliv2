@@ -24,7 +24,9 @@
 		"datatables" : "~1.10.9",
 		"angular-datatables" : "*",
 		"datatables.net-buttons" : "*",
-		"Wicket": "*"
+		"Wicket": "*",
+		"bootstrap-switch" : "*",
+		"angular-bootstrap-switch" : "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

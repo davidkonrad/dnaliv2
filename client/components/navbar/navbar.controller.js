@@ -8,8 +8,8 @@ angular.module('dnalivApp')
 		$scope.isAdmin = Auth.isAdmin;
 		$scope.getCurrentUser = Auth.getCurrentUser;
 		$scope.user;
+
 		$scope.logout = function() {
-			$scope.collections = undefined;
 			Auth.logout();
 			$location.path('/login');
 		};

@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin',
+  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin', 'Resultat',
 															'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout',  
 
-	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin,
+	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin, Resultat,
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
+
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
@@ -60,12 +61,6 @@ angular.module('dnalivApp')
 			if (sagsNo != '') Booking.save({ booking_id: '' }, { sagsNo: sagsNo }).$promise.then(function(booking) {	
 				$scope.newSagsNo = sagsNo
 				$scope.reloadData()
-				/*
-				$timeout(function() {
-					console.log('ok')
-					$scope.inputFilter = sagsNo
-				}, 150)
-				*/
 			})
 		}
 

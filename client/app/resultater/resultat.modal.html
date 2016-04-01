@@ -1,0 +1,48 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Resultat #{{ resultat.resultat_id }}</h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-inline" role="form" id="klasse-form">
+
+					<div class="form-group">
+						<label>SagsNr&nbsp;&nbsp;</label>
+						<input type="text" class="booking-typeahead form-control input-sm" ng-model="resultat.sagsNo" placeholder="..." onclick="this.value = ''">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>PrøveNr.&nbsp;&nbsp;</label>
+						<input type="text" class="proeve-typeahead form-control input-sm" ng-model="resultat.proeve_nr" placeholder="..." onclick="this.value = ''">
+
+					</div>
+
+					<div class="rule"></div>
+
+						<table datatable="ng" class="taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
+							<tbody>
+								<tr ng-repeat="taxon in resultat.taxon">
+									<td class="center"><input type="checkbox" ng-model="taxon.analyseret"/></td>
+									<td><em> {{ taxon.taxon_navn }} </em></td>
+									<td> {{ taxon.taxon_navn_dk }} </td>
+									<td> {{ taxon.taxon_artsgruppe }} </td>
+									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" /></td>
+									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false"/></td>
+									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" /></td>
+									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false"/></td>
+								</tr>
+							</tbody>
+						</table>
+
+				</form>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-disabled="!resultat.isEdited" ng-click="saveResultat()"></i>Gem</button> 
+				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
+			</div>
+		</div>
+	</div>
+</div>

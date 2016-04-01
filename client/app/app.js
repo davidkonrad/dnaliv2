@@ -12,7 +12,8 @@ angular.module('dnalivApp', [
 	'angular-inview',
 	'leaflet-directive',
 	'datatables',
-	'datatables.buttons'
+	'datatables.buttons',
+	'frapontillo.bootstrap-switch'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

@@ -1,0 +1,36 @@
+
+.modal-dialog {
+	min-width: 80% !important;
+	width: 80% !important;
+}
+
+.modal-body {
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+
+.rule {
+	width:100%;
+	display: block;
+	float: left;
+	clear: both;
+	height: 10px;
+}
+
+.modal-body {
+	padding: 20px;
+}
+
+table.taxon tbody td {
+	padding-left: 0px;
+}
+table.taxon thead th {
+	padding-left: 0px;
+}
+table.taxon thead th {
+	border-bottom: 1px solid #ebebeb;
+}
+table.dataTable.no-footer {
+    border-bottom: 0px;
+}

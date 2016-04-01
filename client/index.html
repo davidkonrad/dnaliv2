@@ -18,6 +18,7 @@
       <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
       <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
       <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css" />
+      <link rel="stylesheet" href="bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -29,6 +30,7 @@
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/oversigt/oversigt.css">
       <link rel="stylesheet" href="app/proeve/proeve.css">
+      <link rel="stylesheet" href="app/resultater/resultater.css">
       <link rel="stylesheet" href="app/xxx_app.css">
       <link rel="stylesheet" href="components/angular-hotkeys/hotkeys.css">
       <!-- endinjector -->
@@ -103,6 +105,8 @@
       <script src="bower_components/Wicket/wicket-arcgis.js"></script>
       <script src="bower_components/Wicket/wicket-gmap3.js"></script>
       <script src="bower_components/Wicket/wicket-leaflet.js"></script>
+      <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+      <script src="bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.js"></script>
       <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -131,10 +135,14 @@
           <script src="app/oversigt/oversigt.js"></script>
           <script src="app/proeve/proeve.controller.js"></script>
           <script src="app/proeve/proeve.js"></script>
+          <script src="app/resultater/resultater.controller.js"></script>
+          <script src="app/resultater/resultater.js"></script>
           <script src="app/services/Booking/Booking.service.js"></script>
           <script src="app/services/Booking_taxon/Booking_taxon.service.js"></script>
           <script src="app/services/Lokalitet/Lokalitet.service.js"></script>
           <script src="app/services/Proeve/Proeve.service.js"></script>
+          <script src="app/services/Resultat/Resultat.service.js"></script>
+          <script src="app/services/Resultat_taxon/Resultat_taxon.service.js"></script>
           <script src="app/services/Taxon/Taxon.service.js"></script>
           <script src="app/services/Test/Test.service.js"></script>
           <script src="app/services/fag/Fag.service.js"></script>

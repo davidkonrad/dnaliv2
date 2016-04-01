@@ -1,13 +1,14 @@
-/* jshint indent: 2 */
+'use strict';
+
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('resultat_taxon', {
-    resultat_taxon_id: {
+	var Resultat_taxon = sequelize.define("resultat_taxon", {
+		resultat_taxon_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
-    },
+		},
     resultat_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false
@@ -31,9 +32,19 @@ module.exports = function(sequelize, DataTypes) {
     eDNA: {
       type: DataTypes.BOOLEAN,
       allowNull: true
+    },
+    paalidelig: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
     }
-  }, {
-    tableName: 'resultat_taxon',
-    freezeTableName: true
-  });
+
+  
+	}, {
+		tableName: 'resultat_taxon',
+		timestamps: false,
+		freezeTableName: true
+
+	});
+
+	return Resultat_taxon;
 };

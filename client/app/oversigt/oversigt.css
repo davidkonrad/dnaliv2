@@ -44,7 +44,26 @@ tbody tr:hover {
 }
 
 td.may-break {
-	xxwhite-space: normal;
 	white-space: pre-wrap;
+}
+
+/* from booking.modal.html */
+.modal-open {
+    overflow: scroll;
+}
+.modal-body {
+	padding: 20px;
+}
+table.klasse {
+	border-collapse: separate; 
+	border-spacing: 0px 5px;
+}
+.modal-footer {
+	clear: both;
+	width: 100%;
+}
+
+td.center {
+	text-align: center;
 }
 

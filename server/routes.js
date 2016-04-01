@@ -17,6 +17,8 @@ module.exports = function(app) {
 	app.use('/api/booking_taxon', require('./api/mysql/booking_taxon'));
 	app.use('/api/proeve', require('./api/mysql/proeve'));
 	app.use('/api/lokalitet', require('./api/mysql/lokalitet'));
+	app.use('/api/resultat', require('./api/mysql/resultat'));
+	app.use('/api/resultat_taxon', require('./api/mysql/resultat_taxon'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));
