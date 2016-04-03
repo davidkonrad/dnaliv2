@@ -16,7 +16,7 @@ button.new-resultat {
 
 	<table datatable="ng" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs">
 		<tbody>
-			<tr ng-repeat="resultat in resultater" ng-dblclick="showResultat(resultat.resultat_id)" >
+			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" >
 				<td> {{ resultat.resultat_id }} </td>
 				<td> {{ resultat.sagsNo }} </td>
 				<td> {{ resultat.proeve_nr }} </td>

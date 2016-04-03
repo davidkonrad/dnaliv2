@@ -6,7 +6,7 @@
 		<input type="text" bs-datepicker ng-model="fromDate" data-date-format="dd-MM-yyyy" id="from-date" size="8" ng-disabled="!dateFilterActive" />
 		-
 		<input type="text" bs-datepicker ng-model="toDate" data-date-format="dd-MM-yyyy" id="to-date" size="8" ng-disabled="!dateFilterActive" />
-		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;top:10px;" />
+		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;top:10px;" title="Datofilter til / fra" />
 	</span>
 
 	<table datatable="ng" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
@@ -17,6 +17,7 @@
 				<td> {{ booking.DatoForBooking_fixed }} </td>
 				<td> {{ booking.DatoForBesoeg_fixed }} </td>
 				<td class="may-break"> {{ booking.klasser }} </td>
+				<td class="may-break"> {{ booking.laerer }} </td>
 			</tr>
 		</tbody>
 	</table>

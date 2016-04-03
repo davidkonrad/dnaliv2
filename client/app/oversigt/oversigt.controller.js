@@ -15,8 +15,6 @@ angular.module('dnalivApp')
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
 
-		console.log($scope)
-
 		$scope.reloadData = function() {
 			Klasse.query().$promise.then(function(klasser) {	
 				$scope.klasser = klasser.map(function(klasse) {
@@ -25,6 +23,7 @@ angular.module('dnalivApp')
 				Booking.query().$promise.then(function(bookings) {	
 					$scope.bookings = bookings.map(function(booking) {
 						booking.klasser = $scope.getKlasser(booking.booking_id)
+						booking.laerer = $scope.getLaerer(booking.booking_id)
 						booking.status = $scope.getStatus(booking.booking_id)
 	
 						//instead of render methods, improve load speed
@@ -53,10 +52,21 @@ angular.module('dnalivApp')
 			$scope.klasser.forEach(function(klasse) {
 				if (klasse.booking_id == booking_id) {
 					if (klasser != '') klasser += '\n';
-					klasser += klasse.klassetrin+' '+klasse.fag+', '+klasse.institutionsnavn
+					klasser += klasse.institutionsnavn
 				}
 			})
 			return klasser
+		}
+
+		$scope.getLaerer = function(booking_id) {
+			var laerer = '';
+			$scope.klasser.forEach(function(klasse) {
+				if (klasse.booking_id == booking_id) {
+					if (laerer != '') laerer += '\n';
+					laerer += klasse.laererNavn
+				}
+			})
+			return laerer
 		}
 		
 		$scope.createBooking = function() {
@@ -98,6 +108,9 @@ angular.module('dnalivApp')
 					if (!$scope.dateFilterActive) return true
 					var date = Date.parse(data[2])
 					return (date >= $scope.fromDate && date <= $scope.toDate)
+				})
+				$scope.$on('$destroy', function() { 
+					$.fn.dataTable.ext.search.pop()
 				})
 
 				$scope.$watchGroup(['fromDate', 'toDate', 'dateFilterActive'], function() {
@@ -154,7 +167,8 @@ table.buttons().container()
 			}),
       DTColumnBuilder.newColumn('DatoForBooking').withOption('type', 'date').withTitle('Dato for booking'),
       DTColumnBuilder.newColumn('DatoForBesoeg').withOption('type', 'date').withTitle('Dato for besøg'),
-      DTColumnBuilder.newColumn('klasser').withTitle('Klasser')
+      DTColumnBuilder.newColumn('klasser').withTitle('Klasse'),
+      DTColumnBuilder.newColumn('laerer').withTitle('Lærer')
     ];  
 
 		$scope.bookingColumnDefs = []
