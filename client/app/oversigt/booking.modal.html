@@ -4,7 +4,7 @@
 			
 			<div class="modal-header">
 				<button type="button" class="close" ng-click="$hide()">×</button>
-				<h4 class="modal-title"><strong>{{ booking.sagsNo }}</strong> </h4>
+				<h4 class="modal-title">Booking: <strong>{{ booking.sagsNo }}</strong> </h4>
 			</div>
 			<div class="modal-body">
 		
@@ -36,10 +36,10 @@
 
 				<form class="form-inline" role="form">
 				  <div class="form-group">
-				    <label for="lokalitet">Lokalitet</label>
-				    <input type="text" ng-model="lokalitet.presentationString" class="form-control input-sm" size="60" id="lokalitet" ng-disabled="bookingLoaded()">
-						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(booking.lokalitet_id)">
-								<i class="fa fa-edit"></i>
+				    <label for="arter">Arter</label>
+				    <input type="text" XXng-model="lokalitet.presentationString" class="form-control input-sm" size="60" id="lokalitet" ng-disabled="bookingLoaded()">
+						<button role="button" class="btn btn-primary btn-sm" ng-click="showTaxon()">
+							<i class="fa fa-edit"></i>
 						</button>
 				  </div>
 				</form>

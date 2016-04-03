@@ -2,6 +2,7 @@ node_modules
 public
 .tmp
 .idea
+rettelser.txt
 client/bower_components
 projectdata/Booking af klasser_DNA&LIV_v20160202.xlsx
 projectdata/DNA-og-LIV-indtastning-visning-kravspec_v02.pdf

@@ -12,24 +12,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    lokalitet_id: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
     indsamlingsdato: {
       type: DataTypes.DATE,
-      allowNull: true
-    },
-    GPS_X: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    GPS_Y: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    Lat: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    Long: {
-      type: DataTypes.STRING,
       allowNull: true
     },
     Analyseret: {
@@ -41,10 +29,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     Mailadresse: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    Lokalitet: {
       type: DataTypes.STRING,
       allowNull: true
     },

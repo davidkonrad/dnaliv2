@@ -1,0 +1,105 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Prøve: <strong>{{ proeve.proeve_nr }}</strong></h4>
+			</div>
+			<div class="modal-body">
+
+				<form class="form-inline" role="form" id="proeve-form">
+
+				  <div class="form-group">
+				    <label for="proeve_nr">PrøveNr</label>
+						<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm" placeholder="PrøeveNr" id="proeve_nr">
+						&nbsp;&nbsp;
+				  	<label for="dataset">Datasæt</label>
+				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm" id="dataset">
+						&nbsp;&nbsp;
+				    <label for="lokalitet">Lokalitet</label>
+					  <input type="text" class="form-control input-sm" id="lokalitet" size="50" ng-model="proeve.lokalitet" placeholder="Lokalitet">
+						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)">
+							<i class="fa fa-edit"></i>
+						</button>
+
+				  </div>
+
+					<br><br>
+
+				  <div class="form-group">
+				  	<label for="indsamlingsdato">Indsamlingsdato</label>
+				    <input type="text" ng-model="proeve.indsamlingsdato" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker id="indsamlingsdato">
+						&nbsp;
+				  	<label for="ProeverModtaget">Prøve modtaget</label>
+				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker id="ProeverModtaget">
+						&nbsp;
+				  	<label for="DatoForEkst">Dato for ekst.</label>
+				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker id="DatoForEkst">
+						&nbsp;
+				  	<label for="Analyseret">Analysedato</label>
+				    <input type="text" ng-model="proeve.Analyseret" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker id="Analyseret">
+				  </div>
+
+					<div class="rule"></div>
+
+					<div class="form-group">
+				  	<label for="status">Institution</label>
+						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm" institution-typeahead placeholder="Institutionsnavn" id="institution">
+
+						<div class="checkbox">
+							<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
+					  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
+						</div>
+						&nbsp;&nbsp;
+						<div class="checkbox">
+							<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
+					  	<label for="Proevermodtaget">Prøver modtaget</label>
+						</div>
+					</div>
+
+					<div class="rule"></div>
+
+					<div class="form-group">
+				    <label for="adressse">Adresse</label>
+						<input type="text" ng-model="klasse.adresse" class="form-control input-sm" id="adresse" placeholder="Adresse">
+
+				    <label for="postnr">Postnr</label>
+						<input type="text" ng-model="klasse.postnr" class="form-control input-sm" id="postnr" size="4" placeholder="Postnr.">
+	
+				    <label for="kommune">Kommune</label>
+						<input type="text" ng-model="klasse.kommune" class="form-control input-sm" id="kommune" placeholder="Kommune">
+
+				    <label for="region">Region</label>
+						<input type="text" ng-model="klasse.region" class="form-control input-sm" id="region" placeholder="Region">
+					</div>
+
+					<div class="rule"></div>
+
+					<div class="form-group">
+				    <label for="laererNavn">Lærers navn</label>
+				    <input type="text" class="form-control input-sm" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
+
+				    <label for="laererTlf">Tlf.</label>
+				    <input type="text" class="form-control input-sm" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
+
+				    <label for="laererEmail">Email</label>
+				    <input type="email" class="form-control input-sm" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
+					</div>
+
+				</form>
+		
+				<hr>
+				
+				<form class="form-inline" role="form">
+				</form>
+
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" ng-disabled="!klasseIsEdited()" ng-click="saveKlasse()"></i>Gem</button> 
+				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
+			</div>
+		</div>
+	</div>
+</div>
