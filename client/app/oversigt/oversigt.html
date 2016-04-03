@@ -1,20 +1,15 @@
-<style>
-button.new-booking {
-	float: none;
-	clear: none;
-	margin-left: 200px;
-}
-.dataTables_wrapper .dataTables_filter  {
-	clear: none;
-	display: inline;
-	float: none;
-}
-</style>
-
-
 <div class="container">
 
-	<table datatable="ng" dt-options="bookingOptions" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
+	<span id="date-filter">
+		<button class="new-booking btn btn-primary btn-xs" ng-click="$scope.createBooking()" style="margin-right:100px;top:-3px;">Ny booking</button>
+		&nbsp;&nbsp;
+		<input type="text" bs-datepicker ng-model="fromDate" data-date-format="dd-MM-yyyy" id="from-date" size="8" ng-disabled="!dateFilterActive" />
+		-
+		<input type="text" bs-datepicker ng-model="toDate" data-date-format="dd-MM-yyyy" id="to-date" size="8" ng-disabled="!dateFilterActive" />
+		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;top:10px;" />
+	</span>
+
+	<table datatable="ng" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
 		<tbody>
 			<tr ng-repeat="booking in bookings" ng-click="showBooking(booking.booking_id)" >
 				<td> {{ booking.sagsNo }} </td>

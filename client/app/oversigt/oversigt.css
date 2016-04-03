@@ -67,3 +67,14 @@ td.center {
 	text-align: center;
 }
 
+/* oversigt.html */
+button.new-booking {
+	float: none;
+	clear: none;
+	margin-left: 200px;
+}
+.dataTables_wrapper .dataTables_filter  {
+	clear: none;
+	display: inline;
+	float: none;
+}

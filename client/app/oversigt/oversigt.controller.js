@@ -2,10 +2,11 @@
 
 angular.module('dnalivApp')
   .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin', 
-			'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout',  
+			'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout', 
+			'$datepicker',
 
 	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin, Resultat, Taxon, Booking_taxon,
-						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout) {
+						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout, $datepicker) {
 
 
 		$scope.statusOptions = [
@@ -13,6 +14,8 @@ angular.module('dnalivApp')
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
+
+		console.log($scope)
 
 		$scope.reloadData = function() {
 			Klasse.query().$promise.then(function(klasser) {	
@@ -64,6 +67,12 @@ angular.module('dnalivApp')
 			})
 		}
 
+		/* dataTable */
+		$scope.fromDate = Date.parse('1/1/2014')
+		$scope.toDate = new Date()
+		$scope.dateFilterActive = true
+		$scope.bookingInstance = {}
+
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(10)
@@ -84,20 +93,31 @@ angular.module('dnalivApp')
 					$scope.newSagsNo = false
 				}
 
-				//TODO, make the button plugin work properly in angular
-				//append a create button
-				var $button = $('<button></button>')
-						.addClass('new-booking btn btn-primary btn-xs')
-						.text('Ny booking')
-						.click(function() { $scope.createBooking() })
-						.insertAfter('.dataTables_length')	
-				
+				//custom date filter
+				$.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
+					if (!$scope.dateFilterActive) return true
+					var date = Date.parse(data[2])
+					return (date >= $scope.fromDate && date <= $scope.toDate)
+				})
+
+				$scope.$watchGroup(['fromDate', 'toDate', 'dateFilterActive'], function() {
+					if ($scope.finalized) {
+						$scope.bookingInstance.DataTable.draw()
+					}
+				})
+
+				//reattach date-filter element
+				$('<span/>').attr('id', 'dt-custom').insertAfter('.dataTables_length')	
+				$timeout(function() {
+					$('#date-filter').detach().appendTo('#dt-custom')
+					$scope.finalized = true
+				}, 600)
+
 				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
 			/*
 			 .withButtons([
-            'columnsToggle',
             'colvis',
             'copy',
             'print',
@@ -111,6 +131,16 @@ angular.module('dnalivApp')
             }
         ]);
 			*/
+
+		/*
+table.buttons().container()
+    .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
+		*/
+		
+		$timeout(function() {
+			//console.log($scope.bookingInstance)
+		},150)
+
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('status').withTitle('Status').renderWith(function(data, type, full) {
