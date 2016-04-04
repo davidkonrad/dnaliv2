@@ -32,7 +32,8 @@ th {
 .btn-status {
 	width: 90px;
 }
-tbody tr:hover {
+
+table.hover tbody tr:hover {
 	background-color: #ebebeb !important;
 }
 
@@ -64,7 +65,7 @@ table.klasse {
 }
 
 td.center {
-	text-align: center;
+	padding-left: 25px !important;
 }
 
 /* oversigt.html */
@@ -78,3 +79,31 @@ button.new-booking {
 	display: inline;
 	float: none;
 }
+
+.zzdatepicker zzztd {
+	font-size: 60% !important;
+	color: blue;
+	background-color: red;
+ 	width: 20px !important;
+	height: 16px !important;
+	padding: 2px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	padding-left: 1px;
+	padding-right: 0px;
+}
+
+.dt-custom {
+	zword-break: keep-all;
+	zwhite-space: nowrap;
+	xclear: none;
+	xfloat: none;
+}
+#date-filter {
+	xclear: none;
+	xfloat: none;
+	xword-break: keep-all;
+	xwhite-space: nowrap;
+}
+

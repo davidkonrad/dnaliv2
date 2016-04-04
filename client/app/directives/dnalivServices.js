@@ -33,6 +33,27 @@ angular.module('dnalivApp')
 				}
 			},
 
+			formIsEdited : function(id) {
+				var form = document.querySelector(id)
+				if (form) {
+					var i=0, inputs = form.querySelectorAll('input');
+					for (i; i<inputs.length; i++) {
+						if (angular.element(inputs[i]).hasClass('ng-dirty')) return true
+					}
+				}
+				return false
+			},
+
+			formReset: function(id) {
+				var form = document.querySelector(id)
+				if (form) {
+					var i=0, inputs = form.querySelectorAll('input');
+					for (i; i<inputs.length; i++) {
+						angular.element(inputs[i]).removeClass('ng-dirty')
+					}
+				}
+			},
+
 			dataTables_daDk : {
 		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",
 		    "sInfo":           "Viser _START_ til _END_ af _TOTAL_ rækker",

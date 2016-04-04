@@ -32,6 +32,10 @@ angular.module('dnalivApp')
 			}
 		}
 
+		$scope.taxonRowClass = function(analyseret) {
+			return analyseret ? 'active' : 'danger'
+		}
+
 		$scope.reloadData = function() {
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
@@ -119,17 +123,30 @@ angular.module('dnalivApp')
 					})
 				})
 
+			var renderWith = function(data, type, full) {
+				return type == 'sort' ? $(data).is(':checked') : data 
+			}
+
 			$scope.taxonColumns = [
 	      DTColumnBuilder.newColumn(0).withTitle('Analyseret'),
-	      DTColumnBuilder.newColumn(1).withTitle('Videnskabeligt navn'),
-	      DTColumnBuilder.newColumn(2).withTitle('Dansk navn'),
+	      DTColumnBuilder.newColumn(1).withTitle('Dansk navn'),
+	      DTColumnBuilder.newColumn(2).withTitle('Videnskabeligt navn'),
 	      DTColumnBuilder.newColumn(3).withTitle('Artsgruppe'),
 	      DTColumnBuilder.newColumn(4).withTitle('Positiv'),
 	      DTColumnBuilder.newColumn(5).withTitle('Negativ'),
 	      DTColumnBuilder.newColumn(6).withTitle('eDNA'),
 	      DTColumnBuilder.newColumn(7).withTitle('Pålidelig')
 	    ]
-			$scope.taxonColumnDefs = []
+
+			$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col ) {
+		    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+		       return $('input', td).prop('checked') ? '1' : '0';
+		    } );
+			}
+
+			$scope.taxonColumnDefs = [
+				{ targets: [0, 4, 5, 6, 7],  orderDataType: "dom-checkbox" }
+			]
 
 			var modal = $modal({
 				scope: $scope,
@@ -192,7 +209,6 @@ angular.module('dnalivApp')
 			.withLanguage(Utils.dataTables_daDk)
 
 		$scope.resultaterColumns = [
-      DTColumnBuilder.newColumn('resultat_id').withTitle('id'),
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøvenr.')
     ]

@@ -21,17 +21,17 @@
 
 					<div class="rule"></div>
 
-						<table datatable="ng" class="taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
+						<table datatable="ng" class="table taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
 							<tbody>
-								<tr ng-repeat="taxon in resultat.taxon">
+								<tr ng-repeat="taxon in resultat.taxon" ng-class="taxonRowClass(taxon.analyseret)">
 									<td class="center"><input type="checkbox" ng-model="taxon.analyseret"/></td>
-									<td><em> {{ taxon.taxon_navn }} </em></td>
 									<td> {{ taxon.taxon_navn_dk }} </td>
+									<td><em> {{ taxon.taxon_navn }} </em></td>
 									<td> {{ taxon.taxon_artsgruppe }} </td>
-									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" /></td>
-									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false"/></td>
-									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" /></td>
-									<td class="center"><input type="checkbox" bs-switch ng-model="taxon.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false"/></td>
+									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
 								</tr>
 							</tbody>
 						</table>

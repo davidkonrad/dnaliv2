@@ -1,23 +1,8 @@
-<style>
-button.new-resultat {
-	float: none;
-	clear: none;
-	margin-left: 200px;
-}
-.dataTables_wrapper .dataTables_filter  {
-	clear: none;
-	display: inline;
-	float: none;
-}
-</style>
-
-
 <div class="container">
 
 	<table datatable="ng" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs">
 		<tbody>
 			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" >
-				<td> {{ resultat.resultat_id }} </td>
 				<td> {{ resultat.sagsNo }} </td>
 				<td> {{ resultat.proeve_nr }} </td>
 			</tr>

@@ -43,61 +43,12 @@
 
 					<div class="rule"></div>
 
-					<div class="form-group">
-				  	<label for="status">Institution</label>
-						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm" institution-typeahead placeholder="Institutionsnavn" id="institution">
-
-						<div class="checkbox">
-							<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
-					  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
-						</div>
-						&nbsp;&nbsp;
-						<div class="checkbox">
-							<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
-					  	<label for="Proevermodtaget">Prøver modtaget</label>
-						</div>
-					</div>
-
-					<div class="rule"></div>
-
-					<div class="form-group">
-				    <label for="adressse">Adresse</label>
-						<input type="text" ng-model="klasse.adresse" class="form-control input-sm" id="adresse" placeholder="Adresse">
-
-				    <label for="postnr">Postnr</label>
-						<input type="text" ng-model="klasse.postnr" class="form-control input-sm" id="postnr" size="4" placeholder="Postnr.">
+				</form>
 	
-				    <label for="kommune">Kommune</label>
-						<input type="text" ng-model="klasse.kommune" class="form-control input-sm" id="kommune" placeholder="Kommune">
-
-				    <label for="region">Region</label>
-						<input type="text" ng-model="klasse.region" class="form-control input-sm" id="region" placeholder="Region">
-					</div>
-
-					<div class="rule"></div>
-
-					<div class="form-group">
-				    <label for="laererNavn">Lærers navn</label>
-				    <input type="text" class="form-control input-sm" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
-
-				    <label for="laererTlf">Tlf.</label>
-				    <input type="text" class="form-control input-sm" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
-
-				    <label for="laererEmail">Email</label>
-				    <input type="email" class="form-control input-sm" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
-					</div>
-
-				</form>
-		
-				<hr>
-				
-				<form class="form-inline" role="form">
-				</form>
-
 			</div>
 			
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" ng-disabled="!klasseIsEdited()" ng-click="saveKlasse()"></i>Gem</button> 
+				<button type="button" class="btn btn-success" ng-disabled="!proeveIsEdited()" ng-click="saveProeve()"></i>Gem</button> 
 				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>
 		</div>

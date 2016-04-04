@@ -37,6 +37,26 @@ angular.module('dnalivApp')
 			})			
 		}
 
+		$scope.createProeve = function() {
+			var proeve_nr = prompt('PrøveNr: ', '');
+			if (proeve_nr != '') Proeve.save({ proeve_id: '' }, { proeve_nr: proeve_nr }).$promise.then(function(proeve) {	
+				$scope.newProeveNr = proeve_nr
+				$scope.loadData()
+				$scope.showProeve(proeve.proeve_id)
+			})
+		}
+
+		$scope.saveProeve = function() {
+			Proeve.update({ proeve_id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
+				console.log('ok')
+				Utils.formReset('#proeve-form')
+			})
+		}
+
+		$scope.proeveIsEdited = function() {
+			return Utils.formIsEdited('#proeve-form')
+		}
+
 		$scope.showProeve = function(proeve_id) {
 			$scope.setProeve(proeve_id)
 			$modal({
@@ -50,12 +70,20 @@ angular.module('dnalivApp')
 		$scope.proeveOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
+			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
+							 "<'row'<'col-sm-12'tr>>" +
+							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
 				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
+
+		$timeout(function() {
+			$('#dt-tools').detach().appendTo('.dt-custom')
+			$scope.finalized = true
+		}, 600)
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),

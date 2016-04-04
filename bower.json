@@ -21,12 +21,12 @@
     "leaflet-providers": "~1.1.7",
 		"proj4leaflet": "0.7.2",
     "angular-inview": "^1.5.6",
-		"datatables" : "~1.10.9",
 		"angular-datatables" : "*",
 		"datatables.net-buttons" : "*",
 		"Wicket": "*",
 		"bootstrap-switch" : "*",
-		"angular-bootstrap-switch" : "*"
+		"angular-bootstrap-switch" : "*",
+		"datatables.net-bs" : "*"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",

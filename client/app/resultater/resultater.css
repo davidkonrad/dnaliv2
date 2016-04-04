@@ -26,7 +26,7 @@ table.taxon tbody td {
 	padding-left: 0px;
 }
 table.taxon thead th {
-	padding-left: 0px;
+	padding-left: 0px !important;
 }
 table.taxon thead th {
 	border-bottom: 1px solid #ebebeb;
@@ -34,3 +34,19 @@ table.taxon thead th {
 table.dataTable.no-footer {
     border-bottom: 0px;
 }
+
+/* resultater.html */
+button.new-resultat {
+	float: none;
+	clear: none;
+	margin-left: 200px;
+}
+.dataTables_wrapper .dataTables_filter  {
+	clear: none;
+	display: inline;
+	float: none;
+}
+.dataTables_wrapper .row {
+   margin-top: 0px;
+}
+

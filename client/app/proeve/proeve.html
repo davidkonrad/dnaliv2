@@ -1,5 +1,9 @@
 <div class="container">
 
+	<span id="dt-tools" class="clearfix">
+		<button class="new-booking btn btn-primary btn-xs" ng-click="createProeve()" style="xmargin-right:100px;top:-3px;">Ny prøve</button>
+	</span>
+
 	<table datatable="ng" dt-options="proeveOptions" dt-columns="proeveColumns" dt-column-defs="proeveColumnDefs">
 		<tbody>
 			<tr ng-repeat="proeve in proever" ng-click="showProeve(proeve.proeve_id)" >

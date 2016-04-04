@@ -86,6 +86,9 @@ angular.module('dnalivApp')
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(10)
+			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
+							 "<'row'<'col-sm-12'tr>>" +
+							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
@@ -120,9 +123,8 @@ angular.module('dnalivApp')
 				})
 
 				//reattach date-filter element
-				$('<span/>').attr('id', 'dt-custom').insertAfter('.dataTables_length')	
 				$timeout(function() {
-					$('#date-filter').detach().appendTo('#dt-custom')
+					$('#date-filter').detach().appendTo('.dt-custom')
 					$scope.finalized = true
 				}, 600)
 
