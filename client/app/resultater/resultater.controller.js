@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Utils', 'Resultat', 'Resultat_taxon', 'Booking', 'Proeve', 'Taxon',
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'Taxon',
 																'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function($scope, $timeout, $modal, Utils, Resultat, Resultat_taxon, Booking, Proeve, Taxon,
+	function($scope, $timeout, $modal, Utils, Resultat, Resultat_item, Booking, Proeve, Taxon,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 
@@ -15,11 +15,20 @@ angular.module('dnalivApp')
 			})
 		})
 
-		Proeve.query().$promise.then(function(proever) {	
-			$scope.proeve_nr = []
-			$scope.proever = proever
-			proever.forEach(function(proeve) {
-				$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
+		$scope.loadProever = function() {
+			Proeve.query().$promise.then(function(proever) {	
+				$scope.proeve_nr = []
+				$scope.proever = proever
+				proever.forEach(function(proeve) {
+					$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
+				})
+			})
+		}
+		$scope.loadProever()
+
+		Resultat_item.query().$promise.then(function(resultat_items) {	
+			$scope.resultat_items = resultat_items.map(function(resultat_item) {
+				return Utils.getObj(resultat_item)
 			})
 		})
 
@@ -31,9 +40,23 @@ angular.module('dnalivApp')
 				}
 			}
 		}
+		$scope.taxonToIds = function() {
+			var ids = []
+			$scope.taxon.forEach(function(taxon) {
+				if (taxon.taxonSelected) ids.push(taxon.taxon_id)
+			}) 
+			return ids.join(',')
+		}
+		$scope.idsToTaxon = function(ids) {
+			ids = ids || ''
+			ids = ids.split(',')
+			$scope.taxon.forEach(function(taxon) {
+				taxon.taxonSelected = ids.indexOf(taxon.taxon_id.toString()) > -1
+			}) 
+		}
 
-		$scope.taxonRowClass = function(analyseret) {
-			return analyseret ? 'active' : 'danger'
+		$scope.taxonRowClass = function(selected) {
+			return selected ? 'active' : 'danger'
 		}
 
 		$scope.reloadData = function() {
@@ -41,6 +64,8 @@ angular.module('dnalivApp')
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '<ikke sat>'
 					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '<ikke sat>'
+					resultat.datoForAnalyse = Date.parse(resultat.datoForAnalyse)
+					resultat.datoForAnalyse_fixed = Utils.fixDate(resultat.datoForAnalyse)
 					return Utils.getObj(resultat)
 				})
 			})
@@ -53,57 +78,28 @@ angular.module('dnalivApp')
 			if ($scope.resultat) $scope.resultat.isEdited = true
 		}, true)
 
-		$scope.createResultat = function() {
-			document.querySelector('body').style.cursor = "hourglass"
-			Resultat.save( { resultat_id: '' } ).$promise.then(function(resultat) {	
-				$scope.taxon.forEach(function(taxon) {
-					var resultat_taxon = {
-						resultat_id: resultat.resultat_id,
-						taxon_id: taxon.taxon_id
-					}
-					Resultat_taxon.save( { resultat_taxon_id: '' }, resultat_taxon ).$promise.then(function(resultat_taxon) {
-						//console.log(resultat_taxon)
-					})
-				})
-				$scope.reloadData()
-				$("body").css("cursor", "default")
-			})
-		}
 
 		$scope.setResultat = function(resultat_id) {
 			$scope.resultat = {}
 			$scope.resultater.forEach(function(resultat) {
 				if (resultat.resultat_id == resultat_id) {
 					Utils.mergeObj($scope.resultat, resultat)
+					$scope.idsToTaxon(resultat.taxon_ids)
+					$scope.rebuildResultItems()
 				}
 			})
-			Resultat_taxon.query().$promise.then(function(resultat_taxons) {	
-				$scope.resultat.taxon = resultat_taxons.filter(function(resultat_taxon) {
-					if (resultat_taxon.resultat_id == resultat_id) {
-						var taxon = $scope.getTaxon(resultat_taxon.taxon_id),
-								result_taxon = Utils.getObj(resultat_taxon)
-						Utils.mergeObj(resultat_taxon, taxon)
-						return resultat_taxon
-					}
-				})
-			})
-
-			$timeout(function() {
-			}, 100)
-
 		}
 			
 		$scope.saveResultat = function() {
+			$scope.resultat.taxon_ids = $scope.taxonToIds()
 			Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat)
-			$scope.resultat.taxon.forEach(function(resultat_taxon) {
-				Resultat_taxon.update({ result_taxon_id: resultat_taxon.resultat_taxon_id }, resultat_taxon)
-			})
 			$scope.resultat.isEdited = false
 		}
 						
 		$scope.showResultat = function(resultat_id) {
 			$scope.setResultat(resultat_id)
 
+			//taxon
 			$scope.taxonOptions = DTOptionsBuilder.newOptions()
 				.withOption('destroy', true)
 				.withOption('paging', false)
@@ -112,30 +108,16 @@ angular.module('dnalivApp')
 				.withOption('searching', false)
 				.withOption('autoWidth', true)
 		    .withDisplayLength(50)
+				.withOption('order', [[ 0, "desc" ]])
 				.withOption('initComplete', function() {
-					$('.switch').bootstrapSwitch({
-						size: 'mini',
-						onText: '1',
-						offText: '0',
-						onSwitchChange: function() {
-							$scope.resultat.isEdited = true
-						}
-					})
 				})
-
-			var renderWith = function(data, type, full) {
-				return type == 'sort' ? $(data).is(':checked') : data 
-			}
+				.withLanguage(Utils.dataTables_daDk)
 
 			$scope.taxonColumns = [
-	      DTColumnBuilder.newColumn(0).withTitle('Analyseret'),
-	      DTColumnBuilder.newColumn(1).withTitle('Dansk navn'),
-	      DTColumnBuilder.newColumn(2).withTitle('Videnskabeligt navn'),
-	      DTColumnBuilder.newColumn(3).withTitle('Artsgruppe'),
-	      DTColumnBuilder.newColumn(4).withTitle('Positiv'),
-	      DTColumnBuilder.newColumn(5).withTitle('Negativ'),
-	      DTColumnBuilder.newColumn(6).withTitle('eDNA'),
-	      DTColumnBuilder.newColumn(7).withTitle('Pålidelig')
+	      DTColumnBuilder.newColumn(0).withTitle('Inkl.'),
+	      DTColumnBuilder.newColumn(1).withTitle('Artsgruppe'),
+	      DTColumnBuilder.newColumn(2).withTitle('Dansk navn'),
+	      DTColumnBuilder.newColumn(3).withTitle('Videnskabeligt navn')
 	    ]
 
 			$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col ) {
@@ -145,7 +127,7 @@ angular.module('dnalivApp')
 			}
 
 			$scope.taxonColumnDefs = [
-				{ targets: [0, 4, 5, 6, 7],  orderDataType: "dom-checkbox" }
+				{ targets: [0],  orderDataType: "dom-checkbox" }
 			]
 
 			var modal = $modal({
@@ -164,7 +146,11 @@ angular.module('dnalivApp')
 					},
 					items: 15,
 					afterSelect: function(item) {
-						$scope.resultat.booking_id = item.booking_id
+						$timeout(function() {
+							$scope.resultat.booking_id = item.booking_id
+							$scope.resultat.datoForAnalyse = item.DatoForBesoeg
+							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(item.DatoForBesoeg)
+						})
 					}
 				})
 				$('.proeve-typeahead').typeahead({
@@ -186,6 +172,7 @@ angular.module('dnalivApp')
 		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(10)
+			.withOption('destroy', true)
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
@@ -193,7 +180,10 @@ angular.module('dnalivApp')
 				input.className += 'form-control inject-control'
 				input.style.padding = '5px'
 				input.placeholder = 'skriv ..'
-
+				if ($scope.newProeveNr) {
+					input.value = $scope.newProeveNr
+					$(input).trigger('keyup')
+				}
 				$scope.inputFilter = input
 
 				//TODO, make the button plugin work properly in angular
@@ -203,17 +193,133 @@ angular.module('dnalivApp')
 						.text('Nyt resultat')
 						.click(function() { $scope.createResultat() })
 						.insertAfter('.dataTables_length')	
-				
-				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
+			
 			})
 			.withLanguage(Utils.dataTables_daDk)
 
 		$scope.resultaterColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
-      DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøvenr.')
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøvenr.'),
+      DTColumnBuilder.newColumn('datoForAnalyse').withTitle('Dato for analyse')
     ]
 
 		$scope.resultaterColumnDefs = []
 
+		
+		/** 
+				createResultat
+		 **/
+		$scope.createResultat = function() {
+			$scope.createProeveNr = {
+				proeve_nr: '',
+				create: false,
+				exists: false
+			}
+			$scope.canCreateResultat = function() {
+				//console.log($scope.createProeveNr)
+				if ($scope.createProeveNr.proeve_nr != '') {
+					if (typeof $scope.createProeveNr.proeve_id == 'number') {
+						if ($scope.createProeveNr.create) return false
+						return true
+					} else {
+						if ($scope.createProeveNr.create) {
+							return true
+						}
+					}
+				}
+				return false					
+			}
+			var modal = $modal({
+					scope: $scope,
+					templateUrl: 'app/resultater/proevenr.modal.html',
+					backdrop: 'static',
+					show: true
+				})
+			modal.$promise.then(modal.show).then(function() {
+				$('.proeve-typeahead').typeahead({
+					showHintOnFocus: false,
+					source: $scope.proever,
+					displayText: function(item) {
+						return item.proeve_nr
+					},
+					items: 15,
+					afterSelect: function(item) {
+						$timeout(function() {
+							$scope.createProeveNr.proeve_id = item.proeve_id
+							$scope.createProeveNr.proeve_nr = item.proeve_nr
+							$scope.createProeveNr.exists = true
+							$scope.createProeveNr.create = false
+						})
+					}
+				})
+			})
+			$scope.closeCreateModal = function($event) {
+				if ($event) {
+					$event.stopImmediatePropagation()
+				  $event.preventDefault()
+				  $event.stopPropagation()
+				}
+		    modal.$promise.then(modal.hide)
+			}						
+			$scope.doCreateTaxons = function(resultat, proeve_nr) {
+				$timeout(function() {
+					$scope.closeCreateModal()
+					$scope.reloadData()
+					$scope.newProeveNr = proeve_nr
+				}, 500)
+			}
+			$scope.doCreateResultat = function() {
+				if ($scope.createProeveNr.executing) return
+				$scope.createProeveNr.executing = true
+				if (typeof $scope.createProeveNr.proeve_id == 'number') {
+					var resultat = {
+						proeve_id: $scope.createProeveNr.proeve_id
+					}
+					Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+						$scope.doCreateTaxons(resultat, $scope.createProeveNr.proeve_nr)
+					})
+				} else {
+					var proeve = {
+						proeve_nr: $scope.createProeveNr.proeve_nr
+					}
+					Proeve.save( { proeve_id: '' }, proeve).$promise.then(function(proeve) {	
+						$scope.loadProever()
+						var resultat = {
+							proeve_id: proeve.proeve_id
+						}
+						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+							$scope.doCreateTaxons(resultat, proeve.proeve_nr)
+						})
+					})
+				}
+			}
+		}
+
+		/**
+			resultat item
+		 **/
+		$scope.rebuildResultItems = function() {
+			var items = []
+			$scope.taxon.forEach(function(taxon) {
+				if (taxon.taxonSelected) items[taxon.taxon_id] = []
+			})
+			$scope.resultat_items.forEach(function(resultat_item) {
+				if (resultat_item.resultat_id == $scope.resultat.resultat_id) {
+					items[resultat_item.taxon_id].push(resultat_item)
+				}
+			})
+			$scope.resultat.resultat_items = items
+		}
+
+		$scope.createResultatItem = function(taxon_id) {
+			var resultat_item = {
+				resultat_id: $scope.resultat.resultat_id,
+				taxon_id: taxon_id
+			}
+			Resultat_item.save( { resultat_item_id: '' }, resultat_item ).$promise.then(function(resultat_item) {
+				$scope.resultat_items.push(Utils.getObj(resultat_item))
+				$scope.rebuildResultItems()
+			})
+		}
 
   }]);

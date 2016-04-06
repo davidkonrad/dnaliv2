@@ -4,7 +4,7 @@
 
 'use strict';
 
-var Resultat_taxon = require('./resultat_taxon.model');
+var Resultat_taxon = require('./resultat_item.model');
 
 exports.register = function(socket) {
   Resultat_taxon.schema.post('save', function (doc) {
@@ -16,9 +16,9 @@ exports.register = function(socket) {
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('resultat_taxon:save', doc);
+  socket.emit('resultat_item:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('resultat_taxon:remove', doc);
+  socket.emit('resultat_item:remove', doc);
 }

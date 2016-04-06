@@ -8,34 +8,75 @@
 			</div>
 			<div class="modal-body">
 
-				<form class="form-inline" role="form" id="klasse-form">
+				<form class="form-inline" role="form" id="resultat-form">
 
 					<div class="form-group">
 						<label>SagsNr&nbsp;&nbsp;</label>
-						<input type="text" class="booking-typeahead form-control input-sm" ng-model="resultat.sagsNo" placeholder="..." onclick="this.value = ''">
+						<input type="text" class="booking-typeahead form-control input-sm" ng-model="resultat.sagsNo" placeholder="..." />
+
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>PrøveNr.&nbsp;&nbsp;</label>
-						<input type="text" class="proeve-typeahead form-control input-sm" ng-model="resultat.proeve_nr" placeholder="..." onclick="this.value = ''">
+						<label>PrøveNr&nbsp;&nbsp;</label>
+						<input type="text" class="proeve-typeahead form-control input-sm" ng-model="resultat.proeve_nr" placeholder="..." />
+
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>Dato for analyse&nbsp;&nbsp;</label>
+						<input type="text" class="form-control input-sm" ng-model="resultat.datoForAnalyse_fixed" bs-datepicker data-date-format="dd-MM-yyyy" size="7" placeholder="..." />
+
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button role="button" class="btn btn-success">Gem ændringer</button>
 
 					</div>
 
-					<div class="rule"></div>
+					<div bs-tabs>
+						<div bs-pane data-title="Undersøgte arter">
+		
+							<table datatable="ng" class="table taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
+								<tbody>
+									<tr ng-repeat="taxon in taxon" ng-class="taxonRowClass(taxon.taxonSelected)">
+										<td class="center"><input type="checkbox" ng-model="taxon.taxonSelected" ng-checked="taxon.taxonSelected" /></td>
+										<td> {{ taxon.taxon_artsgruppe }} </td>
+										<td> {{ taxon.taxon_navn_dk }} </td>
+										<td><em> {{ taxon.taxon_navn }} </em></td>
+									</tr>
+								</tbody>
+							</table>
+	
+						</div>
 
-						<table datatable="ng" class="table taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
-							<tbody>
-								<tr ng-repeat="taxon in resultat.taxon" ng-class="taxonRowClass(taxon.analyseret)">
-									<td class="center"><input type="checkbox" ng-model="taxon.analyseret"/></td>
-									<td> {{ taxon.taxon_navn_dk }} </td>
-									<td><em> {{ taxon.taxon_navn }} </em></td>
-									<td> {{ taxon.taxon_artsgruppe }} </td>
-									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-									<td xclass="center"><input type="checkbox" bs-switch ng-model="taxon.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-								</tr>
-							</tbody>
-						</table>
+						<div bs-pane data-title="Resultater">				
+							<br>
+							<table ng-repeat="taxon in taxon" ng-if="taxon.taxonSelected" class="table resultat-item-table">
+								<thead>
+									<tr>
+										<th colspan="3">
+											<button role="button" class="btn btn-primary btn-xs" ng-click="createResultatItem(taxon.taxon_id)" title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}">
+												<i class="fa fa-plus"></i>
+											</button>
+											&nbsp;{{ taxon.taxon_navn_dk }}
+										</th>
+										<th ng-if='$first'>Positiv</th>
+										<th ng-if='$first'>Negativ</th>
+										<th ng-if='$first'>eDNA prøve</th>
+										<th ng-if='$first'>database</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
+										<td> {{ taxon.taxon_artsgruppe }} </td>
+										<td> {{ taxon.taxon_navn_dk }} </td>
+										<td><em> {{ taxon.taxon_navn }} </em></td>
+										<td><input type="checkbox" bs-switch ng-model="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
+									</tr>	
+								</tbody>
+							</table>
 
+						</div>
+
+					</div>
+	
 				</form>
 			</div>
 			

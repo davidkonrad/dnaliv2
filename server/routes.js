@@ -18,7 +18,7 @@ module.exports = function(app) {
 	app.use('/api/proeve', require('./api/mysql/proeve'));
 	app.use('/api/lokalitet', require('./api/mysql/lokalitet'));
 	app.use('/api/resultat', require('./api/mysql/resultat'));
-	app.use('/api/resultat_taxon', require('./api/mysql/resultat_taxon'));
+	app.use('/api/resultat_item', require('./api/mysql/resultat_item'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

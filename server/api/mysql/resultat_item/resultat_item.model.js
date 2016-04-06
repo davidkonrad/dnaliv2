@@ -2,8 +2,8 @@
 
 
 module.exports = function(sequelize, DataTypes) {
-	var Resultat_taxon = sequelize.define("resultat_taxon", {
-		resultat_taxon_id: {
+	var Resultat_item = sequelize.define("resultat_item", {
+		resultat_item_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
@@ -33,18 +33,17 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: true
     },
-    paalidelig: {
+    database_result: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     }
-
-  
+ 
 	}, {
-		tableName: 'resultat_taxon',
+		tableName: 'resultat_item',
 		timestamps: false,
 		freezeTableName: true
 
 	});
 
-	return Resultat_taxon;
+	return Resultat_item;
 };

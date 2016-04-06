@@ -18,10 +18,17 @@ angular.module('dnalivApp')
 				}
 				Proeve.query().$promise.then(function(proever) {	
 					$scope.proever = proever.map(function(proeve) {
+						/*
 						proeve.indsamlingsdato = Utils.fixDate(proeve.indsamlingsdato)
 						proeve.DatoForEkst = Utils.fixDate(proeve.DatoForEkst)
 						proeve.ProeverModtaget = Utils.fixDate(proeve.ProeverModtaget)
+						*/
+						proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
+						proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
+						proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
+
 						proeve.lokalitet = getLokalitet(proeve.lokalitet_id)
+
 						return Utils.getObj(proeve)
 					})
 				})				
@@ -42,14 +49,16 @@ angular.module('dnalivApp')
 			if (proeve_nr != '') Proeve.save({ proeve_id: '' }, { proeve_nr: proeve_nr }).$promise.then(function(proeve) {	
 				$scope.newProeveNr = proeve_nr
 				$scope.loadData()
-				$scope.showProeve(proeve.proeve_id)
+				$timeout(function() {
+					$scope.showProeve(proeve.proeve_id)
+				}, 200)
 			})
 		}
 
 		$scope.saveProeve = function() {
 			Proeve.update({ proeve_id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
-				console.log('ok')
 				Utils.formReset('#proeve-form')
+				$scope.loadData()
 			})
 		}
 
@@ -76,7 +85,6 @@ angular.module('dnalivApp')
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
-				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
 

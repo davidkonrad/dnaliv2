@@ -16,7 +16,15 @@ module.exports = function(sequelize, DataTypes) {
 		proeve_id: {
 			type: DataTypes.INTEGER(11),
 			allowNull: true
-		}	
+		},
+		taxon_ids: {
+			type: DataTypes.STRING,
+			allowNull: true
+		},
+    datoForAnalyse: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
 	}, {
 		tableName: 'resultat',
 		timestamps: false,

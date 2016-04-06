@@ -92,6 +92,7 @@ button.new-booking {
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	padding-left: 1px;
 	padding-right: 0px;
+	background-color: white;
 }
 
 .dt-custom {

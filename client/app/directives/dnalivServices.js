@@ -62,10 +62,10 @@ angular.module('dnalivApp')
   		  "sInfoPostFix":    "",
   		  "sInfoThousands":  ",",
 		    "sLengthMenu":     "Vis _MENU_ rækker",
-		    "sLoadingRecords": "Loading...",
+		    "sLoadingRecords": "Henter data...",
 		    "sProcessing":     "Processing...",
-		    "sSearch":         "Filtrer:",
-		    "sZeroRecords":    "No matching records found",
+		    "sSearch":         "Filter:",
+		    "sZeroRecords":    "Ingen rækker passede søgningen",
 		    "oPaginate": {
 	        "sFirst":    "Første",
 	        "sLast":     "Sidste",
