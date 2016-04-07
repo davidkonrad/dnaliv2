@@ -127,13 +127,20 @@ angular.module('dnalivApp')
         }
       },
 
-      /**
-       * Check if a user is an admin
-       *
-       * @return {Boolean}
-       */
       isAdmin: function() {
-        return currentUser.role === 'Manager';
+        return currentUser.role === 'Admin';
+      },
+
+      isUser: function() {
+        return currentUser.role === 'User';
+      },
+
+      isGuest: function() {
+        return currentUser.role === 'Guest';
+      },
+
+      mayEdit: function() {
+				return !this.isGuest()
       },
 
       /**
