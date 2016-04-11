@@ -82,3 +82,42 @@ button.new-resultat {
 .resultat-item-table th {
 	padding-left: 0px;
 }
+
+/** new resultat design 08.04.2016 ****/
+
+tr.taxon-row {
+	background-color: #ebebeb;
+	font-size: 12px;
+}
+tr.taxon-row td {
+	line-height: 18px !important;
+	padding-top: 3px !important;
+	padding-bottom: 1px !important;
+}
+.add-resultat {
+	padding-right: 0px !important;
+	padding-left: 5px !important;
+	margin-right: 0px !important;
+	margin-left: 0px !important;
+	max-width: 20px; !important;
+	width: 10px; !important;
+	text-align: right;
+}
+
+tr.taxon-row th.center {
+	padding-left: 0px;
+	padding-right: 0px;
+	text-align: center;
+}
+tr.taxon-row td.center {
+	padding-left: 0px;
+	padding-right: 0px;
+	text-align: center;
+}
+
+label.normal {
+	font-weight: normal;
+}
+input.bold {
+	font-weight: bold;
+}

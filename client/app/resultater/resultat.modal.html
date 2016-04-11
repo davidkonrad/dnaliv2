@@ -11,22 +11,24 @@
 				<form class="form-inline" role="form" id="resultat-form">
 
 					<div class="form-group">
-						<label>SagsNr&nbsp;&nbsp;</label>
-						<input type="text" class="booking-typeahead form-control input-sm" ng-model="resultat.sagsNo" placeholder="..." />
+						<label class="normal">SagsNr&nbsp;&nbsp;</label>
+						<input type="text" class="booking-typeahead form-control input-sm bold" size="10" ng-model="resultat.sagsNo" placeholder="..." />
 
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>PrøveNr&nbsp;&nbsp;</label>
-						<input type="text" class="proeve-typeahead form-control input-sm" ng-model="resultat.proeve_nr" placeholder="..." />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<label class="normal">PrøveNr&nbsp;&nbsp;</label>
+						<input type="text" class="form-control input-sm bold" size="10" ng-model="resultat.proeve_nr" readonly style="background-color:#fff;"/>
 
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>Dato for analyse&nbsp;&nbsp;</label>
-						<input type="text" class="form-control input-sm" ng-model="resultat.datoForAnalyse_fixed" bs-datepicker data-date-format="dd-MM-yyyy" size="7" placeholder="..." />
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<label class="normal">Dato for analyse&nbsp;&nbsp;</label>
+						<input type="text" class="form-control input-sm bold" size="10" ng-model="resultat.datoForAnalyse" bs-datepicker data-date-format="dd-MM-yyyy" size="7" data-autoclose="true" placeholder="..." />
 
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<!--
+						&nbsp;&nbsp;&nbsp;&nbsp;
 						<button role="button" class="btn btn-success">Gem ændringer</button>
-
+						-->
 					</div>
 
+					<!--
 					<div bs-tabs>
 						<div bs-pane data-title="Undersøgte arter">
 		
@@ -72,16 +74,68 @@
 									</tr>	
 								</tbody>
 							</table>
-
 						</div>
-
+						
 					</div>
-	
+					-->
+
+						<br>
+						<table class="table resultat-item-table">
+								<thead>
+									<tr>
+										<th class="add-resultat"></th> <!-- add -->
+										<th></th> <!-- artsgruppe -->
+										<th></th> <!-- species -->
+										<th></th> <!-- scientific -->
+										<th class="center">Positiv</th>
+										<th class="center">Negativ</th>
+										<th class="center">eDNA prøve</th>
+										<th class="center">database</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat-start="taxon in taxon" ng-if="taxon.taxonSelected" class="taxon-row">
+										<td class="add-resultat">
+											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:3px;"></i>
+										</td>
+										<td> {{ taxon.taxon_artsgruppe }} </td>
+										<td> {{ taxon.taxon_navn_dk }} </td>
+										<td><em> {{ taxon.taxon_navn }} </em></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>
+											<i class="fa fa-remove" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;float:right;padding-top:3px;"></i>
+										</td>
+									</tr>	
+									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
+										<td></td>
+										<td> {{ taxon.taxon_artsgruppe }} </td>
+										<td> {{ taxon.taxon_navn_dk }} </td>
+										<td><em> {{ taxon.taxon_navn }} </em></td>
+										<td class="center"><input type="checkbox" bs-switch ng-model="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('positiv', true, item)" /></td>
+										<td class="center"><input type="checkbox" bs-switch ng-model="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('negativ', false, item)" /></td>
+										<td class="center"><input type="checkbox" bs-switch ng-model="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('eDNA', true, item)" /></td>
+										<td class="center"><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="updateResultatItem(item)" /></td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
 				</form>
 			</div>
 			
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" ng-disabled="!resultat.isEdited" ng-click="saveResultat()"></i>Gem</button> 
+				<div class="form-inline form-group" style="float:left;">
+					<label for="ssexcludedTaxons">Tilføj skjult art</label>
+					<!--
+					<select ng-model="unExcludeTaxon" id="unExcludeSelect" ng-options="t.art for t in excludedTaxons" xxxng-change="test()"></select>
+					-->
+					<select id="unExcludeSelect">
+						<option ng-repeat="t in excludedTaxons" value="{{ t.taxon_id }}">{{ t.art }}</option>
+					</select>
+				</div>
 				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>
 		</div>

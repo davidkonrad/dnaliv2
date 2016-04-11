@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 06, 2016 at 11:34 AM
+-- Generation Time: Apr 11, 2016 at 11:30 AM
 -- Server version: 5.5.44-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.13
 
@@ -1228,6 +1228,8 @@ CREATE TABLE IF NOT EXISTS `resultat` (
   `proeve_id` int(11) NOT NULL,
   `taxon_ids` varchar(255) DEFAULT NULL,
   `datoForAnalyse` date DEFAULT NULL,
+  `created_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_userName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`resultat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -1263,7 +1265,7 @@ CREATE TABLE IF NOT EXISTS `taxon` (
   `taxon_basisliste` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`taxon_id`),
   UNIQUE KEY `taxon_navn` (`taxon_navn`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `taxon`

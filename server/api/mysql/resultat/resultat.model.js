@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
     datoForAnalyse: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+		created_timestamp : {
+      type: DataTypes.DATE,
+      allowNull: true
+    }, 
+		created_userName : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
 	}, {
 		tableName: 'resultat',

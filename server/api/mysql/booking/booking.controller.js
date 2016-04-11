@@ -4,7 +4,8 @@ var models = require('../');
 // Get list of bookings
 exports.index = function(req, res) {
   models.Booking.findAll().then(function(booking){
-  	return res.json(200, booking);	
+  	//return res.json(200, booking);	
+		return res.status(200).json(booking) //!!?? 
   }).catch(function(err){
 	  handleError(res, err);
   });
@@ -58,7 +59,7 @@ exports.destroy = function(req, res) {
 // Describe booking
 exports.describe = function(req, res) {
   models.Booking.describe().then(function(booking){
-	  console.log(booking);
+	  //console.log(booking);
   	return res.json(200, booking);	
   }).catch(function(err){
 	  handleError(res, err);

@@ -1,14 +1,14 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin', 
+  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin', 
 			'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout', 
 			'$datepicker',
 
-	function ($scope, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin, Resultat, Taxon, Booking_taxon,
+	function ($scope, $compile, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin, Resultat, Taxon, Booking_taxon,
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout, $datepicker) {
 
-
+		
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
@@ -162,7 +162,7 @@ table.buttons().container()
 				var s = '';
 				switch(parseInt(data)) {
 					case -1: s = '<button class="btn btn-xs btn-status btn-danger">Aflyst</button>'; break;
-					case 1: s = '<button class="btn btn-xs btn-status btn-success">Bekræftet</button>'; break;
+					case 1: s = '<button class="btn btn-xs btn-status btn-success edit" ng-click="test()">Bekræftet</button>'; break;
 					default : s = '<button class="btn btn-xs btn-status btn-inverse">Ikke bekræftet</button>'; break;
 				}
         return s;

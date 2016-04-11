@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     analyseret: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.DATE,
       allowNull: true
     },
     positiv: {

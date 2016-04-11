@@ -16,7 +16,7 @@ User.find({}).remove(function() {
 		role: 'Guest' 
 	}, {
     provider: 'local',
-    name: '--test--',
+    name: '-- test --',
     email: 'david@ku.dk',
     password: 'david',
 		role: 'Admin'
