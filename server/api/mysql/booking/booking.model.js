@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     periode: {
       type: DataTypes.INTEGER(11),
-      allowNull: true
+			allowNull: true
     },
     aar_periode: {
       type: DataTypes.INTEGER(11),
@@ -49,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
     freezeTableName: true,
 		classMethods: {
       associate: function(models) {
-        models.Booking.hasMany(models.Klasse, { foreignKey : 'booking_id' })
+        models.Booking.hasMany(models.Klasse, { foreignKey : 'booking_id', as : 'Klasse' })
 			}
 		}
 

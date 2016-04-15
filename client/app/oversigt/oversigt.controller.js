@@ -9,6 +9,12 @@ angular.module('dnalivApp')
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout, $datepicker) {
 
 		
+		/*
+		Booking.findById(3).$promise.then(function(booking) {	
+			console.log(booking)
+		})	
+		*/
+
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
