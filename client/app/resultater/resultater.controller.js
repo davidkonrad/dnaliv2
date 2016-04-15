@@ -170,6 +170,7 @@ angular.module('dnalivApp')
 						return item.sagsNo
 					},
 					items: 15,
+					/*
 					afterSelect: function(item) {
 						$timeout(function() {
 							$scope.resultat.booking_id = item.booking_id
@@ -177,6 +178,7 @@ angular.module('dnalivApp')
 							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(item.DatoForBesoeg)
 						})
 					}
+					*/
 				})
 				/*
 				$('.proeve-typeahead').typeahead({
