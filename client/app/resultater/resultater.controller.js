@@ -107,7 +107,7 @@ angular.module('dnalivApp')
 					//console.log(resultat.datoForAnalyse, Utils.fixDate(resultat.datoForAnalyse), $scope.resultat.datoForAnalyse_fixed)
 					$scope.idsToTaxon(resultat.taxon_ids)
 					$scope.rebuildResultatItems()
-					console.log($scope.resultat)
+					//console.log($scope.resultat)
 				}
 			})
 		}
@@ -170,7 +170,6 @@ angular.module('dnalivApp')
 						return item.sagsNo
 					},
 					items: 15,
-					/*
 					afterSelect: function(item) {
 						$timeout(function() {
 							$scope.resultat.booking_id = item.booking_id
@@ -178,7 +177,7 @@ angular.module('dnalivApp')
 							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(item.DatoForBesoeg)
 						})
 					}
-					*/
+
 				})
 				/*
 				$('.proeve-typeahead').typeahead({
@@ -370,19 +369,20 @@ angular.module('dnalivApp')
 		}
 		$scope.resultatValueClick = function(name, defaultValue, item) {
 			if (item.isNull) {
-				//item[name] = defaultValue
+				item[name] = defaultValue
 				//"calc" database_result
-				//item.database_result = item.negativ	== false && item.positiv == true && item.eDNA != null
+				console.log(item)
+				item.database_result = item.negativ	== false && item.positiv == true && item.eDNA != null
 			}
 			$scope.updateResultatItem(item)
-			//console.log(item);
 		}
 		$scope.excludeTaxon = function(taxon_id) {
 			var ids = $scope.taxonToIds().split(',')
 			ids.splice(ids.indexOf(taxon_id.toString()), 1)
 			$scope.resultat.taxon_ids = ids.join(',')
 			Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
-				$scope.resultat = resultat
+				console.log(resultat)
+				//$scope.resultat = resultat
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()
 			})
@@ -395,7 +395,7 @@ angular.module('dnalivApp')
 				$scope.resultat = resultat
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()
-				$scope.reloadData()
+				//$scope.reloadData()
 			})
 		}			
 

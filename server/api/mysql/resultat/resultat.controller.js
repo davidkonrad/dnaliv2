@@ -32,7 +32,7 @@ exports.create = function(req, res) {
 
 // Updates an existing resultat in the DB.
 exports.update = function(req, res) {
-  models.Resultat.find(req.params.id).then(function(resultat){
+  models.Resultat.find({ where : { resultat_id: req.params.id }} ).then(function(resultat){
       if(!resultat) { return res.send(404); }  
 	  return resultat.updateAttributes(req.body);	  	
   }).then(function(resultat){
@@ -45,7 +45,6 @@ exports.update = function(req, res) {
 
 // Deletes a resultat from the DB.
 exports.destroy = function(req, res) {
-	
 	models.Resultat.find(req.params.id).then(function(resultat){
 		if(!resultat) { return res.send(404); }
 		return resultat.destroy()
@@ -60,7 +59,6 @@ exports.destroy = function(req, res) {
 // Describe resultat
 exports.describe = function(req, res) {
   models.Resultat.describe().then(function(resultat){
-	  console.log(resultat);
   	return res.json(200, resultat);	
   }).catch(function(err){
 	  handleError(res, err);

@@ -4,8 +4,6 @@ angular.module('dnalivApp')
   .controller('MainCtrl', ['$scope', '$compile', 'Geo', 'Utils', 'Booking', '$timeout', '$modal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 	 function($scope, $compile, Geo, Utils, Booking, $timeout, $modal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		console.log($compile)
-
 		Booking.query().$promise.then(function(bookings) {
 			$scope.bookings = bookings
 		})
@@ -18,7 +16,7 @@ angular.module('dnalivApp')
 			.withPaginationType('full_numbers')
 		*/
 
-		//$scope.bookingOptions = DTOptionsBuilder.newOptions()
+		/*
 		$scope.$watch('bookings', function(newVal, oldVal) {	
 			if (typeof newVal == 'object') {
 				console.log('OK')
@@ -37,6 +35,6 @@ angular.module('dnalivApp')
 			}
 			
 		})
-
+		*/
 
   }]);

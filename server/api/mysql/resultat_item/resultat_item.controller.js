@@ -31,7 +31,9 @@ exports.create = function(req, res) {
 
 // Updates an existing resultat_item in the DB.
 exports.update = function(req, res) {
-  models.Resultat_item.find(req.params.id).then(function(resultat_item){
+	//console.log(req)
+  models.Resultat_item.find({ where : { resultat_item_id: req.params.id }} ).then(function(resultat_item){
+  //models.Resultat_item.find(req.params.id).then(function(resultat_item){
       if(!resultat_item) { return res.send(404); }  
 	  return resultat_item.updateAttributes(req.body);	  	
   }).then(function(resultat_item){
