@@ -123,3 +123,6 @@ input.bold {
 }
 
 
+.resultat-item-table td {
+	cursor: default !important;
+}

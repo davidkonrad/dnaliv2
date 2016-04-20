@@ -378,6 +378,14 @@ angular.module('dnalivApp')
 		/**
 			resultat item
 		 **/
+		$scope.removeReplikat = function(resultat_item) {
+			if (confirm('Dette vil slette replikatet PERMANENT. Er du sikker på du vil slette?')) {
+				Resultat_item.test({ resultat_item_id: resultat_item.resultat_item_id }).$promise.then(function(resultat_item) {
+					console.log(resultat_item)
+				})
+			}
+		}
+			
 		$scope.rebuildResultatItems = function() {
 			var items = []
 			$scope.taxon.forEach(function(taxon) {

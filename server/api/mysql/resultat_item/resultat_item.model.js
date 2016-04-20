@@ -36,7 +36,11 @@ module.exports = function(sequelize, DataTypes) {
     database_result: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    }
+    }, 
+		Ct_vaerdi: {
+			type: DataTypes.INTEGER(11),
+			allowNull: true
+		}
  
 	}, {
 		tableName: 'resultat_item',

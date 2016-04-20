@@ -18,3 +18,37 @@
 	clear: none;
 }
 
+/* from lokalitet.modal.html */
+
+.modal-body {
+	padding: 0px;
+	padding-top: 5px;
+}
+.typeahead {
+	z-index:10000;
+}
+.checkbox input[type="checkbox"] {
+	margin-left: 0px;
+}
+input.sm-pad {
+	padding-left: 3px;
+	padding-right: 1px;
+}
+.checkbox input[type="checkbox"] {
+	position: relative;
+	top: 2px;
+}
+span.map-tool {
+	float: right;
+	right: 100px;
+	display: inline-block;
+	position: relative;
+	margin: 0px;
+	top: -3px;
+	background-color:#ebebeb;
+	padding:4px;
+	top:-8px;
+	padding-right:22px;
+}
+
+

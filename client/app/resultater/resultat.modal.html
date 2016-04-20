@@ -22,10 +22,6 @@
 						<label class="normal">Dato for analyse&nbsp;&nbsp;</label>
 						<input type="text" class="form-control input-sm bold" size="10" ng-model="resultat.datoForAnalyse" bs-datepicker data-date-format="dd-MM-yyyy" size="7" data-autoclose="true" placeholder="..." />
 
-						<!--
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<button role="button" class="btn btn-success">Gem ændringer</button>
-						-->
 					</div>
 
 					<!--
@@ -91,6 +87,7 @@
 										<th class="center">Negativ</th>
 										<th class="center">eDNA prøve</th>
 										<th class="center">Pålidelig</th>
+										<th>Ct værdi</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -106,8 +103,9 @@
 										<td></td>
 										<td></td>
 										<td></td>
+										<td></td>
 										<td>
-											<i class="fa fa-remove" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;float:right;padding-top:3px;"></i>
+											<i class="fa fa-sort-up" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;font-size:130%;float:right;padding-top:3px;"></i>
 										</td>
 									</tr>	
 									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
@@ -119,7 +117,10 @@
 										<td class="center"><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('negativ', false, item)" /></td>
 										<td class="center"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('eDNA', true, item)" /></td>
 										<td class="center"><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="updateResultatItem(item)" /></td>
-										<td></td>
+										<td><input type="text" ng-model="item.Ct_vaerdi" size="3" ng-change="updateResultatItem(item)" /></td>
+										<td>
+											<i class="fa fa-remove" bs-tooltip ng-click="removeReplikat(item.resultat_item_id)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="color:gray;font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
+										</td>
 									</tr>
 								</tbody>
 							</table>
