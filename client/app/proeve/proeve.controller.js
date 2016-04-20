@@ -85,13 +85,15 @@ angular.module('dnalivApp')
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
+				//remove any previous set global filters
+				$.fn.dataTable.ext.search = []
 			})
 			.withLanguage(Utils.dataTables_daDk)
 
 		$timeout(function() {
-			$('#dt-tools').detach().appendTo('.dt-custom')
+			$('#dt-tools').detach().appendTo('.dt-custom').show()
 			$scope.finalized = true
-		}, 600)
+		}, 500)
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),

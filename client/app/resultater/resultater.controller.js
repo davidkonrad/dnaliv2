@@ -13,12 +13,15 @@ angular.module('dnalivApp')
 			bookings.forEach(function(booking) {
 				$scope.sagsNo[booking.booking_id] = booking.sagsNo
 			})
+			$scope.reloadData()
 		})
 
 		$scope.loadProever = function() {
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proeve_nr = []
-				$scope.proever = proever
+				$scope.proever = proever.map(function(proeve) {
+					return Utils.getObj(proeve)
+				})
 				proever.forEach(function(proeve) {
 					$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
 				})
@@ -68,7 +71,8 @@ angular.module('dnalivApp')
 		$scope.defaultTaxonIds = function() {
 			var ids = []
 			$scope.taxon.forEach(function(taxon) {
-				ids.push(taxon.taxon_id)
+				console.log(taxon.taxon_basisliste)
+				if (taxon.taxon_basisliste) ids.push(taxon.taxon_id)
 			}) 
 			return ids.join(',')
 		}
@@ -79,6 +83,7 @@ angular.module('dnalivApp')
 		}
 
 		$scope.reloadData = function() {
+			$('#dt-tools').detach().appendTo('body').hide()
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '<ikke sat>'
@@ -89,14 +94,32 @@ angular.module('dnalivApp')
 				})
 			})
 		}
+		/*
 		$timeout(function() {
 			$scope.reloadData()
-		}, 150)
+		}, 300)
+		*/
 
 		$scope.$watch('resultat', function() {
 			if ($scope.resultat) $scope.resultat.isEdited = true
 		}, true)
 
+		$scope.userFilter = ''
+		$scope.setUserFilter = function(userFilter) {
+			//console.log(userFilter, $scope.userFilter)
+			//if (userFilter == $scope.userFilter) return
+			if (userFilter) {
+				$.fn.dataTable.ext.search.push(
+			    function( settings, data, dataIndex ) {
+						return data[3] == Auth.getCurrentUser().name
+					}
+				)
+			} else {
+				$.fn.dataTable.ext.search = []
+			}
+			$('#dt-tools').detach().appendTo('body').hide()
+			$scope.resultaterInstance.rerender()
+		}
 
 		$scope.setResultat = function(resultat_id) {
 			$scope.resultat = {}
@@ -200,14 +223,17 @@ angular.module('dnalivApp')
 				$scope.resultat.datoForAnalyse = date
 				$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(date)
 				$scope.saveResultat()
-				$scope.reloadData()
+				//$scope.reloadData()
 			}
 		})
 
 		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(10)
-			.withOption('destroy', true)
+			//.withOption('destroy', true)
+			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
+							 "<'row'<'col-sm-12'tr>>" +
+							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
@@ -218,19 +244,37 @@ angular.module('dnalivApp')
 				if ($scope.newProeveNr) {
 					input.value = $scope.newProeveNr
 					$(input).trigger('keyup')
+					$scope.newProeveNr = false
 				}
 				$scope.inputFilter = input
 
 				//TODO, make the button plugin work properly in angular
 				//append a create button
+				/*
 				var $button = $('<button></button>')
 						.addClass('new-resultat btn btn-primary btn-xs')
 						.text('Nyt resultat')
 						.click(function() { $scope.createResultat() })
-						.insertAfter('.dataTables_length')	
-			
+						.appendTo('.dt-custom')	
+		*/
+
+				$timeout(function() {
+					if ($('.dt-custom').find('#dt-tools').length) return
+					$('#dt-tools').detach().appendTo('.dt-custom').show()
+					$scope.finalized = true
+				}, 301)
+
 			})
 			.withLanguage(Utils.dataTables_daDk)
+
+		/*
+		$timeout(function() {
+			$('#dt-tools').clone().detach().appendTo('.dt-custom').show()
+			$scope.finalized = true
+		}, 300)
+		*/
+
+		$scope.resultaterInstance = {}
 
 		$scope.resultaterColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
@@ -272,10 +316,11 @@ angular.module('dnalivApp')
 				})
 			modal.$promise.then(modal.show).then(function() {
 				$('.proeve-typeahead').typeahead({
-					showHintOnFocus: false,
+					//showHintOnFocus: false,
 					source: $scope.proever,
 					displayText: function(item) {
-						return item.proeve_nr
+						//return item.proeve_nr
+						return item.proeve_nr != null ? item.proeve_nr : ''
 					},
 					items: 15,
 					afterSelect: function(item) {
@@ -368,11 +413,16 @@ angular.module('dnalivApp')
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.resultatValueClick = function(name, defaultValue, item) {
+			//console.log(item)
 			if (item.isNull) {
 				item[name] = defaultValue
-				//"calc" database_result
-				console.log(item)
-				item.database_result = item.negativ	== false && item.positiv == true && item.eDNA != null
+			}
+			//"calc" database_result
+			//item.database_result = item.negativ	== false && item.positiv == true //&& item.eDNA != null
+			if (item.negativ === false && item.positiv === true && item.eDNA !== null) {
+				item.database_result = true
+			} else {
+				item.database_result = false
 			}
 			$scope.updateResultatItem(item)
 		}
@@ -381,7 +431,6 @@ angular.module('dnalivApp')
 			ids.splice(ids.indexOf(taxon_id.toString()), 1)
 			$scope.resultat.taxon_ids = ids.join(',')
 			Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
-				console.log(resultat)
 				//$scope.resultat = resultat
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()

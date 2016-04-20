@@ -1,11 +1,11 @@
 <div class="container">
 
-	<span id="date-filter" class="clearfix">
+	<span id="date-filter" class="clearfix" style="display:none;">
 		<button class="new-booking btn btn-primary btn-xs" ng-click="createBooking()" style="xmargin-right:100px;top:-3px;">Ny booking</button>
 		&nbsp;&nbsp;
-		<input type="text" bs-datepicker ng-model="fromDate" data-date-format="dd-MM-yyyy" id="from-date" size="8" ng-disabled="!dateFilterActive" />
+		<input type="text" class="form-control inject-control" bs-datepicker ng-model="fromDate" data-date-format="dd-MM-yyyy" data-autoclose="true" id="from-date" size="8" ng-disabled="!dateFilterActive" />
 		-
-		<input type="text" bs-datepicker ng-model="toDate" data-date-format="dd-MM-yyyy" id="to-date" size="8" ng-disabled="!dateFilterActive" />
+		<input type="text" class="form-control inject-control" bs-datepicker ng-model="toDate" data-date-format="dd-MM-yyyy" data-autoclose="true" id="to-date" size="8" ng-disabled="!dateFilterActive" />
 		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;top:10px;" title="Datofilter til / fra" />
 	</span>
 

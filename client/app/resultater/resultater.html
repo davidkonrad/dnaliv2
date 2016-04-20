@@ -1,6 +1,16 @@
 <div class="container">
 
-	<table datatable="ng" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs">
+	<span id="dt-tools" class="clearfix" style="display:none;">
+		<button class="new-resultat btn btn-primary btn-xs" ng-click="createResultat()">Nyt resultat</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<div class="checkbox-inline">
+			<label for="userFilter" class="normal checkbox-inline" XXXbs-tooltip data-triggger="hover" data-title="Vis kun egne resultater i oversigten">
+				<input type="checkbox" id="userFilter" ng-model="userFilter" ng-change="setUserFilter(userFilter)" />Egne resultater
+			</label>
+		</div>
+	</span>
+
+	<table datatable="ng" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs" dt-instance="resultaterInstance">
 		<tbody>
 			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" >
 				<td> {{ resultat.sagsNo }} </td>

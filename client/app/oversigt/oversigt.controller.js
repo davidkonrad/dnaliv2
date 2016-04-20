@@ -9,18 +9,19 @@ angular.module('dnalivApp')
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout, $datepicker) {
 
 		
-		/*
-		Booking.findById(3).$promise.then(function(booking) {	
-			console.log(booking)
-		})	
-		*/
-
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
 
+		Klasse.query().$promise.then(function(klasser) {	
+			$scope.klasser = klasser.map(function(klasse) {
+				return klasse
+			})
+		})
+	
+		/*
 		$scope.reloadData = function() {
 			Klasse.query().$promise.then(function(klasser) {	
 				$scope.klasser = klasser.map(function(klasse) {
@@ -41,8 +42,60 @@ angular.module('dnalivApp')
 				})
 			})
 		}
+		*/
+		$scope.reloadData = function() {
+			function getKlasser(booking) {
+				var klasser = '';
+				for (var i in booking.Klasse) {
+					if (klasser != '') klasser += '\n';
+					klasser += booking.Klasse[i].institutionsnavn
+				}
+				return klasser
+			}
+			function getLaerer(booking) {
+				var laerer = '';
+				booking.Klasse.forEach(function(klasse) {
+					if (laerer != '') laerer += '\n';
+					laerer += klasse.laererNavn
+				})
+				return laerer
+			}
+
+			function initInfo(booking) {
+				booking.klasser = ''
+				booking.laerer = ''
+				booking.status = -1
+				booking.Klasse.forEach(function(klasse) {
+					if (booking.laerer != '') booking.laerer += '\n';
+					booking.laerer += klasse.laererNavn
+
+					if (booking.klasser != '') booking.klasser += '\n';
+					booking.klasser += klasse.institutionsnavn
+
+					booking.status = klasse.status
+				})
+			}
+
+			Booking.query().$promise.then(function(bookings) {	
+				$scope.bookings = bookings.map(function(booking) {
+					//booking.klasser = $scope.getKlasser(booking.booking_id)
+					/*
+					booking.klasser = getKlasser(booking)
+					booking.laerer = getLaerer(booking)
+					booking.status = '0' //$scope.getStatus(booking.booking_id)
+					*/
+					initInfo(booking)
+					//instead of render methods, improve load speed
+					booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
+					booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
+
+					return Utils.getObj(booking)
+				})
+			})
+		}
 		$scope.reloadData()
 
+		/*
 		$scope.getStatus = function(booking_id) {
 			var status = 0;
 			$scope.klasser.forEach(function(klasse) {
@@ -52,7 +105,9 @@ angular.module('dnalivApp')
 			})
 			return status
 		}
+		*/
 
+		/*
 		$scope.getKlasser = function(booking_id) {
 			var klasser = '';
 			$scope.klasser.forEach(function(klasse) {
@@ -63,7 +118,9 @@ angular.module('dnalivApp')
 			})
 			return klasser
 		}
+		*/
 
+		/*
 		$scope.getLaerer = function(booking_id) {
 			var laerer = '';
 			$scope.klasser.forEach(function(klasse) {
@@ -74,7 +131,8 @@ angular.module('dnalivApp')
 			})
 			return laerer
 		}
-		
+		*/
+
 		$scope.createBooking = function() {
 			var sagsNo = prompt('SagsNo: ', '');
 			if (sagsNo != '') Booking.save({ booking_id: '' }, { sagsNo: sagsNo }).$promise.then(function(booking) {	
@@ -112,6 +170,8 @@ angular.module('dnalivApp')
 					$scope.newSagsNo = false
 				}
 
+				//remove any previous set global filters
+				$.fn.dataTable.ext.search = []
 				//custom date filter
 				$.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
 					if (!$scope.dateFilterActive) return true
@@ -130,37 +190,13 @@ angular.module('dnalivApp')
 
 				//reattach date-filter element
 				$timeout(function() {
-					$('#date-filter').detach().appendTo('.dt-custom')
+					$('#date-filter').detach().appendTo('.dt-custom').show()
 					$scope.finalized = true
-				}, 600)
+				}, 800)
 
-				document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
+				//document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
 			})
 			.withLanguage(Utils.dataTables_daDk)
-			/*
-			 .withButtons([
-            'colvis',
-            'copy',
-            'print',
-            'excel',
-            {
-                text: 'Some button',
-                key: '1',
-                action: function (e, dt, node, config) {
-                    alert('Button activated');
-                }
-            }
-        ]);
-			*/
-
-		/*
-table.buttons().container()
-    .appendTo( $('.col-sm-6:eq(0)', table.table().container() ) );
-		*/
-		
-		$timeout(function() {
-			//console.log($scope.bookingInstance)
-		},150)
 
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
