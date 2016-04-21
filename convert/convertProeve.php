@@ -26,7 +26,7 @@ class ConvertProeve extends Db {
 
 	public function run() {
 		if (($handle = fopen($this->file, "r")) !== false) {
-			$this->fieldNames = fgetcsv($handle, 1000, ',');
+			$this->fieldNames = fgetcsv($handle, 1000, ';');
 
 			echo '<pre>';
 			print_r($this->fieldNames);
@@ -35,7 +35,7 @@ class ConvertProeve extends Db {
 			$total=0;
 			$count=0;
 			
-			while (($record = fgetcsv($handle, 1000, ',')) !== false) {
+			while (($record = fgetcsv($handle, 1000, ';')) !== false) {
 				$array = array();
 				$index = 0;
 
@@ -48,28 +48,44 @@ class ConvertProeve extends Db {
 				print_r($array);
 				echo '</pre>';
 
-				$ngUl = isset($array['ngUl']) ? $array['ngUl'] : '';
+				//insert lokalitet
+				$SQL='insert into lokalitet (presentationString, X_GPS, Y_GPS, latitude, longitude) values('.
+					$this->q($array['Lokalitet']) .					
+					$this->q($array['X_GPS']) .
+					$this->q($array['Y_GPS']) .
+					$this->q($array['Latitude']) .
+					$this->q($array['Longitude'], false) .
+				')';
+				$lokalitet_id = $this->insertQuery($SQL);
 
-				$SQL='insert into proeve (proeve_nr, Lokalitet, indsamlingsdato, GPS_X, GPS_Y, Lat, `Long` , Analyseret, Indsamler, Mailadresse, '.
+				//insert proeve			
+				$SQL='insert into proeve (proeve_nr, lokalitet_id, indsamlingsdato, Analyseret, Indsamler, Mailadresse, '.
 											'ProeverModtaget, DatoForEkst, ElueretI, ngUl, AntalKuverter, SNM_Adresse, kommentar, dataset) values('.
-					$this->q($array['ProeveID']) .
-					$this->q($array['Lokalitet']) .
-					$this->q($this->fixDate($array['DatoForIndsamling'])) .
-					$this->q($array['GPS_X']) .
-					$this->q($array['GPS_Y']) .
-					$this->q($array['Lat']) .
-					$this->q($array['Lon']) .
-					$this->q($this->fixDate($array['Analyseret'])) .
+					$this->q($array['Proevenummer']) .
+					$this->q($lokalitet_id) .
+					//$this->q($this->fixDate($array['DatoForIndsamling'])) .
+					$this->q($array['DatoForIndsamling']) .
+					
+					//$this->q($this->fixDate($array['Analyseret'])) .
+					$this->q('') .
+		
 					$this->q($array['Indsamler']) .
-					$this->q($array['Mailadresse']) .
-					$this->q($this->fixDate($array['ProeverModtaget'])) .
-					$this->q($this->fixDate($array['DatoForEkst'])) .
+					$this->q($array['Email']) .
+					//$this->q($this->fixDate($array['ProeverModtaget'])) .
+					$this->q($array['ProeverModtaget']) .
+					//$this->q($this->fixDate($array['DatoForEkst'])) .
+					$this->q($array['DatoForEkst']) .
 					$this->q($array['ElueretI']) .
-					$this->q($ngUl) .
-					$this->q($array['AntalKuverter']) .
-					$this->q($array['SNM_Adresse']) .
-					$this->q($array['Kommentar']) .
-					$this->q($this->dataset, false) .
+					$this->q($array['ngUl']) .
+
+					//$this->q($array['AntalKuverter']) .
+					$this->q('') .
+
+					//$this->q($array['SNM_Adresse']) .
+					$this->q('') .
+
+					$this->q($array['Note']) .
+					$this->q($array['Dataset'], false) .
 				')';
 
 				echo $SQL.'<br>';
@@ -88,16 +104,22 @@ class ConvertProeve extends Db {
 
 	public function emptyTables() {
 		$this->resetTable('proeve');
+		$this->resetTable('lokalitet');
 	}
 
 				
 }
-
+/*
 $convert = new ConvertProeve('../projectdata/snm2014.csv', 'SNM2014');
 $convert->emptyTables();
 $convert->run();
 
 $convert = new ConvertProeve('../projectdata/snm2015.csv', 'SNM2015');
+$convert->run();
+*/
+
+$convert = new ConvertProeve('../projectdata/DNA&liv_Prøveliste02.csv', '');
+$convert->emptyTables();
 $convert->run();
 
 ?>

@@ -101,6 +101,11 @@ class Db {
 		}
 	}
 
+	public function insertQuery($SQL) {
+		$result = $this->query($SQL);
+		return mysql_insert_id() !== 0 ? mysql_insert_id() : false;
+	}
+
 	//extra
 	public function debug($a) {
 		echo '<pre>';

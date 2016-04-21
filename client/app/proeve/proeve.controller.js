@@ -79,36 +79,50 @@ angular.module('dnalivApp')
 		$scope.proeveOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
-			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
+			/*
+			.withDOM("<'row'<'col-sm-2'l><B'col-sm-7 dt-custom'><'col-sm-3'f>>" +
 							 "<'row'<'col-sm-12'tr>>" +
 							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
+			*/
+			.withDOM('lBfrtip')
+			.withOption('autoWidth', false)
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
 				//remove any previous set global filters
 				$.fn.dataTable.ext.search = []
+				$('.dt-button').each(function(btn) {
+					$(this).removeClass('dt-button').removeClass('buttons-collection').removeClass('buttons-colvis') //, 'buttons-columnVisibility'])
+				})
 			})
-			.withLanguage(Utils.dataTables_daDk)
+			.withButtons([ 
+					{ extend : 'colvis',
+						text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+						className: 'btn btn-default btn-xs colvis-btn'
+					},
+					{ text: 'Opret ny prøve',
+						className: 'btn btn-primary btn-xs colvis-btn',
+						action: function ( e, dt, node, config ) {
+							$scope.createProeve()
+            }
+					}
 
-		$timeout(function() {
-			$('#dt-tools').detach().appendTo('.dt-custom').show()
-			$scope.finalized = true
-		}, 500)
+				])
+			.withLanguage(Utils.dataTables_daDk)
+			//.withBootstrap()
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
-      DTColumnBuilder.newColumn('dataset').withTitle('dataset'),
+      DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet'),
       DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'date').withTitle('Indsamlingsdato'),
-      DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'date').withTitle('Dato for ekst.'),
-      DTColumnBuilder.newColumn('ProeverModtaget').withOption('type', 'date').withTitle('Prøver modtaget'),
+      DTColumnBuilder.newColumn('Indsamler').withTitle('Indsamler'),
       DTColumnBuilder.newColumn('KuvertAfsendt').withOption('type', 'date').withTitle('Kuverter afsendt'),
+      DTColumnBuilder.newColumn('ProeverModtaget').withOption('type', 'date').withTitle('Prøver modtaget'),
+      DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'date').withTitle('Dato for ekst.'),
       DTColumnBuilder.newColumn('ElueretI').withTitle('Elueret i'),
       DTColumnBuilder.newColumn('ngUl').withTitle('ng/µl'),
-      DTColumnBuilder.newColumn('Indsamler').withTitle('Indsamler'),
-      DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet')
+      DTColumnBuilder.newColumn('dataset').withTitle('dataset')
     ];  
-
-
 
 		/**
 			Lokalitet

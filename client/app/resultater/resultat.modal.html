@@ -24,57 +24,6 @@
 
 					</div>
 
-					<!--
-					<div bs-tabs>
-						<div bs-pane data-title="Undersøgte arter">
-		
-							<table datatable="ng" class="table taxon" dt-options="taxonOptions" dt-columns="taxonColumns" dt-column-defs="taxonColumnDefs">
-								<tbody>
-									<tr ng-repeat="taxon in taxon" ng-class="taxonRowClass(taxon.taxonSelected)">
-										<td class="center"><input type="checkbox" ng-model="taxon.taxonSelected" ng-checked="taxon.taxonSelected" /></td>
-										<td> {{ taxon.taxon_artsgruppe }} </td>
-										<td> {{ taxon.taxon_navn_dk }} </td>
-										<td><em> {{ taxon.taxon_navn }} </em></td>
-									</tr>
-								</tbody>
-							</table>
-	
-						</div>
-
-						<div bs-pane data-title="Resultater">				
-							<br>
-							<table ng-repeat="taxon in taxon" ng-if="taxon.taxonSelected" class="table resultat-item-table">
-								<thead>
-									<tr>
-										<th colspan="3">
-											<button role="button" class="btn btn-primary btn-xs" ng-click="createResultatItem(taxon.taxon_id)" title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}">
-												<i class="fa fa-plus"></i>
-											</button>
-											&nbsp;{{ taxon.taxon_navn_dk }}
-										</th>
-										<th ng-if='$first'>Positiv</th>
-										<th ng-if='$first'>Negativ</th>
-										<th ng-if='$first'>eDNA prøve</th>
-										<th ng-if='$first'>database</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
-										<td> {{ taxon.taxon_artsgruppe }} </td>
-										<td> {{ taxon.taxon_navn_dk }} </td>
-										<td><em> {{ taxon.taxon_navn }} </em></td>
-										<td><input type="checkbox" bs-switch ng-model="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-										<td><input type="checkbox" bs-switch ng-model="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-										<td><input type="checkbox" bs-switch ng-model="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-										<td><input type="checkbox" bs-switch ng-model="item.paalidelig" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" /></td>
-									</tr>	
-								</tbody>
-							</table>
-						</div>
-						
-					</div>
-					-->
-
 						<br>
 						<table class="table resultat-item-table">
 								<thead>
@@ -83,16 +32,16 @@
 										<th></th> <!-- artsgruppe -->
 										<th></th> <!-- species -->
 										<th></th> <!-- scientific -->
-										<th class="center">Positiv</th>
-										<th class="center">Negativ</th>
-										<th class="center">eDNA prøve</th>
-										<th class="center">Pålidelig</th>
-										<th>Ct værdi</th>
+										<th xclass="center">Positiv</th>
+										<th xclass="center">Negativ</th>
+										<th xclass="center">eDNA-prøve</th>
+										<th xclass="center">Pålidelig</th>
+										<th>Ct-værdi (eDNA-prøve)</th>
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat-start="taxon in taxon" ng-if="taxon.taxonSelected" class="taxon-row">
+									<tr ng-repeat-start="taxon in taxon | orderBy:'sortOrder'" ng-if="taxon.taxonSelected" class="taxon-row">
 										<td class="add-resultat">
 											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:3px;"></i>
 										</td>
@@ -105,21 +54,21 @@
 										<td></td>
 										<td></td>
 										<td>
-											<i class="fa fa-sort-up" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;font-size:130%;float:right;padding-top:3px;"></i>
+											<i class="fa fa-sort-up" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;font-size:130%;float:right;padding-top:3px;cursor:pointer;"></i>
 										</td>
 									</tr>	
-									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
+									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]" ng-if="!item.is_removed">
 										<td></td>
 										<td> {{ taxon.taxon_artsgruppe }} </td>
 										<td> {{ taxon.taxon_navn_dk }} </td>
 										<td><em> {{ taxon.taxon_navn }} </em></td>
-										<td class="center"><input type="checkbox" bs-switch ng-model="item.positiv" ng-checked="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true"  ng-change="resultatValueClick('positiv', true, item)" /></td>
-										<td class="center"><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('negativ', false, item)" /></td>
-										<td class="center"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('eDNA', true, item)" /></td>
-										<td class="center"><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="updateResultatItem(item)" /></td>
-										<td><input type="text" ng-model="item.Ct_vaerdi" size="3" ng-change="updateResultatItem(item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.positiv" ng-checked="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('positiv', true, item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('negativ', false, item)" /></td>
+										<td style="padding-left:22px;"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick('eDNA', true, item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="updateResultatItem(item)" /></td>
+										<td style="padding-left:20px;"><input type="text" ng-model="item.Ct_vaerdi" size="7" only-digits ng-change="updateResultatItem(item)" /></td>
 										<td>
-											<i class="fa fa-remove" bs-tooltip ng-click="removeReplikat(item.resultat_item_id)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="color:gray;font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
+											<i class="fa fa-remove" bs-tooltip ng-click="removeReplikat(item)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="color:gray;font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
 										</td>
 									</tr>
 								</tbody>

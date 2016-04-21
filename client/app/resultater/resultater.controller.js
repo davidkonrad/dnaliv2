@@ -35,7 +35,26 @@ angular.module('dnalivApp')
 			})
 		})
 
-		$scope.taxon = Taxon.query()
+		Taxon.query().$promise.then(function(taxons) {	
+			$scope.taxon = taxons.map(function(taxon) {
+				switch (taxon.taxon_artsgruppe) {
+					case 'Fisk' :
+						taxon.sortOrder = 1; break;
+					case 'Guldsmede' :
+						taxon.sortOrder = 2; break;
+					case 'Biller' :
+						taxon.sortOrder = 2; break;
+					case 'Tibenede krebsdyr' :
+						taxon.sortOrder = 3; break;
+					case 'Padder' :
+						taxon.sortOrder = 4; break;
+					default :
+						taxon.sortOrder = 100; break;
+				}
+				return Utils.getObj(taxon)
+			})
+		})
+
 		$scope.getTaxon = function(taxon_id) {
 			for (var i=0;i<$scope.taxon.length; i++) {
 				if ($scope.taxon[i].taxon_id == taxon_id) {
@@ -88,17 +107,13 @@ angular.module('dnalivApp')
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '<ikke sat>'
 					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '<ikke sat>'
-					resultat.datoForAnalyse = Date.parse(resultat.datoForAnalyse)
-					resultat.datoForAnalyse_fixed = Utils.fixDate(resultat.datoForAnalyse)
+					//resultat.datoForAnalyse = Date.parse(resultat.datoForAnalyse)
+					//console.log(resultat.datoForAnalyse)
+					resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
 					return Utils.getObj(resultat)
 				})
 			})
 		}
-		/*
-		$timeout(function() {
-			$scope.reloadData()
-		}, 300)
-		*/
 
 		$scope.$watch('resultat', function() {
 			if ($scope.resultat) $scope.resultat.isEdited = true
@@ -202,35 +217,22 @@ angular.module('dnalivApp')
 					}
 
 				})
-				/*
-				$('.proeve-typeahead').typeahead({
-					showHintOnFocus: true,
-					source: $scope.proever,
-					displayText: function(item) {
-						return item.proeve_nr
-					},
-					items: 15,
-					afterSelect: function(item) {
-						$scope.resultat.proeve_id = item.proeve_id
-					}
-				})
-				*/
 			})
 		}
 		$scope.$watch('resultat.datoForAnalyse', function(newVal, oldVal) {
 			var date = Date.parse(newVal)
 			if (newVal != oldVal && !isNaN(date)) {
+				//add 12 hours
+				date = new Date().setTime(date + (2*60*60*1000))
 				$scope.resultat.datoForAnalyse = date
 				$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(date)
 				$scope.saveResultat()
-				//$scope.reloadData()
 			}
 		})
 
 		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
-      .withDisplayLength(10)
-			//.withOption('destroy', true)
+      .withDisplayLength(-1)
 			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
 							 "<'row'<'col-sm-12'tr>>" +
 							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
@@ -248,31 +250,14 @@ angular.module('dnalivApp')
 				}
 				$scope.inputFilter = input
 
-				//TODO, make the button plugin work properly in angular
-				//append a create button
-				/*
-				var $button = $('<button></button>')
-						.addClass('new-resultat btn btn-primary btn-xs')
-						.text('Nyt resultat')
-						.click(function() { $scope.createResultat() })
-						.appendTo('.dt-custom')	
-		*/
-
 				$timeout(function() {
 					if ($('.dt-custom').find('#dt-tools').length) return
 					$('#dt-tools').detach().appendTo('.dt-custom').show()
 					$scope.finalized = true
-				}, 301)
+				}, 801)
 
 			})
 			.withLanguage(Utils.dataTables_daDk)
-
-		/*
-		$timeout(function() {
-			$('#dt-tools').clone().detach().appendTo('.dt-custom').show()
-			$scope.finalized = true
-		}, 300)
-		*/
 
 		$scope.resultaterInstance = {}
 
@@ -380,8 +365,9 @@ angular.module('dnalivApp')
 		 **/
 		$scope.removeReplikat = function(resultat_item) {
 			if (confirm('Dette vil slette replikatet PERMANENT. Er du sikker på du vil slette?')) {
-				Resultat_item.test({ resultat_item_id: resultat_item.resultat_item_id }).$promise.then(function(resultat_item) {
-					console.log(resultat_item)
+				resultat_item.is_removed = true
+				Resultat_item.update({ resultat_item_id: resultat_item.resultat_item_id }, resultat_item).$promise.then(function(resultat_item) {
+					$scope.rebuildResultatItems()
 				})
 			}
 		}
@@ -395,7 +381,7 @@ angular.module('dnalivApp')
 			$scope.resultat_items.forEach(function(resultat_item) {
 				if (resultat_item.resultat_id == $scope.resultat.resultat_id) {
 					//set a isNull value, indicating we should overrule first click values
-					resultat_item.isNull = resultat_item.positiv == null && resultat_item.negativ == null && resultat_item.eDNA == null
+					resultat_item.isNull = resultat_item.positiv == null || resultat_item.negativ == null || resultat_item.eDNA == null
 					items[resultat_item.taxon_id].push(resultat_item)
 				}
 			})
@@ -421,18 +407,23 @@ angular.module('dnalivApp')
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.resultatValueClick = function(name, defaultValue, item) {
-			//console.log(item)
 			if (item.isNull) {
 				item[name] = defaultValue
 			}
+
+			item.negativ = item.negativ != null ? item.negativ : false
+			item.positiv = item.positiv != null ? item.positiv : true
+			item.eDNA = item.eDNA != null ? item.eDNA : true
+
 			//"calc" database_result
 			//item.database_result = item.negativ	== false && item.positiv == true //&& item.eDNA != null
-			if (item.negativ === false && item.positiv === true && item.eDNA !== null) {
+			if (item.negativ == false && item.positiv == true) {
 				item.database_result = true
 			} else {
 				item.database_result = false
 			}
-			$scope.updateResultatItem(item)
+
+			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.excludeTaxon = function(taxon_id) {
 			var ids = $scope.taxonToIds().split(',')

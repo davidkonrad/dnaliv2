@@ -40,7 +40,12 @@ module.exports = function(sequelize, DataTypes) {
 		Ct_vaerdi: {
 			type: DataTypes.INTEGER(11),
 			allowNull: true
-		}
+		},
+    is_removed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    }
+
  
 	}, {
 		tableName: 'resultat_item',
