@@ -8,7 +8,6 @@ var errors = require('./components/errors');
 
 module.exports = function(app) {
 
-	app.use('/api/test', require('./api/mysql/test'));
 	app.use('/api/booking', require('./api/mysql/booking'));
 	app.use('/api/klasse', require('./api/mysql/klasse'));
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
@@ -19,6 +18,7 @@ module.exports = function(app) {
 	app.use('/api/lokalitet', require('./api/mysql/lokalitet'));
 	app.use('/api/resultat', require('./api/mysql/resultat'));
 	app.use('/api/resultat_item', require('./api/mysql/resultat_item'));
+	app.use('/api/kommentar', require('./api/mysql/kommentar'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

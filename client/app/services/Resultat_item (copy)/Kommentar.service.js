@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('Resultat_item', function ($resource) {
+  .factory('Kommentar', function ($resource) {
     
     // Public API here
-	  return $resource('/api/resultat_item/:id', { id: '@resultat_item_id' }, {
+	  return $resource('/api/kommentar/:id', { id: '@kommentar_id' }, {
 	      update: {
 	        method: 'PUT' // this method issues a PUT request
 	      }

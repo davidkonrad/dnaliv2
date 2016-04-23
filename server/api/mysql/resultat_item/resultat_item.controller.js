@@ -1,10 +1,11 @@
 'use strict';
 var models = require('../');
+var qp = require('../nestedQueryParser');
 
-
-// Get list of resultat_items
+// Get list of resultat_items, use query if specified
 exports.index = function(req, res) {
-  models.Resultat_item.findAll().then(function(resultat_item){
+	var query = (req.query) ? qp.parseQueryString(req.query) : undefined;
+  models.Resultat_item.findAll(query).then(function(resultat_item){
   	return res.json(200, resultat_item);	
   }).catch(function(err){
 	  handleError(res, err);
@@ -32,8 +33,9 @@ exports.create = function(req, res) {
 // Updates an existing resultat_item in the DB.
 exports.update = function(req, res) {
   models.Resultat_item.find({ where : { resultat_item_id: req.params.id }} ).then(function(resultat_item){
-  //models.Resultat_item.find(req.params.id).then(function(resultat_item){
-      if(!resultat_item) { return res.send(404); }  
+    if (!resultat_item) { 
+			return res.send(404); 
+		}  
 	  return resultat_item.updateAttributes(req.body);	  	
   }).then(function(resultat_item){
   	return res.json(200, resultat_item);
@@ -44,13 +46,13 @@ exports.update = function(req, res) {
 
 // Deletes a resultat_item from the DB.
 exports.destroy = function(req, res) {
-	console.log(req)
-  models.Resultat_item.find({ where : { resultat_item_id: req.params.id }} ).then(function(resultat_item){
-	//models.Resultat_item.find(req.params.id).then(function(resultat_item){
-		if(!resultat_item) { return res.send(404); }
-		return resultat_item.destroy()
+  models.Resultat_item.destroy({ where : { resultat_item_id: req.params.id }} ).then(function(resultat_item){
+		if (!resultat_item) { 
+			return res.sendStatus(204); 
+		}
+		//return resultat_item
 	}).then(function(){
-		return res.send(204);
+		return res.sendStatus(204);
 	}).catch(function(err){
 	  handleError(res, err);
   });

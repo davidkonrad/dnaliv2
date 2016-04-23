@@ -2,13 +2,13 @@
 
 var should = require('should');
 var app = require('../../app');
-var request = require('supertest');
+var request = require('superkommentar');
 
-describe('GET /api/mysql/test', function() {
+describe('GET /api/mysql/kommentar', function() {
 
   it('should respond with JSON array', function(done) {
     request(app)
-      .get('/api/mysql/test')
+      .get('/api/mysql/kommentar')
       .expect(200)
       .expect('Content-Type', /json/)
       .end(function(err, res) {

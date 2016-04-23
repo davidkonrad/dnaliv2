@@ -6,6 +6,24 @@ angular.module('dnalivApp')
 	function($scope, $timeout, $modal, Auth, Utils, Resultat, Resultat_item, Booking, Proeve, Taxon,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		/*
+		function test(name) {
+			if (typeof Resultat_item[name] === 'function') {
+				Resultat_item[name]({ id: 10 }).$promise.then(function(resultat) {	
+					console.log(name, resultat)
+				})
+			} else {
+				console.log(name+' does not exists')
+			}
+		}
+		test('show')
+		test('get')
+		test('describe')
+		test('index')
+		test('findAll')
+		test('query')
+		test('find')
+		*/
 
 		Booking.query().$promise.then(function(bookings) {	
 			$scope.sagsNo = []
@@ -29,11 +47,13 @@ angular.module('dnalivApp')
 		}
 		$scope.loadProever()
 
+		/*
 		Resultat_item.query().$promise.then(function(resultat_items) {	
 			$scope.resultat_items = resultat_items.map(function(resultat_item) {
 				return Utils.getObj(resultat_item)
 			})
 		})
+		*/
 
 		Taxon.query().$promise.then(function(taxons) {	
 			$scope.taxon = taxons.map(function(taxon) {
@@ -121,8 +141,6 @@ angular.module('dnalivApp')
 
 		$scope.userFilter = ''
 		$scope.setUserFilter = function(userFilter) {
-			//console.log(userFilter, $scope.userFilter)
-			//if (userFilter == $scope.userFilter) return
 			if (userFilter) {
 				$.fn.dataTable.ext.search.push(
 			    function( settings, data, dataIndex ) {
@@ -363,10 +381,9 @@ angular.module('dnalivApp')
 		/**
 			resultat item
 		 **/
-		$scope.removeReplikat = function(resultat_item) {
-			if (confirm('Dette vil slette replikatet PERMANENT. Er du sikker på du vil slette?')) {
-				resultat_item.is_removed = true
-				Resultat_item.update({ resultat_item_id: resultat_item.resultat_item_id }, resultat_item).$promise.then(function(resultat_item) {
+		$scope.deleteResultatItem = function(resultat_item) {
+			if (confirm('Dette vil slette oplysninger om replikatet PERMANENT. Er du sikker på du vil slette?')) {
+				Resultat_item.delete({ id: resultat_item.resultat_item_id }).$promise.then(function() {
 					$scope.rebuildResultatItems()
 				})
 			}
@@ -375,9 +392,9 @@ angular.module('dnalivApp')
 		$scope.rebuildResultatItems = function() {
 			var items = []
 			$scope.taxon.forEach(function(taxon) {
-				//if (taxon.taxonSelected) items[taxon.taxon_id] = []
 				items[taxon.taxon_id] = []
 			})
+			/*
 			$scope.resultat_items.forEach(function(resultat_item) {
 				if (resultat_item.resultat_id == $scope.resultat.resultat_id) {
 					//set a isNull value, indicating we should overrule first click values
@@ -385,7 +402,23 @@ angular.module('dnalivApp')
 					items[resultat_item.taxon_id].push(resultat_item)
 				}
 			})
-			$scope.resultat.resultat_items = items
+			*/
+			
+			/*
+			var params = {
+				where: {
+						resultat_id: 2
+					}
+				};
+			*/
+			Resultat_item.query({ where: { resultat_id: $scope.resultat.resultat_id }}).$promise.then(function(resultat_items) {	
+				resultat_items.forEach(function(resultat_item) {
+					//set a isNull value, indicating we should overrule first click values
+					resultat_item.isNull = resultat_item.positiv == null || resultat_item.negativ == null || resultat_item.eDNA == null
+					items[resultat_item.taxon_id].push(resultat_item)
+				})
+				$scope.resultat.resultat_items = items
+			})
 		}
 
 		$scope.createResultatItem = function(taxon_id) {
@@ -397,7 +430,7 @@ angular.module('dnalivApp')
 				eDNA: null
 			}
 			Resultat_item.save( { resultat_item_id: '' }, resultat_item ).$promise.then(function(resultat_item) {
-				$scope.resultat_items.push(Utils.getObj(resultat_item))
+				//$scope.resultat_items.push(Utils.getObj(resultat_item))
 				$scope.rebuildResultatItems()
 			})
 		}

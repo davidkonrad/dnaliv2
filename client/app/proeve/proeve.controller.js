@@ -1,9 +1,13 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function ($scope, $modal, $timeout, Utils, Geo, Proeve, Lokalitet, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+	function ($scope, $modal, $timeout, Utils, Geo, Proeve, Lokalitet, Kommentar, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+
+		Kommentar.query().$promise.then(function(kommentarer) {	
+			console.log('kommentarer', kommentarer)
+		})
 
 		$scope.loadData = function() {
 			Lokalitet.query().$promise.then(function(lokaliteter) {	

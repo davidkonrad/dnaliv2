@@ -4,21 +4,21 @@
 
 'use strict';
 
-var Qwerty = require('./qwerty.model');
+var Kommentar = require('./kommentar.model');
 
 exports.register = function(socket) {
-  Qwerty.schema.post('save', function (doc) {
+  Resultat_taxon.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Qwerty.schema.post('remove', function (doc) {
+  Resultat_taxon.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('qwerty:save', doc);
+  socket.emit('kommentar:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('qwerty:remove', doc);
+  socket.emit('kommentar:remove', doc);
 }
