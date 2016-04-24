@@ -42,8 +42,8 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat-start="taxon in taxon | orderBy:'sortOrder'" ng-if="taxon.taxonSelected" class="taxon-row">
-										<td class="add-resultat">
-											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:3px;"></i>
+										<td class="add-resultat" class="cursor:pointer;">
+											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:3px;cursor:pointer;"></i>
 										</td>
 										<td> {{ taxon.taxon_artsgruppe }} </td>
 										<td> {{ taxon.taxon_navn_dk }} </td>
