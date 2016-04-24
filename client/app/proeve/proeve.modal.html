@@ -1,4 +1,4 @@
-<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
+<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			
@@ -47,7 +47,10 @@
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
 						<table class="table-striped">
 							<tr ng-repeat="k in proeve.kommentarer" class="info">
-								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}"> {{ k.kommentar }} </td>
+								<td><span style="color:red;cursor:pointer;" ng-click="removeKommentar(k.kommentar_id)">×</span>&nbsp;</td>
+								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}"> 
+									{{ k.kommentar }} 
+								</td>
 							</tr>
 						</table>
 					</div>

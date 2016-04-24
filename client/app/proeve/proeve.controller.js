@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function ($scope, $modal, $timeout, Auth, Utils, Geo, Proeve, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
-
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		$scope.loadData = function() {
 			Lokalitet.query().$promise.then(function(lokaliteter) {	
@@ -98,18 +97,17 @@ angular.module('dnalivApp')
 				})
 			})
 			.withButtons([ 
-					{ extend : 'colvis',
-						text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
-						className: 'btn btn-default btn-xs colvis-btn'
-					},
-					{ text: 'Opret ny prøve',
-						className: 'btn btn-primary btn-xs colvis-btn',
-						action: function ( e, dt, node, config ) {
-							$scope.createProeve()
-            }
-					}
-
-				])
+				{ extend : 'colvis',
+					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+					className: 'btn btn-default btn-xs colvis-btn'
+				},
+				{ text: 'Opret ny prøve',
+					className: 'btn btn-primary btn-xs colvis-btn',
+					action: function ( e, dt, node, config ) {
+						$scope.createProeve()
+ 					}
+				}
+			])
 			.withLanguage(Utils.dataTables_daDk)
 			//.withBootstrap()
 
@@ -182,10 +180,20 @@ angular.module('dnalivApp')
 					created_userName: Auth.getCurrentUser().name
 				}
 				Kommentar.save(kommentar).$promise.then(function() {	
-					$scope.loadKommentarer()
+					$scope.loadKommentarer($scope.proeve.proeve_id)
 				})
 			})
 		}	
+
+		$scope.removeKommentar = function(kommentar_id) {
+			Alert.show($scope,'Slet notat', 'Slet note / kommentar - er du sikker?').then(function(confirm) {
+				if (confirm) {
+					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
+						$scope.loadKommentarer($scope.proeve.proeve_id)
+					})
+				}
+			})
+		}
 
 
 }]);

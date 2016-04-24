@@ -135,3 +135,12 @@ input.bold {
 	text-align: center !important;
 }
 
+/* egne resultater button */
+.userFilter label {
+	cursor: pointer;
+	font-weight: normal;
+	vertical-align: top;
+	color: inherit !important;
+}
+
+

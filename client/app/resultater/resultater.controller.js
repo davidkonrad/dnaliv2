@@ -90,7 +90,6 @@ angular.module('dnalivApp')
 			return ids.join(',')
 		}
 
-
 		$scope.taxonRowClass = function(selected) {
 			return selected ? 'active' : 'danger'
 		}
@@ -124,8 +123,7 @@ angular.module('dnalivApp')
 			} else {
 				$.fn.dataTable.ext.search = []
 			}
-			$('#dt-tools').detach().appendTo('body').hide()
-			$scope.resultaterInstance.rerender()
+			$scope.resultaterInstance.DataTable.draw()
 		}
 
 		$scope.setResultat = function(resultat_id) {
@@ -225,9 +223,7 @@ angular.module('dnalivApp')
 		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
-			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
-							 "<'row'<'col-sm-12'tr>>" +
-							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
+			.withDOM('lBfrtip')
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
@@ -242,13 +238,29 @@ angular.module('dnalivApp')
 				}
 				$scope.inputFilter = input
 
-				$timeout(function() {
-					if ($('.dt-custom').find('#dt-tools').length) return
-					$('#dt-tools').detach().appendTo('.dt-custom').show()
-					$scope.finalized = true
-				}, 801)
+				//should be trivialised
+				$('.dt-button').each(function(btn) {
+					$(this).removeClass('dt-button').removeClass('buttons-collection').removeClass('buttons-colvis') 
+				})
 
 			})
+			.withButtons([ 
+				{ text: 'Nyt resultat',
+					className: 'btn btn-primary btn-xs colvis-btn',
+					action: function ( e, dt, node, config ) {
+						$scope.createResultat()
+ 					}
+				},
+				{ text: '<input type="checkbox" id="userFilter" ng-model="userFilter"/><label for="userFilter">Vis kun egne resultater</label>',
+					className: 'colvis-btn userFilter',
+					action: function ( e, dt, node, config ) {
+						$scope.userFilter = !$scope.userFilter
+						$(node).find('input').prop('checked', $scope.userFilter)
+						$scope.setUserFilter($scope.userFilter)
+ 					}
+				}
+
+			])
 			.withLanguage(Utils.dataTables_daDk)
 
 		$scope.resultaterInstance = {}

@@ -29,3 +29,9 @@
     transform:translateX(-50%) translateY(-50%)
 }
 
+/* datatables */
+table.dataTable tbody th, 
+table.dataTable tbody td {
+	cursor: pointer;
+}
+

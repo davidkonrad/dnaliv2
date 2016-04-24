@@ -65,7 +65,7 @@ angular.module('dnalivApp')
 		    "sLoadingRecords": "Henter data...",
 		    "sProcessing":     "Processing...",
 		    "sSearch":         "Filter:",
-		    "sZeroRecords":    "Ingen rækker passede søgningen",
+		    "sZeroRecords":    "Ingen rækker matchede filter",
 		    "oPaginate": {
 	        "sFirst":    "Første",
 	        "sLast":     "Sidste",

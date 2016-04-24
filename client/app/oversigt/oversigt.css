@@ -14,7 +14,6 @@ th.action, td.action {
 }
 td {
 	white-space: nowrap;
-	cursor: pointer;
 	vertical-align: top;
 }
 th {
@@ -80,32 +79,11 @@ button.new-booking {
 	float: none;
 }
 
-.zzdatepicker zzztd {
-	font-size: 60% !important;
-	color: blue;
-	background-color: red;
- 	width: 20px !important;
-	height: 16px !important;
-	padding: 2px;
-}
 
 .dataTables_wrapper .dataTables_paginate .paginate_button {
 	padding-left: 1px;
 	padding-right: 0px;
 	background-color: white;
-}
-
-.dt-custom {
-	zword-break: keep-all;
-	zwhite-space: nowrap;
-	xclear: none;
-	xfloat: none;
-}
-#date-filter {
-	xclear: none;
-	xfloat: none;
-	xword-break: keep-all;
-	xwhite-space: nowrap;
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
