@@ -112,9 +112,17 @@ angular.module('dnalivApp')
 											//doubtful matches
 											'bugt', 'strandpost', 'lystbådehavn', 'sund', 'vandmølle', 'tørtVedLavvande', 'botaniskHave'
 											],
-			aePass: "&login=davidkonrad&password=nhmdzm"
+			aePass: "&login=davidkonrad&password=nhmdzm",
 
-
+			//kommentar_type hardcoded
+			KOMMENTAR_TYPE : {
+				BOOKING: 1,
+				KLASSE: 2,
+				PROEVE: 3,
+				RESULTAT: 4,
+				LOKALITET: 5
+			}
+	
 		}
 	});
 

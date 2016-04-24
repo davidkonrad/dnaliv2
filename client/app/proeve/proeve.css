@@ -1,3 +1,10 @@
+
+#modal-proeve .modal-dialog {
+	min-width: 70% !important;
+	width: 70% !important;
+	max-width: 80% !important;
+}
+
 .rule {
 	width:100%;
 	display: block;

@@ -1,4 +1,4 @@
-<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			
@@ -12,13 +12,13 @@
 
 				  <div class="form-group">
 				    <label for="proeve_nr" class="normal">PrøveNr</label>
-						<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" placeholder="PrøeveNr" id="proeve_nr">
+						<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" size="9" placeholder="PrøeveNr" id="proeve_nr">
 						&nbsp;&nbsp;
 				  	<label for="dataset" class="normal">Datasæt</label>
-				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" id="dataset">
+				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="9" id="dataset">
 						&nbsp;&nbsp;
 				    <label for="lokalitet" class="normal">Lokalitet</label>
-					  <input type="text" class="form-control input-sm bold" id="lokalitet" size="50" ng-model="proeve.lokalitet" placeholder="Lokalitet">
+					  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" placeholder="Lokalitet">
 						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)">
 							<i class="fa fa-edit"></i>
 						</button>
@@ -43,13 +43,22 @@
 
 					<div class="rule"></div>
 
+				  <div class="form-group">
+						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
+						<table class="table-striped">
+							<tr ng-repeat="k in proeve.kommentarer" class="info">
+								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}"> {{ k.kommentar }} </td>
+							</tr>
+						</table>
+					</div>
+
 				</form>
 	
 			</div>
 			
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" ng-disabled="!proeveIsEdited()" ng-click="saveProeve()"></i>Gem</button> 
-				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
+				<button type="button" class="btn btn-success" ng-disabled="!proeveIsEdited()" ng-click="saveProeve()">Gem</button> 
+				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok">Luk</button> 
 			</div>
 		</div>
 	</div>

@@ -1,0 +1,22 @@
+<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;" id="kommentar-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()">×</button>
+				<h4 class="modal-title">Ny note / kommentar</h4>
+			</div>
+			<div class="modal-body">
+
+				<div class="form-group">
+					<textarea class="form-control" id="kommentar" focused></textarea>
+				</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="kommentarModalCancel()">Fortryd</button> 
+				<button type="button" class="btn btn-success" ng-click="kommentarModalOk()">Ok</button> 
+			</div>
+
+		</div>
+	</div>
+</div>

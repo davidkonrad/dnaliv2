@@ -1,13 +1,9 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function ($scope, $modal, $timeout, Utils, Geo, Proeve, Lokalitet, Kommentar, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+	function ($scope, $modal, $timeout, Auth, Utils, Geo, Proeve, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-
-		Kommentar.query().$promise.then(function(kommentarer) {	
-			console.log('kommentarer', kommentarer)
-		})
 
 		$scope.loadData = function() {
 			Lokalitet.query().$promise.then(function(lokaliteter) {	
@@ -40,10 +36,17 @@ angular.module('dnalivApp')
 		}
 		$scope.loadData()
 
+		$scope.loadKommentarer = function(proeve_id) {
+			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
+				$scope.proeve.kommentarer = kommentarer
+			})
+		}
+
 		$scope.setProeve = function(proeve_id) {
 			$scope.proever.forEach(function(proeve) {
 				if (proeve.proeve_id == proeve_id) {
 					$scope.proeve = proeve
+					$scope.loadKommentarer(proeve_id)
 				}
 			})			
 		}
@@ -174,7 +177,20 @@ angular.module('dnalivApp')
 			return typeof $scope.lokalitet.lokalitet_id == 'number'
 		}
 
-	
+		/** kommentarer **/
+		$scope.addKommentar = function() {
+			KommentarModal.show($scope).then(function(kommentar) {	
+				var kommentar = {
+					kommentar: kommentar,
+					type_id: Utils.KOMMENTAR_TYPE.PROEVE,
+					relation_id: $scope.proeve.proeve_id,
+					created_userName: Auth.getCurrentUser().name
+				}
+				Kommentar.save(kommentar).$promise.then(function() {	
+					$scope.loadKommentarer()
+				})
+			})
+		}	
 
 
 }]);
