@@ -151,6 +151,98 @@ angular.module('dnalivApp')
 				}
 
 	      return deferred.promise;
+			},
+
+			/** attach resultat to ... **/
+			attachTo: function($scope) {
+				loadProever()
+
+				$scope.proeveNrModal = {
+					title: 'Opret nyt Resultat for Prøve ..',
+					message: 'Vælg eksisterende Prøve eller opret ny :',
+					canSubmit: false,
+					willCreate: false,
+					proeve_nr: '',
+					proeve_id: null
+				}
+
+				$scope.$watchGroup(['proeveNrModal.proeve_nr', 'proeveNrModal.willCreate'], function(newVal, oldVal) {
+					var $input = $('#modal-proeveNr-input'),
+							$glyph = $('#modal-proeveNr-glyph'),
+							$create = $('#modal-proeveNr-create');
+
+					function ok() {
+						$input.removeClass('has-error').addClass('has-success')
+		        $glyph.removeClass('glyphicon-remove').addClass('glyphicon-ok');         
+						$create.hide()
+						$scope.proeveNrModal.canSubmit = true
+					}
+					function error() {
+						$input.removeClass('has-success').addClass('has-error')
+		        $glyph.removeClass('glyphicon-ok').addClass('glyphicon-remove');         
+						$create.show()
+						$scope.proeveNrModal.canSubmit = false
+					}
+
+					if ($scope.proeveNrModal.proeve_nr == '') {
+						error()
+						$create.hide()
+						return
+					}
+					if (proeveNrExists($scope.proeveNrModal.proeve_nr)) {
+						ok()
+					} else {
+						if ($scope.proeveNrModal.willCreate) {
+							ok()
+							$create.show()
+						} else {
+							error()
+						}
+					}
+				}) 
+
+				deferred = $q.defer()
+				modal = $modal({
+					scope: $scope,
+					templateUrl: 'app/proeveNr/proeveNr.modal.html',
+					backdrop: 'static',
+					show: true
+				})
+
+				modal.$promise.then(modal.show).then(function() {
+					$timeout(function() {
+						$('#input').typeahead({
+							showHintOnFocus: true,
+							source: proever,
+							displayText: function(item) {
+								return item.proeve_nr != null ? item.proeve_nr : ''
+							},
+							items: 15,
+							afterSelect: function(item) {
+								$timeout(function() {
+									$scope.proeveNrModal.proeve_nr = item.proeve_nr
+									$scope.proeveNrModal.proeve_id = item.proeve_id
+									$scope.proeveNrModal.willCreate = false
+								})
+							}
+						})
+						$scope.proeveNrModal.proeve_nr = ''
+						angular.element('#input').focus()
+					}, 100)
+				})
+
+				$scope.proeveNrClose = function(success) {
+					modal.hide()
+					if (success) {
+						var result = $scope.proeveNrModal.willCreate ? $scope.proeveNrModal.proeve_nr : $scope.proeveNrModal.proeve_id 
+					} else {
+						result = false
+					}
+		      deferred.resolve(result)
+				}
+	
+	      return deferred.promise;
+
 			}
 		}
 

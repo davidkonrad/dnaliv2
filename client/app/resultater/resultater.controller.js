@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'Taxon',
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'ProeveNr', 'Taxon',
 																'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $timeout, $modal, Auth, Alert, Utils, Resultat, Resultat_item, Booking, Proeve, Taxon,
+	function($scope, $timeout, $modal, Auth, Alert, Utils, Resultat, Resultat_item, Booking, Proeve, ProeveNr, Taxon,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
@@ -274,96 +274,7 @@ angular.module('dnalivApp')
 
 		$scope.resultaterColumnDefs = []
 
-		
-		/** 
-				createResultat
-		 **/
-		$scope.createResultat = function() {
-			$scope.createProeveNr = {
-				proeve_nr: '',
-				create: false,
-				exists: false
-			}
-			$scope.canCreateResultat = function() {
-				if ($scope.createProeveNr.proeve_nr != '') {
-					if (typeof $scope.createProeveNr.proeve_id == 'number') {
-						if ($scope.createProeveNr.create) return false
-						return true
-					} else {
-						if ($scope.createProeveNr.create) {
-							return true
-						}
-					}
-				}
-				return false					
-			}
-			var modal = $modal({
-					scope: $scope,
-					templateUrl: 'app/resultater/proevenr.modal.html',
-					backdrop: 'static',
-					show: true
-				})
-			modal.$promise.then(modal.show).then(function() {
-				$('.proeve-typeahead').typeahead({
-					//showHintOnFocus: false,
-					source: $scope.proever,
-					displayText: function(item) {
-						//return item.proeve_nr
-						return item.proeve_nr != null ? item.proeve_nr : ''
-					},
-					items: 15,
-					afterSelect: function(item) {
-						$timeout(function() {
-							$scope.createProeveNr.proeve_id = item.proeve_id
-							$scope.createProeveNr.proeve_nr = item.proeve_nr
-							$scope.createProeveNr.exists = true
-							$scope.createProeveNr.create = false
-						})
-					}
-				})
-			})
-			$scope.closeCreateModal = function($event) {
-				if ($event) {
-					$event.stopImmediatePropagation()
-				  $event.preventDefault()
-				  $event.stopPropagation()
-				}
-		    modal.$promise.then(modal.hide)
-			}						
-			$scope.doCreateTaxons = function(resultat, proeve_nr) {
-				$timeout(function() {
-					$scope.closeCreateModal()
-					$scope.reloadData()
-					$scope.newProeveNr = proeve_nr
-				}, 500)
-			}
-			$scope.doCreateResultat = function() {
-				if ($scope.createProeveNr.executing) return
-				$scope.createProeveNr.executing = true
-				var resultat = {
-					created_userName: Auth.getCurrentUser().name,
-					taxon_ids: $scope.defaultTaxonIds()
-				}
-				if (typeof $scope.createProeveNr.proeve_id == 'number') {
-					resultat.proeve_id = $scope.createProeveNr.proeve_id
-					Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
-						$scope.doCreateTaxons(resultat, $scope.createProeveNr.proeve_nr)
-					})
-				} else {
-					var proeve = {
-						proeve_nr: $scope.createProeveNr.proeve_nr
-					}
-					Proeve.save( { proeve_id: '' }, proeve).$promise.then(function(proeve) {	
-						$scope.loadProever()
-						resultat.proeve_id = proeve.proeve_id
-						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
-							$scope.doCreateTaxons(resultat, proeve.proeve_nr)
-						})
-					})
-				}
-			}
-		}
-
+	
 		/**
 			resultat item
 		 **/
@@ -452,7 +363,6 @@ angular.module('dnalivApp')
 			ids.splice(ids.indexOf(taxon_id.toString()), 1)
 			$scope.resultat.taxon_ids = ids.join(',')
 			Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
-				//$scope.resultat = resultat
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()
 			})
@@ -465,8 +375,51 @@ angular.module('dnalivApp')
 				$scope.resultat = resultat
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()
-				//$scope.reloadData()
 			})
 		}			
+
+		$scope.getProeveNr = function(proeve_id) {
+			for (var i=0;i<$scope.proever.length;i++) {
+				if ($scope.proever[i].proeve_id == proeve_id) {
+					return $scope.proever[i].proeve_nr
+				}
+			}
+			return 'ERROR'
+		}
+
+		/** 
+				createResultat
+		 **/
+		$scope.createResultat = function() {
+			ProeveNr.attachTo($scope).then(function(proeve) {
+				if (proeve) {
+					var resultat = {
+						created_userName: Auth.getCurrentUser().name,
+						taxon_ids: $scope.defaultTaxonIds()
+					}
+					//we trust typeof number as referring to a proeve_id
+					if (typeof proeve == 'number') {
+						resultat.proeve_id = proeve
+						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+							$scope.reloadData()
+							$scope.newProeveNr = $scope.getProeveNr(proeve)
+						})
+					} else {
+						var proeve = {
+							proeve_nr: proeve
+						}
+						Proeve.save( { proeve_id: '' }, proeve).$promise.then(function(proeve) {	
+							$scope.loadProever()
+							resultat.proeve_id = proeve.proeve_id
+							Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+								$scope.reloadData()
+								$scope.newProeveNr = proeve.proeve_nr
+							})
+						})
+					}
+				}
+			})
+		}
+
 
   }]);
