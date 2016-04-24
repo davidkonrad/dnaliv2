@@ -1,29 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'Taxon',
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'Taxon',
 																'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function($scope, $timeout, $modal, Auth, Utils, Resultat, Resultat_item, Booking, Proeve, Taxon,
-					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		/*
-		function test(name) {
-			if (typeof Resultat_item[name] === 'function') {
-				Resultat_item[name]({ id: 10 }).$promise.then(function(resultat) {	
-					console.log(name, resultat)
-				})
-			} else {
-				console.log(name+' does not exists')
-			}
-		}
-		test('show')
-		test('get')
-		test('describe')
-		test('index')
-		test('findAll')
-		test('query')
-		test('find')
-		*/
+	function($scope, $timeout, $modal, Auth, Alert, Utils, Resultat, Resultat_item, Booking, Proeve, Taxon,
+					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
 			$scope.sagsNo = []
@@ -46,14 +28,6 @@ angular.module('dnalivApp')
 			})
 		}
 		$scope.loadProever()
-
-		/*
-		Resultat_item.query().$promise.then(function(resultat_items) {	
-			$scope.resultat_items = resultat_items.map(function(resultat_item) {
-				return Utils.getObj(resultat_item)
-			})
-		})
-		*/
 
 		Taxon.query().$promise.then(function(taxons) {	
 			$scope.taxon = taxons.map(function(taxon) {
@@ -382,11 +356,14 @@ angular.module('dnalivApp')
 			resultat item
 		 **/
 		$scope.deleteResultatItem = function(resultat_item) {
-			if (confirm('Dette vil slette oplysninger om replikatet PERMANENT. Er du sikker på du vil slette?')) {
-				Resultat_item.delete({ id: resultat_item.resultat_item_id }).$promise.then(function() {
-					$scope.rebuildResultatItems()
-				})
-			}
+			Alert.show($scope, 'Slet replikat?', 'Dette vil slette oplysninger om replikatet permanent. Er du sikker på du vil slette?').then(function(confirm) {	
+				if (confirm) {
+					Resultat_item.delete({ id: resultat_item.resultat_item_id }).$promise.then(function() {
+						$scope.rebuildResultatItems()
+					})
+				}
+			})
+
 		}
 			
 		$scope.rebuildResultatItems = function() {

@@ -32,10 +32,10 @@
 										<th></th> <!-- artsgruppe -->
 										<th></th> <!-- species -->
 										<th></th> <!-- scientific -->
-										<th xclass="center">Positiv</th>
-										<th xclass="center">Negativ</th>
-										<th xclass="center">eDNA-prøve</th>
-										<th xclass="center">Pålidelig</th>
+										<th>Positiv</th>
+										<th>Negativ</th>
+										<th>eDNA-prøve</th>
+										<th>Pålidelig</th>
 										<th>Ct-værdi (eDNA-prøve)</th>
 										<th></th>
 									</tr>
@@ -57,7 +57,7 @@
 											<i class="fa fa-sort-up" bs-tooltip ng-hide="resultat.resultat_items[taxon.taxon_id] != 0" ng-click="excludeTaxon(taxon.taxon_id)" data-trigger="hover" data-title="Fjern <b>{{ taxon.taxon_navn_dk | lowercase }}</b> fra oversigten" data-html="true" style="color:gray;font-size:130%;float:right;padding-top:3px;cursor:pointer;"></i>
 										</td>
 									</tr>	
-									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]" ng-if="!item.is_removed">
+									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
 										<td></td>
 										<td> {{ taxon.taxon_artsgruppe }} </td>
 										<td> {{ taxon.taxon_navn_dk }} </td>
