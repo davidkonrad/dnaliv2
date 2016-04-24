@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		$scope.loadData = function() {
 			Lokalitet.query().$promise.then(function(lokaliteter) {	
@@ -43,17 +43,6 @@ angular.module('dnalivApp')
 					$scope.loadKommentarer(proeve_id)
 				}
 			})			
-		}
-
-		$scope.createProeve = function() {
-			var proeve_nr = prompt('PrøveNr: ', '');
-			if (proeve_nr != '') Proeve.save({ proeve_id: '' }, { proeve_nr: proeve_nr }).$promise.then(function(proeve) {	
-				$scope.newProeveNr = proeve_nr
-				$scope.loadData()
-				$timeout(function() {
-					$scope.showProeve(proeve.proeve_id)
-				}, 200)
-			})
 		}
 
 		$scope.saveProeve = function() {
@@ -190,6 +179,31 @@ angular.module('dnalivApp')
 				if (confirm) {
 					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
 						$scope.loadKommentarer($scope.proeve.proeve_id)
+					})
+				}
+			})
+		}
+
+		/** prøveNr **/
+		$scope.changeProeveNr = function() {
+			ProeveNr.change($scope, $scope.proeve.proeve_nr).then(function(newProeveNr) {	
+				if (newProeveNr) {
+					$scope.proeve.proeve_nr = newProeveNr
+					Proeve.update({ proeve_id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
+					})
+				}
+			})
+		}
+
+		$scope.createProeve = function() {
+			ProeveNr.create($scope).then(function(newProeveNr) {	
+				if (newProeveNr) {
+					Proeve.save({ proeve_id: '' }, { proeve_nr: newProeveNr }).$promise.then(function(proeve) {	
+						$scope.newProeveNr = newProeveNr
+						$scope.loadData()
+						$timeout(function() {
+							$scope.showProeve(proeve.proeve_id)
+						}, 200)
 					})
 				}
 			})

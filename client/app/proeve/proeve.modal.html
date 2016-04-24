@@ -12,16 +12,24 @@
 
 				  <div class="form-group">
 				    <label for="proeve_nr" class="normal">PrøveNr</label>
-						<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" size="9" placeholder="PrøeveNr" id="proeve_nr">
+						<div class="input-group">
+							<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" size="11" placeholder="PrøeveNr" id="proeve_nr">
+						  <span class="input-group-btn">
+				        <button class="btn btn-primary btn-sm" type="button" bs-tooltip data-title="Ret prøveNr" ng-click="changeProeveNr()"><i class="fa fa-edit"></i></button>
+					   </span>
+						</div>
+
 						&nbsp;&nbsp;
 				  	<label for="dataset" class="normal">Datasæt</label>
 				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="9" id="dataset">
 						&nbsp;&nbsp;
 				    <label for="lokalitet" class="normal">Lokalitet</label>
-					  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" placeholder="Lokalitet">
-						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)">
-							<i class="fa fa-edit"></i>
-						</button>
+						<div class="input-group">
+						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" placeholder="Lokalitet">
+						  <span class="input-group-btn">
+								<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)"><i class="fa fa-edit"></i></button>
+							</span>
+						</div>
 
 				  </div>
 

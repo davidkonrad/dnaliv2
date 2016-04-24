@@ -1,0 +1,26 @@
+<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeveNr">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<h4 class="modal-title"> {{ proeveNrModal.title }}</h4>
+			</div>
+
+			<div class="modal-body">
+			  <label class="control-label normal" for="input"> {{ proeveNrModal.message }} </label>
+				<div class="form-group has-success has-feedback" id="modal-proeveNr-input">
+					<input type="text" class="form-control bold" ng-model="proeveNrModal.proeve_nr" id="input" aria-describedby="inputStatus">
+  				<span class="glyphicon glyphicon-ok form-control-feedback" id="modal-proeveNr-glyph" aria-hidden="true"></span>
+				  <span id="inputStatus" class="sr-only">(warning)</span>
+				</div>
+				<span class="text-danger" id="modal-proeveNr-exists" style="display:none;">prøveNr <b>{{ proeveNrModal.proeve_nr }}</b> er optaget!</span>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" ng-click="proeveNrClose(false)">Fortryd</button> 
+				<button type="button" class="btn btn-success" ng-disabled="!proeveNrModal.canSubmit" ng-click="proeveNrClose(true)">OK</button> 
+			</div>
+
+		</div>
+	</div>
+</div>
