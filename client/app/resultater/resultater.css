@@ -41,11 +41,13 @@ button.new-resultat {
 	clear: none;
 	margin-left: 200px;
 }
+/*
 .dataTables_wrapper .dataTables_filter  {
 	clear: none;
 	display: inline;
 	float: none;
 }
+*/
 .dataTables_wrapper .row {
    margin-top: 0px;
 }

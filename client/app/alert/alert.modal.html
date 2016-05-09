@@ -8,7 +8,7 @@
 
 			<div class="modal-body">
 				<i class="fa fa-warning" style="font-size:300%;"></i>
-				<span class="text"> {{ alertParams.message }} </span>
+				<span class="text" ng-bind-html="alertParams.message"></span>
 			</div>
 
 			<div class="modal-footer">

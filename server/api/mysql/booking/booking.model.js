@@ -28,8 +28,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     timestamp_created: {
       type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: 'CURRENT_TIMESTAMP'
+      allowNull: true
     },
     periode: {
       type: DataTypes.INTEGER(11),

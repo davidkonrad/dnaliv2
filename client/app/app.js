@@ -56,9 +56,20 @@ angular.module('dnalivApp', [
 	 
     $rootScope.$on('$routeChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
+				var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
+				if (typeof publicLocation == 'string') {
+					publicLocation = ['main.html','login.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
+				} else {
+					publicLocation = false
+				}
+        if (!publicLocation && !loggedIn) {
+          $location.path('/'); //redirect to frontpage
+        }
+				/* original 
         if (next.authenticate && !loggedIn) {
           $location.path('/login');
         }
+				*/
       });
     });
   });

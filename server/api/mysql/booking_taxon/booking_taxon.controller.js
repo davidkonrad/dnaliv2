@@ -43,7 +43,6 @@ exports.update = function(req, res) {
 
 // Deletes a booking_taxon from the DB.
 exports.destroy = function(req, res) {
-	
 	models.Booking_taxon.find(req.params.id).then(function(booking_taxon){
 		if(!booking_taxon) { return res.send(404); }
 		return booking_taxon.destroy()

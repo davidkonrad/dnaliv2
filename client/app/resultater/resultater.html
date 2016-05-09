@@ -1,6 +1,6 @@
 <div class="container">
 
-	<table datatable="ng" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs" dt-instance="resultaterInstance">
+	<table datatable="ng" class="table table-striped" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs" dt-instance="resultaterInstance">
 		<tbody>
 			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" >
 				<td> {{ resultat.sagsNo }} </td>

@@ -47,12 +47,8 @@ exports.update = function(req, res) {
 // Deletes a resultat_item from the DB.
 exports.destroy = function(req, res) {
   models.Resultat_item.destroy({ where : { resultat_item_id: req.params.id }} ).then(function(resultat_item){
-		if (!resultat_item) { 
-			return res.sendStatus(204); 
-		}
-		//return resultat_item
 	}).then(function(){
-		return res.sendStatus(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });

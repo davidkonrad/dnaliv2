@@ -1,6 +1,8 @@
+/*
 .trash { 
 	color:rgb(209, 91, 71); 
 }
+*/
 th {
 	cursor: pointer;
 }
@@ -76,7 +78,7 @@ button.new-booking {
 .dataTables_wrapper .dataTables_filter  {
 	clear: none;
 	display: inline;
-	float: none;
+	float: right;
 }
 
 
@@ -89,4 +91,37 @@ button.new-booking {
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
 	background: white !important;
 	border: 1px solid white;
+}
+
+.dt-custom {
+	display: inline;
+	clear: none;
+	float: left;
+}
+
+.ml25px {
+	margin-left: 25px;
+}
+.mr25px {
+	margin-right: 25px;
+}
+
+hr {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.rule-sm {
+	width:100%;
+	display: block;
+	float: left;
+	clear: both;
+	height: 10px !important;
+}
+.rule-lg {
+	width:100%;
+	display: block;
+	float: left;
+	clear: both;
+	height: 20px !important;
 }

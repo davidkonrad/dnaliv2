@@ -1,14 +1,15 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'Fag', 'Klassetrin', 
-			'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', '$modal', '$timeout', 
-			'$datepicker',
+  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert',
 
-	function ($scope, $compile, $location, Utils, Geo, Booking, Klasse, Lokalitet, Fag, Klassetrin, Resultat, Taxon, Booking_taxon,
-						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, $modal, $timeout, $datepicker) {
+	function ($scope, $compile, $location, Utils, Geo, Booking, Klasse, Lokalitet, 
+						Fag, Klassetrin, Resultat, Taxon, Booking_taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
+						$modal, $timeout, $datepicker, SagsNo, Alert) {
 
-		
+
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
@@ -21,138 +22,76 @@ angular.module('dnalivApp')
 			})
 		})
 	
-		/*
-		$scope.reloadData = function() {
-			Klasse.query().$promise.then(function(klasser) {	
-				$scope.klasser = klasser.map(function(klasse) {
-					return klasse
-				})
-				Booking.query().$promise.then(function(bookings) {	
-					$scope.bookings = bookings.map(function(booking) {
-						booking.klasser = $scope.getKlasser(booking.booking_id)
-						booking.laerer = $scope.getLaerer(booking.booking_id)
-						booking.status = $scope.getStatus(booking.booking_id)
-	
-						//instead of render methods, improve load speed
-						booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
-						booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
-
-						return Utils.getObj(booking)
-					})
-				})
-			})
-		}
+		/**
+			format and adds klasser, laerer etc attributes to the booking item
 		*/
+		$scope.initBookingInfo = function(booking) {
+			booking.klasser = ''
+			booking.laerer = ''
+			booking.fag = ''
+			booking.antal_elever = 0
+
+			booking.Klasse.forEach(function(klasse) {
+				if (booking.laerer != '') booking.laerer += '\n';
+				booking.laerer += klasse.laererNavn
+
+				if (booking.klasser != '') booking.klasser += '\n';
+				booking.klasser += klasse.institutionsnavn
+
+				if (booking.fag != '') booking.fag += '\n';
+				booking.fag += klasse.fag
+				if (klasse.klassetrin) booking.fag += ', ' + klasse.klassetrin
+
+				if (!isNaN(parseInt(klasse.antalElever))) booking.antal_elever += parseInt(klasse.antalElever)
+
+				//update status with klasse status
+				//booking.status = klasse.status
+			})
+			booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
+			booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
+		}
+
 		$scope.reloadData = function() {
-			function getKlasser(booking) {
-				var klasser = '';
-				for (var i in booking.Klasse) {
-					if (klasser != '') klasser += '\n';
-					klasser += booking.Klasse[i].institutionsnavn
-				}
-				return klasser
-			}
-			function getLaerer(booking) {
-				var laerer = '';
-				booking.Klasse.forEach(function(klasse) {
-					if (laerer != '') laerer += '\n';
-					laerer += klasse.laererNavn
-				})
-				return laerer
-			}
-
-			function initInfo(booking) {
-				booking.klasser = ''
-				booking.laerer = ''
-				booking.status = -1
-				booking.Klasse.forEach(function(klasse) {
-					if (booking.laerer != '') booking.laerer += '\n';
-					booking.laerer += klasse.laererNavn
-
-					if (booking.klasser != '') booking.klasser += '\n';
-					booking.klasser += klasse.institutionsnavn
-
-					booking.status = klasse.status
-				})
-			}
-
 			Booking.query().$promise.then(function(bookings) {	
 				$scope.bookings = bookings.map(function(booking) {
-					//booking.klasser = $scope.getKlasser(booking.booking_id)
-					/*
-					booking.klasser = getKlasser(booking)
-					booking.laerer = getLaerer(booking)
-					booking.status = '0' //$scope.getStatus(booking.booking_id)
-					*/
-					initInfo(booking)
-					//instead of render methods, improve load speed
-					booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
-					booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
-
+					$scope.initBookingInfo(booking)
 					return Utils.getObj(booking)
 				})
 			})
 		}
 		$scope.reloadData()
 
-		/*
-		$scope.getStatus = function(booking_id) {
-			var status = 0;
-			$scope.klasser.forEach(function(klasse) {
-				if (klasse.booking_id == booking_id) {
-					status = klasse.status
-				}
-			})
-			return status
-		}
-		*/
-
-		/*
-		$scope.getKlasser = function(booking_id) {
-			var klasser = '';
-			$scope.klasser.forEach(function(klasse) {
-				if (klasse.booking_id == booking_id) {
-					if (klasser != '') klasser += '\n';
-					klasser += klasse.institutionsnavn
-				}
-			})
-			return klasser
-		}
-		*/
-
-		/*
-		$scope.getLaerer = function(booking_id) {
-			var laerer = '';
-			$scope.klasser.forEach(function(klasse) {
-				if (klasse.booking_id == booking_id) {
-					if (laerer != '') laerer += '\n';
-					laerer += klasse.laererNavn
-				}
-			})
-			return laerer
-		}
-		*/
-
 		$scope.createBooking = function() {
-			var sagsNo = prompt('SagsNo: ', '');
-			if (sagsNo != '') Booking.save({ booking_id: '' }, { sagsNo: sagsNo }).$promise.then(function(booking) {	
-				$scope.newSagsNo = sagsNo
-				$scope.reloadData()
+			SagsNo.create($scope).then(function(sagsNo) {
+				if (sagsNo) {
+					Booking.save({ booking_id: '' }, { sagsNo: sagsNo, status: 0 }).$promise.then(function(booking) {	
+						$scope.newSagsNo = sagsNo
+						$scope.reloadData()
+					})
+				}
+			})
+		}
+
+		$scope.changeSagsNo = function() {
+			SagsNo.change($scope, $scope.booking.sagsNo).then(function(sagsNo) {
+				if (sagsNo) {
+					Booking.update({ id: $scope.booking.booking_id }, { sagsNo: sagsNo }).$promise.then(function(booking) {	
+						$scope.booking.sagsNo = sagsNo
+					})
+				}
 			})
 		}
 
 		/* dataTable */
 		$scope.fromDate = Date.parse('1/1/2014')
 		$scope.toDate = new Date()
-		$scope.dateFilterActive = true
+		$scope.dateFilterActive = false
 		$scope.bookingInstance = {}
 
 		$scope.bookingOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
-      .withDisplayLength(10)
-			.withDOM("<'row'<'col-sm-2'l><'col-sm-7 dt-custom'><'col-sm-3'f>>" +
-							 "<'row'<'col-sm-12'tr>>" +
-							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
+      .withDisplayLength(-1)
+			.withDOM('lB<"dt-custom">frtip')
 			.withOption('initComplete', function() {
 				//style the row length menu 
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
@@ -161,7 +100,11 @@ angular.module('dnalivApp')
 				input.style.padding = '5px'
 				input.placeholder = 'skriv ..'
 
-				$scope.inputFilter = input
+				Utils.dtNormalizeButtons()
+
+				$timeout(function() {
+					$scope.$apply($compile(angular.element('.dt-buttons'))($scope))
+				}, 200)
 
 				//set filter to newly inserted sagsno
 				if ($scope.newSagsNo) {
@@ -192,27 +135,54 @@ angular.module('dnalivApp')
 				$timeout(function() {
 					$('#date-filter').detach().appendTo('.dt-custom').show()
 					$scope.finalized = true
-				}, 800)
-
-				//document.querySelector('tbody').setAttribute('title', 'Dobbeltklik for at redigere')
+				}, 1000)
 			})
 			.withLanguage(Utils.dataTables_daDk)
+			.withButtons([ 
+				{ extend : 'colvis',
+					overlayFade: 0,
+					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+					className: 'btn btn-default btn-xs colvis-btn'
+				}, { 
+					extend : 'excelHtml5',
+					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
+					filename: 'bookings', 
+					className: 'btn btn-default btn-xs ml25px'
+				},{ 
+					extend : 'pdfHtml5',
+					text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
+					filename: 'bookings', 
+					className: 'btn btn-default btn-xs'
+				}, { 
+					text: 'Ny booking',
+					className: 'btn btn-primary btn-xs ml25px mr25px',
+					action: function ( e, dt, node, config ) {
+						$scope.createBooking()
+ 					}
+				}
+			])
 
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('status').withTitle('Status').renderWith(function(data, type, full) {
-				var s = '';
-				switch(parseInt(data)) {
-					case -1: s = '<button class="btn btn-xs btn-status btn-danger">Aflyst</button>'; break;
-					case 1: s = '<button class="btn btn-xs btn-status btn-success edit" ng-click="test()">Bekræftet</button>'; break;
-					default : s = '<button class="btn btn-xs btn-status btn-inverse">Ikke bekræftet</button>'; break;
+				if (type == 'display') {
+					var s = '';
+					switch(parseInt(data)) {
+						case -1: s = '<button class="btn btn-xs btn-status btn-danger">Aflyst</button>'; break;
+						case 1: s = '<button class="btn btn-xs btn-status btn-success">Bekræftet</button>'; break;
+						default : s = '<button class="btn btn-xs btn-status btn-inverse">Ikke bekræftet</button>'; break;
+					}
+  	      return s;
+				} else {
+					return data
 				}
-        return s;
 			}),
       DTColumnBuilder.newColumn('DatoForBooking').withOption('type', 'date').withTitle('Dato for booking'),
       DTColumnBuilder.newColumn('DatoForBesoeg').withOption('type', 'date').withTitle('Dato for besøg'),
       DTColumnBuilder.newColumn('klasser').withTitle('Klasse'),
-      DTColumnBuilder.newColumn('laerer').withTitle('Lærer')
+      DTColumnBuilder.newColumn('fag').withTitle('Fag'),
+      DTColumnBuilder.newColumn('laerer').withTitle('Lærer'),
+      DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev')
     ];  
 
 		$scope.bookingColumnDefs = []
@@ -225,7 +195,7 @@ angular.module('dnalivApp')
 			$scope.bookings.forEach(function(booking) {
 				if (booking.booking_id == booking_id) {
 					$scope.booking = booking
-					$scope.setBookingKlasser(booking.booking_id)
+					//$scope.setBookingKlasser(booking.booking_id)
 					//$scope.setBookingLokalitet(booking.lokalitet_id)
 					return
 				}
@@ -249,22 +219,6 @@ angular.module('dnalivApp')
 			})
 		}
 
-		/*
-		$scope.setBookingLokalitet = function(lokalitet_id) {
-			$scope.lokalitet = {
-				locked: false,
-				showMarker: true,
-				showPolygon: true,
-				showPopup: true
-			}
-			$scope.lokaliteter.forEach(function(lokalitet) {
-				if (lokalitet.lokalitet_id == lokalitet_id) {
-					$scope.lokalitet = lokalitet
-				}
-			})
-		}
-		*/
-			
 		$scope.showBooking = function(booking_id) {
 			$scope.setBooking(booking_id)
 			$modal({
@@ -275,24 +229,83 @@ angular.module('dnalivApp')
 			})
 			//$location.path('bookings/'+sagsNo)
 		}
+		$scope.resetBooking = function() {
+			$scope.booking = {}
+		}
 
+		//update booking modal status select with appropriate class
+		$scope.$watch('booking.status', function(newVal, oldVal) {
+			if (newVal == oldVal) return
+			for (var s in $scope.statusOptions) {
+				if ($scope.statusOptions[s].value == newVal) {
+					$scope.statusSelectClass = $scope.statusOptions[s].class
+					if (oldVal == undefined) return
+					Booking.update({ id: $scope.booking.booking_id }, { status: $scope.booking.status }).$promise.then(function(booking) {	
+						$scope.bookingInstance.rerender()
+					})
+				}
+			}
+		})
 
+		$scope.$watch('booking.DatoForBesoeg', function(newVal, oldVal) {
+			if (newVal == oldVal || oldVal == undefined) return
+			Booking.update({ id: $scope.booking.booking_id }, { DatoForBesoeg: $scope.booking.DatoForBesoeg }).$promise.then(function(booking) {	
+				$scope.booking.DatoForBesoeg_fixed = Utils.fixDate($scope.booking.DatoForBesoeg)
+				$scope.bookingInstance.rerender()
+			})
+		})
+
+		$scope.$watch('booking.DatoForBooking', function(newVal, oldVal) {
+			if (newVal == oldVal || oldVal == undefined) return
+			Booking.update({ id: $scope.booking.booking_id }, { DatoForBooking: $scope.booking.DatoForBooking }).$promise.then(function(booking) {	
+				$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
+				$scope.bookingInstance.rerender()
+			})
+		})
 
 		/**
 			klasser
 		**/
 		$scope.setKlasse = function(klasse_id) {
+			/*
 			$scope.klasser.forEach(function(klasse) {
 				if (klasse.klasse_id == klasse_id) {
 					$scope.klasse = klasse
-					$scope.setKlasseLokalitet()
+					//$scope.setKlasseLokalitet()
 				}
+			})
+			*/
+			$scope.booking.Klasse.forEach(function(klasse) {
+				if (klasse.klasse_id == klasse_id) {
+					$scope.klasse = klasse
+					//$scope.setKlasseLokalitet()
+				}
+			})
+			
+		}
+
+		$scope.createKlasse = function() {
+			Klasse.save({ klasse_id: '' }, { booking_id : $scope.booking.booking_id, institutionsnavn: 'ikke sat' }).$promise.then(function(klasse) {	
+				$scope.booking.Klasse.push(klasse)
 			})
 		}
 
+		$scope.deleteKlasse = function(klasse_id, institutionsnavn) {
+			Alert.show($scope, 'Slet klasse / institution?', 'Er du sikker på du vil fjerne "<b>'+institutionsnavn+'</b>" fra denne booking?').then(function(confirm) {	
+				if (confirm) {
+					Klasse.delete({ id: klasse_id }).$promise.then(function() {
+						Booking.get({ id: $scope.booking.booking_id }).$promise.then(function(booking) {
+							$scope.klasseModal.hide()
+							$scope.booking = booking
+						})
+					})
+				}
+			})
+		}
+	
 		$scope.showKlasse = function(klasse_id) {
 			$scope.setKlasse(klasse_id)
-			$modal({
+			$scope.klasseModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/oversigt/klasse.modal.html',
 				backdrop: 'static',
@@ -301,41 +314,16 @@ angular.module('dnalivApp')
 		}
 
 		$scope.saveKlasse = function() {
-			Klasse.update({ klasse_id: $scope.klasse.klasse_id }, $scope.klasse)
-			var form = document.querySelector('#klasse-form');
-			if (form) {
-				var i=0, inputs = form.querySelectorAll('input');
-				for (i; i<inputs.length; i++) {
-					angular.element(inputs[i]).removeClass('ng-dirty')
-				}
-			}
-		}
-
-		$scope.setKlasseLokalitet = function() {
-			$scope.klasse.lokalitetNavn = 'Samme som booking lokalitet'
-			$scope.lokalitet = {
-				locked: false,
-				showMarker: true,
-				showPolygon: true,
-				showPopup: true
-			}
-			if (!$scope.klasse.lokalitet_id) return
-			$scope.lokaliteter.forEach(function(lokalitet) {
-				if (lokalitet.lokalitet_id == $scope.klasse.lokalitet_id) {
-					$scope.klasse.lokalitetNavn = lokalitet.presentationString
-					$scope.lokalitet = lokalitet
-				}
+			Klasse.update({ id: $scope.klasse.klasse_id }, $scope.klasse).$promise.then(function() {
+				Utils.formReset('#klasse-form')
+				Booking.get({ id: $scope.booking.booking_id }).$promise.then(function(booking) {
+					$scope.booking = booking
+				})
 			})
 		}
-
+		
 		$scope.klasseIsEdited = function() {
-			var form = document.querySelector('#klasse-form');
-			if (form) {
-				var i=0, inputs = form.querySelectorAll('input');
-				for (i; i<inputs.length; i++) {
-					if (angular.element(inputs[i]).hasClass('ng-dirty')) return true
-				}
-			}
+			return Utils.formIsEdited('#klasse-form')
 		}
 
 

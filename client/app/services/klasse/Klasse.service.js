@@ -10,11 +10,13 @@ angular.module('dnalivApp')
 			}
 		});
 
+		/*
 		return $resource('/api/klasse/:booking_id', { booking_id: '@booking_id' }, {
 			query: {
 				method: 'GET',
 				isArray: true
 			}
 		});
-   
+   	*/
+
 	});

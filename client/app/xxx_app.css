@@ -5,12 +5,14 @@
 	user-select: none;
 }
 
+/*
 .container > div {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 }
+*/
 
 .navbar-brand {
 	font-weight: bold;

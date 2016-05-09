@@ -1,61 +1,68 @@
-<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			
 			<div class="modal-header">
-				<button type="button" class="close" ng-click="$hide()">×</button>
+				<button type="button" class="close" ng-click="resetBooking();$hide()">×</button>
 				<h4 class="modal-title">Booking: <strong>{{ booking.sagsNo }}</strong> </h4>
 			</div>
 			<div class="modal-body">
 		
 				<form class="form-inline" role="form">
 				  <div class="form-group">
-				    <label for="sagsNo">Sagsnr.&nbsp;</label>
-				    <input type="text" ng-model="booking.sagsNo" class="form-control input-sm" size="10" id="sagsNo" ng-disabled="bookingLoaded()">
-				  </div>
+				    <label for="sagsNo" class="normal">SagsNr:&nbsp;</label>
+						<div class="input-group">
+					    <input type="text" ng-model="booking.sagsNo" class="form-control bold" size="10" id="sagsNo" readonly style="background-color:white;">
+						  <span class="input-group-btn">
+				        <button class="btn btn-primary" type="button" title="Ret / skift sagsNr" ng-click="changeSagsNo()"><i class="fa fa-edit"></i></button>
+					   </span>
+						</div>
+					</div>
+					&nbsp;&nbsp;
 				  <div class="form-group">
-    				<label for="DatoForBooking">Dato booking</label>
-				    <input type="text" ng-model="booking.DatoForBooking" bs-datepicker data-date-language="da" data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBooking" ng-disabled="bookingLoaded()">
+						<label class="normal" for="status">Status:&nbsp;</label>
+						<button type="button" id="status" class="btn btn-default btn-sm bold" ng-model="booking.status" data-html="1" bs-options="s.value as s.text for s in statusOptions" ng-class="statusSelectClass" bs-select style="width:100px;">
+	  					<span class="caret"></span>
+						</button>
 				  </div>
+					&nbsp;&nbsp;&nbsp;
 				  <div class="form-group">
-				    <label for="DatoForBesoeg">Dato besøg</label>
-				    <input type="text" ng-model="booking.DatoForBesoeg" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" ng-disabled="bookingLoaded()">
+    				<label for="DatoForBooking" class="normal">Dato for Booking:&nbsp;</label>
+				    <input type="text" class="form-control bold" ng-model="booking.DatoForBooking" bs-datepicker data-date-language="da" data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBooking" data-autoclose="true" />
 				  </div>
+					&nbsp;&nbsp;&nbsp;
 				  <div class="form-group">
-				    <label for="aar_periode">Årsperiode</label>
-				    <input type="number" ng-model="booking.aar_periode" class="form-control input-sm" size="1" id="aar_periode" ng-disabled="bookingLoaded()">
+				    <label for="DatoForBesoeg" class="normal">Dato for Besøg:&nbsp;</label>
+				    <input type="text" class="form-control bold" ng-model="booking.DatoForBesoeg" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" data-autoclose="true" />
 				  </div>
+
+					<!---
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				  <div class="form-group">
-				    <label for="periode">Periode</label>
-				    <input type="number" ng-model="booking.periode" class="form-control input-sm" size="1" id="periode" ng-disabled="bookingLoaded()">
+				    <label for="aar_periode" class="normal">Årsperiode;&nbsp;</label>
+				    <input type="number" ng-model="booking.aar_periode" class="form-control input-sm bold" size="1" id="aar_periode" ng-disabled="bookingLoaded()">
 				  </div>
-				  <button type="submit" class="btn btn-primary btn-sm" ng-disabled="bookingLoaded()" ng-click="saveBooking()"	>Gem</button>
+
+				  <div class="form-group">
+				    <label for="periode" class="normal">Periode</label>
+				    <input type="number" ng-model="booking.periode" class="form-control input-sm bold" size="1" id="periode" ng-disabled="bookingLoaded()">
+				  </div>
+					-->
 				</form>
 
 				<br>
-
-				<form class="form-inline" role="form">
-				  <div class="form-group">
-				    <label for="arter">Arter</label>
-				    <input type="text" XXng-model="lokalitet.presentationString" class="form-control input-sm" size="60" id="lokalitet" ng-disabled="bookingLoaded()">
-						<button role="button" class="btn btn-primary btn-sm" ng-click="showTaxon()">
-							<i class="fa fa-edit"></i>
-						</button>
-				  </div>
-				</form>
 
 				<br>
 				<div class="form-group">
-					<button type="button" class="btn btn-primary btn-xs" ng-click="createKlasse()" ng-disabled="bookingLoaded()" title="Tilføj en ny klasse / institution">
+					<button type="button" class="btn btn-primary btn-xs" ng-click="createKlasse()" title="Tilføj en ny klasse / institution">
 						<i class="fa fa-plus"></i>
 					</button>
-					<label>&nbsp;Tilføj klasse</label>
+					<label>Klasse / institution</label>
 				</div>
 
-<!-- -->
 				<table class="col-sm-12 klasse">
 					<tbody>
-						<tr ng-repeat="klasse in bookingKlasser">
+						<tr ng-repeat="klasse in booking.Klasse">
 							<td style="width:30px;">
 								<button role="button" class="btn btn-primary btn-xs" ng-click="showKlasse(klasse.klasse_id)">
 									<i class="fa fa-edit"></i>
@@ -71,11 +78,9 @@
 			</div>
 
 			<div class="modal-footer">
-				<div class="col-md-12">
-					<button type="button" class="btn btn-primary" ng-click="$hide()"> 
-						<i class="fa fa-ok"></i>Luk
-					</button> 
-				</div>
+				<button type="button" class="btn btn-primary" ng-click="resetBooking();$hide()"> 
+					<i class="fa fa-ok"></i>Luk
+				</button> 
 			</div>
 		</div>
 	</div>

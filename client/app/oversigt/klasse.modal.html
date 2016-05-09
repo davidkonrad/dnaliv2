@@ -1,16 +1,4 @@
-<style>
-.rule {
-	width:100%;
-	display: block;
-	float: left;
-	clear: both;
-	height: 10px;
-}
-.modal-body {
-	padding: 20px;
-}
-</style>
-<div class="modal ng-scope top am-fade-and-slide-top" tabindex="-1" role="dialog" style="display: block;">
+<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			
@@ -23,24 +11,24 @@
 				<form class="form-inline" role="form" id="klasse-form">
 
 				  <div class="form-group">
-				    <label for="status">Status</label>
-						<select class="form-control input-sm" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status"></select>
+				    <label for="status" class="normal">Status</label>
+						<select class="form-control input-sm bold" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status"></select>
 				  </div>
 
 				  <div class="form-group">
-				  	<label for="status">Dato booking</label>
-				    <input type="text" ng-model="klasse.DatoForBooking" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
-
-				  	<label for="status">Dato Besøg</label>
-				    <input type="text" ng-model="klasse.DatoForBesoeg" class="form-control input-sm" data-date-format="dd-MM-yyyy" size="8" bs-datepicker ng-disabled="bookingLoaded()">
+						&nbsp;&nbsp;
+				  	<label for="DatoForBooking" class="normal">Dato booking</label>
+				    <input type="text" id="DatoForBooking" ng-model="klasse.DatoForBooking" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+							&nbsp;&nbsp;
+				  	<label for="DatoForBesoeg" class="normal">Dato Besøg</label>
+				    <input type="text" id="DatoForBesoeg" ng-model="klasse.DatoForBesoeg" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
 				  </div>
 
 					<div class="rule"></div>
 
 					<div class="form-group">
-				  	<label for="status">Institution</label>
-						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm" institution-typeahead placeholder="Institutionsnavn" id="institution">
-
+				  	<label for="status" class="normal">Institution</label>
+						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm bold" institution-typeahead placeholder="Institutionsnavn" id="institution">
 						<div class="checkbox">
 							<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
 					  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
@@ -52,74 +40,68 @@
 						</div>
 					</div>
 
-					<div class="rule"></div>
+					<div class="rule-sm"></div>	
 
 					<div class="form-group">
-				    <label for="adressse">Adresse</label>
-						<input type="text" ng-model="klasse.adresse" class="form-control input-sm" id="adresse" placeholder="Adresse">
+				    <label for="adressse" class="normal">Adresse</label>
+						<input type="text" ng-model="klasse.adresse" class="form-control input-sm bold" id="adresse" placeholder="Adresse">
+						&nbsp;&nbsp;
+				    <label for="postnr" class="normal">Postnr</label>
+						<input type="text" ng-model="klasse.postnr" class="form-control input-sm bold" id="postnr" size="4" placeholder="Postnr.">
+						&nbsp;&nbsp;
+				    <label for="kommune" class="normal">Kommune</label>
+						<input type="text" ng-model="klasse.kommune" class="form-control input-sm bold" id="kommune" placeholder="Kommune">
+						&nbsp;&nbsp;
+				    <label for="region" class="normal">Region</label>
+						<input type="text" ng-model="klasse.region" class="form-control input-sm bold" id="region" placeholder="Region">
+					</div>
 
-				    <label for="postnr">Postnr</label>
-						<input type="text" ng-model="klasse.postnr" class="form-control input-sm" id="postnr" size="4" placeholder="Postnr.">
-	
-				    <label for="kommune">Kommune</label>
-						<input type="text" ng-model="klasse.kommune" class="form-control input-sm" id="kommune" placeholder="Kommune">
+					<div class="rule-lg"></div>
 
-				    <label for="region">Region</label>
-						<input type="text" ng-model="klasse.region" class="form-control input-sm" id="region" placeholder="Region">
+					<div class="form-group">
+				    <label for="laererNavn" class="normal">Lærers navn</label>
+				    <input type="text" class="form-control input-sm bold" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
+						&nbsp;&nbsp;
+				    <label for="laererTlf" class="normal">Tlf.</label>
+				    <input type="text" class="form-control input-sm bold" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
+						&nbsp;&nbsp;
+				    <label for="laererEmail" class="normal">Email</label>
+				    <input type="email" class="form-control input-sm bold" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
 					</div>
 
 					<div class="rule"></div>
 
 					<div class="form-group">
-				    <label for="laererNavn">Lærers navn</label>
-				    <input type="text" class="form-control input-sm" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
-
-				    <label for="laererTlf">Tlf.</label>
-				    <input type="text" class="form-control input-sm" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
-
-				    <label for="laererEmail">Email</label>
-				    <input type="email" class="form-control input-sm" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
-					</div>
-
-					<div class="rule"></div>
-
-					<div class="form-group">
-				    <label for="fag">Fag</label>
-						<select class="form-control input-sm" ng-model="klasse.fag" id="fag">
+				    <label for="fag" class="normal">Fag</label>
+						<select class="form-control input-sm bold" ng-model="klasse.fag" id="fag">
 							<option>{{ klasse.fag }}</option>
 							<option ng-repeat="f in fag" value="{{ f.fag_navn }}">{{ f.fag_navn }}</option>
 						</select>
 
-				    <label for="klassetrin">Klassetrin</label>
-						<select class="form-control input-sm" ng-model="klasse.klassetrin" id="klassetrin">
+						&nbsp;&nbsp;
+				    <label for="klassetrin" class="normal">Klassetrin</label>
+						<select class="form-control input-sm bold" ng-model="klasse.klassetrin" id="klassetrin">
 							<option>{{ klasse.klassetrin }}</option>
 							<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_navn }}">{{ klasse.klassetrin_navn }}</option>
 						</select>
 
-				    <label for="antalElever">Antal elever</label>
-				    <input type="number" ng-model="klasse.antalElever" class="form-control input-sm" id="antalElever" placeholder="0">
+						&nbsp;&nbsp;
+				    <label for="antalElever" class="normal">Antal elever</label>
+				    <input type="number" ng-model="klasse.antalElever" class="form-control input-sm bold" id="antalElever" placeholder="0">
 
-				    <label for="antalLaerer">Antal lærere</label>
-				    <input type="number" ng-model="klasse.antalLaerer" class="form-control input-sm" id="antalLaerer" placeholder="0">
+						&nbsp;&nbsp;
+				    <label for="antalLaerer" class="normal">Antal lærere</label>
+				    <input type="number" ng-model="klasse.antalLaerer" class="form-control input-sm bold" id="antalLaerer" placeholder="0">
 					</div>
 
 				</form>
 		
-				<hr>
-				
-				<form class="form-inline" role="form">
-					<div class="form-group">
-				    <label for="lokalitet">Lokalitet</label>
-					  <input type="text" class="form-control input-sm" id="lokalitet" size="50" ng-model="klasse.lokalitetNavn" placeholder="Lokalitet">
-						<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(klasse.lokalitet_id)">
-							<i class="fa fa-edit"></i>
-						</button>
-					</div>
-				</form>
-
 			</div>
 			
 			<div class="modal-footer">
+				<span style="float:left;">
+					<button type="button" class="btn btn-danger" ng-click="deleteKlasse(klasse.klasse_id, klasse.institutionsnavn)"></i>Slet</button> 
+				</span>				
 				<button type="button" class="btn btn-primary" ng-disabled="!klasseIsEdited()" ng-click="saveKlasse()"></i>Gem</button> 
 				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>

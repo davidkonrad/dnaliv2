@@ -3,7 +3,7 @@
 		<div class="modal-content">
 			
 			<div class="modal-header">
-				<button type="button" class="close" ng-click="$hide()">×</button>
+				<button type="button" class="close" ng-click="resetProeve();$hide()">×</button>
 				<h4 class="modal-title">Prøve: <strong>{{ proeve.proeve_nr }}</strong></h4>
 			</div>
 			<div class="modal-body">
@@ -15,13 +15,13 @@
 						<div class="input-group">
 							<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" size="11" placeholder="PrøeveNr" id="proeve_nr">
 						  <span class="input-group-btn">
-				        <button class="btn btn-primary btn-sm" type="button" bs-tooltip data-title="Ret prøveNr" ng-click="changeProeveNr()"><i class="fa fa-edit"></i></button>
+				        <button class="btn btn-primary btn-sm" type="button" title="Ret / skift prøveNr" ng-click="changeProeveNr()"><i class="fa fa-edit"></i></button>
 					   </span>
 						</div>
 
 						&nbsp;&nbsp;
 				  	<label for="dataset" class="normal">Datasæt</label>
-				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="9" id="dataset">
+				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="12" id="dataset">
 						&nbsp;&nbsp;
 				    <label for="lokalitet" class="normal">Lokalitet</label>
 						<div class="input-group">
@@ -44,12 +44,14 @@
 						&nbsp;
 				  	<label for="DatoForEkst" class="normal">Dato for ekst.</label>
 				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst">
+						<!---
 						&nbsp;
 				  	<label for="Analyseret" class="normal">Analysedato</label>
 				    <input type="text" ng-model="proeve.Analyseret" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="Analyseret">
+						-->
 				  </div>
 
-					<div class="rule"></div>
+					<br><div class="rule-lg"></div>
 
 				  <div class="form-group">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
@@ -68,8 +70,7 @@
 			</div>
 			
 			<div class="modal-footer">
-				<button type="button" class="btn btn-success" ng-disabled="!proeveIsEdited()" ng-click="saveProeve()">Gem</button> 
-				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok">Luk</button> 
+				<button type="button" class="btn btn-default" ng-click="resetProeve();$hide()"> <i class="fa fa-ok">Luk</button> 
 			</div>
 		</div>
 	</div>

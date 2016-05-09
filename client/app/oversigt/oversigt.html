@@ -1,15 +1,13 @@
 <div class="container">
 
 	<span id="date-filter" class="clearfix" style="display:none;">
-		<button class="new-booking btn btn-primary btn-xs" ng-click="createBooking()" style="xmargin-right:100px;top:-3px;">Ny booking</button>
-		&nbsp;&nbsp;
 		<input type="text" class="form-control inject-control" bs-datepicker ng-model="fromDate" data-date-format="dd-MM-yyyy" data-autoclose="true" id="from-date" size="8" ng-disabled="!dateFilterActive" />
 		-
 		<input type="text" class="form-control inject-control" bs-datepicker ng-model="toDate" data-date-format="dd-MM-yyyy" data-autoclose="true" id="to-date" size="8" ng-disabled="!dateFilterActive" />
-		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;top:10px;" title="Datofilter til / fra" />
+		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;left:0px;top:10px;" title="Datofilter til / fra" />
 	</span>
 
-	<table datatable="ng" id="bookingTable" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
+	<table datatable="ng" class="table table-striped" id="bookingTable" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
 		<tbody>
 			<tr ng-repeat="booking in bookings" ng-click="showBooking(booking.booking_id)" >
 				<td> {{ booking.sagsNo }} </td>
@@ -17,7 +15,9 @@
 				<td> {{ booking.DatoForBooking_fixed }} </td>
 				<td> {{ booking.DatoForBesoeg_fixed }} </td>
 				<td class="may-break"> {{ booking.klasser }} </td>
+				<td class="may-break"> {{ booking.fag }} </td>
 				<td class="may-break"> {{ booking.laerer }} </td>
+				<td> {{ booking.antal_elever }} </td>
 			</tr>
 		</tbody>
 	</table>

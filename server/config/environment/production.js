@@ -28,11 +28,6 @@ module.exports = {
 	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
 	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
 	  database: 'dnaliv'
-		/*
-	  database: 'dnaliv',
-	  username: 'adminEjemRCv',
-	  password: 'zUiTXC-8IQa2'
-		*/
   }
 
 };

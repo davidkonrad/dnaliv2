@@ -15,7 +15,12 @@ exports.index = function(req, res) {
 
 // Get a single booking
 exports.show = function(req, res) {
-  models.Booking.find(req.params.id).then(function(booking){
+  //models.Booking.find({ where : { booking_id: req.params.id }} ).then(function(booking) {
+  models.Booking.find({ where : { booking_id: req.params.id }, include: [{ 
+		model: models.Klasse,
+		as: 'Klasse'
+	}]}).then(function(booking){
+  //models.Booking.find(req.params.id).then(function(booking){
   	return res.json(200, booking);	
   }).catch(function(err){
 	  handleError(res, err);
@@ -33,8 +38,11 @@ exports.create = function(req, res) {
 
 // Updates an existing booking in the DB.
 exports.update = function(req, res) {
+/*
   models.Booking.find(req.params.id).then(function(booking){
-      if(!booking) { return res.send(404); }  
+*/
+  models.Booking.find({ where : { booking_id: req.params.id }} ).then(function(booking) {
+		if(!booking) { return res.send(404); }  
 	  return booking.updateAttributes(req.body);	  	
   }).then(function(booking){
   	return res.json(200, booking);
@@ -46,7 +54,6 @@ exports.update = function(req, res) {
 
 // Deletes a booking from the DB.
 exports.destroy = function(req, res) {
-	
 	models.Booking.find(req.params.id).then(function(booking){
 		if(!booking) { return res.send(404); }
 		return booking.destroy()

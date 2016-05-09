@@ -23,15 +23,14 @@ fs.readdirSync(__dirname).filter(function(file) {
 			var model = sequelize.import(path.join(__dirname, dir, file));
 			var capitalizedModelName = model.name.charAt(0).toUpperCase() + model.name.slice(1);
 			db[capitalizedModelName] = model;
-			//console.log('model : ', model);
 		}
 	})
 });
 
+console.log('Sequelize.version: ', Sequelize.version);
 
 Object.keys(db).forEach(function(modelName) {
 	if ("associate" in db[modelName]) {
-		//console.log(db[modelName]);
 		db[modelName].associate(db);
 	}
 });

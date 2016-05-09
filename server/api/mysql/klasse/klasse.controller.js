@@ -32,35 +32,29 @@ exports.create = function(req, res) {
 
 // Updates an existing klasse in the DB.
 exports.update = function(req, res) {
-  models.Klasse.find(req.params.id).then(function(klasse){
-      if(!klasse) { return res.send(404); }  
+  models.Klasse.find({ where : { klasse_id: req.params.id }} ).then(function(klasse){
+    if(!klasse) { return res.send(404); }  
 	  return klasse.updateAttributes(req.body);	  	
   }).then(function(klasse){
   	return res.json(200, klasse);
   }).catch(function(err){
 	  handleError(res, err);
   });
-  
 };
 
 // Deletes a klasse from the DB.
 exports.destroy = function(req, res) {
-	
-models.Klasse.find(req.params.id).then(function(klasse){
-		if(!klasse) { return res.send(404); }
-		return klasse.destroy()
+	models.Klasse.destroy({ where : { klasse_id: req.params.id }} ).then(function(klasse){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe klasse
 exports.describe = function(req, res) {
   models.Klasse.describe().then(function(klasse){
-	  console.log(klasse);
   	return res.json(200, klasse);	
   }).catch(function(err){
 	  handleError(res, err);

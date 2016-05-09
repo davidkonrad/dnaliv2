@@ -54,7 +54,7 @@ angular.module('dnalivApp')
 				}
 			},
 
-			dataTables_daDk : {
+			dataTables_daDk: {
 		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",
 		    "sInfo":           "Viser _START_ til _END_ af _TOTAL_ rækker",
 		    "sInfoEmpty":      "Viser 0 til 0 af 0 rækker",
@@ -76,6 +76,18 @@ angular.module('dnalivApp')
 	        "sSortAscending":  ": activate to sort column ascending",
 	        "sSortDescending": ": activate to sort column descending"
 		    }
+			},
+
+			dtNormalizeButtons: function() {
+				$('.dt-button').each(function(btn) {
+					$(this).removeClass('dt-button').removeClass('buttons-collection').removeClass('buttons-colvis') 
+				})
+			},
+
+			dtPerformSearch: function(term) {
+				var input = document.querySelector('.dataTables_filter input')
+				input.value = term
+				$(input).trigger('keyup')
 			},
 
 			//status options map

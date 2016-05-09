@@ -25,6 +25,11 @@ angular.module('dnalivApp')
 
 						return Utils.getObj(proeve)
 					})
+
+					$scope.datasets = []
+					proever.forEach(function(proeve) {
+						if (proeve.dataset != undefined && !~$scope.datasets.indexOf(proeve.dataset)) $scope.datasets.push(proeve.dataset)
+					})
 				})				
 			})
 		}
@@ -46,14 +51,37 @@ angular.module('dnalivApp')
 		}
 
 		$scope.saveProeve = function() {
-			Proeve.update({ proeve_id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
-				Utils.formReset('#proeve-form')
-				$scope.loadData()
+			Proeve.update({ id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
+				console.log('Proeve saved ...')
+				$timeout(function() {
+					$scope.proeveInstance.rerender()
+				})
 			})
 		}
+		$scope.$watch('proeve.indsamlingsdato', function(newVal, oldVal) {
+			console.log(newVal, oldVal)
+			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			$scope.saveProeve()
+			$scope.proeve.indsamlingsdato_fixed = Utils.fixDate($scope.proeve.indsamlingsdato)
+		})
+		$scope.$watch('proeve.ProeverModtaget', function(newVal, oldVal) {
+			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			$scope.saveProeve()
+			$scope.proeve.ProeverModtaget_fixed = Utils.fixDate($scope.proeve.ProeverModtaget)
+		})
+		$scope.$watch('proeve.DatoForEkst', function(newVal, oldVal) {
+			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			$scope.saveProeve()
+			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
+		})
+		$scope.$watch('proeve.dataset', function(newVal, oldVal) {
+			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			$scope.saveProeve()
+			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
+		})
 
-		$scope.proeveIsEdited = function() {
-			return Utils.formIsEdited('#proeve-form')
+		$scope.resetProve = function() {
+			$scope.proeve = {}
 		}
 
 		$scope.showProeve = function(proeve_id) {
@@ -64,16 +92,20 @@ angular.module('dnalivApp')
 				backdrop: 'static',
 				show: true
 			})
+			$timeout(function() {
+				$('#dataset').typeahead({
+					source: $scope.datasets,
+					showHintOnFocus: true,
+					afterSelect: function(value) {
+						$scope.proeve.dataset = value
+					}
+				})
+			}, 500)
 		}
 
 		$scope.proeveOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
-			/*
-			.withDOM("<'row'<'col-sm-2'l><B'col-sm-7 dt-custom'><'col-sm-3'f>>" +
-							 "<'row'<'col-sm-12'tr>>" +
-							 "<'row'<'col-sm-5'i><'col-sm-7'p>>")
-			*/
 			.withDOM('lBfrtip')
 			.withOption('autoWidth', false)
 			.withOption('initComplete', function() {
@@ -81,16 +113,25 @@ angular.module('dnalivApp')
 				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
 				//remove any previous set global filters
 				$.fn.dataTable.ext.search = []
-				$('.dt-button').each(function(btn) {
-					$(this).removeClass('dt-button').removeClass('buttons-collection').removeClass('buttons-colvis') //, 'buttons-columnVisibility'])
-				})
+				Utils.dtNormalizeButtons()
+
 			})
 			.withButtons([ 
 				{ extend : 'colvis',
 					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
 					className: 'btn btn-default btn-xs colvis-btn'
-				},
-				{ text: 'Opret ny prøve',
+				}, { 
+					extend : 'excelHtml5',
+					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
+					filename: 'bookings', 
+					className: 'btn btn-default btn-xs ml25px'
+				},{ 
+					extend : 'pdfHtml5',
+					text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
+					filename: 'bookings', 
+					className: 'btn btn-default btn-xs'
+				}, { 
+					text: 'Opret ny prøve',
 					className: 'btn btn-primary btn-xs colvis-btn',
 					action: function ( e, dt, node, config ) {
 						$scope.createProeve()
@@ -98,7 +139,6 @@ angular.module('dnalivApp')
 				}
 			])
 			.withLanguage(Utils.dataTables_daDk)
-			//.withBootstrap()
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
@@ -112,6 +152,8 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn('ngUl').withTitle('ng/µl'),
       DTColumnBuilder.newColumn('dataset').withTitle('dataset')
     ];  
+
+		$scope.proeveInstance = {}
 
 		/**
 			Lokalitet

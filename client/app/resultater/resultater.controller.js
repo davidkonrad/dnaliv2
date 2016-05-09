@@ -238,10 +238,7 @@ angular.module('dnalivApp')
 				}
 				$scope.inputFilter = input
 
-				//should be trivialised
-				$('.dt-button').each(function(btn) {
-					$(this).removeClass('dt-button').removeClass('buttons-collection').removeClass('buttons-colvis') 
-				})
+				Utils.dtNormalizeButtons()
 
 			})
 			.withButtons([ 

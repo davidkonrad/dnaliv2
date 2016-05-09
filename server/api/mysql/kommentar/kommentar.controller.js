@@ -47,15 +47,13 @@ exports.update = function(req, res) {
 // Deletes a kommentar from the DB.
 exports.destroy = function(req, res) {
   models.Kommentar.destroy({ where : { kommentar_id: req.params.id }} ).then(function(kommentar){
-		if (!kommentar) { 
-			return res.sendStatus(204); 
-		}
 	}).then(function(){
-		return res.sendStatus(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
 };
+
 
 // Describe kommentar
 exports.describe = function(req, res) {
