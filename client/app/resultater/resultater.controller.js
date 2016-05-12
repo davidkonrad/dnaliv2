@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 'Proeve', 'ProeveNr', 'Taxon',
-																'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 
+			'Resultat_item', 'Booking', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $timeout, $modal, Auth, Alert, Utils, Resultat, Resultat_item, Booking, Proeve, ProeveNr, Taxon,
+	function($scope, $timeout, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, Proeve, ProeveNr, Taxon, 
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
@@ -98,8 +98,8 @@ angular.module('dnalivApp')
 			$('#dt-tools').detach().appendTo('body').hide()
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
-					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '<ikke sat>'
-					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '<ikke sat>'
+					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
+					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '?'
 					//resultat.datoForAnalyse = Date.parse(resultat.datoForAnalyse)
 					//console.log(resultat.datoForAnalyse)
 					resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
@@ -135,7 +135,6 @@ angular.module('dnalivApp')
 					//console.log(resultat.datoForAnalyse, Utils.fixDate(resultat.datoForAnalyse), $scope.resultat.datoForAnalyse_fixed)
 					$scope.idsToTaxon(resultat.taxon_ids)
 					$scope.rebuildResultatItems()
-					//console.log($scope.resultat)
 				}
 			})
 		}
@@ -191,6 +190,7 @@ angular.module('dnalivApp')
 				$('#unExcludeSelect').on('change', function() {
 					 $scope.includeTaxon($(this).val())
 				})
+				/*
 				$('.booking-typeahead').typeahead({
 					showHintOnFocus: true,
 					source: $scope.bookings,
@@ -205,8 +205,8 @@ angular.module('dnalivApp')
 							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(item.DatoForBesoeg)
 						})
 					}
-
 				})
+				*/
 			})
 		}
 		$scope.$watch('resultat.datoForAnalyse', function(newVal, oldVal) {
@@ -259,6 +259,8 @@ angular.module('dnalivApp')
 
 			])
 			.withLanguage(Utils.dataTables_daDk)
+			.withOption('order', [[1, 'asc']]);
+
 
 		$scope.resultaterInstance = {}
 
@@ -291,23 +293,7 @@ angular.module('dnalivApp')
 			$scope.taxon.forEach(function(taxon) {
 				items[taxon.taxon_id] = []
 			})
-			/*
-			$scope.resultat_items.forEach(function(resultat_item) {
-				if (resultat_item.resultat_id == $scope.resultat.resultat_id) {
-					//set a isNull value, indicating we should overrule first click values
-					resultat_item.isNull = resultat_item.positiv == null || resultat_item.negativ == null || resultat_item.eDNA == null
-					items[resultat_item.taxon_id].push(resultat_item)
-				}
-			})
-			*/
-			
-			/*
-			var params = {
-				where: {
-						resultat_id: 2
-					}
-				};
-			*/
+		
 			Resultat_item.query({ where: { resultat_id: $scope.resultat.resultat_id }}).$promise.then(function(resultat_items) {	
 				resultat_items.forEach(function(resultat_item) {
 					//set a isNull value, indicating we should overrule first click values
@@ -327,7 +313,6 @@ angular.module('dnalivApp')
 				eDNA: null
 			}
 			Resultat_item.save( { resultat_item_id: '' }, resultat_item ).$promise.then(function(resultat_item) {
-				//$scope.resultat_items.push(Utils.getObj(resultat_item))
 				$scope.rebuildResultatItems()
 			})
 		}
@@ -336,23 +321,14 @@ angular.module('dnalivApp')
 		$scope.updateResultatItem = function(item) {
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
-		$scope.resultatValueClick = function(name, defaultValue, item) {
+		$scope.resultatValueClick = function(item) {
 			if (item.isNull) {
-				item[name] = defaultValue
-			}
-
-			item.negativ = item.negativ != null ? item.negativ : false
-			item.positiv = item.positiv != null ? item.positiv : true
-			item.eDNA = item.eDNA != null ? item.eDNA : true
-
-			//"calc" database_result
-			//item.database_result = item.negativ	== false && item.positiv == true //&& item.eDNA != null
-			if (item.negativ == false && item.positiv == true) {
+				item.negativ = false
+				item.positiv = true
+				item.eDNA = false
 				item.database_result = true
-			} else {
-				item.database_result = false
+				item.isNull = false
 			}
-
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.excludeTaxon = function(taxon_id) {
@@ -418,5 +394,38 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.changeSagsNo = function() {
+			SagsNo.select($scope, $scope.resultat.sagsNo).then(function(response) {
+				if (response) {
+					$scope.resultat.booking_id = response.booking_id
+					$scope.resultat.datoForAnalyse = response.DatoForBesoeg
+					$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(response.DatoForBesoeg)
+
+					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
+						$scope.resultat.sagsNo = response.sagsNo
+						$scope.reloadData()
+						$timeout(function() {
+							$scope.resultaterInstance.rerender()
+						}, 200)
+					})
+
+				}
+			})
+		}
+
+		$scope.changeProeveNr = function() {
+			ProeveNr.select($scope, $scope.resultat.proeve_nr).then(function(proeve) {
+				if (proeve) {
+					$scope.resultat.proeve_id = proeve.proeve_id
+					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
+						$scope.resultat.proeve_nr = proeve.proeve_nr
+						$scope.reloadData()
+						$timeout(function() {
+							$scope.resultaterInstance.rerender()
+						}, 200)
+					})
+				}
+			})
+		}
 
   }]);

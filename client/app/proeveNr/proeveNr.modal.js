@@ -16,8 +16,9 @@ angular.module('dnalivApp')
 		}
 
 		function proeveNrExists(proeve_nr) {
+			if (!proever) return
 			for (var i=0;i<proever.length;i++) {
-				if (proever[i].proeve_nr == proeve_nr) return true
+				if (proever[i].proeve_nr == proeve_nr) return proever[i]
 			}
 			return false
 		}
@@ -217,7 +218,7 @@ angular.module('dnalivApp')
 							displayText: function(item) {
 								return item.proeve_nr != null ? item.proeve_nr : ''
 							},
-							items: 15,
+							items: 10,
 							afterSelect: function(item) {
 								$timeout(function() {
 									$scope.proeveNrModal.proeve_nr = item.proeve_nr
@@ -243,7 +244,81 @@ angular.module('dnalivApp')
 	
 	      return deferred.promise;
 
-			}
+			},
+
+			/**
+				this should REALLY be trivialised 
+			**/
+			select: function($scope) {
+				loadProever()
+
+				$scope.proeveNrModal = {
+					title: 'Knyt til prøve ..',
+					message: 'Opslag på PrøeveNr :',
+					canSubmit: false,
+					proeve_nr: null
+				}
+
+				$scope.$watch('proeveNrModal.proeve_nr', function(newVal, oldVal) {
+					var $input = $('#modal-proeveNr-input'),
+							$glyph = $('#modal-proeveNr-glyph'),
+							$exists = $('#modal-proeveNr-exists');
+
+					function ok() {
+						$input.removeClass('has-error').addClass('has-success')
+		        $glyph.removeClass('glyphicon-remove').addClass('glyphicon-ok');         
+						//$exists.hide()
+						$scope.proeveNrModal.canSubmit = true
+					}
+					function error() {
+						$input.removeClass('has-success').addClass('has-error')
+		        $glyph.removeClass('glyphicon-ok').addClass('glyphicon-remove');         
+						//$exists.show()
+						$scope.proeveNrModal.canSubmit = false
+					}
+
+					$scope.proeveNrModal.proeve = proeveNrExists(newVal)
+					if ($scope.proeveNrModal.proeve) {
+						ok()
+					} else {
+						error()
+					}
+				}) 
+
+				deferred = $q.defer()
+				modal = $modal({
+					scope: $scope,
+					templateUrl: 'app/proeveNr/proeveNr.modal.html',
+					backdrop: 'static',
+					show: true
+				})
+
+				modal.$promise.then(modal.show).then(function() {
+					$timeout(function() {
+						$scope.proeveNrModal.proeve_nr = ''
+
+						$('#input').typeahead({
+							showHintOnFocus: true,
+							source: proever,
+							displayText: function(item) {
+								return item.proeve_nr
+							},
+							items: 10,
+							afterSelect: function(item) {
+							}
+						})
+						angular.element('#input').focus()
+					}, 200)
+				})
+
+				$scope.proeveNrClose = function(success) {
+					modal.hide()
+		      deferred.resolve(success ? $scope.proeveNrModal.proeve : false)
+				}
+
+	      return deferred.promise;
+			},
+
 		}
 
 	}]);

@@ -1,24 +1,23 @@
-'use strict';
-
+/* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-	var Resultat_item = sequelize.define("resultat_item", {
-		resultat_item_id: {
+  return sequelize.define('resultat_item', {
+    resultat_item_id: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
-		},
+    },
     resultat_id: {
       type: DataTypes.INTEGER(11),
-      allowNull: true
+      allowNull: false
     },
     taxon_id: {
       type: DataTypes.INTEGER(11),
-      allowNull: true
+      allowNull: false
     },
     analyseret: {
-      type: DataTypes.DATE,
+      type: DataTypes.BOOLEAN,
       allowNull: true
     },
     positiv: {
@@ -36,18 +35,13 @@ module.exports = function(sequelize, DataTypes) {
     database_result: {
       type: DataTypes.BOOLEAN,
       allowNull: true
-    }, 
-		Ct_vaerdi: {
-			type: DataTypes.DECIMAL,
-			allowNull: true
-		}
- 
-	}, {
-		tableName: 'resultat_item',
-		timestamps: false,
-		freezeTableName: true
-
-	});
-
-	return Resultat_item;
+    },
+    Ct_vaerdi: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    }
+  }, {
+    tableName: 'resultat_item',
+    freezeTableName: true
+  });
 };

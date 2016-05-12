@@ -19,6 +19,15 @@ module.exports = function(sequelize, DataTypes) {
     kommentar: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    created_timestamp: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: 'CURRENT_TIMESTAMP'
+    },
+    created_userName: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
     tableName: 'kommentar',

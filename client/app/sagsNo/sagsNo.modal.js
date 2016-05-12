@@ -16,8 +16,9 @@ angular.module('dnalivApp')
 		}
 
 		function sagsNoExists(sagsNo) {
+			if (!bookings) return
 			for (var i=0;i<bookings.length;i++) {
-				if (bookings[i].sagsNo == sagsNo) return true
+				if (bookings[i].sagsNo == sagsNo) return bookings[i]
 			}
 			return false
 		}
@@ -151,10 +152,78 @@ angular.module('dnalivApp')
 				}
 
 	      return deferred.promise;
+			},
+
+			/**
+				this should REALLY be trivialised 
+			**/
+			select: function($scope) {
+				loadBookings()
+
+				$scope.sagsNoModal = {
+					title: 'Find Booking / SagsNr',
+					message: 'SagsNr :',
+					canSubmit: false,
+					sagsNo: null
+				}
+
+				deferred = $q.defer()
+				modal = $modal({
+					scope: $scope,
+					templateUrl: 'app/sagsNo/sagsNo.modal.html',
+					backdrop: 'static',
+					show: true
+				})
+
+				modal.$promise.then(modal.show).then(function() {
+					$timeout(function() {
+						$('#input').typeahead({
+							showHintOnFocus: true,
+							source: bookings,
+							displayText: function(item) {
+								return item.sagsNo
+							},
+							items: 10,
+							afterSelect: function(item) {
+							}
+						})
+					}, 200)
+				})
+
+				$scope.$watch('sagsNoModal.sagsNo', function(newVal, oldVal) {
+					var $input = $('#modal-sagsNo-input'),
+							$glyph = $('#modal-sagsNo-glyph'),
+							$exists = $('#modal-sagsNo-exists');
+
+					function ok() {
+						$input.removeClass('has-error').addClass('has-success')
+		        $glyph.removeClass('glyphicon-remove').addClass('glyphicon-ok');         
+						$scope.sagsNoModal.canSubmit = true
+					}
+					function error() {
+						$input.removeClass('has-success').addClass('has-error')
+		        $glyph.removeClass('glyphicon-ok').addClass('glyphicon-remove');         
+						$scope.sagsNoModal.canSubmit = false
+					}
+
+					$scope.sagsNoModal.booking = sagsNoExists(newVal)
+					if ($scope.sagsNoModal.booking) {
+						ok()
+					} else {
+						error()
+					}
+				}) 
+
+				$scope.sagsNoClose = function(success) {
+					modal.hide()
+		      deferred.resolve(success ? $scope.sagsNoModal.booking : false)
+				}
+
+	      return deferred.promise;
 			}
 
 		}
-		
+
 	}]);
 
 
