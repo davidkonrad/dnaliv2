@@ -84,7 +84,6 @@ angular.module('dnalivApp')
 		$scope.defaultTaxonIds = function() {
 			var ids = []
 			$scope.taxon.forEach(function(taxon) {
-				console.log(taxon.taxon_basisliste)
 				if (taxon.taxon_basisliste) ids.push(taxon.taxon_id)
 			}) 
 			return ids.join(',')
@@ -322,6 +321,7 @@ angular.module('dnalivApp')
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.resultatValueClick = function(item) {
+			console.log(item, item.isNull)
 			if (item.isNull) {
 				item.negativ = false
 				item.positiv = true

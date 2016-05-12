@@ -73,10 +73,10 @@
 										<td> {{ taxon.taxon_artsgruppe }} </td>
 										<td> {{ taxon.taxon_navn_dk }} </td>
 										<td><em> {{ taxon.taxon_navn }} </em></td>
-										<td><input type="checkbox" bs-switch ng-model="item.positiv" ng-checked="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick(item)" /></td>
-										<td><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick(item)" /></td>
-										<td style="padding-left:22px;"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick(item)" /></td>
-										<td><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" ng-change="resultatValueClick(item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.positiv" ng-checked="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
+										<td style="padding-left:22px;"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
+										<td><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
 										<td style="padding-left:20px;"><input type="text" ng-model="item.Ct_vaerdi" size="7" only-digits ng-change="updateResultatItem(item)" /></td>
 										<td>
 											<i class="fa fa-remove" bs-tooltip ng-click="deleteResultatItem(item)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="color:gray;font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
