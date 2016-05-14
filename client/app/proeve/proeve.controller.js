@@ -10,12 +10,19 @@ angular.module('dnalivApp')
 					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
 					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
 					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
+
 					proeve.lokalitet = proeve.Lokalitet.length ? proeve.Lokalitet[0].presentationString : ''
+
 					return Utils.getObj(proeve)
 				})
-				$scope.datasets = []
+
+				$scope.lookupDataset = []
+				$scope.lookupIndsamler = []
+				$scope.lookupInstitutionsnavn = []
 				proever.forEach(function(proeve) {
-					if (proeve.dataset != undefined && !~$scope.datasets.indexOf(proeve.dataset)) $scope.datasets.push(proeve.dataset)
+					if (proeve.dataset != undefined && !~$scope.lookupDataset.indexOf(proeve.dataset)) $scope.lookupDataset.push(proeve.dataset)
+					if (proeve.Indsamler != undefined && !~$scope.lookupIndsamler.indexOf(proeve.Indsamler)) $scope.lookupIndsamler.push(proeve.Indsamler)
+					if (proeve.Institutionsnavn != undefined && !~$scope.lookupInstitutionsnavn.indexOf(proeve.Institutionsnavn)) $scope.lookupInstitutionsnavn.push(proeve.Institutionsnavn)
 				})
 			})				
 		}
@@ -41,7 +48,7 @@ angular.module('dnalivApp')
 				console.log('Proeve saved ...')
 				$scope.proeve.edited = false
 				$timeout(function() {
-					$scope.proeveInstance.rerender()
+					$scope.proeveInstance.DataTable.draw()
 				})
 			})
 		}
@@ -65,6 +72,10 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
+		$scope.$watchGroup(['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse'], function(newVal, oldVal) {
+			if (!$scope.proeve || !$scope.proeve.edited) return
+			$scope.saveProeve()
+		})
 
 		$scope.showProeve = function(proeve_id) {
 			$scope.setProeve(proeve_id)
@@ -74,16 +85,32 @@ angular.module('dnalivApp')
 				backdrop: 'static',
 				show: true
 			})
-			$scope.$on('modal.show',function() {
-				$('#dataset').typeahead({
-					source: $scope.datasets,
-					showHintOnFocus: true,
-					afterSelect: function(value) {
-						$scope.proeve.dataset = value
-					}
-				})
-			})
 			modal.internalName = 'proeve'
+			$scope.$on('modal.show',function(e, target) {
+				if (target.internalName == 'proeve') {
+					$('#dataset').typeahead({
+						source: $scope.lookupDataset,
+						showHintOnFocus: true,
+						afterSelect: function(value) {
+							$scope.proeve.dataset = value
+						}
+					})
+					$('#Indsamler').typeahead({
+						source: $scope.lookupIndsamler,
+						showHintOnFocus: true,
+						afterSelect: function(value) {
+							$scope.proeve.Indsamler = value
+						}
+					})
+					$('#Institutionsnavn').typeahead({
+						source: $scope.lookupInstitutionsnavn,
+						showHintOnFocus: true,
+						afterSelect: function(value) {
+							$scope.proeve.Institutionsnavn = value
+						}
+					})
+				}
+			})
 			$scope.$on('modal.hide',function(e, target){
 				if (target.internalName == 'proeve') $scope.proeve = {}				
 			})
@@ -132,6 +159,7 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet'),
       DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'date').withTitle('Indsamlingsdato'),
       DTColumnBuilder.newColumn('Indsamler').withTitle('Indsamler'),
+      DTColumnBuilder.newColumn('Institutionsnavn').withTitle('Institutionsnavn'),
       DTColumnBuilder.newColumn('KuvertAfsendt').withOption('type', 'date').withTitle('Kuverter afsendt'),
       DTColumnBuilder.newColumn('ProeverModtaget').withOption('type', 'date').withTitle('Prøver modtaget'),
       DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'date').withTitle('Dato for ekst.'),
@@ -150,11 +178,14 @@ angular.module('dnalivApp')
 		$scope.wkt = new Wkt.Wkt()
 
 		$scope.setLokalitet = function(lokalitet_id) {
+			console.log(lokalitet_id)
+			/*
 			$scope.lokaliteter.forEach(function(lokalitet) {
 				if (lokalitet.lokalitet_id == lokalitet_id) {
 					$scope.lokalitet = lokalitet
 				}
 			})
+			*/
 		}
 
 		$scope.showLokalitet = function(lokalitet_id) {

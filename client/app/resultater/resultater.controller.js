@@ -13,7 +13,6 @@ angular.module('dnalivApp')
 			bookings.forEach(function(booking) {
 				$scope.sagsNo[booking.booking_id] = booking.sagsNo
 			})
-			$scope.reloadData()
 		})
 
 		$scope.loadProever = function() {
@@ -25,6 +24,7 @@ angular.module('dnalivApp')
 				proever.forEach(function(proeve) {
 					$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
 				})
+				$scope.reloadData()
 			})
 		}
 		$scope.loadProever()
@@ -192,23 +192,6 @@ angular.module('dnalivApp')
 				$('#unExcludeSelect').on('change', function() {
 					 $scope.includeTaxon($(this).val())
 				})
-				/*
-				$('.booking-typeahead').typeahead({
-					showHintOnFocus: true,
-					source: $scope.bookings,
-					displayText: function(item) {
-						return item.sagsNo
-					},
-					items: 15,
-					afterSelect: function(item) {
-						$timeout(function() {
-							$scope.resultat.booking_id = item.booking_id
-							$scope.resultat.datoForAnalyse = item.DatoForBesoeg
-							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(item.DatoForBesoeg)
-						})
-					}
-				})
-				*/
 			})
 		}
 		$scope.$watch('resultat.datoForAnalyse', function(newVal, oldVal) {

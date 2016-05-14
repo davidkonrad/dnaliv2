@@ -42,9 +42,23 @@
 				  	<label for="ProeverModtaget" class="normal">Prøve modtaget</label>
 				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="ProeverModtaget" ng-change="proeve.edited = true" />
 						&nbsp;
-				  	<label for="DatoForEkst" class="normal">Dato for ekst.</label>
+				  	<label for="DatoForEkst" class="normal">Dato for ekstrakt</label>
 				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst" ng-change="proeve.edited = true" />
 				  </div>
+
+					<br><div class="rule-lg"></div>
+
+				  <div class="form-group">
+				  	<label for="Indsamler" class="normal">Indsamler</label>
+				    <input type="text" ng-model="proeve.Indsamler" class="form-control input-sm bold" size="16" id="Indsamler" ng-change="proeve.edited = true" />
+						&nbsp;
+				  	<label for="Mailadresse" class="normal">Email</label>
+				    <input type="text" ng-model="proeve.Mailadresse" class="form-control input-sm bold" size="16" id="Mailadresse" ng-change="proeve.edited = true" />
+						&nbsp;
+				  	<label for="Institutionsnavn" class="normal">Institutionsnavn</label>
+				    <input type="text" ng-model="proeve.Institutionsnavn" class="form-control input-sm bold" size="16" id="Institutionsnavn" ng-change="proeve.edited = true" />
+
+					</div>
 
 					<br><div class="rule-lg"></div>
 
@@ -60,8 +74,11 @@
 						</table>
 					</div>
 
+	
 				</form>
 	
+
+			
 			</div>
 			
 			<div class="modal-footer">
