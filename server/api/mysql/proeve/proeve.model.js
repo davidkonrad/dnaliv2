@@ -67,7 +67,12 @@ module.exports = function(sequelize, DataTypes) {
 	}, {
 		tableName: 'proeve',
 		timestamps: false,
-		freezeTableName: true
+		freezeTableName: true,
+		classMethods: {
+      associate: function(models) {
+        models.Proeve.hasMany(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
+			}
+		}
 
 	});
 

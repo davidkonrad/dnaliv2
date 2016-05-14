@@ -4,7 +4,10 @@ var models = require('../');
 
 // Get list of proeves
 exports.index = function(req, res) {
-  models.Proeve.findAll().then(function(proeve){
+  models.Proeve.findAll({ include: [{ 
+		model: models.Lokalitet,
+		as: 'Lokalitet'
+	}]}).then(function(proeve){
   	return res.json(200, proeve);	
   }).catch(function(err){
 	  handleError(res, err);
@@ -31,7 +34,6 @@ exports.create = function(req, res) {
 
 // Updates an existing proeve in the DB.
 exports.update = function(req, res) {
-  //models.Proeve.find(req.params.id).then(function(proeve){
   models.Proeve.find({ where : { proeve_id: req.params.id }} ).then(function(proeve){
     if(!proeve) { return res.send(404); }  
 	  return proeve.updateAttributes(req.body);	  	
@@ -59,7 +61,6 @@ exports.destroy = function(req, res) {
 // Describe proeve
 exports.describe = function(req, res) {
   models.Proeve.describe().then(function(proeve){
-	  console.log(proeve);
   	return res.json(200, proeve);	
   }).catch(function(err){
 	  handleError(res, err);

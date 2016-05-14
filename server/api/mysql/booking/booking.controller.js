@@ -15,12 +15,10 @@ exports.index = function(req, res) {
 
 // Get a single booking
 exports.show = function(req, res) {
-  //models.Booking.find({ where : { booking_id: req.params.id }} ).then(function(booking) {
   models.Booking.find({ where : { booking_id: req.params.id }, include: [{ 
 		model: models.Klasse,
 		as: 'Klasse'
 	}]}).then(function(booking){
-  //models.Booking.find(req.params.id).then(function(booking){
   	return res.json(200, booking);	
   }).catch(function(err){
 	  handleError(res, err);

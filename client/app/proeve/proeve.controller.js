@@ -5,34 +5,19 @@ angular.module('dnalivApp')
 	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		$scope.loadData = function() {
-
-			Lokalitet.query().$promise.then(function(lokaliteter) {	
-				$scope.lokaliteter = lokaliteter.map(function(lokalitet) {
-					return lokalitet
+			Proeve.query().$promise.then(function(proever) {	
+				$scope.proever = proever.map(function(proeve) {
+					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
+					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
+					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
+					proeve.lokalitet = proeve.Lokalitet.length ? proeve.Lokalitet[0].presentationString : ''
+					return Utils.getObj(proeve)
 				})
-				function getLokalitet(lokalitet_id) {
-					for (var i=0;i<$scope.lokaliteter.length;i++) {
-						if ($scope.lokaliteter[i].lokalitet_id == lokalitet_id) return $scope.lokaliteter[i].presentationString
-					}
-					return '<ikke sat>'
-				}
-				Proeve.query().$promise.then(function(proever) {	
-					$scope.proever = proever.map(function(proeve) {
-						proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
-						proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
-						proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
-
-						proeve.lokalitet = getLokalitet(proeve.lokalitet_id)
-
-						return Utils.getObj(proeve)
-					})
-
-					$scope.datasets = []
-					proever.forEach(function(proeve) {
-						if (proeve.dataset != undefined && !~$scope.datasets.indexOf(proeve.dataset)) $scope.datasets.push(proeve.dataset)
-					})
-				})				
-			})
+				$scope.datasets = []
+				proever.forEach(function(proeve) {
+					if (proeve.dataset != undefined && !~$scope.datasets.indexOf(proeve.dataset)) $scope.datasets.push(proeve.dataset)
+				})
+			})				
 		}
 		$scope.loadData()
 
