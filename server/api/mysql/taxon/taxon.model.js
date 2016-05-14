@@ -24,7 +24,12 @@ module.exports = function(sequelize, DataTypes) {
     taxon_basisliste: {
       type: DataTypes.BOOLEAN,
       allowNull: false
-    }
+    },
+		taxon_prioritet: {
+			type: DataTypes.INTEGER(3),
+			allowNull: true
+		}
+
 	}, {
 		tableName: 'taxon',
 		timestamps: false,

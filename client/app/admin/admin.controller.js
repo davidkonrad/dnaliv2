@@ -3,6 +3,8 @@
 angular.module('dnalivApp')
   .controller('AdminCtrl', ['$scope', '$http', 'Taxon', function ($scope, $http, Taxon) {
 
+		$scope.prioritetList = [1,2,3,4,5]
+
 		$scope.reloadTaxons = function() {
 			Taxon.query().$promise.then(function(taxons) {	
 				$scope.taxons = {};
@@ -12,7 +14,9 @@ angular.module('dnalivApp')
 						taxon_id: taxon.taxon_id,
 						taxon_navn: taxon.taxon_navn, 
 						taxon_navn_dk: taxon.taxon_navn_dk,
-						taxon_basisliste: taxon.taxon_basisliste 
+						taxon_basisliste: taxon.taxon_basisliste,
+						taxon_prioritet: taxon.taxon_prioritet,
+						edited: false
 					})
 				})
 			})
@@ -47,6 +51,11 @@ angular.module('dnalivApp')
 		
 		$scope.basislisteToggle = function(taxon) {
 			Taxon.update({ taxon_id: taxon.taxon_id }, taxon);
+		}
+
+		$scope.saveArt = function(art) {
+			Taxon.update({ taxon_id: art.taxon_id }, art)
+			art.edited = false
 		}
 
 

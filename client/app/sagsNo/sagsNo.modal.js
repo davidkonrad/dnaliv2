@@ -158,7 +158,9 @@ angular.module('dnalivApp')
 				this should REALLY be trivialised 
 			**/
 			select: function($scope) {
-				loadBookings()
+				$timeout(function() {
+					loadBookings()
+				})
 
 				$scope.sagsNoModal = {
 					title: 'Find Booking / SagsNr',

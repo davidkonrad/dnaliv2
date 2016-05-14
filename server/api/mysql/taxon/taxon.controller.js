@@ -4,7 +4,6 @@ var models = require('../');
 
 // Get list of taxons
 exports.index = function(req, res) {
-
   models.Taxon.findAll().then(function(taxon){
   	return res.json(200, taxon);	
   }).catch(function(err){
@@ -32,6 +31,18 @@ exports.create = function(req, res) {
 
 // Updates an existing taxon in the DB.
 exports.update = function(req, res) {
+  models.Taxon.find({ where : { taxon_id: req.params.id }} ).then(function(taxon){
+    if (!taxon) { 
+			return res.send(404); 
+		}  
+	  return taxon.updateAttributes(req.body);	  	
+  }).then(function(taxon){
+  	return res.json(200, taxon);
+  }).catch(function(err){
+	  handleError(res, err);
+  });
+};
+/*
   models.Taxon.find(req.params.id).then(function(taxon){
       if(!taxon) { return res.send(404); }  
 	  return taxon.updateAttributes(req.body);	  	
@@ -40,12 +51,11 @@ exports.update = function(req, res) {
   }).catch(function(err){
 	  handleError(res, err);
   });
-  
 };
+*/
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
-	
 	models.Taxon.find(req.params.id).then(function(taxon){
 		if(!taxon) { return res.send(404); }
 		return taxon.destroy()
@@ -60,7 +70,6 @@ exports.destroy = function(req, res) {
 // Describe taxon
 exports.describe = function(req, res) {
   models.Taxon.describe().then(function(taxon){
-	  console.log(taxon);
   	return res.json(200, taxon);	
   }).catch(function(err){
 	  handleError(res, err);

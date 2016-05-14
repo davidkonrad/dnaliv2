@@ -13,4 +13,36 @@ th.action, td.action {
 	margin-right:20px;
 }
 
+/* taxon.tab.html */
+
+td.check-col {
+	color:red;
+	max-width: 30px !important;
+	width: 30px !important;
+	text-align: center;
+	padding-top: 10px !important;
+	vertical-align: bottom;
+}
+
+#table-taxon {
+	max-width: 600px !important;
+}	
+
+td.artsgruppe {
+	font-size: 90%;
+	padding: 0px;
+}
+
+td.info-head {
+	font-size: 80%;
+	padding-right: 7px;
+}
+td.info-content {
+	white-space: nowrap;
+}
+b.dk {
+	font-weight: normal;
+	text-transform: lowercase;
+	color: navy;
+}
 

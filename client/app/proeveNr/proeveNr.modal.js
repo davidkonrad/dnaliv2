@@ -250,7 +250,9 @@ angular.module('dnalivApp')
 				this should REALLY be trivialised 
 			**/
 			select: function($scope) {
-				loadProever()
+				$timeout(function() {
+					loadProever()
+				})
 
 				$scope.proeveNrModal = {
 					title: 'Knyt til prøve ..',

@@ -146,4 +146,6 @@ input.bold {
 	color: #333 !important;
 }
 
-
+.dataTable > thead > tr > th[class*="sort"]:after{
+    content: "" !important;
+}

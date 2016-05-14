@@ -31,6 +31,8 @@ angular.module('dnalivApp')
 
 		Taxon.query().$promise.then(function(taxons) {	
 			$scope.taxon = taxons.map(function(taxon) {
+				/*
+				now stored as taxon_prioritet in database
 				switch (taxon.taxon_artsgruppe) {
 					case 'Fisk' :
 						taxon.sortOrder = 1; break;
@@ -45,6 +47,7 @@ angular.module('dnalivApp')
 					default :
 						taxon.sortOrder = 100; break;
 				}
+				*/
 				return Utils.getObj(taxon)
 			})
 		})
