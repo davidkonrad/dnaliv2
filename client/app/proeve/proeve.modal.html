@@ -21,7 +21,7 @@
 
 						&nbsp;&nbsp;
 				  	<label for="dataset" class="normal">Datasæt</label>
-				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="12" id="dataset" />
+				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="12" id="dataset" ng-change="proeve.edited = true" />
 						&nbsp;&nbsp;
 				    <label for="lokalitet" class="normal">Lokalitet</label>
 						<div class="input-group">
@@ -37,13 +37,13 @@
 
 				  <div class="form-group">
 				  	<label for="indsamlingsdato" class="normal">Indsamlingsdato</label>
-				    <input type="text" ng-model="proeve.indsamlingsdato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato">
+				    <input type="text" ng-model="proeve.indsamlingsdato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="ProeverModtaget" class="normal">Prøve modtaget</label>
-				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="ProeverModtaget">
+				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="ProeverModtaget" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="DatoForEkst" class="normal">Dato for ekst.</label>
-				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst">
+				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst" ng-change="proeve.edited = true" />
 				  </div>
 
 					<br><div class="rule-lg"></div>

@@ -54,28 +54,29 @@ angular.module('dnalivApp')
 		$scope.saveProeve = function() {
 			Proeve.update({ id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
 				console.log('Proeve saved ...')
+				$scope.proeve.edited = false
 				$timeout(function() {
 					$scope.proeveInstance.rerender()
 				})
 			})
 		}
 		$scope.$watch('proeve.indsamlingsdato', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 			$scope.proeve.indsamlingsdato_fixed = Utils.fixDate($scope.proeve.indsamlingsdato)
 		})
 		$scope.$watch('proeve.ProeverModtaget', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 			$scope.proeve.ProeverModtaget_fixed = Utils.fixDate($scope.proeve.ProeverModtaget)
 		})
 		$scope.$watch('proeve.DatoForEkst', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
 		$scope.$watch('proeve.dataset', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
+			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
