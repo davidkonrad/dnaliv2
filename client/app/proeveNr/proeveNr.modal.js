@@ -30,7 +30,7 @@ angular.module('dnalivApp')
 				current_proeve_nr = proeve_nr
 
 				$scope.proeveNrModal = {
-					title: 'Ret prøveNr ..',
+					title: 'Ret PrøveNr ..',
 					message: 'Skriv nyt (unikt) prøveNr :',
 					canSubmit: false,
 					proeve_nr: proeve_nr
@@ -250,17 +250,12 @@ angular.module('dnalivApp')
 				this should REALLY be trivialised 
 			**/
 			select: function($scope) {
-				$timeout(function() {
-					loadProever()
-				})
-
 				$scope.proeveNrModal = {
 					title: 'Knyt til prøve ..',
 					message: 'Opslag på PrøeveNr :',
 					canSubmit: false,
 					proeve_nr: null
 				}
-
 				$scope.$watch('proeveNrModal.proeve_nr', function(newVal, oldVal) {
 					var $input = $('#modal-proeveNr-input'),
 							$glyph = $('#modal-proeveNr-glyph'),
@@ -269,13 +264,11 @@ angular.module('dnalivApp')
 					function ok() {
 						$input.removeClass('has-error').addClass('has-success')
 		        $glyph.removeClass('glyphicon-remove').addClass('glyphicon-ok');         
-						//$exists.hide()
 						$scope.proeveNrModal.canSubmit = true
 					}
 					function error() {
 						$input.removeClass('has-success').addClass('has-error')
 		        $glyph.removeClass('glyphicon-ok').addClass('glyphicon-remove');         
-						//$exists.show()
 						$scope.proeveNrModal.canSubmit = false
 					}
 
@@ -296,11 +289,11 @@ angular.module('dnalivApp')
 				})
 
 				modal.$promise.then(modal.show).then(function() {
-					$timeout(function() {
+					Proeve.query().$promise.then(function(p) {
+						proever = p	
 						$scope.proeveNrModal.proeve_nr = ''
 
 						$('#input').typeahead({
-							showHintOnFocus: true,
 							source: proever,
 							displayText: function(item) {
 								return item.proeve_nr
@@ -310,7 +303,7 @@ angular.module('dnalivApp')
 							}
 						})
 						angular.element('#input').focus()
-					}, 200)
+					})
 				})
 
 				$scope.proeveNrClose = function(success) {
@@ -319,7 +312,7 @@ angular.module('dnalivApp')
 				}
 
 	      return deferred.promise;
-			},
+			}
 
 		}
 

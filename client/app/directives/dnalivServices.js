@@ -84,6 +84,20 @@ angular.module('dnalivApp')
 				})
 			},
 
+			dtNormalizeLengthMenu: function() {
+				var select = document.querySelector('.dataTables_length select')
+				if (select) {
+					select.className += 'form-control inject-control'
+				}
+			},
+
+			dtNormalizeSearch: function() {
+				var input = document.querySelector('.dataTables_filter input')
+				input.className += 'form-control inject-control'
+				input.style.padding = '5px'
+				input.placeholder = 'skriv ..'
+			},
+
 			dtPerformSearch: function(term) {
 				var input = document.querySelector('.dataTables_filter input')
 				input.value = term

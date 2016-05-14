@@ -21,7 +21,7 @@
 	<thead>
 		<tr>
 			<th></th>
-			<th>Videnskabeligt navn</th>
+			<th>Latinsk navn</th>
 			<th>Dansk navn</th>
 			<th></th>
 			<th></th>
@@ -58,7 +58,7 @@
 		</tr>
 		<tr ng-repeat="(index, art) in taxons[artsgruppe]">
 			<td class="check-col">
-				<input type="checkbox" ng-model="art.taxon_basisliste" xxng-click="basislisteToggle(art)" title="Medtages i basisliste / default" ng-change="art.edited = true" />
+				<input type="checkbox" ng-model="art.taxon_basisliste" title="Medtages i basisliste / default" ng-change="art.edited = true" />
 			</td>
 			<td>
 				<input type="text" ng-model="art.taxon_navn" class="form-control" ng-change="art.edited = true" style="font-style:italic;"/>
@@ -72,7 +72,7 @@
 				</button>
 			</td>
 			<td>
-				<button type="button" class="btn" ng-class="{ 'btn-primary': (art.edited == true) }" ng-disabled="!art.edited" ng-click="saveArt(art)" title="Gem ændringer">
+				<button type="button" class="btn" ng-class="{ 'btn-primary': (art.edited == true) }" ng-disabled="!art.edited" ng-click="saveTaxon(art)" title="Gem ændringer">
 					<i class="glyphicon glyphicon-ok"></i>
 				</button>
 			</td>

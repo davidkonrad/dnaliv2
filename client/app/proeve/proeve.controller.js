@@ -80,19 +80,15 @@ angular.module('dnalivApp')
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
 
-		$scope.resetProve = function() {
-			$scope.proeve = {}
-		}
-
 		$scope.showProeve = function(proeve_id) {
 			$scope.setProeve(proeve_id)
-			$modal({
+			var modal = $modal({
 				scope: $scope,
 				templateUrl: 'app/proeve/proeve.modal.html',
 				backdrop: 'static',
 				show: true
 			})
-			$timeout(function() {
+			$scope.$on('modal.show',function(){
 				$('#dataset').typeahead({
 					source: $scope.datasets,
 					showHintOnFocus: true,
@@ -100,21 +96,25 @@ angular.module('dnalivApp')
 						$scope.proeve.dataset = value
 					}
 				})
-			}, 500)
+			})
+			$scope.$on('modal.hide',function(){
+				$scope.proeve = {}				
+			})
 		}
 
 		$scope.proeveOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(50)
 			.withDOM('lBfrtip')
+			.withOption('destroy', true)
 			.withOption('autoWidth', false)
 			.withOption('initComplete', function() {
-				//style the row length menu 
-				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
 				//remove any previous set global filters
 				$.fn.dataTable.ext.search = []
-				Utils.dtNormalizeButtons()
 
+				Utils.dtNormalizeLengthMenu()
+				Utils.dtNormalizeButtons()
+				Utils.dtNormalizeSearch()
 			})
 			.withButtons([ 
 				{ extend : 'colvis',

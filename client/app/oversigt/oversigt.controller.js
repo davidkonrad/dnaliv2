@@ -93,23 +93,17 @@ angular.module('dnalivApp')
       .withDisplayLength(-1)
 			.withDOM('lB<"dt-custom">frtip')
 			.withOption('initComplete', function() {
-				//style the row length menu 
-				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
-				var input = document.querySelector('.dataTables_filter input')
-				input.className += 'form-control inject-control'
-				input.style.padding = '5px'
-				input.placeholder = 'skriv ..'
-
+				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
-
+				Utils.dtNormalizeSearch()
+				
 				$timeout(function() {
 					$scope.$apply($compile(angular.element('.dt-buttons'))($scope))
 				}, 200)
 
-				//set filter to newly inserted sagsno
+				//set filter to newly inserted sagsNo
 				if ($scope.newSagsNo) {
-					input.value = $scope.newSagsNo
-					$(input).trigger('keyup')
+					Utils.dtPerformSearch($scope.newSagsNo)
 					$scope.newSagsNo = false
 				}
 

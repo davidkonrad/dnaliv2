@@ -53,7 +53,7 @@ angular.module('dnalivApp')
 			Taxon.update({ taxon_id: taxon.taxon_id }, taxon);
 		}
 
-		$scope.saveArt = function(art) {
+		$scope.saveTaxon = function(art) {
 			Taxon.update({ taxon_id: art.taxon_id }, art)
 			art.edited = false
 		}

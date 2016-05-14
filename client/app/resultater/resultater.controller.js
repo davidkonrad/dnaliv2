@@ -226,22 +226,16 @@ angular.module('dnalivApp')
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
 			.withDOM('lBfrtip')
+			.withOption('order', [[1, 'asc']])
 			.withOption('initComplete', function() {
-				//style the row length menu 
-				document.querySelector('.dataTables_length select').className += 'form-control inject-control'
-				var input = document.querySelector('.dataTables_filter input')
-				input.className += 'form-control inject-control'
-				input.style.padding = '5px'
-				input.placeholder = 'skriv ..'
+				Utils.dtNormalizeLengthMenu()
+				Utils.dtNormalizeButtons()
+				Utils.dtNormalizeSearch()
+
 				if ($scope.newProeveNr) {
-					input.value = $scope.newProeveNr
-					$(input).trigger('keyup')
+					Utils.dtPerformSearch($scope.newProeveNr)
 					$scope.newProeveNr = false
 				}
-				$scope.inputFilter = input
-
-				Utils.dtNormalizeButtons()
-
 			})
 			.withButtons([ 
 				{ text: 'Nyt resultat',
@@ -260,9 +254,7 @@ angular.module('dnalivApp')
 				}
 
 			])
-			.withLanguage(Utils.dataTables_daDk)
-			.withOption('order', [[1, 'asc']]);
-
+			.withLanguage(Utils.dataTables_daDk);
 
 		$scope.resultaterInstance = {}
 

@@ -52,10 +52,11 @@ span.map-tool {
 	position: relative;
 	margin: 0px;
 	top: -3px;
-	background-color:#ebebeb;
+	XXbackground-color:#ebebeb;
 	padding:4px;
 	top:-8px;
 	padding-right:22px;
+	border-radius: 3px;
 }
 
 /* override dataTables buttons */
