@@ -48,12 +48,12 @@
 
 					<br><div class="rule-lg"></div>
 
-				  <div class="form-group">
+				  <div class="form-group" style="width:50%;">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
 						<table class="table-striped">
 							<tr ng-repeat="k in proeve.kommentarer" class="info">
 								<td><span style="color:red;cursor:pointer;" ng-click="removeKommentar(k.kommentar_id)">×</span>&nbsp;</td>
-								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}"> 
+								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}" style="white-space:normal !important;"> 
 									{{ k.kommentar }} 
 								</td>
 							</tr>

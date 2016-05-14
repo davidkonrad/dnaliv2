@@ -5,6 +5,7 @@ angular.module('dnalivApp')
 	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		$scope.loadData = function() {
+
 			Lokalitet.query().$promise.then(function(lokaliteter) {	
 				$scope.lokaliteter = lokaliteter.map(function(lokalitet) {
 					return lokalitet
@@ -59,7 +60,6 @@ angular.module('dnalivApp')
 			})
 		}
 		$scope.$watch('proeve.indsamlingsdato', function(newVal, oldVal) {
-			console.log(newVal, oldVal)
 			if (newVal == oldVal || oldVal == undefined || newVal == undefined) return
 			$scope.saveProeve()
 			$scope.proeve.indsamlingsdato_fixed = Utils.fixDate($scope.proeve.indsamlingsdato)
@@ -88,7 +88,7 @@ angular.module('dnalivApp')
 				backdrop: 'static',
 				show: true
 			})
-			$scope.$on('modal.show',function(){
+			$scope.$on('modal.show',function() {
 				$('#dataset').typeahead({
 					source: $scope.datasets,
 					showHintOnFocus: true,
@@ -97,14 +97,15 @@ angular.module('dnalivApp')
 					}
 				})
 			})
-			$scope.$on('modal.hide',function(){
-				$scope.proeve = {}				
+			modal.internalName = 'proeve'
+			$scope.$on('modal.hide',function(e, target){
+				if (target.internalName == 'proeve') $scope.proeve = {}				
 			})
 		}
 
 		$scope.proeveOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
-      .withDisplayLength(50)
+      .withDisplayLength(-1)
 			.withDOM('lBfrtip')
 			.withOption('destroy', true)
 			.withOption('autoWidth', false)

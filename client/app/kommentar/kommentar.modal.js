@@ -21,7 +21,7 @@ angular.module('dnalivApp')
 					kommentar = angular.element('#kommentar')
 					$timeout(function() {
 						kommentar.focus()
-					})
+					}, 50)
 				})
 		
 				$scope.kommentarModalOk = function() {
