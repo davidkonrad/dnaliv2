@@ -24,6 +24,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: '0'
+    },
+    taxon_prioritet: {
+      type: DataTypes.INTEGER(3),
+      allowNull: false,
+      defaultValue: '5'
     }
   }, {
     tableName: 'taxon',

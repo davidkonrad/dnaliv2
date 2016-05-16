@@ -37,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     Ct_vaerdi: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+registered
+https://developer.here.com/
+dnaliv
+App_Id WQbz8ksVFNn4Y8ibFJ5M
+App_Code AV5ngGiwOzQyWmvyF1Hm1g
+*/
+
 /**
 	an ugly way to isolate code from the main controller
 **/
@@ -45,6 +53,21 @@ function initializeMap($scope, Utils, Geo) {
 			}
 	})
 
+var HERE_hybridDay = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}', {
+	attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
+	subdomains: '1234',
+	mapID: 'newest',
+	app_id: 'WQbz8ksVFNn4Y8ibFJ5M',
+	app_code: 'AV5ngGiwOzQyWmvyF1Hm1g',
+	base: 'aerial',
+	maxZoom: 20,
+	type: 'maptile',
+	language: 'da', //eng
+	format: 'png8',
+	size: '256'
+});
+
+
 	var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 		attribution: 'Geodatastyrelsen',
 		continuousWorld: true,
@@ -60,7 +83,8 @@ function initializeMap($scope, Utils, Geo) {
 
 	$scope.baselayers = {
     "Luftfoto": luftFoto,
-    "Skærmkort": skaermKort
+    "Skærmkort": skaermKort,
+    "HERE_hybridDay": HERE_hybridDay
 	}
 
 	L.control.layers($scope.baselayers).addTo($scope.map);
@@ -74,8 +98,8 @@ function initializeMap($scope, Utils, Geo) {
 		$scope.map.setView(center, 11);
 		$scope.lokalitetPolygon = geometryWktPolygon($scope, Geo, $scope.lokalitet.geometryWkt)
 	} else {
-	  $scope.map.addLayer(skaermKort);
-		$scope.map.setView(center, 1);
+	  $scope.map.addLayer(HERE_hybridDay); //skaermkort
+		$scope.map.setView(center, 10);
 	}
 
 	/**
@@ -89,6 +113,7 @@ function initializeMap($scope, Utils, Geo) {
 	}
 
   $scope.map.on('click', function(e) {
+		console.log(e)
 		if (!$scope.lokalitet.locked) {
 			$scope.setLokalitetLatLng(e.latlng) 
 			$scope.lokalitetMarker.setLatLng(e.latlng)

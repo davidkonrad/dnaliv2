@@ -16,6 +16,7 @@ module.exports = function(app) {
 	app.use('/api/booking_taxon', require('./api/mysql/booking_taxon'));
 	app.use('/api/proeve', require('./api/mysql/proeve'));
 	app.use('/api/lokalitet', require('./api/mysql/lokalitet'));
+	app.use('/api/lokalitet_spot', require('./api/mysql/lokalitet_spot'));
 	app.use('/api/resultat', require('./api/mysql/resultat'));
 	app.use('/api/resultat_item', require('./api/mysql/resultat_item'));
 	app.use('/api/kommentar', require('./api/mysql/kommentar'));
