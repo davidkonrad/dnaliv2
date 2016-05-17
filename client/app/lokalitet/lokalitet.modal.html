@@ -4,50 +4,67 @@
 			
 			<div class="modal-header">
 				<button type="button" class="close" ng-click="$hide()">×</button>
-				<h4 class="modal-title"	style="display:inline-block;">Lokalitet: <strong> {{ proeve.lokalitet }}</strong></h4>
+				<h4 class="modal-title"	style="display:inline-block;">Lokalitet: <strong> {{ __lokalitet.presentationString }} </strong></h4>
 
-				<span class="checkbox no-select map-tool bg-primary text-primary">
-					<label for="locked" title="Lås kort og lokalitetsmarkør">Låst</label>
-					<input type="checkbox" ng-model="lokalitet.locked" id="locked">
-					&nbsp;&nbsp;
+				<div style="float:right;position:relative;top:-6px;">
+	
+					<span class="checkbox no-select map-tool bg-primary text-primary">
 
-					<label for="centerMarker" title="Centrer kort om lokalitetsmarkør" ng-click="centerMarker()"><i class="fa fa-dot-circle-o"></i></label>
-					&nbsp;&nbsp;
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.locked" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-lock"></i>
+						</button>
 
-					<label for="showMarker" title="Skjul / Vis lokalitetsmarkør"><i class="fa fa-map-marker"></i></label>
-					<input type="checkbox" ng-model="lokalitet.showMarker" ng-change="showMarker()" id="showMarker">
-					&nbsp;
-					<label for="showPopup" title="Skjul / vis beskrivelse"><i class="fa fa-comment-o"></i></label>  
-					<input type="checkbox" ng-model="lokalitet.show" id="showPopup" xxng-change="showMarker()">
-					&nbsp;
-					<label for="showPolygon" title="Skjul / vis polygon"><i class="fa fa-crosshairs"></i></label>  
-					<input type="checkbox" ng-model="lokalitet.showPolygon" ng-change="showPolygon()" id="showPolygon">
+						<button type="button" class="btn btn-primary" ng-click="centerMarker()" title="Centrer kort om lokalitetsmarkør" style="focus:outline:none;">
+							<i class="fa fa-dot-circle-o"></i>
+						</button>
 
-				</span>
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showMarker" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-map-marker"></i>
+						</button>
+
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showPolygon" title="Vis lokalitet polygon" ng-change="showPolygon()" ng-disabled="hasPolygon()" id="showPolygon" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-crosshairs"></i>
+						</button>
+
+					</span>
+
+					<span class="checkbox no-select map-tool bg-primary text-primary">
+
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.hotspotsLocked" title="Lås hotspots" ng-change="hotspotsLockedChange()" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-lock"></i>
+						</button>
+
+						<button type="button" class="btn btn-primary btn-sm" ng-click="createHotspot()" style="focus:outline:none;" title="Opret nyt hotspot" id="createHotspot">
+							Nyt hotspot
+						</button>
+
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showHotspots" title="Vis hotspots" ng-change="showHotspots()" ng-disabled="hasHotspots()" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-map-marker"></i>
+						</button>
+
+						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showHotspotPolygon" title="Vis hotspot polygon" ng-change="showHotspotPolygon()" bs-checkbox style="focus:outline:none;">
+							<i class="fa fa-crosshairs"></i>
+						</button>
+
+					</span>
+
+				</div>
 
 			</div>
 			<div class="modal-body">
 
 				<form class="form-inline" role="form" style="margin-left:3px;margin-bottom:5px;">
 				  <div cl	ass="form-group">
-						<input type="text" class="form-control input-sm wetland bold" size="50" ng-model="lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ...">
+						<input type="text" class="form-control input-sm wetland bold" size="50" ng-model="__lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ..." ng-disabled="__lokalitet.locked" />
 
 						&nbsp;&nbsp;
 				    <label for="lat" class="normal">Lat.</label>
-				    <input type="text" ng-model="lokalitet.latitude" class="form-control input-sm sm-pad bold" size="15" id="lat" ng-disabled="lokalitet.locked">
+				    <input type="text" ng-model="__lokalitet.latitude" class="form-control input-sm sm-pad bold" size="18" id="lat" ng-disabled="__lokalitet.locked">
 
 						&nbsp;&nbsp;
 				    <label for="lng" class="normal">Lng.</label>
-				    <input type="text" ng-model="lokalitet.longitude" class="form-control input-sm sm-pad bold" size="15" id="lng" ng-disabled="lokalitet.locked">
+				    <input type="text" ng-model="__lokalitet.longitude" class="form-control input-sm sm-pad bold" size="18" id="lng" ng-disabled="__lokalitet.locked">
 
-						<!--
-				    <label for="x_gps">xgps</label>
-				    <input type="text" ng-model="lokalitet.X_GPS" class="form-control input-sm" size="4" id="x_gps" ng-disabled="lokalitet.locked">
-
-				    <label for="y_gps">ygps</label>
-				    <input type="text" ng-model="lokalitet.Y_GPS" class="form-control input-sm" size="4" id="y_gps" ng-disabled="lokalitet.locked">
-						<button role="button" class="btn btn-primary btn-sm" ng-click="saveLokalitet()">Gem</button>
-						-->
 				  </div>
 				</form>
 

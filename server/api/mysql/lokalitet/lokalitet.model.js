@@ -76,7 +76,12 @@ module.exports = function(sequelize, DataTypes) {
 	}, {
 		tableName: 'lokalitet',
 		timestamps: false,
-		freezeTableName: true
+		freezeTableName: true,
+		classMethods: {
+      associate: function(models) {
+        models.Lokalitet.hasMany(models.Lokalitet_spot, { foreignKey : 'lokalitet_id', as : 'Spot' })
+			}
+		}
 
 	});
 

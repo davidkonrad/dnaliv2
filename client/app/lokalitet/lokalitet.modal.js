@@ -1,59 +1,146 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('LokalitetModal', ['$modal', '$q', '$timeout', 'Utils', 'Geo', 'Lokalitet', 'Lokalitet_spot', 
-		function($modal, $q, $timeout, Utils, Geo, Lokalitet, Lokalitet_spot) {
+  .factory('LokalitetModal', ['$modal', '$q', '$timeout', '$popover', 'InputModal', 'Utils', 'Geo', 'Lokalitet', 'Lokalitet_spot', 
+		function($modal, $q, $timeout, $popover, InputModal, Utils, Geo, Lokalitet, Lokalitet_spot) {
 
-		var lokalitet = {
+		var yellowIcon = L.icon({
+	    iconUrl: '/app/lokalitet/yellow.png',
+
+		  _iconRetinaUrl: 'my-icon@2x.png',
+    	_iconSize: [38, 95],
+    	iconAnchor: [6,32],
+	    _popupAnchor: [-9, -89],
+	    _shadowUrl: 'my-icon-shadow.png',
+	    _shadowRetinaUrl: 'my-icon-shadow@2x.png',
+	    _shadowSize: [68, 95],
+	    _shadowAnchor: [22, 94]
+		})
+
+		var defaultLokalitet = {
 			locked: false,
+			hotspotsLocked: true,
 			showMarker: true,
+			showPopup: true,
+			showHotspots: true,
+			showHotspotPolygon: true,
 			latitude: 55.685255690177826, 
-			longitude: 12.572981195446564
+			longitude: 12.572981195446564,
+			Spots: []
 		};
 
 		var map = null,
+				popover = null,
+				isCreating = false,
 				lokalitetPolygon = null,
-				lokalitetMarker = null;
+				lokalitetMarker = null,
+				hotspotMarkers = null,
+				hotspotPolygon = null;
 
 		//we assume Wkt is loaded
 		var wkt = new Wkt.Wkt()
 
-		function geometryWktPolygon($scope, geometryWkt) {
-			console.log(arguments)
+		function geometryWktPolygon(geometryWkt) {
 			wkt.read(geometryWkt);
-			for (var p in wkt.components) {
-				var a = wkt.components[p].map(function(xy) {
+			console.log(geometryWkt, wkt.components)
+			if (!wkt.components[0]) return undefined
+			//we are only taking the first polygon for now
+			var a = wkt.components[0].map(function(xy) {
 				var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
 				return [latLng.lng, latLng.lat]
-				})
-			}
+			})
 			return L.polygon(a, {
 				fillColor: '#FFFF00',
 				color: '#FFFF00'
 			}).addTo(map)
 		}
 
+		function createHotspotMarkers($scope, lokalitet) {
+			if (lokalitet.Spot.length < 0) return
+			if (hotspotMarkers) map.removeLayer(hotspotMarkers)
+			hotspotMarkers = []
+			lokalitet.Spot.forEach(function(spot) {
+				hotspotMarkers.push(
+					L.marker([spot.latitude, spot.longitude], { 
+						lokalitet_spot_id: spot.lokalitet_spot_id,
+						icon: yellowIcon,
+						draggable: !$scope.__lokalitet.hotspotsLocked
+					})
+					.on('dragend', function(e) {
+						var lokalitet_spot_id = e.target.options.lokalitet_spot_id
+						Lokalitet_spot.update({ id: lokalitet_spot_id }, {
+							latitude: e.target._latlng.lat,
+ 							longitude: e.target._latlng.lng
+						}).$promise.then(function(newSpot) {
+							for (var i=0; i<$scope.__lokalitet.Spot.length; i++) {
+								if ($scope.__lokalitet.Spot[i].lokalitet_spot_id == newSpot.lokalitet_spot_id) {
+									$scope.__lokalitet.Spot[i].latitude = newSpot.latitude
+									$scope.__lokalitet.Spot[i].longitude = newSpot.longitude
+								}
+							}
+							if ($scope.__lokalitet.showHotspotPolygon) createHotspotPolygon($scope, $scope.__lokalitet)
+						})
+					})
+					.bindPopup(spot.kommentar).openPopup()
+				)
+			})
+			hotspotMarkers = L.layerGroup(hotspotMarkers).addTo(map)
+		}
+
+		function createHotspotPolygon($scope, lokalitet) {
+			console.log('createhotspotpolygon')
+			if (lokalitet.Spot.length < 0) return
+			if (hotspotPolygon) map.removeLayer(hotspotPolygon)
+
+			hotspotPolygon = []
+			lokalitet.Spot.forEach(function(spot) {
+				hotspotPolygon.push([parseFloat(spot.latitude), parseFloat(spot.longitude)])
+			})
+			console.log(hotspotPolygon)
+			hotspotPolygon = L.polygon(hotspotPolygon, {
+				fillColor: '#FFFF00',
+				color: '#FFFF00'
+			}).addTo(map)
+		}
+
+		function setLokalitet($scope, lokalitet) {
+			var obj = Utils.mergeObj(defaultLokalitet, lokalitet)
+			$scope.__lokalitet = obj
+			if (lokalitet.geometryWkt && lokalitet.geometryWkt != '') {
+				lokalitetPolygon = geometryWktPolygon(lokalitet.geometryWkt)
+			}	
+			createLokalitetPopup(lokalitet) 
+			createHotspotMarkers($scope, lokalitet)
+		}
+
+		function createLokalitetPopup(lokalitet) {
+			var desc = '<h4>' + lokalitet.presentationString + '</h4>' 
+			desc += lokalitet.type ? lokalitet.type : ''
+			desc += lokalitet.subtype && lokalitet.subtype!=lokalitet.type ? ' (' + lokalitet.subtype + '). '  : '. '
+			desc += lokalitet.skrivemaade ? lokalitet.skrivemaade : ''
+			desc += lokalitet.skrivemaade_uofficiel ? '(' + lokalitet.skrivemaade_uofficiel + '). '  : '. '
+
+			lokalitetMarker.bindPopup(desc).openPopup();
+		}
+	
 		function initializeWetland($scope) {
 			$('#lokalitet_wetland').typeahead({
 				displayText: function(item) {
 					return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
 				},
 				afterSelect: function(item) {
-					Utils.mergeObj(lokalitet, item);
-					lokalitetPolygon = geometryWktPolygon($scope, item.geometryWkt)
-					var center = lokalitetPolygon.getBounds().getCenter()
-					$scope.setLokalitetLatLng(center) 
-					lokalitetMarker.setLatLng(center)
-					var popup = new L.popup()
-						.setLatLng(center) 
-				    .setContent(
-							'<h4>' + item.skrivemaade_officiel + '</h4>' +
-							'<p>'  + item.skrivemaade_officiel + '</p>' 
-						)
-				    .openOn(map);
-		
-					map.fitBounds(lokalitetPolygon.getBounds(), { maxZoom: 10 } )
-					/* far better than $scope.map.setView(center, 8, { reset: true	}) */
+					Utils.mergeObj($scope.__lokalitet, item);
+					lokalitetPolygon = geometryWktPolygon(item.geometryWkt)
+					$timeout(function() {
+						var center = lokalitetPolygon.getBounds().getCenter()
+						map.fitBounds(lokalitetPolygon.getBounds(), { maxZoom: 20 } )
+						map.setView(center)
+						$scope.setLokalitetLatLng(center) 
+						createLokalitetPopup(item) 
+						$timeout(function() {
+							map.invalidateSize()
+						})
+					}, 100)
 				}, 
 				items : 20,
 			  source: function(query, process) {
@@ -66,7 +153,7 @@ angular.module('dnalivApp')
 							} else {
 								if (!~Utils.aeNoWater.indexOf(resp.data[i].subtype)) {
 									//TODO stop logging unknown ae types
-									console.log(resp.data[i].subtype);
+									console.log('Unregistered subtype: ', resp.data[i].subtype);
 								}
 							}
 						}			
@@ -77,6 +164,10 @@ angular.module('dnalivApp')
 		}
 
 		function createMap(withCRS) {
+			if (map) {
+				map.remove()
+				map = null
+			}
 			var options = {
 				inertia: false
 			}
@@ -87,31 +178,14 @@ angular.module('dnalivApp')
 				});
 			}
 			map = new L.Map('map', options);
-			/*
-			} else {
-				map = new L.Map('map') //, { crs: crs });
-			}
-			*/
 		}
 
 		function initializeMap($scope) {
-
-			/*
-			var crs = new L.Proj.CRS.TMS('EPSG:25832',
-		    '+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs', [120000, 5900000, 1000000, 6500000], {
-		      resolutions: [1638.4, 819.2, 409.6, 204.8, 102.4, 51.2, 25.6, 12.8, 6.4, 3.2, 1.6, 0.8, 0.4, 0.2, 0.1]
-			});
-	
-			//$scope.map = new L.Map('map', { crs: crs });
-			$scope.map = new L.Map('map') //, { crs: crs });
-			*/
-
 			createMap()
-
 			var luftFoto = new L.tileLayer('http://{s}.services.kortforsyningen.dk/orto_foraar?request=GetTile&version=1.0.0&service=WMTS&Layer=orto_foraar&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 				attribution: 'Geodatastyrelsen',
-		    continuousWorld: false,
 			  maxZoom: 14,
+				useCrs : true,
 			  zoom: function () {
 					var zoom = map.getZoom();
 					if (zoom < 10)
@@ -133,11 +207,11 @@ angular.module('dnalivApp')
 				language: 'eng',
 				format: 'png8',
 				size: '256'
-			})
+			}).addTo(map)
 
 			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 				attribution: 'Geodatastyrelsen',
-				continuousWorld: false,
+				useCrs : true,
 	  	  zoom: function() {
 	  	    var zoom = map.getZoom();
 	  	    if (zoom < 10)
@@ -146,6 +220,11 @@ angular.module('dnalivApp')
 	  	      return 'L' + zoom;
 			   }
 			}) 
+
+			var OpenStreetMap =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+				maxZoom: 18,
+      })
 
 			var Stamen_TonerLabels = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.{ext}', {
 				attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -191,10 +270,11 @@ angular.module('dnalivApp')
 			});
 
 			var baseLayers = {
-		    "Orto Foraar": luftFoto,
-		    "Skærmkort": skaermKort,
+		    //"Orto Foraar": luftFoto,
+		    //"Skærmkort": skaermKort,
 		    'HERE_hybridDay': HERE_hybridDay,
 				'HERE_normalDay': HERE_normalDay,
+				'OpenStreetMap': OpenStreetMap,
 				'Thunderforest_Outdoors': Thunderforest_Outdoors,
 				'Esri_WorldTopoMap': Esri_WorldTopoMap,
 				'Esri_WorldImagery': Esri_WorldImagery
@@ -204,47 +284,44 @@ angular.module('dnalivApp')
 			}
 
 			L.control.layers(baseLayers, overlayLayers).addTo(map);
-			
-			var center = L.latLng(lokalitet.latitude, lokalitet.longitude) 
-	
-			//$scope.map.addLayer(HERE_hybridDay); //skaermkort
+			var center = L.latLng($scope.__lokalitet.latitude, $scope.__lokalitet.longitude) 
 			map.setView(center, 18);
 
-			/*
-			if (lokalitet) {
-			  $scope.map.addLayer(luftFoto);
-				$scope.map.setView(center, 11);
-				if (lokalitet.geometryWkt) lokalitetPolygon = geometryWktPolygon($scope, lokalitet.geometryWkt)
-			} else {
-			  $scope.map.addLayer(HERE_hybridDay); //skaermkort
-				$scope.map.setView(center, 10);
-			}
-			*/
 
 			/**
 				populate $scope with some event listeners and functions
-			**/
-			$scope.setLokalitetLatLng = function(latlng) {
-				document.querySelector('#lat').value = latlng.lat
-				document.querySelector('#lng').value = latlng.lng
-				lokalitet.latitude = latlng.lat
-				lokalitet.longitude = latlng.lng
-			}
-
+			 */
 	  	map.on('click', function(e) {
-				console.log(e)
-				if (!lokalitet.locked) {
+				if ($scope.__isCreatingHotSpot) {
+					popover.hide()
+					$scope.__isCreatingHotSpot = false
+					InputModal.show($scope,'Opret hotspot ..', 'Navn / beskrivelse').then(function(desc) {	
+						if (desc) {
+							var lokalitet_spot = {
+								lokalitet_id: $scope.__lokalitet.lokalitet_id,
+								latitude: e.latlng.lat,
+								longitude: e.latlng.lng,
+								kommentar: desc
+							}
+							Lokalitet_spot.save({ lokalitet_spot_id: ''}, lokalitet_spot).$promise.then(function(ls) {
+								$scope.__lokalitet.Spot.push(ls)
+								createHotspotMarkers($scope, $scope.__lokalitet) 
+							})
+						}
+					})
+				}
+				if (!$scope.__lokalitet.locked) {
 					$scope.setLokalitetLatLng(e.latlng) 
 					lokalitetMarker.setLatLng(e.latlng)
 				}
 			})
 
 			map.on('baselayerchange', function(e) {
-				console.log(e)
+				//console.log(e.layer.options)
 			})
 
 			map.on('zoomend', function(e) {
-				console.log('zoom', e)
+				//console.log('zoom', e.target.zoom)
 			})
 
 			lokalitetMarker = L.marker(center, {
@@ -252,41 +329,103 @@ angular.module('dnalivApp')
 			})
 			.addTo(map)
 			.on('dragend', function(e) {
-				if (!lokalitet.locked) {
+				if (!$scope.__lokalitet.locked) {
 					$scope.setLokalitetLatLng(e.target._latlng) 
 				} else {
 					lokalitetMarker.setLatLng({ 
-						lat: lokalitet.latitude,
-						lng: lokalitet.longitude
+						lat: $scope.__lokalitet.latitude,
+						lng: $scope.__lokalitet.longitude
 					})
 				}
 			})
 
 			$scope.showMarker = function() {
-				if (lokalitet.showMarker) {
+				if ($scope.__lokalitet.showMarker) {
 					lokalitetMarker.setOpacity(1)
+					lokalitetMarker.openPopup()
 				} else {
 					lokalitetMarker.setOpacity(0)
+					lokalitetMarker.closePopup()
 				}
 			}
 
+			$scope.showPopup = function() {
+				if ($scope.__lokalitet.showPopup) {
+					closePopup
+					map.closePopuplokalitetPopup.show()
+				} else {
+					lokalitetPopup.hide()
+				}
+			}
+
+			$scope.createHotspot = function() {
+				$scope.__isCreatingHotSpot = true
+				popover.show()
+				//
+ 			}
+
 			$scope.showPolygon = function() {
-				if (lokalitet.showPolygon) {
+				if (!lokalitetPolygon) return
+				if ($scope.__lokalitet.showPolygon) {
 					map.addLayer(lokalitetPolygon)
 				} else {
 					map.removeLayer(lokalitetPolygon)
 				}
 			}
 
-			$scope.centerMarker = function() {
-				map.setView(L.latLng(lokalitet.latitude, lokalitet.longitude), 11)
+			$scope.hasPolygon = function() {
+				return lokalitetPolygon == undefined
 			}
 
-			/*
-			$scope.$watch('lokalitet.locked', function() {
-				document.querySelector('#lokalitet_wetland').readOnly = $scope.lokalitet.locked
+			$scope.showHotspots = function() {
+				if (!hotspotMarkers) return
+				if ($scope.__lokalitet.showHotspots) {
+					map.addLayer(hotspotMarkers)
+				} else {
+					map.removeLayer(hotspotMarkers)
+				}
+			}
+
+			$scope.hasHotspots = function() {						
+				return hotspotMarkers == undefined
+			}
+
+			$scope.hotspotsLockedChange = function() {						
+				createHotspotMarkers($scope, $scope.__lokalitet) 
+			}
+
+			$scope.showHotspotPolygon = function() {
+				console.log('showHotspotpolygon')
+				if ($scope.__lokalitet.showHotspotPolygon) {
+					createHotspotPolygon($scope, $scope.__lokalitet)
+				} else {
+					if (!hotspotPolygon) return
+					map.removeLayer(hotspotPolygon)
+				}
+			}
+
+			$scope.$watchGroup(['__lokalitet.latitude', '__lokalitet.longitude'], function(newVal, oldVal) {
+				if (JSON.stringify(newVal) != JSON.stringify(oldVal)) {
+					var ll = L.latLng(newVal[0], newVal[1])
+					lokalitetMarker.setLatLng(ll)
+					map.setView(ll);
+				}
 			})
-			*/
+
+			$scope.setLokalitetLatLng = function(latlng) {
+				document.querySelector('#lat').value = latlng.lat
+				document.querySelector('#lng').value = latlng.lng
+				$scope.__lokalitet.latitude = latlng.lat
+				$scope.__lokalitet.longitude = latlng.lng
+			}
+
+			$scope.centerMarker = function() {
+				if (lokalitetPolygon) {
+					map.fitBounds(lokalitetPolygon.getBounds(), { maxZoom: 20 } )
+				} else {
+					map.setView(L.latLng($scope.__lokalitet.latitude, $scope.__lokalitet.longitude), 17)
+				}
+			}
 
 		}
 
@@ -295,7 +434,10 @@ angular.module('dnalivApp')
 
 		return {
 			
-			show: function($scope) {
+			show: function($scope, lokalitet_id) {
+
+				//set default lokalitet upon loading
+				$scope.__lokalitet = defaultLokalitet
 
 				deferred = $q.defer()
 
@@ -313,17 +455,34 @@ angular.module('dnalivApp')
 						initializeMap($scope)
 						initializeWetland($scope)
 						modal.initialized = true
+
+						if (lokalitet_id) {
+							Lokalitet.get({ id: lokalitet_id}).$promise.then(function(lokalitet) {
+								lokalitet.locked = true //set locked to false to prevent unattended changes of the map
+								setLokalitet($scope, lokalitet)
+							})
+						} else {
+							//setLokalitet(defaultLokalitet)
+						}
+
+						popover = $popover(angular.element('#createHotspot'), {
+							content: 'Klik på kortet for at oprette nyt hotspot', 
+							trigger: 'manual',
+							placement: 'right'
+						})
+
 					}
 				})
+
 				$scope.$on('modal.hide', function(e, target) {
 					if (target.internalName == 'lokalitetModal') {
 						console.log('HIDE')
 					}
 				})
 
-				$scope.proeveNrClose = function(success) {
+				$scope.__modalClose = function(success) {
 					modal.hide()
-		      deferred.resolve(success ? $scope.proeveNrModal.proeve_nr : false)
+		      deferred.resolve(success)
 				}
 
 	      return deferred.promise;

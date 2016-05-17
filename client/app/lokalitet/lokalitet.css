@@ -13,23 +13,27 @@ body.modal-open {
 	padding-top: 3px;
 }
 
+#modal-lokalitet .modal-header {
+	padding-bottom: 7px !important;
+}
+
 #modal-lokalitet .col-sm-12 {
 	padding-left: 5px;
 	padding-right: 5px;
 }
 
 span.map-tool {
-	float: right;
-	right: 100px;
+	right: 50px;
 	display: inline-block;
 	position: relative;
 	margin: 0px;
 	top: -3px;
 	padding:4px;
 	top: 0px;
-	padding-right:22px;
 	border-radius: 3px;
 	font-size: 120%;
+	margin-left: 10px;
+	clear: none;
 }
 
 input.sm-pad {
@@ -37,4 +41,13 @@ input.sm-pad {
 	padding-right: 1px;
 }
 
+#modal-lokalitet .popover {
+	border: none !important;
+}
+#modal-lokalitet .popover-title {
+	color: #000 !important;
+}
+#modal-lokalitet .popover-content {
+	color: #000 !important;
+}
 

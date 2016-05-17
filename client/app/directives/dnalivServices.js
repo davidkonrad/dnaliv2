@@ -22,6 +22,8 @@ angular.module('dnalivApp')
 				for (var p in srcObject) {
 					toObject[p] = srcObject[p]
 				}
+				//return toObject so it can be sued in an expression
+				return toObject
 			},
 
 			fixDate : function(date) {
@@ -132,9 +134,9 @@ angular.module('dnalivApp')
 										'hundevæddeløbsbane', 'varde', 'primærRingvej', 'sekundærRingvej', 'restriktionsareal', 'landsdel',
 										'overskylledeSten', 'vejkryds', 'lavning', 'arboret', 'løvtræ', 'bautasten', 'bautasten', 
 										'sti', 'plads', 'heliport', 'hestevæddeløbsbane', 'ledLåge', 'ås', 'observatorium', 'fiskerihavn',
-										'sejlløb', 'nor', 'tomt'
+										'sejlløb', 'nor', 'tomt', 'proffesionshøjskole'
 									],
-			aeWaterTypes: ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump',
+			aeWaterTypes: ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump', 'tange', 
 											//doubtful matches
 											'bugt', 'strandpost', 'lystbådehavn', 'sund', 'vandmølle', 'tørtVedLavvande', 'botaniskHave'
 											],

@@ -1,22 +1,43 @@
-<script type="text/ng-template" id="popover.taxon.html">
-  <div class="popover" style="width:300px;">
-  <div class="arrow"></div>
-  <div class="popover-content" ng-model="content">
-		<table>
-			<tr><td class="info-content" colspan="2">Artsgruppe: {{ artInfo.Artsgruppe_dk }}</td></tr>
-			<tr><td class="info-head">Rige</td><td class="info-content"><em> {{ artInfo.Rige | lowercase }}</em>  <b class="dk">{{ artInfo.Rige_dk }}</b></td></tr>
-			<tr><td class="info-head">Række</td><td class="info-content"><em>{{ artInfo.Raekke | lowercase}}</em>  <b class="dk">{{ artInfo.Raekke_dk }}</b></td></tr>
-			<tr><td class="info-head">Orden</td><td class="info-content"><em>{{ artInfo.Orden | lowercase}}</em>  <b class="dk">{{ artInfo.Orden_dk }}</b></td></tr>
-			<tr><td class="info-head">Klasse</td><td class="info-content"><em>{{ artInfo.Klasse | lowercase}}</em>  <b class="dk">{{ artInfo.Klasse_dk }}</b></td></tr>
-			<tr><td class="info-head">Familie</td><td class="info-content"><em>{{ artInfo.Familie | lowercase}}</em>  <b class="dk">{{ artInfo.Familie_dk }}</b></td></tr>
-			<tr><td class="info-head">Slægt</td><td class="info-content"><em>{{ artInfo.Slaegt | lowercase}}</em>  <b class="dk">{{ artInfo.Slaegt_dk }}</b></td></tr>
+<span style="border-left: 1px solid #ddd;display:inline-block;">
 
-		</table>
-  </div>
-</div>
-</script>
+<br><br>
+
+<button type="button" class="btn btn-default btn-sm bold" ng-model="taxonOrderBy" bs-options="s.value as s.text for s in taxonOrders" bs-select style="width:100px;">
+	<span class="caret"></span>
+</button>
 
 <br>
+
+<ul dnd-list="taxonsUnordered" id="list-taxon"
+		dnd-inserted="dndInserted('insert')"
+		dnd-dragover="dragoverCallback(event, index, external, type)"
+		dnd-drop="dropCallback(event, index, item, external, type, 'itemType')"
+>
+    <li ng-repeat="item in taxonsUnordered | orderBy: taxonOrderBy" class="col-xs-10"
+        dnd-draggable="item"
+        dnd-moved="taxonsUnordered.splice($index, 1)"
+        dnd-effect-allowed="move"
+				dnd-disable-if="taxonOrderBy != 'taxon_prioritet'"
+        >
+				<span class="col-xs-1">
+					<input type="checkbox" ng-model="item.taxon_basisliste" title="Medtages i basisliste / default" ng-change="item.edited = true" />
+				</span>
+				<span class="col-xs-3">
+ 					<input type="text" ng-model="item.taxon_navn" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
+				</span>
+				<span class="col-xs-3">
+					<input type="text" ng-model="item.taxon_navn_dk" class="form-control bold" ng-change="item.edited = true" />
+				</span>
+				<span class="col-xs-3">
+ 					<input type="text" ng-model="item.taxon_artsgruppe" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
+				</span>
+
+   </li>
+</ul>
+
+<br>
+
+<!--
 <table class="table table-condensed" id="table-taxon">
 	<thead>
 		<tr>
@@ -80,4 +101,7 @@
   </tbody>
 
 </table>
+-->
 
+<br><br><br>
+</span>

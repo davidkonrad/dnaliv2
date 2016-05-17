@@ -14,7 +14,8 @@ angular.module('dnalivApp', [
 	'datatables',
 	'datatables.buttons',
 	'datatables.bootstrap',
-	'frapontillo.bootstrap-switch'
+	'frapontillo.bootstrap-switch',
+	'dndLists'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

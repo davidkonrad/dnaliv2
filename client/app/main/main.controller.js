@@ -9,7 +9,7 @@ angular.module('dnalivApp')
 
 
 		$scope.test = function() {
-			LokalitetModal.show($scope)
+			LokalitetModal.show($scope, 8)
 		}
 
   }]);

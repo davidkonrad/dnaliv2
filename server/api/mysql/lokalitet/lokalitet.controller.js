@@ -1,7 +1,6 @@
 'use strict';
 var models = require('../');
 
-
 // Get list of lokalitets
 exports.index = function(req, res) {
   models.Lokalitet.findAll().then(function(lokalitet){
@@ -13,7 +12,10 @@ exports.index = function(req, res) {
 
 // Get a single lokalitet
 exports.show = function(req, res) {
-  models.Lokalitet.find(req.params.id).then(function(lokalitet){
+  models.Lokalitet.find({ where : { lokalitet_id: req.params.id }, include: [{ 
+		model: models.Lokalitet_spot,
+		as: 'Spot'
+	}]}).then(function(lokalitet){
   	return res.json(200, lokalitet);	
   }).catch(function(err){
 	  handleError(res, err);
