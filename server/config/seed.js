@@ -56,6 +56,7 @@ User.find({}).remove(function() {
   )
 })
 
+
 /*
 Andreas Kelager				akelager@snm.ku.dk				kelager
 Mette Grøn						mette.groen@snm.ku.dk			wuVb5tA3Sw
