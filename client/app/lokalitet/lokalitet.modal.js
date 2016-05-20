@@ -18,6 +18,7 @@ angular.module('dnalivApp')
 		})
 
 		var defaultLokalitet = {
+			edited: false, //main locality changed
 			locked: false,
 			hotspotsLocked: true,
 			showMarker: true,
@@ -42,7 +43,7 @@ angular.module('dnalivApp')
 
 		function geometryWktPolygon(geometryWkt) {
 			wkt.read(geometryWkt);
-			console.log(geometryWkt, wkt.components)
+			//console.log(geometryWkt, wkt.components)
 			if (!wkt.components[0]) return undefined
 			//we are only taking the first polygon for now
 			var a = wkt.components[0].map(function(xy) {
@@ -56,7 +57,7 @@ angular.module('dnalivApp')
 		}
 
 		function createHotspotMarkers($scope, lokalitet) {
-			if (lokalitet.Spot.length < 0) return
+			if (!lokalitet.Spot || lokalitet.Spot.length < 0) return
 			if (hotspotMarkers) map.removeLayer(hotspotMarkers)
 			hotspotMarkers = []
 			lokalitet.Spot.forEach(function(spot) {
@@ -88,7 +89,7 @@ angular.module('dnalivApp')
 		}
 
 		function createHotspotPolygon($scope, lokalitet) {
-			console.log('createhotspotpolygon')
+			//console.log('createhotspotpolygon')
 			if (lokalitet.Spot.length < 0) return
 			if (hotspotPolygon) map.removeLayer(hotspotPolygon)
 
@@ -96,7 +97,7 @@ angular.module('dnalivApp')
 			lokalitet.Spot.forEach(function(spot) {
 				hotspotPolygon.push([parseFloat(spot.latitude), parseFloat(spot.longitude)])
 			})
-			console.log(hotspotPolygon)
+			//console.log(hotspotPolygon)
 			hotspotPolygon = L.polygon(hotspotPolygon, {
 				fillColor: '#FFFF00',
 				color: '#FFFF00'
@@ -111,6 +112,11 @@ angular.module('dnalivApp')
 			}	
 			createLokalitetPopup(lokalitet) 
 			createHotspotMarkers($scope, lokalitet)
+
+			//???
+			$timeout(function() {
+				//map.invalidateSize()
+			})
 		}
 
 		function createLokalitetPopup(lokalitet) {
@@ -209,7 +215,9 @@ angular.module('dnalivApp')
 				size: '256'
 			}).addTo(map)
 
-			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
+			//var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
+			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMS&Layer=dtk_skaermkort&style=default&format=image/jpeg'+Utils.aePass, {
+				/*
 				attribution: 'Geodatastyrelsen',
 				useCrs : true,
 	  	  zoom: function() {
@@ -219,6 +227,24 @@ angular.module('dnalivApp')
 	  	    else
 	  	      return 'L' + zoom;
 			   }
+				*/
+				name: "DK 4cm kort",
+				type: 'wms',
+				visible: true,
+				url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+				layerOptions: {
+					layers: "topo25_klassisk",
+					servicename: "topo25",
+					version: "1.1.1",
+					request: "GetMap",
+					format: "image/jpeg",
+					service: "WMS",
+					styles: "default",
+					exceptions: "application/vnd.ogc.se_inimage",
+					jpegquality: "80",
+					attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste"
+				}
+				//ticket: ticket
 			}) 
 
 			var OpenStreetMap =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -395,7 +421,7 @@ angular.module('dnalivApp')
 			}
 
 			$scope.showHotspotPolygon = function() {
-				console.log('showHotspotpolygon')
+				//console.log('showHotspotpolygon')
 				if ($scope.__lokalitet.showHotspotPolygon) {
 					createHotspotPolygon($scope, $scope.__lokalitet)
 				} else {
@@ -408,22 +434,37 @@ angular.module('dnalivApp')
 				if (JSON.stringify(newVal) != JSON.stringify(oldVal)) {
 					var ll = L.latLng(newVal[0], newVal[1])
 					lokalitetMarker.setLatLng(ll)
+					console.log('ll', ll)
 					map.setView(ll);
 				}
 			})
+
+			$scope.updateLokalitet = function() {
+				var updateObj = {
+					presentationString: $scope.__lokalitet.presentationString,
+					latitude: $scope.__lokalitet.latitude,
+					longitude: $scope.__lokalitet.longitude
+				}
+				Lokalitet.update({ id: $scope.__lokalitet.lokalitet_id }, updateObj).$promise.then(function(lokalitet) {
+					$scope.__lokalitet.edited = false
+				})
+			}		
 
 			$scope.setLokalitetLatLng = function(latlng) {
 				document.querySelector('#lat').value = latlng.lat
 				document.querySelector('#lng').value = latlng.lng
 				$scope.__lokalitet.latitude = latlng.lat
 				$scope.__lokalitet.longitude = latlng.lng
+				//
+				$scope.__lokalitet.edited = true
 			}
 
 			$scope.centerMarker = function() {
 				if (lokalitetPolygon) {
 					map.fitBounds(lokalitetPolygon.getBounds(), { maxZoom: 20 } )
 				} else {
-					map.setView(L.latLng($scope.__lokalitet.latitude, $scope.__lokalitet.longitude), 17)
+					//map.setView(L.latLng($scope.__lokalitet.latitude, $scope.__lokalitet.longitude), 17)
+					map.panTo(L.latLng($scope.__lokalitet.latitude, $scope.__lokalitet.longitude), 17)
 				}
 			}
 
@@ -436,6 +477,8 @@ angular.module('dnalivApp')
 			
 			show: function($scope, lokalitet_id) {
 
+				var modalName = 'lokalitetModal'
+
 				//set default lokalitet upon loading
 				$scope.__lokalitet = defaultLokalitet
 
@@ -446,20 +489,29 @@ angular.module('dnalivApp')
 					templateUrl: 'app/lokalitet/lokalitet.modal.html',
 					backdrop: 'static',
 					show: true,
-					TEST: 'test'
+					internalName: modalName,
+					lokalitet_id: lokalitet_id
 				})
-				modal.internalName = 'lokalitetModal'
 
 				$scope.$on('modal.show', function(e, target) {
-					if (target.internalName == 'lokalitetModal' && !modal.initialized) {
+					if (target.$options.internalName == modalName && !modal.initialized) {
 						initializeMap($scope)
 						initializeWetland($scope)
 						modal.initialized = true
 
-						if (lokalitet_id) {
-							Lokalitet.get({ id: lokalitet_id}).$promise.then(function(lokalitet) {
+						if (target.$options.lokalitet_id) {
+							Lokalitet.get({ id: target.$options.lokalitet_id }).$promise.then(function(lokalitet) {
 								lokalitet.locked = true //set locked to false to prevent unattended changes of the map
 								setLokalitet($scope, lokalitet)
+								$timeout(function() {
+									console.log('TIMEOUT', lokalitet.latitude, $scope.__lokalitet.latitude)
+									//$scope.centerMarker()
+									//map.invalidateSize()
+					        //map.setView([ lokalitet.latitude, lokalitet.longitude ], 18, {animation: true});
+									//L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);
+									$scope.centerMarker()
+							    //map.invalidateSize(true);
+								}, 100)
 							})
 						} else {
 							//setLokalitet(defaultLokalitet)
@@ -476,7 +528,7 @@ angular.module('dnalivApp')
 
 				$scope.$on('modal.hide', function(e, target) {
 					if (target.internalName == 'lokalitetModal') {
-						console.log('HIDE')
+						//console.log('HIDE')
 					}
 				})
 

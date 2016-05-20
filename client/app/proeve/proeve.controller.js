@@ -93,7 +93,7 @@ angular.module('dnalivApp')
 			$scope.proeveModal.internalName = 'proeve'
 			$scope.$on('modal.show',function(e, target) {
 				if (target.internalName == 'proeve') {
-					$("#closeBtn").focus()
+					//$("#closeBtn").focus()
 					$('#dataset').typeahead({
 						source: $scope.lookupDataset,
 						showHintOnFocus: true,

@@ -33,15 +33,14 @@ exports.create = function(req, res) {
 
 // Updates an existing lokalitet in the DB.
 exports.update = function(req, res) {
-  models.Lokalitet.find(req.params.id).then(function(lokalitet){
-      if(!lokalitet) { return res.send(404); }  
+  models.Lokalitet.find({ where : { lokalitet_id: req.params.id }} ).then(function(lokalitet){
+    if (!lokalitet) { return res.send(404); }  
 	  return lokalitet.updateAttributes(req.body);	  	
-  }).then(function(lokalitet){
+  }).then(function(lokalitet) {
   	return res.json(200, lokalitet);
   }).catch(function(err){
 	  handleError(res, err);
   });
-  
 };
 
 // Deletes a lokalitet from the DB.

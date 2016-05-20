@@ -55,16 +55,19 @@
 
 				<form class="form-inline" role="form" style="margin-left:3px;margin-bottom:5px;">
 				  <div cl	ass="form-group">
-						<input type="text" class="form-control input-sm wetland bold" size="50" ng-model="__lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ..." ng-disabled="__lokalitet.locked" />
+						<input type="text" class="form-control input-sm wetland bold" size="50" ng-model="__lokalitet.presentationString" id="lokalitet_wetland" placeholder="Sø, å, mose ..." ng-disabled="__lokalitet.locked" ng-change="__lokalitet.edited = true" />
 
 						&nbsp;&nbsp;
 				    <label for="lat" class="normal">Lat.</label>
-				    <input type="text" ng-model="__lokalitet.latitude" class="form-control input-sm sm-pad bold" size="18" id="lat" ng-disabled="__lokalitet.locked">
+				    <input type="text" ng-model="__lokalitet.latitude" class="form-control input-sm sm-pad bold" size="18" id="lat" ng-disabled="__lokalitet.locked" ng-change="__lokalitet.edited = true" >
 
 						&nbsp;&nbsp;
 				    <label for="lng" class="normal">Lng.</label>
-				    <input type="text" ng-model="__lokalitet.longitude" class="form-control input-sm sm-pad bold" size="18" id="lng" ng-disabled="__lokalitet.locked">
+				    <input type="text" ng-model="__lokalitet.longitude" class="form-control input-sm sm-pad bold" size="18" id="lng" ng-disabled="__lokalitet.locked" ng-change="__lokalitet.edited = true" >
 
+						&nbsp;&nbsp;
+						<button type="button" class="btn btn-primary btn-xs" ng-disabled="!__lokalitet.edited" ng-click="updateLokalitet()">Gem</button>
+					
 				  </div>
 				</form>
 

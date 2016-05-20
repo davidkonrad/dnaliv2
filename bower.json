@@ -29,7 +29,8 @@
     "datatables.net-bs": "*",
     "jszip": "2.6.0",
     "pdfmake": "*",
-    "angular-drag-and-drop-lists": "^1.4.0"
+    "angular-drag-and-drop-lists": "^1.4.0",
+    "angular-animate": "^1.5.5"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
