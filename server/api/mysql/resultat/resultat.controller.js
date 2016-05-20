@@ -4,7 +4,6 @@ var models = require('../');
 
 // Get list of resultats
 exports.index = function(req, res) {
-
   models.Resultat.findAll().then(function(resultat){
   	return res.json(200, resultat);	
   }).catch(function(err){
@@ -45,15 +44,12 @@ exports.update = function(req, res) {
 
 // Deletes a resultat from the DB.
 exports.destroy = function(req, res) {
-	models.Resultat.find(req.params.id).then(function(resultat){
-		if(!resultat) { return res.send(404); }
-		return resultat.destroy()
+  models.Resultat.destroy({ where : { resultat_id: req.params.id }} ).then(function(resultat){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe resultat

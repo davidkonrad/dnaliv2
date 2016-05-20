@@ -22,7 +22,7 @@ User.find({}).remove(function() {
 		role: 'Admin'
   }, {
     provider: 'local',
-    name: 'andreas',
+    name: 'Andreas Kelager',
     email: 'akelager@snm.ku.dk',
     password: 'kelager',
 		role: 'Admin' 
@@ -44,10 +44,23 @@ User.find({}).remove(function() {
     email: 'marie.lillemark@snm.ku.dk',
     password: 'KPDt0p6AfG',
 		role: 'User' 
+	}, {
+    provider: 'local',
+    name: 'Pernille Selmer Olsen',
+    email: 'pvsolsen@snm.ku.dk',
+    password: 'eyHskF3gXY',
+		role: 'User' 
 	}, function() {
       console.log('finished populating users');
     }
   )
 })
 
+/*
+Andreas Kelager				akelager@snm.ku.dk				kelager
+Mette Grøn						mette.groen@snm.ku.dk			wuVb5tA3Sw
+Maja Elling						maja.elling@snm.ku.dk			sVq48mYhpk
+Marie Lillemark				marie.lillemark@snm.ku.dk	KPDt0p6AfG
+Pernille Selmer Olsen	pvsolsen@snm.ku.dk				eyHskF3gXY
+*/
 

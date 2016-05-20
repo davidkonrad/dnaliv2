@@ -181,14 +181,14 @@ angular.module('dnalivApp')
 				{ targets: [0],  orderDataType: "dom-checkbox" }
 			]
 
-			var modal = $modal({
+			$scope.resultatModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/resultater/resultat.modal.html',
 				backdrop: 'static',
 				show: true
 			})
 
-			modal.$promise.then(modal.show).then(function() {
+			$scope.resultatModal.$promise.then($scope.resultatModal.show).then(function() {
 				$('#unExcludeSelect').on('change', function() {
 					 $scope.includeTaxon($(this).val())
 				})
@@ -294,12 +294,24 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.deleteResultat = function(resultat_id) {
+			var date = new Date($scope.resultat.created_timestamp).toLocaleString('da-DK', { hour12: false } ),
+					author = $scope.resultat.created_userName;
+			Alert.show($scope,'Slet Resultat?', 'Oprettet <b>'+date+'</b> af <b>'+author+'</b>.<br><br>Resultat samt tilhørende replikater vil blive slettet permanent. Vil du fortsætte?').then(function(confirm) {
+				if (confirm) {
+					Resultat.delete({ id : resultat_id }).$promise.then(function() {	
+						$scope.resultatModal.hide()
+						$scope.reloadData()
+					})
+				}
+			})
+		}
+
 		//
 		$scope.updateResultatItem = function(item) {
 			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
 		}
 		$scope.resultatValueClick = function(item) {
-			console.log(item, item.isNull)
 			if (item.isNull) {
 				item.negativ = false
 				item.positiv = true

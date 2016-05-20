@@ -42,20 +42,17 @@ exports.update = function(req, res) {
   }).catch(function(err){
 	  handleError(res, err);
   });
-  
+ 
 };
 
 // Deletes a proeve from the DB.
 exports.destroy = function(req, res) {
-	models.Proeve.find(req.params.id).then(function(proeve){
-		if(!proeve) { return res.send(404); }
-		return proeve.destroy()
+  models.Proeve.destroy({ where : { proeve_id: req.params.id }} ).then(function(proeve){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe proeve

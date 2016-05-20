@@ -3,6 +3,7 @@
 	min-width: 70% !important;
 	width: 70% !important;
 	max-width: 80% !important;
+	height: auto !important;
 }
 
 .rule {
@@ -15,6 +16,7 @@
 
 .modal-body {
 	padding: 20px;
+	overflow: visible;
 }
 
 .inject-control {

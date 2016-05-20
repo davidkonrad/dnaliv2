@@ -1,5 +1,6 @@
 <span style="border-left: 1px solid #ddd;display:inline-block;">
 
+<!--
 <br><br>
 
 <button type="button" class="btn btn-default btn-sm bold" ng-model="taxonOrderBy" bs-options="s.value as s.text for s in taxonOrders" bs-select style="width:100px;">
@@ -36,8 +37,8 @@
 </ul>
 
 <br>
+-->
 
-<!--
 <table class="table table-condensed" id="table-taxon">
 	<thead>
 		<tr>
@@ -57,15 +58,17 @@
 				</button>
 			</td>
 			<td>
-				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control">
+				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control" size="20" />
 			</td>
 			<td>
-				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon">
+				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon" size="20" />
 			</td>
 			<td>
+				<!--
 				<button type="button" class="btn btn-primary current-taxon" bs-popover data-trigger="hover" data-html="true" data-template-url="popover.taxon.html">
 					<i class="fa fa-info"></i>
 				</button>
+				-->
 			</td>
 			<td></td>
 		</tr>
@@ -101,7 +104,6 @@
   </tbody>
 
 </table>
--->
 
 <br><br><br>
 </span>

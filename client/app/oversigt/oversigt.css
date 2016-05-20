@@ -51,7 +51,7 @@ td.may-break {
 
 /* from booking.modal.html */
 .modal-open {
-    overflow: scroll;
+	overflow: scroll;
 }
 .modal-body {
 	padding: 20px;

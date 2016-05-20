@@ -1,3 +1,6 @@
+<!--
+<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
+-->
 <div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -27,7 +30,7 @@
 						<div class="input-group">
 						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" placeholder="Lokalitet" readonly style="background-color:#fff;" />
 						  <span class="input-group-btn">
-								<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)"><i class="fa fa-edit"></i></button>
+								<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)" ng-disabled="!proeve.lokalitet_id"><i class="fa fa-edit"></i></button>
 							</span>
 						</div>
 
@@ -35,11 +38,11 @@
 
 					<br><br>
 
-				  <div class="form-group" style="background-color:#ebebeb;">
+				  <div class="form-group">
 				  	<label for="indsamlingsdato" class="normal">Indsamlingsdato</label>
 				    <input type="text" ng-model="proeve.indsamlingsdato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato" ng-change="proeve.edited = true" />
 						&nbsp;
-				  	<label for="ProeverModtaget" class="normal">Prøve modtaget</label>
+				  	<label for="ProeverModtaget" class="normal">Prøver modtaget</label>
 				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="ProeverModtaget" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="DatoForEkst" class="normal">Dato for ekstrakt</label>
@@ -56,11 +59,20 @@
 				    <input type="text" ng-model="proeve.Mailadresse" class="form-control input-sm bold" size="18" id="Mailadresse" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="Institutionsnavn" class="normal">Institutionsnavn</label>
-				    <input type="text" ng-model="proeve.Institutionsnavn" class="form-control input-sm bold" size="18" id="Institutionsnavn" ng-change="proeve.edited = true" />
-
+				    <input type="text" ng-model="proeve.Institutionsnavn" class="form-control input-sm bold" size="30" id="Institutionsnavn" ng-change="proeve.edited = true" />
 					</div>
 
 					<br><div class="rule-lg"></div>
+
+				  <div class="form-group">
+				  	<label for="ElueretI" class="normal">Elueret i</label>
+				    <input type="text" ng-model="proeve.ElueretI" class="form-control input-sm bold" size="10" id="ElueretI" ng-change="proeve.edited = true" />
+						&nbsp;
+				  	<label for="ngUl" class="normal">ng/µl</label>
+				    <input type="text" ng-model="proeve.ngUl" class="form-control input-sm bold" size="10" id="ngUl" ng-change="proeve.edited = true" />
+					</div>
+
+					<br><hr><div class="rule-lg"></div>
 
 				  <div class="form-group" style="width:50%;">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
@@ -74,15 +86,17 @@
 						</table>
 					</div>
 
-	
 				</form>
 	
-
-			
 			</div>
 			
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok">Luk</button> 
+				<span style="float:left;">
+					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp}}">
+						Slet Prøve
+					</button> 
+				</span>
+				<button type="button" class="btn btn-primary" ng-click="$hide()" id="closeBtn">Luk</button> 
 			</div>
 		</div>
 	</div>

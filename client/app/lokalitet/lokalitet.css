@@ -1,11 +1,30 @@
+/*
 body.modal-open {
-    overflow: hidden;
+  overflow: auto;
 }
+
+.modal-open {
+	position: absolute;
+	overflow-y: visible;
+}
+*/
+
+ body.modal-open {
+    XXoverflow: visible;
+    XXposition: relative;
+    XXwidth: 100%;
+}
+
+.modal {
+    overflow-y: auto;
+}
+
 
 #modal-lokalitet .modal-dialog {
 	min-width: 90% !important;
 	width: 90% !important;
 	height: 85% !important;
+	XXposition: fixed;
 }
 
 #modal-lokalitet .modal-body {

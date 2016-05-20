@@ -95,6 +95,7 @@ angular.module('dnalivApp')
 
 			dtNormalizeSearch: function() {
 				var input = document.querySelector('.dataTables_filter input')
+				if (!input) return
 				input.className += 'form-control inject-control'
 				input.style.padding = '5px'
 				input.placeholder = 'skriv ..'
@@ -102,6 +103,7 @@ angular.module('dnalivApp')
 
 			dtPerformSearch: function(term) {
 				var input = document.querySelector('.dataTables_filter input')
+				if (!input) return
 				input.value = term
 				$(input).trigger('keyup')
 			},

@@ -92,6 +92,7 @@ angular.module('dnalivApp')
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
 			.withDOM('lB<"dt-custom">frtip')
+			.withOption('destroy', true)
 			.withOption('initComplete', function() {
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
@@ -235,7 +236,7 @@ angular.module('dnalivApp')
 					$scope.statusSelectClass = $scope.statusOptions[s].class
 					if (oldVal == undefined) return
 					Booking.update({ id: $scope.booking.booking_id }, { status: $scope.booking.status }).$promise.then(function(booking) {	
-						$scope.bookingInstance.rerender()
+						//$scope.bookingInstance.rerender()
 					})
 				}
 			}
@@ -245,7 +246,7 @@ angular.module('dnalivApp')
 			if (newVal == oldVal || oldVal == undefined) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBesoeg: $scope.booking.DatoForBesoeg }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBesoeg_fixed = Utils.fixDate($scope.booking.DatoForBesoeg)
-				$scope.bookingInstance.rerender()
+				//$scope.bookingInstance.rerender()
 			})
 		})
 
@@ -253,7 +254,7 @@ angular.module('dnalivApp')
 			if (newVal == oldVal || oldVal == undefined) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBooking: $scope.booking.DatoForBooking }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
-				$scope.bookingInstance.rerender()
+				//$scope.bookingInstance.rerender()
 			})
 		})
 

@@ -42,6 +42,7 @@ angular.module('dnalivApp')
 		$scope.reloadTaxons = function() {
 			Taxon.query().$promise.then(function(taxons) {	
 
+				/*
 				$scope.taxonsUnordered = taxons.map(function(taxon) {
 					return { 
 						taxon_id: taxon.taxon_id,
@@ -53,8 +54,8 @@ angular.module('dnalivApp')
 						edited: false
 					}
 				})
+				*/
 
-				/*
 				$scope.taxons = {};
 				taxons.forEach(function(taxon) {
 					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
@@ -64,10 +65,11 @@ angular.module('dnalivApp')
 						taxon_navn_dk: taxon.taxon_navn_dk,
 						taxon_basisliste: taxon.taxon_basisliste,
 						taxon_prioritet: taxon.taxon_prioritet,
+						taxon_artsgruppe: taxon.taxon_artsgruppe,
 						edited: false
 					})
 				})
-				*/
+
 			})
 		}
 		$scope.reloadTaxons();

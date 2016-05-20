@@ -1,18 +1,23 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat',
+			'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
+	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat,
+			LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+
+		Resultat.query().$promise.then(function(resultater) {
+			$scope.resultater = resultater
+		})	
+	
 		$scope.loadData = function() {
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proever = proever.map(function(proeve) {
 					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
 					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
 					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
-
-					proeve.lokalitet = proeve.Lokalitet.length ? proeve.Lokalitet[0].presentationString : ''
-
+					proeve.lokalitet = proeve.Lokalitet ? proeve.Lokalitet.presentationString : ''
 					return Utils.getObj(proeve)
 				})
 
@@ -79,15 +84,16 @@ angular.module('dnalivApp')
 
 		$scope.showProeve = function(proeve_id) {
 			$scope.setProeve(proeve_id)
-			var modal = $modal({
+			$scope.proeveModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/proeve/proeve.modal.html',
 				backdrop: 'static',
 				show: true
 			})
-			modal.internalName = 'proeve'
+			$scope.proeveModal.internalName = 'proeve'
 			$scope.$on('modal.show',function(e, target) {
 				if (target.internalName == 'proeve') {
+					$("#closeBtn").focus()
 					$('#dataset').typeahead({
 						source: $scope.lookupDataset,
 						showHintOnFocus: true,
@@ -125,7 +131,6 @@ angular.module('dnalivApp')
 			.withOption('initComplete', function() {
 				//remove any previous set global filters
 				$.fn.dataTable.ext.search = []
-
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
 				Utils.dtNormalizeSearch()
@@ -189,6 +194,10 @@ angular.module('dnalivApp')
 		}
 
 		$scope.showLokalitet = function(lokalitet_id) {
+			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
+				console.log(success)
+			})
+			/*
 			$scope.setLokalitet(lokalitet_id)
 			$modal({
 				scope: $scope,
@@ -200,6 +209,8 @@ angular.module('dnalivApp')
 				initWetland($scope, Utils, Geo)
 				initializeMap($scope, Utils, Geo)
 			}, 250)
+			*/
+
 		}
 	
 		$scope.saveLokalitet = function() {
@@ -268,6 +279,30 @@ angular.module('dnalivApp')
 				}
 			})
 		}
+
+		$scope.proeveHasResultat = function(proeve_id) {
+			for (var i=0; i<$scope.resultater.length;i++) {
+				if ($scope.resultater[i].proeve_id == proeve_id) {
+					return true
+				}
+			}
+			return false
+		}
+
+		$scope.deleteProeve = function(proeve_id) {
+			Alert.show($scope,'Slet Prøve?', 'Der er ingen resultater tilknyttet prøven, så sletning er sikker.').then(function(confirm) {
+				if (confirm) {
+					Proeve.delete({ id : proeve_id }).$promise.then(function() {	
+						$scope.loadData()
+						$scope.proeveModal.hide()
+						$timeout(function() {
+							$scope.proeveInstance.DataTable.draw()
+						})
+					})
+				}
+			})
+		}
+
 
 
 }]);

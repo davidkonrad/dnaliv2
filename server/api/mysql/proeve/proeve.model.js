@@ -67,14 +67,23 @@ module.exports = function(sequelize, DataTypes) {
     dataset: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		created_timestamp : {
+      type: DataTypes.DATE,
+      allowNull: true
+    }, 
+		created_userName : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
 	}, {
 		tableName: 'proeve',
 		timestamps: false,
 		freezeTableName: true,
 		classMethods: {
       associate: function(models) {
-        models.Proeve.hasMany(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
+        models.Proeve.hasOne(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
 			}
 		}
 
