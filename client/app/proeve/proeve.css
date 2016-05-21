@@ -75,3 +75,10 @@ div.dt-button-background {
 .colvis-btn {
 	margin-left: 100px;
 }
+
+/* !! */
+table.table thead .sorting_asc:before,
+table.table thead .sorting_desc:before {
+	color: blue;
+}
+
