@@ -4,13 +4,14 @@
 		<tbody>
 			<tr ng-repeat="proeve in proever" ng-click="showProeve(proeve.proeve_id)" >
 				<td> {{ proeve.proeve_nr }} </td>
-				<td> {{ proeve.lokalitet }} </td>
+				<td title="{{ proeve.lokalitet }}"> {{ proeve.lokalitet }} </td>
 				<td> {{ proeve.indsamlingsdato_fixed }} </td>
-				<td> {{ proeve.Indsamler }} </td>
-				<td> {{ proeve.Institutionsnavn }} </td>
+				<td> {{ proeve.DatoForEkst_fixed }} </td>
+				<td> {{ proeve.analyseDato_fixed }} </td>
+				<td title="{{ proeve.Indsamler }}"> {{ proeve.Indsamler }} </td>
+				<td title="{{ proeve.Institutionsnavn }}"> {{ proeve.Institutionsnavn }} </td>
 				<td> {{ proeve.KuvertAfsendt }} </td>
 				<td> {{ proeve.ProeverModtaget_fixed }} </td>
-				<td> {{ proeve.DatoForEkst_fixed }} </td>
 				<td> {{ proeve.ElueretI }} </td>
 				<td> {{ proeve.ngUl }} </td>
 				<td> {{ proeve.dataset }} </td>

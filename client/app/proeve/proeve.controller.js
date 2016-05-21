@@ -14,10 +14,16 @@ angular.module('dnalivApp')
 		$scope.loadData = function() {
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proever = proever.map(function(proeve) {
+			
 					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
 					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
 					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
 					proeve.lokalitet = proeve.Lokalitet ? proeve.Lokalitet.presentationString : ''
+
+					proeve.analyseDato_fixed = proeve.Resultat.map(function(resultat) {
+						return Utils.fixDate(resultat.datoForAnalyse)
+					}).join("\t\t")
+
 					return Utils.getObj(proeve)
 				})
 
@@ -161,16 +167,17 @@ angular.module('dnalivApp')
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
-      DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet'),
+      DTColumnBuilder.newColumn('lokalitet').withOption('class', 'td-ellipsis').withTitle('Lokalitet'),
       DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'date').withTitle('Indsamlingsdato'),
-      DTColumnBuilder.newColumn('Indsamler').withTitle('Indsamler'),
-      DTColumnBuilder.newColumn('Institutionsnavn').withTitle('Institutionsnavn'),
-      DTColumnBuilder.newColumn('KuvertAfsendt').withOption('type', 'date').withTitle('Kuverter afsendt'),
-      DTColumnBuilder.newColumn('ProeverModtaget').withOption('type', 'date').withTitle('Prøver modtaget'),
       DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'date').withTitle('Dato for ekst.'),
-      DTColumnBuilder.newColumn('ElueretI').withTitle('Elueret i'),
-      DTColumnBuilder.newColumn('ngUl').withTitle('ng/µl'),
-      DTColumnBuilder.newColumn('dataset').withTitle('dataset')
+      DTColumnBuilder.newColumn('analyseDato_fixed').withOption('class', 'td-wordwrap').withOption('type', 'date').withTitle('Analysedato'),
+      DTColumnBuilder.newColumn('Indsamler').withOption('visible', false).withOption('class', 'td-ellipsis').withTitle('Indsamler'),
+      DTColumnBuilder.newColumn('Institutionsnavn').withOption('class', 'td-ellipsis').withTitle('Institutionsnavn'),
+      DTColumnBuilder.newColumn('KuvertAfsendt').withOption('visible', false).withOption('type', 'date').withTitle('Kuverter afsendt'),
+      DTColumnBuilder.newColumn('ProeverModtaget').withOption('visible', false).withOption('type', 'date').withTitle('Prøver modtaget'),
+      DTColumnBuilder.newColumn('ElueretI').withOption('visible', false).withTitle('Elueret i'),
+      DTColumnBuilder.newColumn('ngUl').withOption('visible', false).withTitle('ng/µl'),
+      DTColumnBuilder.newColumn('dataset').withTitle('Datasæt')
     ];  
 
 		$scope.proeveInstance = {}

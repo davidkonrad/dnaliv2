@@ -213,10 +213,11 @@ angular.module('dnalivApp')
 				modal.$promise.then(modal.show).then(function() {
 					$timeout(function() {
 						$('#input').typeahead({
-							showHintOnFocus: true,
+							//showHintOnFocus: true,
 							source: proever,
 							displayText: function(item) {
-								return item.proeve_nr != null ? item.proeve_nr : ''
+								//return item.proeve_nr != null ? item.proeve_nr : ''
+								return item.proeve_nr
 							},
 							items: 10,
 							afterSelect: function(item) {

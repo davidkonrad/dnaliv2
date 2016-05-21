@@ -84,6 +84,8 @@ module.exports = function(sequelize, DataTypes) {
 		classMethods: {
       associate: function(models) {
         models.Proeve.hasOne(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
+        models.Proeve.hasMany(models.Resultat, { foreignKey : 'proeve_id', as : 'Resultat' })
+
 			}
 		}
 

@@ -4,10 +4,16 @@ var models = require('../');
 
 // Get list of proeves
 exports.index = function(req, res) {
-  models.Proeve.findAll({ include: [{ 
-		model: models.Lokalitet,
-		as: 'Lokalitet'
-	}]}).then(function(proeve){
+  models.Proeve.findAll({ 
+		include: [{ 
+			model: models.Lokalitet,
+			as: 'Lokalitet'
+		}, {
+			model: models.Resultat,
+			as: 'Resultat'
+		}
+	]
+	}).then(function(proeve){
   	return res.json(200, proeve);	
   }).catch(function(err){
 	  handleError(res, err);

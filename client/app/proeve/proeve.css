@@ -82,3 +82,16 @@ table.table thead .sorting_desc:before {
 	color: blue;
 }
 
+td.td-ellipsis {
+	max-width:200px !important;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+td.td-wordwrap {
+	max-width: 70px !important;
+	white-space: pre-wrap;
+	word-wrap: normal;
+}
+
