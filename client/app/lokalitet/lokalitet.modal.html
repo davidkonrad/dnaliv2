@@ -7,42 +7,48 @@
 				<h4 class="modal-title"	style="display:inline-block;">Lokalitet: <strong> {{ __lokalitet.presentationString }} </strong></h4>
 
 				<div style="float:right;position:relative;top:-6px;">
-	
-					<span class="checkbox no-select map-tool bg-primary text-primary">
 
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.locked" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;">
+					<span class="checkbox no-select map-tool">
+						<button type="button" class="btn btn-primary" ng-click="centerMarker()" title="Centrer kort om lokalitetsmarkør">
+							<i class="fa fa-dot-circle-o"></i>&nbsp;center
+						</button>
+					</span>
+	
+					<span class="checkbox no-select map-tool XXbg-primary XXtext-primary">
+
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.locked" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;" ng-class=" { 'btn-primary' : __lokalitet.locked }" >
 							<i class="fa fa-lock"></i>
 						</button>
 
-						<button type="button" class="btn btn-primary" ng-click="centerMarker()" title="Centrer kort om lokalitetsmarkør" style="focus:outline:none;">
-							<i class="fa fa-dot-circle-o"></i>
-						</button>
-
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showMarker" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;">
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.showMarker" title="Vis lokalitetsmarkør" ng-change="showMarker()" id="showMarker" bs-checkbox style="focus:outline:none;"  ng-class=" { 'btn-primary' : __lokalitet.showMarker }">
 							<i class="fa fa-map-marker"></i>
 						</button>
 
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showPolygon" title="Vis lokalitet polygon" ng-change="showPolygon()" ng-disabled="hasPolygon()" id="showPolygon" bs-checkbox style="focus:outline:none;">
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.showPolygon" title="Vis lokalitet polygon" ng-change="showPolygon()" ng-disabled="hasPolygon()" id="showPolygon" bs-checkbox style="focus:outline:none;">
 							<i class="fa fa-crosshairs"></i>
 						</button>
 
 					</span>
 
-					<span class="checkbox no-select map-tool bg-primary text-primary">
+					<span class="checkbox no-select map-tool XXbg-primary XXtext-primary">
 
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.hotspotsLocked" title="Lås hotspots" ng-change="hotspotsLockedChange()" bs-checkbox style="focus:outline:none;">
-							<i class="fa fa-lock"></i>
-						</button>
-
-						<button type="button" class="btn btn-primary btn-sm" ng-click="createHotspot()" style="focus:outline:none;" title="Opret nyt hotspot" id="createHotspot">
+						<button type="button" class="btn btn-default btn-sm" ng-click="createHotspot()" style="focus:outline:none;" title="Opret nyt hotspot" id="createHotspot">
 							Nyt hotspot
 						</button>
 
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showHotspots" title="Vis hotspots" ng-change="showHotspots()" ng-disabled="hasHotspots()" bs-checkbox style="focus:outline:none;">
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.hotspotsLocked" title="Lås hotspots" ng-change="hotspotsLockedChange()" bs-checkbox style="focus:outline:none;"  ng-class=" { 'btn-primary' : __lokalitet.hotspotsLocked }" >
+							<i class="fa fa-lock"></i>
+						</button>
+
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.showHotspotMarkers" title="Vis markers" ng-change="showHotspotMarkers()" ng-disabled="hasHotspots()" bs-checkbox style="focus:outline:none;" ng-class=" { 'btn-primary' : __lokalitet.showHotspotMarkers }" >
 							<i class="fa fa-map-marker"></i>
 						</button>
 
-						<button type="button" class="btn btn-primary" ng-model="__lokalitet.showHotspotPolygon" title="Vis hotspot polygon" ng-change="showHotspotPolygon()" bs-checkbox style="focus:outline:none;">
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.showHotspotPopups" title="Vis Info" ng-change="showHotspotPopups()" ng-disabled="hasHotspots()" bs-checkbox style="focus:outline:none;" ng-class=" { 'btn-primary' : __lokalitet.showHotspotPopups }" >
+							<i class="fa fa-comment-o"></i>
+						</button>
+
+						<button type="button" class="btn btn-default" ng-model="__lokalitet.showHotspotPolygon" title="Vis hotspot polygon" ng-change="showHotspotPolygon()" bs-checkbox style="focus:outline:none;" ng-class=" { 'btn-primary' : __lokalitet.showHotspotPolygon }" >
 							<i class="fa fa-crosshairs"></i>
 						</button>
 
@@ -66,7 +72,7 @@
 				    <input type="text" ng-model="__lokalitet.longitude" class="form-control input-sm sm-pad bold" size="18" id="lng" ng-disabled="__lokalitet.locked" ng-change="__lokalitet.edited = true" >
 
 						&nbsp;&nbsp;
-						<button type="button" class="btn btn-primary btn-xs" ng-disabled="!__lokalitet.edited" ng-click="updateLokalitet()">Gem</button>
+						<button type="button" class="btn btn-xs" ng-disabled="!__lokalitet.edited" ng-class=" { 'btn-primary' : __lokalitet.edited }" ng-click="updateLokalitet()" id="updateLokalitetBtn">Gem</button>
 					
 				  </div>
 				</form>
@@ -82,7 +88,10 @@
 			</div>
 		
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i> Luk</button> 
+				<span style="float:left;">
+					<button type="button" class="btn btn-danger" ng-click="resetLokalitet()"">Nulstil</button> 
+				</span>
+				<button type="button" class="btn btn-primary" ng-click="$hide()">Luk</button> 
 			</div>
 
 		</div>

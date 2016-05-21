@@ -45,15 +45,12 @@ exports.update = function(req, res) {
 
 // Deletes a lokalitet from the DB.
 exports.destroy = function(req, res) {
-	models.Lokalitet.find(req.params.id).then(function(lokalitet){
-		if(!lokalitet) { return res.send(404); }
-		return lokalitet.destroy()
+  models.Lokalitet.destroy({ where : { lokalitet_id: req.params.id }} ).then(function(lokalitet){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe lokalitet

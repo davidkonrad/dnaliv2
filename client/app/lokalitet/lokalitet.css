@@ -1,24 +1,7 @@
-/*
-body.modal-open {
-  overflow: auto;
-}
-
-.modal-open {
-	position: absolute;
-	overflow-y: visible;
-}
-*/
-
- body.modal-open {
-    XXoverflow: visible;
-    XXposition: relative;
-    XXwidth: 100%;
-}
 
 .modal {
     overflow-y: auto;
 }
-
 
 #modal-lokalitet .modal-dialog {
 	min-width: 90% !important;
@@ -34,6 +17,10 @@ body.modal-open {
 
 #modal-lokalitet .modal-header {
 	padding-bottom: 7px !important;
+}
+
+#modal-lokalitet .modal-footer {
+	padding-top: 4px !important;
 }
 
 #modal-lokalitet .col-sm-12 {

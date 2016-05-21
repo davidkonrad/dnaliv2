@@ -299,7 +299,11 @@ angular.module('dnalivApp')
 		$scope.deleteProeve = function(proeve_id) {
 			Alert.show($scope,'Slet Prøve?', 'Der er ingen resultater tilknyttet prøven, så sletning er sikker.').then(function(confirm) {
 				if (confirm) {
+					var lokalitet_id = $scope.proeve.lokalitet_id
 					Proeve.delete({ id : proeve_id }).$promise.then(function() {	
+						Lokalitet.delete({ id: lokalitet_id }).$promise.then(function() {	
+							console.log('lokalitet delete OK')
+						}) 
 						$scope.loadData()
 						$scope.proeveModal.hide()
 						$timeout(function() {
