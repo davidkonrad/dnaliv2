@@ -26,8 +26,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(1),
       allowNull: true
     },
-    timestamp_created: {
+    created_timestamp: {
       type: DataTypes.DATE,
+      allowNull: true
+    },
+    created_userName: {
+      type: DataTypes.STRING,
       allowNull: true
     },
     periode: {

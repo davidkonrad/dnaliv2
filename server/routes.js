@@ -13,7 +13,6 @@ module.exports = function(app) {
 	app.use('/api/klassetrin', require('./api/mysql/klassetrin'));
 	app.use('/api/fag', require('./api/mysql/fag'));
 	app.use('/api/taxon', require('./api/mysql/taxon'));
-	app.use('/api/booking_taxon', require('./api/mysql/booking_taxon'));
 	app.use('/api/proeve', require('./api/mysql/proeve'));
 	app.use('/api/lokalitet', require('./api/mysql/lokalitet'));
 	app.use('/api/lokalitet_spot', require('./api/mysql/lokalitet_spot'));

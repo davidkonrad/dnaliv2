@@ -2,11 +2,11 @@
 
 angular.module('dnalivApp')
   .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
-			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'Booking_taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert',
 
 	function ($scope, $compile, $location, Utils, Geo, Booking, Klasse, Lokalitet, 
-						Fag, Klassetrin, Resultat, Taxon, Booking_taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
+						Fag, Klassetrin, Resultat, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
 						$modal, $timeout, $datepicker, SagsNo, Alert) {
 
 
@@ -320,75 +320,6 @@ angular.module('dnalivApp')
 		$scope.klasseIsEdited = function() {
 			return Utils.formIsEdited('#klasse-form')
 		}
-
-
-		/**
-			booking taxon
-		**/
-		$scope.showTaxon = function() {
-			$scope.loadBookingTaxons()
-			$modal({
-				scope: $scope,
-				templateUrl: 'app/oversigt/taxon.modal.html',
-				backdrop: 'static',
-				show: true
-			})
-		}
-
-		$scope.loadBookingTaxons = function() {
-			Booking_taxon.query({ booking_id: $scope.booking_booking_id }).$promise.then(function(booking_taxons) {	
-				$scope.bookingTaxons = []
-				booking_taxons.forEach(function(item) {
-					if (item.booking_id == $scope.booking.booking_id) $scope.bookingTaxons.push(item)
-				})
-				$scope.loadTaxons()
-			})
-		}
-
-		$scope.taxonIsIncluded = function(taxon_id) {
-			var result =  { is_included: false, booking_taxon_id: false };
-			for (var i=0;i<$scope.bookingTaxons.length; i++) {
-				var item = $scope.bookingTaxons[i];
-				if (item.taxon_id == taxon_id) {
-					result.is_included = item.is_included;
-					result.booking_taxon_id = item.booking_taxon_id;
-					return result;
-				}
-			}
-			return result;
-		}
-
-		$scope.loadTaxons = function() {
-			Taxon.query().$promise.then(function(taxons) {	
-				$scope.taxons = {};
-				taxons.forEach(function(taxon) {
-					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
-					$scope.taxons[taxon.taxon_artsgruppe].push({ 
-						taxon_id: taxon.taxon_id,
-						taxon_navn: taxon.taxon_navn, 
-						taxon_navn_dk: taxon.taxon_navn_dk,
-						taxon_basisliste: taxon.taxon_basisliste,
-						booking: $scope.taxonIsIncluded(taxon.taxon_id)
-					})
-				})
-			})
-		}
-
-		$scope.bookingTaxonToggle = function(art) {
-			if (art.booking.is_included) {
-				if (art.booking.booking_taxon_id) {
-					Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: true })
-				} else {
-					Booking_taxon.save({ booking_taxon_id: ''}, { booking_id: $scope.booking.booking_id, taxon_id: art.taxon_id })
-				}
-			} else {
-				Booking_taxon.update({ booking_taxon_id: art.booking.booking_taxon_id, is_included: false})
-			}
-		}
-
-		Booking_taxon.query({ booking_id: $scope.booking_booking_id} ).$promise.then(function(booking_taxons) {	
-			//console.log('pt', booking_taxons);
-		})
 
 
 		/**
