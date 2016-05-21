@@ -20,9 +20,9 @@ angular.module('dnalivApp')
 			locked: false,
 			hotspotsLocked: false,
 			showMarker: true,
-			showPopup: true,
-			showHotspotMarkers: true,
-			showHotspotPopups: true,
+			showPopup: false,
+			showHotspotMarkers: false,
+			showHotspotPopups: false,
 			showHotspotPolygon: true,
 			latitude: BM.lat, 
 			longitude: BM.lng,
@@ -51,52 +51,44 @@ angular.module('dnalivApp')
 		//we assume Wkt is loaded
 		var wkt = new Wkt.Wkt()
 
-		/*
-		function geometryWktPolygon(geometryWkt) {
-			wkt.read(geometryWkt);
-			//console.log(geometryWkt, wkt.components)
-			if (!wkt.components[0]) return undefined
-			//we are only taking the first polygon for now
-			var a = wkt.components[0].map(function(xy) {
-				var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
-				return [latLng.lng, latLng.lat]
-			})
-			return L.polygon(a, {
-				fillColor: '#FFFF00',
-				color: '#FFFF00'
-			}).addTo(map)
-		}
-		*/
-
 		function geometryWktLatLng(geometryWkt) {
 			wkt.read(geometryWkt);
-			if (!wkt.components[0]) return L.LatLng(BM)
+			if (!wkt.components[0].length) return L.latLng(BM)
 			var xy = wkt.components[0][0]
 			return Geo.EPSG25832_to_WGS84(xy.x, xy.y)
 		}
 
 		function geometryWktPolygon(geometryWkt) {
 			wkt.read(geometryWkt);
-			//console.log(geometryWkt, wkt.components)
-			if (!wkt.components[0]) return undefined
-
+			var polygonOptions = {
+				fillColor: '#ffff00',
+				color: '#ffff00',
+				weight: 3,
+				fillRule: 'nonzero'
+			}
 			var center = []
 			var polygons = []
-			for (var p=0; p<wkt.components.length;p++) {
-				var points = wkt.components[p].map(function(xy) {
+
+			if (wkt.components[0].length) {
+				for (var p=0; p<wkt.components.length;p++) {
+					var points = wkt.components[p].map(function(xy) {
+						var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+						return [latLng.lng, latLng.lat]
+					})
+					center = center.concat(points)
+					polygons.push(L.polygon(points, polygonOptions))
+				}
+			} else {
+				var points = wkt.components.map(function(xy) {
 					var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
 					return [latLng.lng, latLng.lat]
 				})
 				center = center.concat(points)
-				polygons.push(
-					L.polygon(points, {
-						fillColor: '#00FF00',
-						color: '#FFFF00'
-					})
-				)
+				polygons.push(L.polygon(points, polygonOptions))
 			}
 			var layer = L.layerGroup(polygons).addTo(map),
 					center = L.polygon(center);
+
 			layer.__center = center.getBounds().getCenter()
 			layer.__bounds = center.getBounds()
 
@@ -190,13 +182,14 @@ angular.module('dnalivApp')
 
 			hotspotPolygon = []
 			lokalitet.Spot.forEach(function(spot) {
-				console.log(spot)
 				hotspotPolygon.push([parseFloat(spot.latitude), parseFloat(spot.longitude)])
 			})
 
 			hotspotPolygon = L.polygon(hotspotPolygon, {
-				fillColor: '#FFFF00',
-				color: '#FFFF00'
+				fillColor: '#00FF00',
+				color: '#00FF00',
+				weight: 3,
+				fillOpacity: 0.6
 			}).addTo(map)
 		}
 
@@ -234,20 +227,26 @@ angular.module('dnalivApp')
 				},
 				afterSelect: function(item) {
 					Utils.mergeObj($scope.__lokalitet, item);
-					lokalitetPolygon = geometryWktPolygon(item.geometryWkt)
-					var center = geometryWktLatLng(item.geometryWkt)
-					$timeout(function() {
-						var center = lokalitetPolygon.__center
-						console.log(center)
-						map.fitBounds(lokalitetPolygon.__bounds, { maxZoom: 20 } )
-						map.setView(center)
-						$scope.setLokalitetLatLng(center) 
-						createLokalitetPopup(item) 
+					if (lokalitetPolygon) map.removeLayer(lokalitetPolygon)
 
-						$timeout(function() {
-							map.invalidateSize()
+					if (item.geometryWkt == '') {
+						Alert.show($scope, 'Der er ingen geodata knyttet til '+item.presentationString).then(function() {
+
 						})
-					}, 100)
+					} else {
+						lokalitetPolygon = geometryWktPolygon(item.geometryWkt)
+						var center = geometryWktLatLng(item.geometryWkt)
+						$timeout(function() {
+							var center = lokalitetPolygon.__center
+							map.fitBounds(lokalitetPolygon.__bounds, { maxZoom: 20 } )
+							map.setView(center)
+							$scope.setLokalitetLatLng(center) 
+							createLokalitetPopup(item) 
+							$timeout(function() {
+								map.invalidateSize()
+							})
+						}, 100)
+					}
 				}, 
 				items : 20,
 			  source: function(query, process) {
@@ -318,7 +317,6 @@ angular.module('dnalivApp')
 
 			//var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMTS&Layer=dtk_skaermkort&style=default&format=image/jpeg&TileMatrixSet=View1&TileMatrix={zoom}&TileRow={y}&TileCol={x}'+Utils.aePass, {
 			var skaermKort = L.tileLayer('http://{s}.services.kortforsyningen.dk/topo_skaermkort?request=GetTile&version=1.0.0&service=WMS&Layer=dtk_skaermkort&style=default&format=image/jpeg'+Utils.aePass, {
-				/*
 				attribution: 'Geodatastyrelsen',
 				useCrs : true,
 	  	  zoom: function() {
@@ -328,24 +326,6 @@ angular.module('dnalivApp')
 	  	    else
 	  	      return 'L' + zoom;
 			   }
-				*/
-				name: "DK 4cm kort",
-				type: 'wms',
-				visible: true,
-				url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-				layerOptions: {
-					layers: "topo25_klassisk",
-					servicename: "topo25",
-					version: "1.1.1",
-					request: "GetMap",
-					format: "image/jpeg",
-					service: "WMS",
-					styles: "default",
-					exceptions: "application/vnd.ogc.se_inimage",
-					jpegquality: "80",
-					attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste"
-				}
-				//ticket: ticket
 			}) 
 
 			var OpenStreetMap =  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -444,11 +424,9 @@ angular.module('dnalivApp')
 			})
 
 			map.on('baselayerchange', function(e) {
-				//console.log(e.layer.options)
 			})
 
 			map.on('zoomend', function(e) {
-				//console.log('zoom', e.target.zoom)
 			})
 
 			lokalitetMarker = L.marker(center, {
@@ -507,7 +485,6 @@ angular.module('dnalivApp')
 			$scope.showHotspotMarkers = function() {
 				if (!hotspotMarkers) return
 				if ($scope.__lokalitet.showHotspotMarkers) {
-					//map.addLayer(hotspotMarkers)
 					hotspotMarkers.addTo(map)
 				} else {
 					map.removeLayer(hotspotMarkers)
@@ -537,20 +514,9 @@ angular.module('dnalivApp')
 				}
 			}
 
-		/*
-		$scope.$watch('__lokalitet.edited', function(newVal, oldVal) {
-			if (newVal) {
-				var popover = $popover(angular.element('#updateLokalitetBtn'), {
-					content: 'Klik på kortet for at oprette nyt hotspot', 
-							trigger: 'manual',
-							placement: 'right'
-						})
-			*/
-
 			$scope.$watchGroup(['__lokalitet.latitude', '__lokalitet.longitude'], function(newVal, oldVal) {
 				if (JSON.stringify(newVal) != JSON.stringify(oldVal)) {
 					var ll = L.latLng(newVal[0], newVal[1])
-					//console.log('ll', ll)
 					lokalitetMarker.setLatLng(ll)
 					map.setView(ll);
 					$scope.__lokalitet.edited = true
@@ -605,17 +571,15 @@ angular.module('dnalivApp')
 				modal = null;
 
 		return {
-			
+	
+			defaultLokalitet : angular.copy(defaultLokalitet),
+
 			show: function($scope, lokalitet_id) {
-
 				var modalName = 'lokalitetModal'
-
 				__$scope = $scope
 				//set default lokalitet upon loading
 				$scope.__lokalitet = defaultLokalitet
-
 				deferred = $q.defer()
-
 				modal = $modal({
 					scope: $scope,
 					templateUrl: 'app/lokalitet/lokalitet.modal.html',

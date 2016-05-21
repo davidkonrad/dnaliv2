@@ -276,7 +276,16 @@ angular.module('dnalivApp')
 		$scope.createProeve = function() {
 			ProeveNr.create($scope).then(function(newProeveNr) {	
 				if (newProeveNr) {
-					Proeve.save({ proeve_id: '' }, { proeve_nr: newProeveNr }).$promise.then(function(proeve) {	
+					Proeve.save({ proeve_id: '' }, { proeve_nr: newProeveNr }).$promise.then(function(proeve) {
+						//create Lokalitet for proeve
+						var lokalitet = LokalitetModal.defaultLokalitet
+						lokalitet.presentationString = 'Lok. for prøve '+newProeveNr
+						Lokalitet.save({ lokalitet_id: '' }, lokalitet).$promise.then(function(newLokalitet) {
+							Proeve.update({ id: proeve.proeve_id }, { lokalitet_id: newLokalitet.lokalitet_id }).$promise.then(function() {
+								//update with new id
+								$scope.proeve.lokalitet_id = newLokalitet.lokalitet_id
+							})
+						})
 						$scope.newProeveNr = newProeveNr
 						$scope.loadData()
 						$timeout(function() {
