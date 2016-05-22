@@ -47,11 +47,14 @@ table.dataTable tbody td {
 	font-size: 200%;
 }
 
+
+table.overview-taxon {
+	width: 99% !important;
+}
 table.overview-taxon th {
 	padding-left: 0px !important;
 	border-right: 10px !important;
 }
-
 table.overview-taxon th.right {
 	text-align: right !important;
 	padding-right: 30px !important;

@@ -19,15 +19,15 @@
 			<thead>
 				<tr>
 					<th> Undersøgte arter </th>
-					<th class="right"> Replikat </th>
+					<th class="right"> Replikater </th>
 					<th class="right"> Fundne </th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="taxon in replikater | orderObjectBy:'taxon_prioritet':true ">
-					<td> {{ taxon.taxon_navn_dk }} </td>
-					<td class="right"> {{ taxon.count }} &nbsp;</td>
-					<td class="right"> {{ taxon.found }} &nbsp;</td>
+					<td> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
+					<td class="right"> {{ taxon.count }} &nbsp;&nbsp;</td>
+					<td class="right"> {{ taxon.found }} &nbsp;&nbsp;</td>
 				</tr>
 			</tbody>
 		</table>
