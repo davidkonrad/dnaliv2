@@ -1,17 +1,42 @@
-<div class="container">
+<div class="container" style="width: 1200px !important;">
 
-	<div class="col-sm-6">
-		<leaflet center="center" defaults="defaults" layers="layers" width="100%" height="480px"></leaflet>
+	<div class="col-sm-4">
+		<span class="overview-left">Bookings</span>
+		<span class="overview-right">{{ bookingCount }}</span>
+
+		<span class="overview-left">Prøver</span>
+		<span class="overview-right">{{ proeveCount }}</span>
+
+		<span class="overview-left">Resultater</span>
+		<span class="overview-right">{{ resultatCount }}</span>
+
+		<span class="overview-left">Replikater</span>
+		<span class="overview-right">{{ replikatCount }}</span>
+
+		<hr style="margin-top:20px !important;clear:both;display:block;background-color: #ccc;">
+
+		<table class="overview-taxon">
+			<thead>
+				<tr>
+					<th> Undersøgte arter </th>
+					<th class="right"> Replikat </th>
+					<th class="right"> Fundne </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="taxon in replikater | orderObjectBy:'taxon_prioritet':true ">
+					<td> {{ taxon.taxon_navn_dk }} </td>
+					<td class="right"> {{ taxon.count }} &nbsp;</td>
+					<td class="right"> {{ taxon.found }} &nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<div class="col-sm-8">
+		<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" width="100%" height="550px" style="border:1px solid #ccc;"></leaflet>
 	</div>
 
-<!--
-<leaflet lf-center="center" height="480px" width="640px"></leaflet>
--->
-
-<!--
-	<button type	="button" ng-click="test()">lokalitet</button>
--->
-	<table id="example" dt-options="dtOptions" dt-columns="dtColumns"></table>
 
 </div>
 

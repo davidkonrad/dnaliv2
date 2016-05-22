@@ -35,3 +35,29 @@ table.dataTable tbody td {
 	cursor: pointer;
 }
 
+.overview-left {
+	display: inline-block;
+	float: left;
+	clear: left;
+	font-size: 200%;
+}
+.overview-right {
+	display: inline-block;
+	float: right;
+	font-size: 200%;
+}
+
+table.overview-taxon th {
+	padding-left: 0px !important;
+	border-right: 10px !important;
+}
+
+table.overview-taxon th.right {
+	text-align: right !important;
+	padding-right: 30px !important;
+}
+table.overview-taxon td.right {
+	text-align: right !important;
+	padding-right: 30px !important;
+
+}

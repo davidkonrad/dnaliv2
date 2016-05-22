@@ -36,9 +36,6 @@ exports.create = function(req, res) {
 
 // Updates an existing booking in the DB.
 exports.update = function(req, res) {
-/*
-  models.Booking.find(req.params.id).then(function(booking){
-*/
   models.Booking.find({ where : { booking_id: req.params.id }} ).then(function(booking) {
 		if(!booking) { return res.send(404); }  
 	  return booking.updateAttributes(req.body);	  	

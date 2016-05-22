@@ -1,18 +1,110 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', '$compile', 'TicketService', 'Geo', 'Utils', 'Booking', '$timeout', '$modal', 'LokalitetModal', 'Lokalitet_spot',
+  .controller('MainCtrl', ['$scope', '$compile', 'TicketService', 'Lokalitet', 'Proeve', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
 						'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function($scope, $compile, TicketService, Geo, Utils, Booking, $timeout, $modal, LokalitetModal, Lokalitet_spot,
+	 function($scope, $compile, TicketService, Lokalitet, Proeve, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		var icon = {
+			iconUrl: 'app/main/Circle_Red.png',
+			iconAnchor: [0,0], 
+			popupAnchor: [0,0] 
+		}
+
+		$scope.getTaxon = function(taxon_id) {
+			for (var i=0; i<$scope.taxons.length; i++) {
+				if ($scope.taxons[i].taxon_id == taxon_id) {
+					return $scope.taxons[i]
+				}
+			}
+		}
+
+		Taxon.query().$promise.then(function(taxons) {
+			$scope.taxons = taxons
+
+			Resultat_item.query().$promise.then(function(resultat_items) {
+				$scope.replikatCount = resultat_items.length
+
+				var replikater = [] 
+				function processReplikat(item) {
+					for (var i=0; i<replikater.length; i++) {
+						if (replikater[i].taxon_id == item.taxon_id) {
+							replikater[i].count++
+							if (item.database_result) replikater[i].found++
+							return true
+						}
+					}
+					var taxon = $scope.getTaxon(item.taxon_id)
+					replikater.push({
+						count: 1,
+						found: item.database_result ? 1 : 0,
+						taxon_id: item.taxon_id,
+						taxon_navn: taxon.taxon_navn,
+						taxon_navn_dk : taxon.taxon_navn_dk,
+						taxon_prioritet: taxon.taxon_prioritet
+					})
+				}				
+
+				resultat_items.forEach(function(item) {
+					processReplikat(item)
+				})
+
+				$scope.replikater = replikater
+			})
+		})
+
+		Resultat.query().$promise.then(function(resultater) {
+			$scope.resultatCount = resultater.length
+		})
+
+		Booking.query().$promise.then(function(bookings) {
+			$scope.bookingCount = bookings.length
+		})
+
+		Proeve.query().$promise.then(function(proever) {
+			$scope.proeveCount = proever.length
+		})
+
+		Lokalitet.query().$promise.then(function(lokaliteter) {
+			$scope.markers = []
+			lokaliteter.forEach(function(lokalitet) {
+				var lat = parseFloat(lokalitet.latitude),
+						lng = parseFloat(lokalitet.longitude)
+				if (lat && lng) {
+					$scope.markers.push({ 
+						lat: lat, 
+						lng: lng,
+            message: lokalitet.presentationString,
+						icon: icon
+ 					})
+				}
+			})
+		})
+
+		$scope.mapClick = function() {
+			//console.log(arguments)
+		}
+
+		$scope.$on('leafletDirectiveMap.click', function(e, arg){
+			//console.log(arg.leafletEvent.latlng)
+    });
 
 		angular.extend($scope, {
 			center: {
-				lat: 55.685255690177826, 
-				lng: 12.572981195446564,
+				lat: 56.126627523318206,
+				lng: 11.457741782069204,
 				zoom: 7
+			}
+		})
+
+		angular.extend($scope, {
+			events: {
+				map: {
+					enable: ['zoomstart', 'drag', 'click', 'mousemove'],
+					logic: 'emit'
+				}
 			}
 		})
 
@@ -26,7 +118,7 @@ angular.module('dnalivApp')
 					opacity: 1
 				}
 			}
-		});
+		})
 
 		angular.extend($scope, {
 			layers: {
