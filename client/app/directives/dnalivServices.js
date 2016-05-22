@@ -144,6 +144,16 @@ angular.module('dnalivApp')
 											],
 			aePass: "&login=davidkonrad&password=nhmdzm",
 
+			aeGetTicket: function() {
+				//http://services.kortforsyningen.dk/service?service=META&request=GetTicket&login=xxxx&password=yyyy
+				$.ajax({
+					url: 'http://services.kortforsyningen.dk/service?service=META&request=GetTicket'+this.aePass,
+					success: function(response) {
+						console.log(response)
+					}
+				})
+			},
+
 			//kommentar_type hardcoded
 			KOMMENTAR_TYPE : {
 				BOOKING: 1,
