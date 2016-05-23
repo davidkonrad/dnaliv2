@@ -46,7 +46,7 @@ class Convert extends Db {
 				$klassetrin = isset($kf[0]) ? $kf[0] : false;
 				$fag = isset($kf[1]) ? $kf[1] : false;
 
-				$SQL='insert into booking_klasse (booking_id, status, adresse, postnr, `by`, kommune, region, institutionsnavn, laererNavn, '.
+				$SQL='insert into klasse (booking_id, status, adresse, postnr, `by`, kommune, region, institutionsnavn, laererNavn, '.
 								'laererTlf, laererEmail, antalElever, antalLaerer, fag, klassetrin, DatoForBesoeg, DatoForBooking, DatoForEkst, '.
 								'SendtInfoMailTilLaerer, UdtraekFraFiskedatabasen) values('. 
 
@@ -74,12 +74,11 @@ class Convert extends Db {
 				')';
 
 				echo '<br>'.$SQL.'<br>';
-				$this->exec($SQL);
-			
-				$klasseId = mysql_insert_id();
+				$klasseId = $this->insertQuery($SQL);
 
 				//insert lokalitet
-				$SQL='insert into klasse_lokalitet (klasse_id, booking_id, navn, X_GPS, Y_GPS, latitude, longitude) values('.
+				/*
+				$SQL='insert into lokalitet (klasse_id, booking_id, navn, X_GPS, Y_GPS, latitude, longitude) values('.
 					$this->q($bookingId) .
 					$this->q($klasseId) .
 					$this->q($array['Lokalitet']) .
@@ -88,27 +87,37 @@ class Convert extends Db {
 					$this->q($array['Latitude']) .
 					$this->q($array['Longitude'], false) .
 				')';
+				*/
 
-				echo '<br>'.$SQL.'<br>';
-				$this->exec($SQL);
+				$SQL='insert into lokalitet (presentationString, X_GPS, latitude, longitude) values('.
+					$this->q($array['Lokalitet']) .
+					$this->q('KLASSE') .
+					$this->q($array['Latitude']) .
+					$this->q($array['Longitude'], false) .
+				')';
+	
+				$lokalitet_id = $this->insertQuery($SQL);
+
+				//update klasse with lokalitet_id
+				$SQL='update klasse set lokalitet_id='.$lokalitet_id.' where klasse_id='.$klasseId;
+				$this->exec($SQL);			
 
 				//insert kommentar
 				if ($array['Kommentarer'] != '') {
-					$SQL='insert into klasse_kommentar (klasse_id, kommentar) values('.
+					$SQL='insert into kommentar (type_id, relation_id, kommentar, created_userName) values('.
+						$this->q('2') .  ////2 = kommentar_type klasse
 						$this->q($klasseId) .
-						$this->q($array['Kommentarer'], false) .
+						$this->q($array['Kommentarer']) .
+						$this->q('{ Excel }', false) .
 					')';
 					$this->exec($SQL);
 				}
-	
-				//$this->records[]=$array;
-				$count++;
 			}
 		}
 	}
 
 	private function statusToNum($status) {
-		switch ($status) {
+		switch (trim($status)) {
 			case 'Bekræftet' :
 					return 1; break;
 			case 'Aflyst' :
@@ -127,18 +136,23 @@ class Convert extends Db {
 
 	private function emptyTables() {
 		$this->resetTable('booking');
-		$this->resetTable('booking_klasse');
-		$this->resetTable('booking_taxon');
-		$this->resetTable('klasse_lokalitet');
-		$this->resetTable('klasse_kommentar');
+		$this->resetTable('klasse');
+
+		$SQL='delete from kommentar where type_id = 2'; //2 = kommentar_type klasse
+		$this->exec($SQL);
+
+		$SQL='delete from lokalitet where X_GPS = "KLASSE"'; 
+		$this->exec($SQL);
+
 	}
 
 	private function getBookingId($record) {
 		$SQL='select * from booking where sagsNo = "'.$record['SagsNo'].'"';
 		$id = $this->getValue($SQL);
 		if (!$id) {
-			$SQL='insert into booking (sagsNo, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
+			$SQL='insert into booking (sagsNo, status, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
 				$this->q($record['SagsNo']) .
+				$this->q($this->statusToNum($record['Status'])) .
 				$this->q($record['DatoForBookning']) .
 				$this->q($record['DatoForBesoeg']) .
 				$this->q($record['Aar_periode']) .

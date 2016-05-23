@@ -98,8 +98,13 @@ module.exports = function(sequelize, DataTypes) {
   }, {
 		tableName: 'klasse',
 		timestamps: false,
-		freezeTableName: true
-			
+		freezeTableName: true,
+		classMethods: {
+      associate: function(models) {
+        models.Proeve.hasOne(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
+			}
+		}
+		
 	});
 
 	return Klasse;

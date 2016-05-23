@@ -4,8 +4,12 @@ var models = require('../');
 
 // Get list of klasses
 exports.index = function(req, res) {
-
-models.Klasse.findAll().then(function(klasse){
+  models.Klasse.findAll({ 
+		include: [{ 
+			model: models.Lokalitet,
+			as: 'Lokalitet'
+		}]
+	}).then(function(klasse){
   	return res.json(200, klasse);	
   }).catch(function(err){
 	  handleError(res, err);
@@ -14,7 +18,10 @@ models.Klasse.findAll().then(function(klasse){
 
 // Get a single klasse
 exports.show = function(req, res) {
-  models.Klasse.find(req.params.id).then(function(klasse){
+  models.Klasse.find({ where : { klasse_id: req.params.id }, include: [{ 
+		model: models.Lokalitet,
+		as: 'Lokalitet'
+	}]}).then(function(klasse){
   	return res.json(200, klasse);	
   }).catch(function(err){
 	  handleError(res, err);

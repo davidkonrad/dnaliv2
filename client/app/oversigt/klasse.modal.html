@@ -24,6 +24,13 @@
 				    <input type="text" id="DatoForBesoeg" ng-model="klasse.DatoForBesoeg" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
 				  </div>
 
+						<div class="input-group">
+						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="klasse.Lokalitet.presentationString" placeholder="Lokalitet" readonly style="background-color:#fff;" />
+						  <span class="input-group-btn">
+								<button role="button" class="btn btn-primary btn-sm" ng-click="showKlasseLokalitet(klasse.Lokalitet.lokalitet_id)"><i class="fa fa-edit"></i></button>
+							</span>
+						</div>
+
 					<div class="rule"></div>
 
 					<div class="form-group">
@@ -61,12 +68,15 @@
 					<div class="form-group">
 				    <label for="laererNavn" class="normal">Lærers navn</label>
 				    <input type="text" class="form-control input-sm bold" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
+
 						&nbsp;&nbsp;
 				    <label for="laererTlf" class="normal">Tlf.</label>
 				    <input type="text" class="form-control input-sm bold" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
+
 						&nbsp;&nbsp;
 				    <label for="laererEmail" class="normal">Email</label>
 				    <input type="email" class="form-control input-sm bold" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
+
 					</div>
 
 					<div class="rule"></div>
@@ -94,6 +104,20 @@
 				    <input type="number" ng-model="klasse.antalLaerer" class="form-control input-sm bold" id="antalLaerer" placeholder="0">
 					</div>
 
+					<div class="rule"></div>
+
+				  <div class="form-group" style="width:50%;">
+						<button type="button" class="btn btn-primary btn-xs" ng-click="addKlasseKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
+						<table class="table-striped">
+							<tr ng-repeat="k in klasse.kommentarer" class="info">
+								<td><span style="color:red;cursor:pointer;" ng-click="removeKlasseKommentar(k.kommentar_id)">×</span>&nbsp;</td>
+								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}" style="white-space:normal !important;"> 
+									{{ k.kommentar }} 
+								</td>
+							</tr>
+						</table>
+					</div>
+
 				</form>
 		
 			</div>
@@ -105,6 +129,7 @@
 				<button type="button" class="btn btn-primary" ng-disabled="!klasseIsEdited()" ng-click="saveKlasse()"></i>Gem</button> 
 				<button type="button" class="btn btn-default" ng-click="$hide()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>
+
 		</div>
 	</div>
 </div>

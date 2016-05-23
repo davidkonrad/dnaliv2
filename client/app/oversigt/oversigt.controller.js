@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
-			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert',
+  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal',
 
-	function ($scope, $compile, $location, Utils, Geo, Booking, Klasse, Lokalitet, 
-						Fag, Klassetrin, Resultat, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
-						$modal, $timeout, $datepicker, SagsNo, Alert) {
+	function ($scope, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
+						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
+						$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal) {
 
 
 		$scope.statusOptions = [
@@ -16,12 +16,6 @@ angular.module('dnalivApp')
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
 
-		Klasse.query().$promise.then(function(klasser) {	
-			$scope.klasser = klasser.map(function(klasse) {
-				return klasse
-			})
-		})
-	
 		/**
 			format and adds klasser, laerer etc attributes to the booking item
 		*/
@@ -204,8 +198,6 @@ angular.module('dnalivApp')
 			$scope.bookings.forEach(function(booking) {
 				if (booking.booking_id == booking_id) {
 					$scope.booking = booking
-					//$scope.setBookingKlasser(booking.booking_id)
-					//$scope.setBookingLokalitet(booking.lokalitet_id)
 					return
 				}
 			})
@@ -218,16 +210,6 @@ angular.module('dnalivApp')
 			$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
 		}
 			
-		$scope.setBookingKlasser = function(booking_id) {
-			$scope.bookingKlasser = []
-			$scope.klasser.forEach(function(klasse) {	
-				if (klasse.booking_id == booking_id) {
-					klasse.edited = false
-					$scope.bookingKlasser.push(klasse)
-				}
-			})
-		}
-
 		$scope.showBooking = function(booking_id) {
 			$scope.setBooking(booking_id)
 			$scope.bookingModal = $modal({
@@ -236,7 +218,6 @@ angular.module('dnalivApp')
 				backdrop: 'static',
 				show: true
 			})
-			//$location.path('bookings/'+sagsNo)
 		}
 		$scope.resetBooking = function() {
 			$scope.booking = {}
@@ -260,7 +241,6 @@ angular.module('dnalivApp')
 			if (newVal == oldVal || oldVal == undefined) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBesoeg: $scope.booking.DatoForBesoeg }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBesoeg_fixed = Utils.fixDate($scope.booking.DatoForBesoeg)
-				//$scope.bookingInstance.rerender()
 			})
 		})
 
@@ -268,7 +248,6 @@ angular.module('dnalivApp')
 			if (newVal == oldVal || oldVal == undefined) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBooking: $scope.booking.DatoForBooking }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
-				//$scope.bookingInstance.rerender()
 			})
 		})
 
@@ -276,26 +255,55 @@ angular.module('dnalivApp')
 			klasser
 		**/
 		$scope.setKlasse = function(klasse_id) {
-			/*
-			$scope.klasser.forEach(function(klasse) {
-				if (klasse.klasse_id == klasse_id) {
-					$scope.klasse = klasse
-					//$scope.setKlasseLokalitet()
-				}
-			})
-			*/
 			$scope.booking.Klasse.forEach(function(klasse) {
 				if (klasse.klasse_id == klasse_id) {
 					$scope.klasse = klasse
-					//$scope.setKlasseLokalitet()
 				}
+				Lokalitet.get({ id: klasse.lokalitet_id }).$promise.then(function(lokalitet) {
+					$scope.klasse.Lokalitet = lokalitet
+				})
 			})
-			
 		}
 
 		$scope.createKlasse = function() {
 			Klasse.save({ klasse_id: '' }, { booking_id : $scope.booking.booking_id, institutionsnavn: 'ikke sat' }).$promise.then(function(klasse) {	
 				$scope.booking.Klasse.push(klasse)
+			})
+		}
+
+		$scope.loadKlasseKommentarer = function(klasse_id) {
+			Kommentar.query( { where: { relation_id: klasse_id, type_id: Utils.KOMMENTAR_TYPE.KLASSE }} ).$promise.then(function(kommentarer) {	
+				$scope.klasse.kommentarer = kommentarer
+			})
+		}
+
+		$scope.addKlasseKommentar = function() {
+			KommentarModal.show($scope).then(function(kommentar) {	
+				var kommentar = {
+					kommentar: kommentar,
+					type_id: Utils.KOMMENTAR_TYPE.KLASSE,
+					relation_id: $scope.klasse.klasse_id,
+					created_userName: Auth.getCurrentUser().name
+				}
+				Kommentar.save(kommentar).$promise.then(function() {	
+					$scope.loadKlasseKommentarer($scope.klasse.klasse_id)
+				})
+			})
+		}	
+
+		$scope.removeKlasseKommentar = function(kommentar_id) {
+			Alert.show($scope,'Slet notat', 'Slet note / kommentar - er du sikker?').then(function(confirm) {
+				if (confirm) {
+					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
+						$scope.loadKlasseKommentarer($scope.klasse.klasse_id)
+					})
+				}
+			})
+		}
+
+		$scope.showKlasseLokalitet = function(lokalitet_id) {
+			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
+				console.log(success)
 			})
 		}
 
@@ -314,6 +322,7 @@ angular.module('dnalivApp')
 	
 		$scope.showKlasse = function(klasse_id) {
 			$scope.setKlasse(klasse_id)
+			$scope.loadKlasseKommentarer(klasse_id)
 			$scope.klasseModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/oversigt/klasse.modal.html',

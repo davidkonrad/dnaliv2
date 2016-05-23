@@ -151,10 +151,10 @@ class ConvertProeve extends Db {
 	}
 
 	public function emptyTables() {
-		$this->resetTable('proeve');
-		$this->resetTable('lokalitet');
-		$this->resetTable('lokalitet_spot');
-		$this->resetKommentarer();
+		//$this->resetTable('proeve');
+		//$this->resetTable('lokalitet');
+		//$this->resetTable('lokalitet_spot');
+		//$this->resetKommentarer();
 	}
 
 				
