@@ -8,7 +8,7 @@ angular.module('dnalivApp')
 				modal = null;
 
 		return {
-			show: function($scope, title, desc) {
+			show: function($scope, title, desc, value) {
 
 				$scope.__inputModal = {
 					title: title ? title : 'Input',
@@ -25,6 +25,7 @@ angular.module('dnalivApp')
 
 				modal.$promise.then(modal.show).then(function() {
 					input = angular.element('#input')
+					if (value) input.val(value)
 					$timeout(function() {
 						input.focus()
 					}, 50)

@@ -49,21 +49,17 @@ exports.update = function(req, res) {
 
 // Deletes a booking from the DB.
 exports.destroy = function(req, res) {
-	models.Booking.find(req.params.id).then(function(booking){
-		if(!booking) { return res.send(404); }
-		return booking.destroy()
+  models.Booking.destroy({ where : { booking_id: req.params.id }} ).then(function(booking){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe booking
 exports.describe = function(req, res) {
   models.Booking.describe().then(function(booking){
-	  //console.log(booking);
   	return res.json(200, booking);	
   }).catch(function(err){
 	  handleError(res, err);

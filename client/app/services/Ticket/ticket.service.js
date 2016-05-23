@@ -14,7 +14,7 @@ angular.module('dnalivApp')
 						ticket = newTicket
 						var expireDate = new Date()
 						expireDate.setDate(expireDate.getDate() + 1);
-						$cookies.put(cookieName, ticket, { expires: expireDate} )
+						$cookies.put(cookieName, ticket, { expires: expireDate } )
 						return ticket
 					})
 				} else {

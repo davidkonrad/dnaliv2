@@ -72,6 +72,20 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.deleteBooking = function() {
+			Alert.show($scope, 'Slet Booking?', 'Er du sikker på du slette booking <b>'+$scope.booking.sagsNo+'</b> samt evt. tilknyttede institutioner?').then(function(confirm) {	
+				if (confirm) {
+					$scope.booking.Klasse.forEach(function(klasse) {
+						Klasse.delete({ id: klasse.klasse_id })
+					})
+					Booking.delete({ id: $scope.booking.booking_id }).$promise.then(function() {
+						$scope.bookingModal.hide()
+						$scope.reloadData()
+					})
+				}
+			})
+		}
+
 		$scope.changeSagsNo = function() {
 			SagsNo.change($scope, $scope.booking.sagsNo).then(function(sagsNo) {
 				if (sagsNo) {
@@ -216,7 +230,7 @@ angular.module('dnalivApp')
 
 		$scope.showBooking = function(booking_id) {
 			$scope.setBooking(booking_id)
-			$modal({
+			$scope.bookingModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/oversigt/booking.modal.html',
 				backdrop: 'static',

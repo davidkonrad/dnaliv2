@@ -57,3 +57,10 @@ input.sm-pad {
 	color: #000 !important;
 }
 
+/*****/
+h5 {
+	overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+}
+
+

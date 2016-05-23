@@ -92,7 +92,7 @@
 			
 			<div class="modal-footer">
 				<span style="float:left;">
-					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp}}">
+					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp | date }}">
 						Slet Prøve
 					</button> 
 				</span>

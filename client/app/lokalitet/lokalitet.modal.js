@@ -18,9 +18,10 @@ angular.module('dnalivApp')
 		var defaultLokalitet = {
 			edited: false, //main locality changed
 			locked: false,
+			hasHotspots: false,
 			hotspotsLocked: false,
 			showMarker: true,
-			showPopup: false,
+			//showPopup: false,
 			showHotspotMarkers: false,
 			showHotspotPopups: false,
 			showHotspotPolygon: true,
@@ -37,8 +38,7 @@ angular.module('dnalivApp')
 			skrivemaader_uofficiel: ''
 		};
 
-		var __$scope = null,
-				map = null,
+		var map = null,
 				hotspotPopover = null,
 				updatePopover = null,
 				isCreating = false,
@@ -96,27 +96,46 @@ angular.module('dnalivApp')
 		}
 
 		//bad bad bad :(
-		$(document).on('click', '.spot-delete', function() {
-			var lokalitet_spot_id = $(this).attr('spot-id')
-			if (!lokalitet_spot_id) return
-			Alert.show(__$scope, 'Slet hotspot', 'Slet hotspot - er du sikker?').then(function(confirm) {
-				if (confirm) {
-					/*
-					Lokalitet_spot.delete({ id: lokalitet_spot_id }).$promise.then(function() {
-					})
-					*/
-				}
+		function initializeHotspotEvents($scope) {
+
+			$(document).on('click', '.spot-delete', function() {
+				var lokalitet_spot_id = $(this).attr('spot-id')
+				if (!lokalitet_spot_id) return
+					Alert.show($scope, 'Slet hotspot', 'Slet hotspot - er du sikker?').then(function(confirm) {
+						if (confirm) {
+						Lokalitet_spot.delete({ id: lokalitet_spot_id }).$promise.then(function() {
+							Lokalitet.get({ id: $scope.__lokalitet.lokalitet_id }).$promise.then(function(lokalitet) {
+								setLokalitet($scope, lokalitet)	
+							})
+						})
+					}
+				})
 			})
-		})
+
+			$(document).on('click', '.spot-edit', function() {
+				var lokalitet_spot_id = $(this).attr('spot-id'),
+						beskrivelse = unescape($(this).attr('spot-beskrivelse'));
+
+				InputModal.show($scope,'Rediger', ' Ny beskrivelse', beskrivelse).then(function(result) {	
+					if (result) {
+						Lokalitet_spot.update({ id: lokalitet_spot_id }, { beskrivelse: result }).$promise.then(function() {
+							Lokalitet.get({ id: $scope.__lokalitet.lokalitet_id }).$promise.then(function(lokalitet) {
+								setLokalitet($scope, lokalitet)	
+							})
+						})
+					}
+				})
+			})					
+		}
 
 		function createHotspotMarkers($scope, lokalitet) {
 
 			var getPopupContent = function(spot) {
-				var content = '<h5>' + spot.kommentar + '</h5>'
+				var content = '<h5>' + spot.beskrivelse + '</h5>'
 				content += '<hr>'
 				content += '<button class="btn btn-danger btn-xs spot-delete" spot-id="'+spot.lokalitet_spot_id+'" style="font-size:90%;" title="Fjern"><i class="fa fa-remove"></i></button>'
 				content += '&nbsp;&nbsp;'
-				content += '<button class="btn btn-primary btn-xs spot-edit"><i class="fa fa-edit" title="Rediger"></i></button>'
+				content += '<button class="btn btn-primary btn-xs spot-edit" spot-id="'+spot.lokalitet_spot_id+'" spot-beskrivelse="'+escape(spot.beskrivelse)+'"><i class="fa fa-edit" title="Rediger"></i></button>'
 				return content
 			}
 
@@ -197,12 +216,26 @@ angular.module('dnalivApp')
 			var obj = angular.copy(defaultLokalitet)
 			Utils.mergeObj(obj, lokalitet)
 
+			//preserve current settings
+			if ($scope.__lokalitet) {
+				obj.locked = $scope.__lokalitet.locked
+				obj.hotspotsLocked = $scope.__lokalitet.hotspotsLocked
+				obj.showMarker = $scope.__lokalitet.showMarker
+				obj.showHotspotMarkers = $scope.__lokalitet.showHotspotMarkers
+				obj.showHotspotPopups = $scope.__lokalitet.showHotspotPopups
+				obj.showHotspotPolygon = $scope.__lokalitet.showHotspotPolygon
+			}
+						
 			//ensure valid lat, lng
 			if (!obj.latitude || !obj.longitude) {
 				obj.latitude = BM.lat
 				obj.longitude = BM.lng
 			}
+
+			obj.hasHotspots = obj.Spot.length > 0
+
 			$scope.__lokalitet = obj
+		
 			if (lokalitet.geometryWkt && lokalitet.geometryWkt != '') {
 				lokalitetPolygon = geometryWktPolygon(lokalitet.geometryWkt)
 			}	
@@ -454,15 +487,6 @@ angular.module('dnalivApp')
 				}
 			}
 
-			$scope.showPopup = function() {
-				if ($scope.__lokalitet.showPopup) {
-					closePopup
-					map.closePopuplokalitetPopup.show()
-				} else {
-					lokalitetPopup.hide()
-				}
-			}
-
 			$scope.createHotspot = function() {
 				$scope.__isCreatingHotSpot = true
 				hotspotPopover.show()
@@ -505,7 +529,6 @@ angular.module('dnalivApp')
 			}
 
 			$scope.showHotspotPolygon = function() {
-				//console.log('showHotspotpolygon')
 				if ($scope.__lokalitet.showHotspotPolygon) {
 					createHotspotPolygon($scope, $scope.__lokalitet)
 				} else {
@@ -515,10 +538,11 @@ angular.module('dnalivApp')
 			}
 
 			$scope.$watchGroup(['__lokalitet.latitude', '__lokalitet.longitude'], function(newVal, oldVal) {
-				if (JSON.stringify(newVal) != JSON.stringify(oldVal)) {
+				if (JSON.stringify(newVal) != JSON.stringify(oldVal) && lokalitetMarker != undefined) {
 					var ll = L.latLng(newVal[0], newVal[1])
+					//console.log(lokalitetMarker, ll)
 					lokalitetMarker.setLatLng(ll)
-					map.setView(ll);
+					//map.setView(ll);
 					$scope.__lokalitet.edited = true
 				}
 			})
@@ -575,8 +599,19 @@ angular.module('dnalivApp')
 			defaultLokalitet : angular.copy(defaultLokalitet),
 
 			show: function($scope, lokalitet_id) {
+
+				map = null
+				hotspotPopover = null
+				updatePopover = null
+				isCreating = false
+				lokalitetPolygon = null
+				lokalitetMarker = null
+				hotspotPopups = null
+				hotspotMarkers = null
+				hotspotPolygon = null
+
 				var modalName = 'lokalitetModal'
-				__$scope = $scope
+
 				//set default lokalitet upon loading
 				$scope.__lokalitet = defaultLokalitet
 				deferred = $q.defer()
@@ -593,12 +628,13 @@ angular.module('dnalivApp')
 					if (target.$options.internalName == modalName && !modal.initialized) {
 						initializeMap($scope)
 						initializeWetland($scope)
+						initializeHotspotEvents($scope)
 						modal.initialized = true
 
 						if (target.$options.lokalitet_id) {
 							Lokalitet.get({ id: target.$options.lokalitet_id }).$promise.then(function(lokalitet) {
-								lokalitet.locked = true //set locked to false to prevent unattended changes of the map
 								setLokalitet($scope, lokalitet)
+								$scope.__lokalitet.locked = true //set locked to false to prevent unattended changes of the map
 								$timeout(function() {
 									map.setView([$scope.__lokalitet.latitude, $scope.__lokalitet.longitude], 14, true)
 								}, 100)
@@ -618,7 +654,6 @@ angular.module('dnalivApp')
 
 				$scope.$on('modal.hide', function(e, target) {
 					if (target.internalName == 'lokalitetModal') {
-						//console.log('HIDE')
 					}
 				})
 
