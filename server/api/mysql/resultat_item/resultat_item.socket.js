@@ -4,13 +4,13 @@
 
 'use strict';
 
-var Resultat_taxon = require('./resultat_item.model');
+var Resultat_item = require('./resultat_item.model');
 
 exports.register = function(socket) {
-  Resultat_taxon.schema.post('save', function (doc) {
+  Resultat_item.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Resultat_taxon.schema.post('remove', function (doc) {
+  Resultat_item.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }

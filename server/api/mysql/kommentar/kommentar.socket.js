@@ -7,10 +7,10 @@
 var Kommentar = require('./kommentar.model');
 
 exports.register = function(socket) {
-  Resultat_taxon.schema.post('save', function (doc) {
+  Kommentar.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Resultat_taxon.schema.post('remove', function (doc) {
+  Kommentar.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }

@@ -4,7 +4,7 @@
 
 'use strict';
 
-var Resultat_taxon = require('./lokalitet_spot.model');
+var Lokalitet_spot = require('./lokalitet_spot.model');
 
 exports.register = function(socket) {
   Lokalitet_spot.schema.post('save', function (doc) {
