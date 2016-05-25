@@ -4,12 +4,10 @@ angular.module('dnalivApp')
   .controller('AdminCtrl', ['$scope', '$http', 'Taxon', function ($scope, $http, Taxon) {
 
 		$scope.dndInserted = function() {
-			console.log(arguments);
 			return false
     }
 
 		$scope.dragoverCallback = function(event, index, external, type) {
-			//console.log('drag', arguments);
 			return true
 		}
 
@@ -20,15 +18,13 @@ angular.module('dnalivApp')
 					Taxon.update({ taxon_id: taxon.taxon_id }, taxon).$promise.then(function(taxon) {	
 						$scope.reloadTaxons()
 					})
-					//console.log('drop', index, taxon)
 				}
 			})
-			//console.log('drop', event.srcElement, event.toElement, event.target );
-			//console.log('drop', arguments);
 			return item;
 		}
 
 		$scope.taxonOrderBy = 'taxon_prioritet';
+
 		$scope.taxonOrders = [
 			{ "value": "taxon_prioritet", "text": "Prioritet", "class": "btn-danger" }, 
 			{ "value": "taxon_navn_dk", "text": "Navn", "class": "btn-inverse" }, 
@@ -36,13 +32,11 @@ angular.module('dnalivApp')
 			{ "value": "!taxon_basisliste", "text": "Basisliste", "class": "btn-success" }
 		]
 
-	
 		$scope.prioritetList = [1,2,3,4,5]
 
 		$scope.reloadTaxons = function() {
 			Taxon.query().$promise.then(function(taxons) {	
 
-				/*
 				$scope.taxonsUnordered = taxons.map(function(taxon) {
 					return { 
 						taxon_id: taxon.taxon_id,
@@ -54,8 +48,8 @@ angular.module('dnalivApp')
 						edited: false
 					}
 				})
-				*/
 
+				/*
 				$scope.taxons = {};
 				taxons.forEach(function(taxon) {
 					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
@@ -69,6 +63,7 @@ angular.module('dnalivApp')
 						edited: false
 					})
 				})
+				*/
 
 			})
 		}
@@ -94,6 +89,7 @@ angular.module('dnalivApp')
 				taxon_navn: $scope.artInfo.Videnskabeligt_navn,
 				taxon_navn_dk: $scope.artInfo.Dansk_navn,
 				taxon_artsgruppe: $scope.artInfo.Artsgruppe_dk,
+				taxon_prioritet: 0, //sæt to lowest prioritet prossible
 				taxon_basisliste: 1
 			}).$promise.then(function(taxon) {	
 				$scope.reloadTaxons();

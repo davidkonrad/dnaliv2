@@ -1,6 +1,6 @@
 'use strict';
 
-console.log(process.env);
+//console.log(process.env);
 // Production specific configuration
 // =================================
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
   // Server port
   port:     process.env.OPENSHIFT_NODEJS_PORT ||
             process.env.PORT ||
-            9000,
+            80,
 
   // MongoDB connection options
   mongo: {
@@ -25,8 +25,8 @@ module.exports = {
   mysql: {
 	  host: process.env.OPENSHIFT_MYSQL_DB_HOST,
 	  port: process.env.OPENSHIFT_MYSQL_DB_PORT,
-	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
+	  username: process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'root',
+	  password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD || '',
 	  database: 'dnaliv'
   }
 

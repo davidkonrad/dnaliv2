@@ -207,17 +207,17 @@ angular.module('dnalivApp')
 					scope: $scope,
 					templateUrl: 'app/proeveNr/proeveNr.modal.html',
 					backdrop: 'static',
-					show: true
+					show: true,
+					internalName: 'proeveNr'
 				})
 
-				modal.$promise.then(modal.show).then(function() {
-					$timeout(function() {
+				$scope.$on('modal.show', function(e, target) {
+					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
 						$('#input').typeahead({
-							//showHintOnFocus: true,
 							source: proever,
 							displayText: function(item) {
-								//return item.proeve_nr != null ? item.proeve_nr : ''
-								return item.proeve_nr
+								//prevent crashing if proeve_nr is null
+								return item.proeve_nr != null  ? item.proeve_nr : ''
 							},
 							items: 10,
 							afterSelect: function(item) {
@@ -230,7 +230,7 @@ angular.module('dnalivApp')
 						})
 						$scope.proeveNrModal.proeve_nr = ''
 						angular.element('#input').focus()
-					}, 100)
+					}
 				})
 
 				$scope.proeveNrClose = function(success) {

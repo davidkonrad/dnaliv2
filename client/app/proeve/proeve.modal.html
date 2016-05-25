@@ -1,6 +1,3 @@
-<!--
-<div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
--->
 <div class="modal ng-scope top am-fade-and-slide-top center" tabindex="-1" role="dialog" style="display: block;" id="modal-proeve">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -92,7 +89,7 @@
 			
 			<div class="modal-footer">
 				<span style="float:left;">
-					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp | date }}">
+					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="!proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp | date }}">
 						Slet Prøve
 					</button> 
 				</span>

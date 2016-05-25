@@ -83,9 +83,8 @@ module.exports = function(sequelize, DataTypes) {
 		freezeTableName: true,
 		classMethods: {
       associate: function(models) {
-        models.Proeve.hasOne(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
+        models.Proeve.belongsTo(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
         models.Proeve.hasMany(models.Resultat, { foreignKey : 'proeve_id', as : 'Resultat' })
-
 			}
 		}
 

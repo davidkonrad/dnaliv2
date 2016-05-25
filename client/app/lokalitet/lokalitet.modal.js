@@ -5,7 +5,7 @@ angular.module('dnalivApp')
 		function($modal, $q, $timeout, $popover, Alert, InputModal, Utils, Geo, Lokalitet, Lokalitet_spot) {
 
 		var yellowIcon = L.icon({
-	    iconUrl: '/app/lokalitet/yellow.png',
+	    iconUrl: 'assets/images/yellow.png',
 			iconAnchor: [14, 41], 
 			popupAnchor: [0, -51] 
 		})
@@ -101,7 +101,7 @@ angular.module('dnalivApp')
 			$(document).on('click', '.spot-delete', function() {
 				var lokalitet_spot_id = $(this).attr('spot-id')
 				if (!lokalitet_spot_id) return
-					Alert.show($scope, 'Slet hotspot', 'Slet hotspot - er du sikker?').then(function(confirm) {
+					Alert.show($scope, 'Slet indsamlingssted', 'Slet indsamlingsstedet - er du sikker?').then(function(confirm) {
 						if (confirm) {
 						Lokalitet_spot.delete({ id: lokalitet_spot_id }).$promise.then(function() {
 							Lokalitet.get({ id: $scope.__lokalitet.lokalitet_id }).$promise.then(function(lokalitet) {
@@ -435,13 +435,13 @@ angular.module('dnalivApp')
 				if ($scope.__isCreatingHotSpot) {
 					hotspotPopover.hide()
 					$scope.__isCreatingHotSpot = false
-					InputModal.show($scope,'Opret hotspot ..', 'Navn / beskrivelse').then(function(desc) {	
-						if (desc) {
+					InputModal.show($scope,'Opret indsamlingssted ..', 'Navn / beskrivelse').then(function(beskrivelse) {	
+						if (beskrivelse) {
 							var lokalitet_spot = {
 								lokalitet_id: $scope.__lokalitet.lokalitet_id,
 								latitude: e.latlng.lat,
 								longitude: e.latlng.lng,
-								kommentar: desc
+								beskrivelse: beskrivelse
 							}
 							Lokalitet_spot.save({ lokalitet_spot_id: ''}, lokalitet_spot).$promise.then(function(ls) {
 								$scope.__lokalitet.Spot.push(ls)
@@ -554,7 +554,7 @@ angular.module('dnalivApp')
 			}		
 
 			$scope.resetLokalitet = function() {
-				Alert.show($scope, 'Nulstil Lokalitet?', 'Dette vil fjerne hotspots og sætte lokaliteten til default.').then(function(confirm) {
+				Alert.show($scope, 'Nulstil Lokalitet?', 'Dette vil fjerne indsamlingssteder og sætte lokaliteten til default.').then(function(confirm) {
 					if (confirm) {
 						$scope.__lokalitet.Spot.forEach(function(spot) {
 							Lokalitet_spot.delete({ id: spot.lokalitet_spot_id })
@@ -644,7 +644,7 @@ angular.module('dnalivApp')
 						}
 
 						hotspotPopover = $popover(angular.element('#createHotspot'), {
-							content: 'Klik på kortet for at oprette nyt hotspot', 
+							content: 'Klik på kortet for at oprette et nyt indsamlingssted', 
 							trigger: 'manual',
 							placement: 'right'
 						})

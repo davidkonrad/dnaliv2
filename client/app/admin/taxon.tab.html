@@ -1,13 +1,42 @@
 <span style="border-left: 1px solid #ddd;display:inline-block;">
 
-<!--
-<br><br>
+<table class="xtable table-condensed col-xs-6">
+	<thead>
+		<tr>
+			<th></th>
+			<th>Latinsk navn</th>
+			<th>Dansk navn</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
 
-<button type="button" class="btn btn-default btn-sm bold" ng-model="taxonOrderBy" bs-options="s.value as s.text for s in taxonOrders" bs-select style="width:100px;">
-	<span class="caret"></span>
-</button>
+	<tbody>
+		<tr xclass="success">
+			<td>
+				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste" ng-click="taxonCreate()">
+					<i class="fa fa-plus"></i>
+				</button>
+			</td>
+			<td>
+				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control" size="20" />
+			</td>
+			<td>
+				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon" size="20" />
+			</td>
+			<td>
+			</td>
+			<td>
+				<button type="button" class="btn btn-default btn-sm bold" ng-model="taxonOrderBy" bs-options="s.value as s.text for s in taxonOrders" bs-select style="width:100px;">
+					<span class="caret"></span>
+				</button>
+			</td>
+		</tr>
+	</tbody>
+</table>
 
-<br>
+<br><br><br>
+
 
 <ul dnd-list="taxonsUnordered" id="list-taxon"
 		dnd-inserted="dndInserted('insert')"
@@ -23,22 +52,35 @@
 				<span class="col-xs-1">
 					<input type="checkbox" ng-model="item.taxon_basisliste" title="Medtages i basisliste / default" ng-change="item.edited = true" />
 				</span>
+
 				<span class="col-xs-3">
  					<input type="text" ng-model="item.taxon_navn" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
 				</span>
+
 				<span class="col-xs-3">
 					<input type="text" ng-model="item.taxon_navn_dk" class="form-control bold" ng-change="item.edited = true" />
 				</span>
+
 				<span class="col-xs-3">
- 					<input type="text" ng-model="item.taxon_artsgruppe" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
+ 					<input type="text" ng-model="item.taxon_artsgruppe" class="form-control bold" ng-change="item.edited = true" />
+				</span>
+
+				<span class="col-xs-2" style="width:60px;padding-left:5px;">
+ 					<input type="text" style="width:45px;" ng-model="item.taxon_prioritet" class="form-control bold" ng-change="item.edited = true" />
+				</span>
+
+				<span class="col-xs-1">
+					<button type="button" class="btn" style="position:relative;top:-5px;" ng-class="{ 'btn-primary': (item.edited == true) }" ng-disabled="!item.edited" ng-click="saveTaxon(item)" title="Gem ændringer">
+						<i class="glyphicon glyphicon-ok"></i>
+					</button>
 				</span>
 
    </li>
 </ul>
 
 <br>
--->
 
+<!--
 <table class="table table-condensed" id="table-taxon">
 	<thead>
 		<tr>
@@ -64,11 +106,6 @@
 				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon" size="20" />
 			</td>
 			<td>
-				<!--
-				<button type="button" class="btn btn-primary current-taxon" bs-popover data-trigger="hover" data-html="true" data-template-url="popover.taxon.html">
-					<i class="fa fa-info"></i>
-				</button>
-				-->
 			</td>
 			<td></td>
 		</tr>
@@ -102,8 +139,8 @@
 			</td>
 		</tr>
   </tbody>
-
 </table>
+-->
 
 <br><br><br>
 </span>

@@ -8,7 +8,7 @@ angular.module('dnalivApp')
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		var icon = {
-			iconUrl: 'app/main/Circle_Red.png',
+			iconUrl: 'assets/images/Circle_Red.png',
 			iconAnchor: [0,0], 
 			popupAnchor: [0,0] 
 		}

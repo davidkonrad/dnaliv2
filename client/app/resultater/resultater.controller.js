@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 
-			'Resultat_item', 'Booking', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
+			'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $timeout, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, Proeve, ProeveNr, Taxon, 
-					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+	function($scope, $timeout, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
+			Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
 			$scope.sagsNo = []
@@ -368,15 +368,22 @@ angular.module('dnalivApp')
 							$scope.newProeveNr = $scope.getProeveNr(proeve)
 						})
 					} else {
-						var proeve = {
-							proeve_nr: proeve
-						}
-						Proeve.save( { proeve_id: '' }, proeve).$promise.then(function(proeve) {	
-							$scope.loadProever()
-							resultat.proeve_id = proeve.proeve_id
-							Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
-								$scope.reloadData()
+						//create lokalitet for the proeve we are about to create
+						var lokalitet = LokalitetModal.defaultLokalitet
+						Lokalitet.save({ lokalitet_id: '' }, lokalitet).$promise.then(function(lokalitet) {
+							var insert_proeve = {
+								proeve_nr: proeve,
+								lokalitet_id: lokalitet.lokalitet_id,
+								created_userName: Auth.getCurrentUser().name
+							}
+							Proeve.save( { proeve_id: '' }, insert_proeve).$promise.then(function(proeve) {	
 								$scope.newProeveNr = proeve.proeve_nr
+								$scope.loadProever()
+								resultat.proeve_id = proeve.proeve_id
+								Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+									//$scope.reloadData()
+									//$scope.newProeveNr = proeve.proeve_nr
+								})
 							})
 						})
 					}
