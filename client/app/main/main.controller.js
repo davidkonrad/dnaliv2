@@ -7,11 +7,21 @@ angular.module('dnalivApp')
 	 function($scope, $compile, TicketService, Lokalitet, Proeve, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		var icon = {
-			iconUrl: 'assets/images/Circle_Red.png',
-			iconAnchor: [0,0], 
-			popupAnchor: [0,0] 
-		}
+		var redIcon = {
+					iconUrl: 'assets/images/Circle_Red.png',
+					iconAnchor: [0,0], 
+					popupAnchor: [9,5] 
+				},
+				redIcon = {
+					iconUrl: 'assets/images/Circle_Yellow.png',
+					iconAnchor: [0,0], 
+					popupAnchor: [9,5] 
+				},
+				greenIcon = {
+					iconUrl: 'assets/images/Circle_Green.png',
+					iconAnchor: [0,0], 
+					popupAnchor: [9,0] 
+				}
 
 		$scope.getTaxon = function(taxon_id) {
 			for (var i=0; i<$scope.taxons.length; i++) {
@@ -77,7 +87,7 @@ angular.module('dnalivApp')
 						lat: lat, 
 						lng: lng,
             message: lokalitet.presentationString,
-						icon: icon
+						icon: greenIcon
  					})
 				}
 			})
@@ -92,26 +102,33 @@ angular.module('dnalivApp')
     });
 
 		angular.extend($scope, {
-			center: {
-				lat: 56.126627523318206,
-				lng: 11.457741782069204,
-				zoom: 7
-			}
-		})
-
-		angular.extend($scope, {
 			events: {
 				map: {
-					enable: ['zoomstart', 'drag', 'click', 'mousemove'],
+					enable: ['zoomstart', 'drag', 'click', 'dblclick', 'mouseover'],
 					logic: 'emit'
 				}
-			}
+			},
+		})
+
+		$scope.center = {
+			lat: 56.126627523318206,
+			lng: 11.457741782069204,
+			zoom: 7
+		}
+
+		$scope.$on('leafletDirectiveMarker.click', function(e, marker) {
+			$scope.center = { lat: marker.model.lat, lng: marker.model.lng, zoom: 14 }			
+			marker.leafletObject.openPopup()
+		})
+
+		$scope.$on('leafletDirectiveMarker.mouseover', function(e, marker) {
+			marker.leafletObject.openPopup()
 		})
 
 		angular.extend($scope, {
 			defaults: {
 				tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-				maxZoom: 14,
+				maxZoom: 17,
 				path: {
 					weight: 1,
 					color: '#800000',

@@ -267,16 +267,19 @@ angular.module('dnalivApp')
 			
 		$scope.rebuildResultatItems = function() {
 			var items = []
-			$scope.taxon.forEach(function(taxon) {
-				items[taxon.taxon_id] = []
-			})
+			//$scope.taxon.forEach(function(taxon) {
+			for (var i = 0, len = $scope.taxon.length; i < len; i++) {
+				items[$scope.taxon[i].taxon_id] = []
+			}
 		
 			Resultat_item.query({ where: { resultat_id: $scope.resultat.resultat_id }}).$promise.then(function(resultat_items) {	
-				resultat_items.forEach(function(resultat_item) {
+				//resultat_items.forEach(function(resultat_item) {
+				for (var i = 0, resultat_item = null, len = resultat_items.length; i < len; i++) {
 					//set a isNull value, indicating we should overrule first click values
+					resultat_item = resultat_items[i]
 					resultat_item.isNull = resultat_item.positiv == null || resultat_item.negativ == null || resultat_item.eDNA == null
 					items[resultat_item.taxon_id].push(resultat_item)
-				})
+				}
 				$scope.resultat.resultat_items = items
 			})
 		}
