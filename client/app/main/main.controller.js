@@ -42,14 +42,15 @@ angular.module('dnalivApp')
 					for (var i=0; i<replikater.length; i++) {
 						if (replikater[i].taxon_id == item.taxon_id) {
 							replikater[i].count++
-							if (item.database_result) replikater[i].found++
+							if (item.eDNA && item.database_result) replikater[i].found++
 							return true
 						}
 					}
 					var taxon = $scope.getTaxon(item.taxon_id)
+					console.log(item.eDNA)
 					replikater.push({
 						count: 1,
-						found: item.database_result ? 1 : 0,
+						found: item.eDNA && item.database_result ? 1 : 0,
 						taxon_id: item.taxon_id,
 						taxon_navn: taxon.taxon_navn,
 						taxon_navn_dk : taxon.taxon_navn_dk,
@@ -82,6 +83,7 @@ angular.module('dnalivApp')
 			lokaliteter.forEach(function(lokalitet) {
 				var lat = parseFloat(lokalitet.latitude),
 						lng = parseFloat(lokalitet.longitude)
+
 				if (lat && lng) {
 					$scope.markers.push({ 
 						lat: lat, 

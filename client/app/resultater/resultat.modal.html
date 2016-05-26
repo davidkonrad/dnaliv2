@@ -125,12 +125,16 @@
 			
 			<div class="modal-footer">
 				<div class="form-inline form-group" style="float:left;">
-					<button type="button" class="btn btn-danger" ng-click="deleteResultat(resultat.resultat_id)">Slet Resultat</button> 
+
+					<button type="button" class="btn btn-danger" ng-click="deleteResultat(resultat.resultat_id)" title="Resultat oprettet af {{ resultat.created_userName }} {{ resultat.created_timestamp | date:'dd/MM/yyyy HH:mm:ss' }} ">
+						Slet Resultat
+					</button> 
 
 					<label style="margin-left:100px;">Tilføj skjult art</label>
 					<select id="unExcludeSelect">
 						<option ng-repeat="t in excludedTaxons" value="{{ t.taxon_id }}">{{ t.art }}</option>
 					</select>
+
 				</div>
 				<button type="button" class="btn btn-primary" ng-click="$hide();reloadData()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>

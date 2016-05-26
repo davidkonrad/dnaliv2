@@ -102,9 +102,10 @@ angular.module('dnalivApp')
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
 					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '?'
-					//resultat.datoForAnalyse = Date.parse(resultat.datoForAnalyse)
-					//console.log(resultat.datoForAnalyse)
 					resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
+
+					//convert to date to so we can format the string properly
+					resultat.created_timestamp = Date.parse(resultat.created_timestamp)
 					return Utils.getObj(resultat)
 				})
 			})
