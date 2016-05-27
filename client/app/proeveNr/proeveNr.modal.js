@@ -287,10 +287,12 @@ angular.module('dnalivApp')
 					templateUrl: 'app/proeveNr/proeveNr.modal.html',
 					backdrop: 'static',
 					show: true,
-					internalName: 'proeveNr'
+					internalName: 'proeveNr',
+					tag: 'test'
 				})
 
 				$scope.$on('modal.show', function(e, target) {
+					console.log(target.$options)
 					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
 						modal.initialized = true
 						Proeve.query().$promise.then(function(p) {
