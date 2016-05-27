@@ -339,7 +339,7 @@ angular.module('dnalivApp')
 			ids.push(taxon_id)
 			$scope.resultat.taxon_ids = ids.join(',')
 			Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
-				$scope.resultat = resultat
+				$scope.resultat.taxon_ids = resultat.taxon_ids
 				$scope.idsToTaxon(resultat.taxon_ids)
 				$scope.rebuildResultatItems()
 			})

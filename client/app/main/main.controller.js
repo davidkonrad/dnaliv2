@@ -47,7 +47,6 @@ angular.module('dnalivApp')
 						}
 					}
 					var taxon = $scope.getTaxon(item.taxon_id)
-					console.log(item.eDNA)
 					replikater.push({
 						count: 1,
 						found: item.eDNA && item.database_result ? 1 : 0,
@@ -140,7 +139,31 @@ angular.module('dnalivApp')
 		})
 
 		angular.extend($scope, {
+			
 			layers: {
+				/*
+				overlays : {
+					topo_basis: {
+						name: "topo_basis",
+						type: 'wms',
+						visible: true,
+						url: "http://kortforsyningen.kms.dk/topo_basis",
+						layerOptions: {
+							layers: 'dtk_oversigt',
+							servicename: "topo_basis",
+							version: "1.1.1",
+							request: "GetMap",
+							format: "image/jpeg",
+							service: "WMS",
+							styles: "default",
+							exceptions: "application/vnd.ogc.se_inimage",
+							jpegquality: "80",
+							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+							ticket: TicketService.get()
+						}
+					},
+				},
+				*/
         baselayers: {
 					xyz: {
 						name: 'OpenStreetMap (XYZ)',

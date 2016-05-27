@@ -250,12 +250,12 @@ angular.module('dnalivApp')
 			/**
 				this should REALLY be trivialised 
 			**/
-			select: function($scope) {
+			select: function($scope, proeve_nr) {
 				$scope.proeveNrModal = {
-					title: 'Knyt til prøve ..',
-					message: 'Opslag på PrøeveNr :',
+					title: 'Knyt til Prøve ..',
+					message: 'Opslag på PrøveNr. :',
 					canSubmit: false,
-					proeve_nr: null
+					proeve_nr: proeve_nr
 				}
 				$scope.$watch('proeveNrModal.proeve_nr', function(newVal, oldVal) {
 					var $input = $('#modal-proeveNr-input'),
@@ -286,25 +286,29 @@ angular.module('dnalivApp')
 					scope: $scope,
 					templateUrl: 'app/proeveNr/proeveNr.modal.html',
 					backdrop: 'static',
-					show: true
+					show: true,
+					internalName: 'proeveNr'
 				})
 
-				modal.$promise.then(modal.show).then(function() {
-					Proeve.query().$promise.then(function(p) {
-						proever = p	
-						$scope.proeveNrModal.proeve_nr = ''
-
-						$('#input').typeahead({
-							source: proever,
-							displayText: function(item) {
-								return item.proeve_nr
-							},
-							items: 10,
-							afterSelect: function(item) {
-							}
+				$scope.$on('modal.show', function(e, target) {
+					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
+						modal.initialized = true
+						Proeve.query().$promise.then(function(p) {
+							proever = p	
+							//$scope.proeveNrModal.proeve_nr = ''
+							//$('#input').val(proeve_nr)
+							$('#input').typeahead({
+								source: proever,
+								displayText: function(item) {
+									return item.proeve_nr
+								},
+								items: 10,
+								afterSelect: function(item) {
+								}
+							})
+							angular.element('#input').focus()
 						})
-						angular.element('#input').focus()
-					})
+					}
 				})
 
 				$scope.proeveNrClose = function(success) {

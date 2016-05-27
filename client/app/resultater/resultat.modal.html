@@ -4,7 +4,19 @@
 			
 			<div class="modal-header">
 				<button type="button" class="close" ng-click="$hide();reloadData()">×</button>
-				<h4 class="modal-title">Resultat #{{ resultat.resultat_id }}</h4>
+				<h4 class="modal-title"> 
+					<span class="text-muted">
+						#{{ resultat.resultat_id | numberFixedLen:3 }}
+					</span>
+					&nbsp;
+					<span class="text-info">
+						{{ resultat.proeve_nr }}
+					</span>
+					&nbsp;	
+					<span class="small">
+						{{ resultat.created_userName }} {{ resultat.created_timestamp | date:'dd/MM/yyyy kl. HH:mm:ss' }} 
+					</span>
+				</h4>
 			</div>
 			<div class="modal-body">
 
@@ -52,9 +64,57 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat-start="taxon in taxon | orderBy:'taxon_prioritet'" ng-if="taxon.taxonSelected" class="taxon-row">
+
+									<!-- has replikats header -->
+									<tr ng-repeat-start="taxon in taxon | orderBy:'taxon_prioritet'" ng-if="taxon.taxonSelected && resultat.resultat_items[taxon.taxon_id].length > 0" class="taxon-row">
+										<td colspan="10">
+										</td>
+									</tr>	
+									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
+										<td>
+											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj yderligere replikat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:5px;cursor:pointer;font-size:80%;"></i>
+										</td>
+										<td> {{ taxon.taxon_artsgruppe }} </td>
+										<td> {{ taxon.taxon_navn_dk }} </td>
+										<td><em> {{ taxon.taxon_navn }} </em></td>
+
+										<td>
+											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.positiv" style="padding-left:10px;">
+											  <label class="btn" ng-class="{ 'btn-default': item.positiv == '', 'btn-danger': item.positiv == false }" ng-click="item.positiv = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
+											  <label class="btn" ng-class="{ 'btn-primary': item.positiv == true }" ng-click="item.positiv = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
+											</span>
+										</td>
+										<td>
+											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.negativ" style="padding-left:10px;">
+											  <label class="btn" ng-class="{ 'btn-default': item.negativ == '', 'btn-danger': item.negativ == false }" ng-click="item.negativ = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
+											  <label class="btn" ng-class="{ 'btn-primary': item.negativ == true }" ng-click="item.negativ = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
+											</span>
+										</td>
+
+										<td>
+											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.eDNA" style="padding-left:22px;">
+											  <label class="btn" ng-class="{ 'btn-default': item.eDNA == '', 'btn-danger': item.eDNA == false }" ng-click="item.eDNA = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
+											  <label class="btn" ng-class="{ 'btn-primary': item.eDNA == true }" ng-click="item.eDNA = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
+											</span>
+										</td>
+
+										<td>
+											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.database_result" style="padding-left:5px;">
+											  <label class="btn" ng-class="{ 'btn-default': item.database_result == '', 'btn-danger': item.database_result == false }" ng-click="item.database_result = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
+											  <label class="btn" ng-class="{ 'btn-primary': item.database_result == true }" ng-click="item.database_result = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
+											</span>
+										</td>
+
+										<td style="padding-left:20px;"><input type="text" ng-model="item.Ct_vaerdi" size="7" only-digits ng-change="updateResultatItem(item)" /></td>
+										<td>
+											<i class="fa fa-remove text-danger" bs-tooltip ng-click="deleteResultatItem(item)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
+										</td>
+									</tr>
+
+									<!-- no replikats header -->
+									<tr ng-repeat-start="taxon in taxon | orderBy:'taxon_prioritet'" ng-if="taxon.taxonSelected && resultat.resultat_items[taxon.taxon_id].length == 0" class="taxon-row">
 										<td class="add-resultat" class="cursor:pointer;">
-											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Tilføj nyt resultat for {{ taxon.taxon_navn_dk | lowercase }}" style="color:green;float:left;padding-top:3px;cursor:pointer;"></i>
+											<i class="fa fa-plus" bs-tooltip ng-click="createResultatItem(taxon.taxon_id)" data-trigger="hover" data-title="Opret {{ taxon.taxon_navn_dk | lowercase }} replikat" style="color:green;float:left;padding-top:3px;cursor:pointer;"></i>
 										</td>
 										<td> {{ taxon.taxon_artsgruppe }} </td>
 										<td> {{ taxon.taxon_navn_dk }} </td>
@@ -69,55 +129,8 @@
 										</td>
 									</tr>	
 									<tr ng-repeat-end ng-repeat="item in resultat.resultat_items[taxon.taxon_id]">
-										<td></td>
-										<td> {{ taxon.taxon_artsgruppe }} </td>
-										<td> {{ taxon.taxon_navn_dk }} </td>
-										<td><em> {{ taxon.taxon_navn }} </em></td>
-
-										<!--
-										<td><input type="checkbox" bs-switch ng-model="item.positiv" ng-checked="item.positiv" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
-										-->
-										<td>
-											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.positiv" style="padding-left:10px;">
-											  <label class="btn" ng-class="{ 'btn-default': item.positiv == '', 'btn-danger': item.positiv == false }" ng-click="item.positiv = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
-											  <label class="btn" ng-class="{ 'btn-primary': item.positiv == true }" ng-click="item.positiv = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
-											</span>
-										</td>
-										<!--
-										<td><input type="checkbox" bs-switch ng-model="item.negativ" ng-checked="item.negativ" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
-										-->
-										<td>
-											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.negativ" style="padding-left:10px;">
-											  <label class="btn" ng-class="{ 'btn-default': item.negativ == '', 'btn-danger': item.negativ == false }" ng-click="item.negativ = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
-											  <label class="btn" ng-class="{ 'btn-primary': item.negativ == true }" ng-click="item.negativ = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
-											</span>
-										</td>
-
-										<!--
-										<td style="padding-left:22px;"><input type="checkbox" bs-switch ng-model="item.eDNA" ng-checked="item.eDNA" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
-										-->
-										<td>
-											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.eDNA" style="padding-left:22px;">
-											  <label class="btn" ng-class="{ 'btn-default': item.eDNA == '', 'btn-danger': item.eDNA == false }" ng-click="item.eDNA = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
-											  <label class="btn" ng-class="{ 'btn-primary': item.eDNA == true }" ng-click="item.eDNA = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
-											</span>
-										</td>
-
-										<!--
-										<td><input type="checkbox" bs-switch ng-model="item.database_result" switch-size="mini" switch-off-text="0" switch-on-text="1" switch-on-color="primary" switch-off-color="danger" switch-animate="false" switch-inverse="true" switch-change="resultatValueClick(item)" /></td>
-										-->
-										<td>
-											<span class="btn-group btn-group-xs" bs-radio-group ng-model="item.database_result" style="padding-left:5px;">
-											  <label class="btn" ng-class="{ 'btn-default': item.database_result == '', 'btn-danger': item.database_result == false }" ng-click="item.database_result = false;resultatValueClick(item)"><input type="radio" class="btn" value="false">0</label>
-											  <label class="btn" ng-class="{ 'btn-primary': item.database_result == true }" ng-click="item.database_result = true;resultatValueClick(item)"><input type="radio" class="btn" value="true">1</label>
-											</span>
-										</td>
-
-										<td style="padding-left:20px;"><input type="text" ng-model="item.Ct_vaerdi" size="7" only-digits ng-change="updateResultatItem(item)" /></td>
-										<td>
-											<i class="fa fa-remove" bs-tooltip ng-click="deleteResultatItem(item)" data-trigger="hover" data-title="Slet replikat" data-html="true" style="color:gray;font-size:80%;float:right;padding-top:3px;cursor:pointer;"></i>
-										</td>
 									</tr>
+
 								</tbody>
 							</table>
 				</form>
