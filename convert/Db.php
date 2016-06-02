@@ -20,8 +20,13 @@ class Db {
 		if ($this->isLocalHost()) {
 			$this->database = 'dnaliv';
 			$this->hostname = 'localhost';
+			/*
 			$this->username = 'root';
 			$this->password = 'dadk';
+			*/
+			$this->username = 'root';
+			$this->password = 'zoo';
+
 		}
 
 		try {

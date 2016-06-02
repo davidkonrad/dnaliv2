@@ -3,17 +3,18 @@
 include('Db.php');
 
 class Convert extends Db {
-	private $CSVFile = '../projectdata/Booking af klasser_DNA&LIV_v20160202.csv';
+	//private $CSVFile = '../projectdata/Booking af klasser_DNA&LIV_v20160202.csv';
+	private $CSVFile = '../projectdata/DNA&liv_Bookingliste02.csv';
 	
 	public function __construct() {
 		parent::__construct();
 
 		mysql_set_charset('utf8');
-
 		$this->emptyTables();
+		$delimiter = ';';
 
 		if (($handle = fopen($this->CSVFile, "r")) !== false) {
-			$this->fieldNames = fgetcsv($handle, 1000, ',');
+			$this->fieldNames = fgetcsv($handle, 1000, $delimiter);
 
 			echo '<pre>';
 			print_r($this->fieldNames);
@@ -22,7 +23,7 @@ class Convert extends Db {
 			$total=0;
 			$count=0;
 			
-			while (($record = fgetcsv($handle, 1000, ',')) !== false) {
+			while (($record = fgetcsv($handle, 1000, $delimiter)) !== false) {
 				$array = array();
 				$index = 0;
 
@@ -42,13 +43,23 @@ class Convert extends Db {
 				$postnr = isset($pb[0]) ? $pb[0] : '';
 				$by = isset($pb[1]) ? $pb[1] : '';
 
-				$kf = explode(' ',$array['Klasse']);
+				/*
+				$kf = explode(' ', $array['Klasse']);
 				$klassetrin = isset($kf[0]) ? $kf[0] : false;
 				$fag = isset($kf[1]) ? $kf[1] : false;
+				*/
+				$fagKlassetrin = explode(' ', $array['Klasse']);
+				if (count($fagKlassetrin) > 1) {
+					$klassetrin = $fagKlassetrin[0];
+					$fag = $fagKlassetrin[1];
+				} else {
+					$klassetrin = '';
+					$fag = $fagKlassetrin[0];
+				}
 
 				$SQL='insert into klasse (booking_id, status, adresse, postnr, `by`, kommune, region, institutionsnavn, laererNavn, '.
 								'laererTlf, laererEmail, antalElever, antalLaerer, fag, klassetrin, DatoForBesoeg, DatoForBooking, DatoForEkst, '.
-								'SendtInfoMailTilLaerer, UdtraekFraFiskedatabasen) values('. 
+								'SendtInfoMailTilLaerer, EANBlanket) values('. 
 
 					$this->q($bookingId) .
 					$this->q($this->statusToNum($array['Status'])) .
@@ -66,10 +77,10 @@ class Convert extends Db {
 					$this->q($fag) .
 					$this->q($klassetrin) .
 					$this->q($array['DatoForBesoeg']) .		
-					$this->q($array['DatoForBookning']) .		
-					$this->q($array['DatoForEkst']) .
-					$this->q($array['SendtInfoMailTilLaerer']) .		
-					$this->q($array['UdtraekFraFiskedatabasen'], false) .		
+					$this->q($array['Bookingdato']) .		
+					$this->q(isset($array['DatoForEkst']) ? $array['DatoForEkst'] : '') .
+					$this->q(isset($array['SendtInfoMailTilLaerer']) ? $array['SendtInfoMailTilLaerer'] : '') .		
+					$this->q($array['EANblanket'], false) .		
 
 				')';
 
@@ -89,18 +100,20 @@ class Convert extends Db {
 				')';
 				*/
 
-				$SQL='insert into lokalitet (presentationString, X_GPS, latitude, longitude) values('.
-					$this->q($array['Lokalitet']) .
-					$this->q('KLASSE') .
-					$this->q($array['Latitude']) .
-					$this->q($array['Longitude'], false) .
-				')';
+				if (isset($array['Lokalitet'])) {
+					$SQL='insert into lokalitet (presentationString, X_GPS, latitude, longitude) values('.
+						$this->q($array['Lokalitet']) .
+						$this->q('KLASSE') .
+						$this->q($array['Latitude']) .
+						$this->q($array['Longitude'], false) .
+					')';
 	
-				$lokalitet_id = $this->insertQuery($SQL);
+					$lokalitet_id = $this->insertQuery($SQL);
 
-				//update klasse with lokalitet_id
-				$SQL='update klasse set lokalitet_id='.$lokalitet_id.' where klasse_id='.$klasseId;
-				$this->exec($SQL);			
+					//update klasse with lokalitet_id
+					$SQL='update klasse set lokalitet_id='.$lokalitet_id.' where klasse_id='.$klasseId;
+					$this->exec($SQL);			
+				}
 
 				//insert kommentar
 				if ($array['Kommentarer'] != '') {
@@ -119,11 +132,11 @@ class Convert extends Db {
 	private function statusToNum($status) {
 		switch (trim($status)) {
 			case 'Bekræftet' :
-					return 1; break;
+				return 1; break;
 			case 'Aflyst' :
-					return -1; break;
+				return -1; break;
 			default :
-					return 0; break;
+				return 0; break;
 		}
 	}
 
@@ -143,7 +156,6 @@ class Convert extends Db {
 
 		$SQL='delete from lokalitet where X_GPS = "KLASSE"'; 
 		$this->exec($SQL);
-
 	}
 
 	private function getBookingId($record) {
@@ -153,10 +165,10 @@ class Convert extends Db {
 			$SQL='insert into booking (sagsNo, status, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
 				$this->q($record['SagsNo']) .
 				$this->q($this->statusToNum($record['Status'])) .
-				$this->q($record['DatoForBookning']) .
+				$this->q($record['Bookingdato']) .
 				$this->q($record['DatoForBesoeg']) .
-				$this->q($record['Aar_periode']) .
-				$this->q($record['Periode'], false) .
+				$this->q(isset($record['Aar_periode']) ? $record['Aar_periode'] : '') .
+				$this->q(isset($record['Periode']) ? $record['Periode'] : '', false) .
 			')';
 			$this->exec($SQL);
 			$id = mysql_insert_id();

@@ -93,7 +93,11 @@ module.exports = function(sequelize, DataTypes) {
     DatoForEkst: {
       type: DataTypes.DATE,
       allowNull: true
-    }
+    },
+		EANBlanket : {
+			type: DataTypes.STRING,
+			allowNull: true
+		}
 
   }, {
 		tableName: 'klasse',
