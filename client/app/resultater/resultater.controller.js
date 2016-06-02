@@ -186,8 +186,20 @@ angular.module('dnalivApp')
 				scope: $scope,
 				templateUrl: 'app/resultater/resultat.modal.html',
 				backdrop: 'static',
-				show: true
+				show: true,
+				onBeforeShow: function() {
+					alert('ok')
+				},
+				onShow: function() {
+					alert('ok')
+				},
+				onHide: function() {
+					alert('ok')
+				}
+
 			})
+			$scope.resultatModal.$promise.then($scope.resultatModal);
+
 
 			$scope.resultatModal.$promise.then($scope.resultatModal.show).then(function() {
 				$('#unExcludeSelect').on('change', function() {
