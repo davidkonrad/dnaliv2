@@ -24,10 +24,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(1),
       allowNull: false
     },
-    timestamp_created: {
+    created_timestamp: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: 'CURRENT_TIMESTAMP'
+    },
+    created_userName: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     periode: {
       type: DataTypes.INTEGER(11),

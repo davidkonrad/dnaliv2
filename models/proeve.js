@@ -67,6 +67,15 @@ module.exports = function(sequelize, DataTypes) {
     dataset: {
       type: DataTypes.STRING,
       allowNull: true
+    },
+    created_timestamp: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: 'CURRENT_TIMESTAMP'
+    },
+    created_userName: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     tableName: 'proeve',

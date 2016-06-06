@@ -3,12 +3,17 @@
 angular.module('dnalivApp')
   .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal',
+			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 
 
 	function ($scope, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
-						$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal) {
+						$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User) {
 
+
+		console.log(Auth);
+		User.query().$promise.then(function(users) {
+			console.log/(users);
+		})
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 

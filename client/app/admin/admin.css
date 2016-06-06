@@ -131,9 +131,12 @@ b.dk {
 	padding-left: 5px !important;
 	padding-right: 2px !important;
 }
-
-
 .dndDragover {
 	border: none;
 	background-color: transparent;
+}
+
+/* 06062016  set cursor to hand */
+.nav-tabs > li > a {
+	cursor: pointer !important;
 }

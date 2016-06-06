@@ -20,8 +20,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    kommentar: {
-      type: DataTypes.TEXT,
+    beskrivelse: {
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

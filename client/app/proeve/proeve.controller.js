@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat',
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat',
 			'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function ($scope, $modal, $timeout, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat,
+	function ($scope, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat,
 			LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		//??
@@ -13,8 +13,13 @@ angular.module('dnalivApp')
 		Resultat.query().$promise.then(function(resultater) {
 			$scope.resultater = resultater
 		})	
-	
+
+		//global deferred activated in loadData, resolved in initComplete
+		var loadDeferred = null;
+
 		$scope.loadData = function() {
+			loadDeferred = $q.defer() //promisfy it
+
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proever = proever.map(function(proeve) {
 			
@@ -38,9 +43,12 @@ angular.module('dnalivApp')
 					if (proeve.Indsamler != undefined && !~$scope.lookupIndsamler.indexOf(proeve.Indsamler)) $scope.lookupIndsamler.push(proeve.Indsamler)
 					if (proeve.Institutionsnavn != undefined && !~$scope.lookupInstitutionsnavn.indexOf(proeve.Institutionsnavn)) $scope.lookupInstitutionsnavn.push(proeve.Institutionsnavn)
 				})
-			})				
+			})
+      return loadDeferred.promise
 		}
-		$scope.loadData()
+		$scope.loadData().then(function() {
+			console.log('ok')
+		})
 
 		$scope.loadKommentarer = function(proeve_id) {
 			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
@@ -49,17 +57,30 @@ angular.module('dnalivApp')
 		}
 
 		$scope.setProeve = function(proeve_id) {
+		  return $q(function(resolve, reject) {
+				for (var i=0; i<$scope.proever.length; i++) {
+					if ($scope.proever[i].proeve_id == proeve_id) {
+						console.log('setProeve SUCCESS', $scope.proever[i])
+						$scope.proeve = $scope.proever[i];
+						$scope.loadKommentarer(proeve_id)
+						resolve(true)
+					}
+				}
+			/*
 			$scope.proever.forEach(function(proeve) {
 				if (proeve.proeve_id == proeve_id) {
+					console.log('setProeve SUCCESS', proeve_id)
 					$scope.proeve = proeve
 					$scope.loadKommentarer(proeve_id)
 				}
-			})			
+			})
+			*/
+			})
+			//here we could raise an error
 		}
 
 		$scope.saveProeve = function() {
 			Proeve.update({ id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
-				console.log('Proeve saved ...')
 				$scope.proeve.edited = false
 				$timeout(function() {
 					$scope.proeveInstance.DataTable.draw()
@@ -92,7 +113,9 @@ angular.module('dnalivApp')
 		})
 
 		$scope.showProeve = function(proeve_id) {
-			$scope.setProeve(proeve_id)
+			console.log('showProeve', proeve_id)
+			$scope.setProeve(proeve_id).then(function() {
+
 			$scope.proeveModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/proeve/proeve.modal.html',
@@ -102,7 +125,6 @@ angular.module('dnalivApp')
 			$scope.proeveModal.internalName = 'proeve'
 			$scope.$on('modal.show',function(e, target) {
 				if (target.internalName == 'proeve') {
-					//$("#closeBtn").focus()
 					$('#dataset').typeahead({
 						source: $scope.lookupDataset,
 						showHintOnFocus: true,
@@ -126,6 +148,7 @@ angular.module('dnalivApp')
 					})
 				}
 			})
+			})
 			$scope.$on('modal.hide',function(e, target){
 				if (target.internalName == 'proeve') $scope.proeve = {}				
 			})
@@ -139,10 +162,17 @@ angular.module('dnalivApp')
 			.withOption('autoWidth', false)
 			.withOption('initComplete', function() {
 				//remove any previous set global filters
+				//console.log('initComplete')
+
 				$.fn.dataTable.ext.search = []
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
 				Utils.dtNormalizeSearch()
+
+				if (loadDeferred) {
+		      loadDeferred.resolve(true)
+				}
+
 			})
 			.withButtons([ 
 				{ extend : 'colvis',
@@ -279,21 +309,21 @@ angular.module('dnalivApp')
 		$scope.createProeve = function() {
 			ProeveNr.create($scope).then(function(newProeveNr) {	
 				if (newProeveNr) {
-					Proeve.save({ proeve_id: '' }, { proeve_nr: newProeveNr }).$promise.then(function(proeve) {
-						//create Lokalitet for proeve
-						var lokalitet = LokalitetModal.defaultLokalitet
-						lokalitet.presentationString = 'Lok. for prøve '+newProeveNr
-						Lokalitet.save({ lokalitet_id: '' }, lokalitet).$promise.then(function(newLokalitet) {
-							Proeve.update({ id: proeve.proeve_id }, { lokalitet_id: newLokalitet.lokalitet_id }).$promise.then(function() {
-								//update with new id
-								$scope.proeve.lokalitet_id = newLokalitet.lokalitet_id
+					//create lokalitet
+					var lokalitet = LokalitetModal.defaultLokalitet
+					lokalitet.presentationString = 'Lok. for prøve '+newProeveNr
+					Lokalitet.save({ lokalitet_id: '' }, lokalitet).$promise.then(function(newLokalitet) {
+						var proeve = {
+							proeve_nr: newProeveNr,
+							lokalitet_id: newLokalitet.lokalitet_id,
+							created_userName: Auth.getCurrentUser().name
+						}
+						//create proeve
+						Proeve.save({ proeve_id: '' }, proeve ).$promise.then(function(proeve) {
+							$scope.loadData().then(function() {
+								$scope.showProeve(proeve.proeve_id)								
 							})
 						})
-						$scope.newProeveNr = newProeveNr
-						$scope.loadData()
-						$timeout(function() {
-							$scope.showProeve(proeve.proeve_id)
-						}, 200)
 					})
 				}
 			})
