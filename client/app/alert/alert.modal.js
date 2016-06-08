@@ -9,10 +9,11 @@ angular.module('dnalivApp')
 
 		return {
 			
-			show: function($scope, title, message) {
+			show: function($scope, title, message, okOnly) {
 				$scope[name] = {
 					title: title,
-					message: message
+					message: message,
+					okOnly: okOnly
 				}
 				deferred = $q.defer()
 				modal = $modal({

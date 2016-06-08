@@ -52,16 +52,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    AntalMl: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
     AntalKuverter: {
       type: DataTypes.STRING,
-      allowNull: true
-    },
-    SNM_Adresse: {
-      type: DataTypes.INTEGER(100),
-      allowNull: true
-    },
-    kommentar: {
-      type: DataTypes.TEXT,
       allowNull: true
     },
     dataset: {
@@ -75,7 +71,12 @@ module.exports = function(sequelize, DataTypes) {
 		created_userName : {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		locked_by : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
 
 	}, {
 		tableName: 'proeve',

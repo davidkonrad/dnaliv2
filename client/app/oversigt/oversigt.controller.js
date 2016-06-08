@@ -1,19 +1,14 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+  .controller('OversigtCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 
 
-	function ($scope, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
+	function ($scope, $q, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
 						$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User) {
 
-
-		console.log(Auth);
-		User.query().$promise.then(function(users) {
-			console.log/(users);
-		})
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
@@ -200,14 +195,25 @@ angular.module('dnalivApp')
 			bookings
 		**/
 		$scope.setBooking = function(booking_id) {
-			$scope.bookings.forEach(function(booking) {
-				if (booking.booking_id == booking_id) {
-					$scope.booking = booking
-					return
+		  return $q(function(resolve, reject) {
+				for (var i=0; i<$scope.bookings.length; i++) {
+					if ($scope.bookings[i].booking_id == booking_id) {
+						if ($scope.bookings[i].locked_by) {
+							Alert.show($scope, 'Bookingen er låst', 'Denne booking redigeres pt. af <strong>'+$scope.bookings[i].locked_by+'</strong>.', true)
+						} else {
+							$scope.booking = $scope.bookings[i]
+							resolve(true)
+						}
+					}
 				}
 			})
 		}
 
+		$scope.lock = function(mode) {
+			var booking = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
+			Booking.update({ id: $scope.booking.booking_id }, booking)
+		}
+		
 		$scope.saveBooking = function() {
 			Booking.update({ booking_id: $scope.booking.booking_id }, $scope.booking)
 			//update view fields
@@ -216,14 +222,23 @@ angular.module('dnalivApp')
 		}
 			
 		$scope.showBooking = function(booking_id) {
-			$scope.setBooking(booking_id)
-			$scope.bookingModal = $modal({
-				scope: $scope,
-				templateUrl: 'app/oversigt/booking.modal.html',
-				backdrop: 'static',
-				show: true
+			$scope.setBooking(booking_id).then(function() {
+				$scope.lock(true)
+				$scope.bookingModal = $modal({
+					scope: $scope,
+					templateUrl: 'app/oversigt/booking.modal.html',
+					backdrop: 'static',
+					show: true,
+					internalName: 'booking'
+				})
+				$scope.$on('modal.hide', function(e, target){
+					if (target.$options.internalName == 'booking') {
+						$scope.lock(false)
+					}
+				})
 			})
 		}
+
 		$scope.resetBooking = function() {
 			$scope.booking = {}
 		}

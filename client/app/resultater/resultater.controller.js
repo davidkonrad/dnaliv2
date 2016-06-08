@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
+  .controller('ResultaterCtrl', ['$scope', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
 			'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $timeout, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
+	function($scope, $timeout, $q, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
 			Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
@@ -129,15 +129,27 @@ angular.module('dnalivApp')
 			$scope.resultaterInstance.DataTable.draw()
 		}
 
+		$scope.lock = function(mode) {
+			var resultat = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
+			Resultat.update( { id: $scope.resultat.resultat_id }, resultat)
+		}
+
 		$scope.setResultat = function(resultat_id) {
-			$scope.resultat = {}
-			$scope.resultater.forEach(function(resultat) {
-				if (resultat.resultat_id == resultat_id) {
-					Utils.mergeObj($scope.resultat, resultat)
-					$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(resultat.datoForAnalyse)
-					//console.log(resultat.datoForAnalyse, Utils.fixDate(resultat.datoForAnalyse), $scope.resultat.datoForAnalyse_fixed)
-					$scope.idsToTaxon(resultat.taxon_ids)
-					$scope.rebuildResultatItems()
+			return $q(function(resolve, reject) {
+				for (var i=0; i<$scope.resultater.length; i++) {
+					if ($scope.resultater[i].resultat_id == resultat_id) {
+						if ($scope.resultater[i].locked_by) {
+							Alert.show($scope, 'Resultatet er låst', 'Dette resultat redigeres pt. af <strong>'+$scope.resultater[i].locked_by+'</strong>.', true)
+						} else {
+							var resultat = $scope.resultater[i]
+							$scope.resultat = {}
+							Utils.mergeObj($scope.resultat, resultat)
+							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(resultat.datoForAnalyse)
+							$scope.idsToTaxon(resultat.taxon_ids)
+							$scope.rebuildResultatItems()
+							resolve(true)
+						}
+					}
 				}
 			})
 		}
@@ -149,61 +161,54 @@ angular.module('dnalivApp')
 		}
 						
 		$scope.showResultat = function(resultat_id) {
-			$scope.setResultat(resultat_id)
+			$scope.setResultat(resultat_id).then(function() {
 
-			//taxon
-			$scope.taxonOptions = DTOptionsBuilder.newOptions()
-				.withOption('destroy', true)
-				.withOption('paging', false)
-				.withOption('lengthChange', false)
-				.withOption('info', false)
-				.withOption('searching', false)
-				.withOption('autoWidth', true)
-		    .withDisplayLength(50)
-				.withOption('order', [[ 0, "desc" ]])
-				.withOption('initComplete', function() {
-				})
-				.withLanguage(Utils.dataTables_daDk)
+				$scope.lock(true)
 
-			$scope.taxonColumns = [
-	      DTColumnBuilder.newColumn(0).withTitle('Inkl.'),
-	      DTColumnBuilder.newColumn(1).withTitle('Artsgruppe'),
-	      DTColumnBuilder.newColumn(2).withTitle('Dansk navn'),
-	      DTColumnBuilder.newColumn(3).withTitle('Videnskabeligt navn')
-	    ]
+				//taxon
+				$scope.taxonOptions = DTOptionsBuilder.newOptions()
+					.withOption('destroy', true)
+					.withOption('paging', false)
+					.withOption('lengthChange', false)
+					.withOption('info', false)
+					.withOption('searching', false)
+					.withOption('autoWidth', true)
+			    .withDisplayLength(50)
+					.withOption('order', [[ 0, "desc" ]])
+					.withOption('initComplete', function() {
+					})
+					.withLanguage(Utils.dataTables_daDk)
 
-			$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col ) {
-		    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-		       return $('input', td).prop('checked') ? '1' : '0';
-		    } );
-			}
+				$scope.taxonColumns = [
+		      DTColumnBuilder.newColumn(0).withTitle('Inkl.'),
+		      DTColumnBuilder.newColumn(1).withTitle('Artsgruppe'),
+		      DTColumnBuilder.newColumn(2).withTitle('Dansk navn'),
+		      DTColumnBuilder.newColumn(3).withTitle('Videnskabeligt navn')
+		    ]
 
-			$scope.taxonColumnDefs = [
-				{ targets: [0],  orderDataType: "dom-checkbox" }
-			]
-
-			$scope.resultatModal = $modal({
-				scope: $scope,
-				templateUrl: 'app/resultater/resultat.modal.html',
-				backdrop: 'static',
-				show: true,
-				onBeforeShow: function() {
-					alert('ok')
-				},
-				onShow: function() {
-					alert('ok')
-				},
-				onHide: function() {
-					alert('ok')
+				$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col ) {
+			    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+			       return $('input', td).prop('checked') ? '1' : '0';
+			    } );
 				}
 
-			})
-			$scope.resultatModal.$promise.then($scope.resultatModal);
+				$scope.taxonColumnDefs = [
+					{ targets: [0],  orderDataType: "dom-checkbox" }
+				]
 
-
-			$scope.resultatModal.$promise.then($scope.resultatModal.show).then(function() {
-				$('#unExcludeSelect').on('change', function() {
-					 $scope.includeTaxon($(this).val())
+				$scope.resultatModal = $modal({
+					scope: $scope,
+					templateUrl: 'app/resultater/resultat.modal.html',
+					backdrop: 'static',
+					show: true
+				})
+				$scope.$on('modal.show', function(e, target) {
+					$('#unExcludeSelect').on('change', function() {
+						 $scope.includeTaxon($(this).val())
+					})
+				})
+				$scope.$on('modal.hide', function(e, target) {
+					$scope.lock(false)
 				})
 			})
 		}
@@ -275,7 +280,6 @@ angular.module('dnalivApp')
 					})
 				}
 			})
-
 		}
 			
 		$scope.rebuildResultatItems = function() {

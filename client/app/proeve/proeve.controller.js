@@ -47,7 +47,6 @@ angular.module('dnalivApp')
       return loadDeferred.promise
 		}
 		$scope.loadData().then(function() {
-			console.log('ok')
 		})
 
 		$scope.loadKommentarer = function(proeve_id) {
@@ -60,23 +59,23 @@ angular.module('dnalivApp')
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.proever.length; i++) {
 					if ($scope.proever[i].proeve_id == proeve_id) {
-						console.log('setProeve SUCCESS', $scope.proever[i])
-						$scope.proeve = $scope.proever[i];
-						$scope.loadKommentarer(proeve_id)
-						resolve(true)
+						if ($scope.proever[i].locked_by) {
+							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
+						} else {
+							$scope.proeve = $scope.proever[i];
+							$scope.loadKommentarer(proeve_id)
+							resolve(true)
+						}
 					}
 				}
-			/*
-			$scope.proever.forEach(function(proeve) {
-				if (proeve.proeve_id == proeve_id) {
-					console.log('setProeve SUCCESS', proeve_id)
-					$scope.proeve = proeve
-					$scope.loadKommentarer(proeve_id)
-				}
-			})
-			*/
 			})
 			//here we could raise an error
+		}
+
+		$scope.lock = function(mode) {
+			var proeve = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
+			console.log($scope.proeve.proeve_id, proeve)
+			Proeve.update({ id: $scope.proeve.proeve_id }, proeve)
 		}
 
 		$scope.saveProeve = function() {
@@ -112,45 +111,49 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 		})
 
-		$scope.showProeve = function(proeve_id) {
-			console.log('showProeve', proeve_id)
-			$scope.setProeve(proeve_id).then(function() {
+		/* modal events, declare only once */
+		$scope.$on('modal.show', function(e, target) {
+			if (target.$options.internalName == 'proeve') {
+				$('#dataset').typeahead({
+					source: $scope.lookupDataset,
+					showHintOnFocus: true,
+					afterSelect: function(value) {
+						$scope.proeve.dataset = value
+					}
+				})
+				$('#Indsamler').typeahead({
+					source: $scope.lookupIndsamler,
+					showHintOnFocus: true,
+					afterSelect: function(value) {
+						$scope.proeve.Indsamler = value
+					}
+				})
+				$('#Institutionsnavn').typeahead({
+					source: $scope.lookupInstitutionsnavn,
+					showHintOnFocus: true,
+					afterSelect: function(value) {
+						$scope.proeve.Institutionsnavn = value
+					}
+				})
+			}
+		})
+		$scope.$on('modal.hide', function(e, target){
+			if (target.$options.internalName == 'proeve') {
+				$scope.lock(false)
+				//$scope.proeve = {}
+			}
+		})
 
-			$scope.proeveModal = $modal({
-				scope: $scope,
-				templateUrl: 'app/proeve/proeve.modal.html',
-				backdrop: 'static',
-				show: true
-			})
-			$scope.proeveModal.internalName = 'proeve'
-			$scope.$on('modal.show',function(e, target) {
-				if (target.internalName == 'proeve') {
-					$('#dataset').typeahead({
-						source: $scope.lookupDataset,
-						showHintOnFocus: true,
-						afterSelect: function(value) {
-							$scope.proeve.dataset = value
-						}
-					})
-					$('#Indsamler').typeahead({
-						source: $scope.lookupIndsamler,
-						showHintOnFocus: true,
-						afterSelect: function(value) {
-							$scope.proeve.Indsamler = value
-						}
-					})
-					$('#Institutionsnavn').typeahead({
-						source: $scope.lookupInstitutionsnavn,
-						showHintOnFocus: true,
-						afterSelect: function(value) {
-							$scope.proeve.Institutionsnavn = value
-						}
-					})
-				}
-			})
-			})
-			$scope.$on('modal.hide',function(e, target){
-				if (target.internalName == 'proeve') $scope.proeve = {}				
+		$scope.showProeve = function(proeve_id) {
+			$scope.setProeve(proeve_id).then(function() {
+				$scope.lock(true)
+				$scope.proeveModal = $modal({
+					scope: $scope,
+					templateUrl: 'app/proeve/proeve.modal.html',
+					backdrop: 'static',
+					show: true,
+					internalName: 'proeve'
+				})
 			})
 		}
 
@@ -237,19 +240,6 @@ angular.module('dnalivApp')
 			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
 				console.log(success)
 			})
-			/*
-			$scope.setLokalitet(lokalitet_id)
-			$modal({
-				scope: $scope,
-				templateUrl: 'app/proeve/lokalitet.modal.html',
-				backdrop: 'static',
-				show: true
-			})
-			$timeout(function() {
-				initWetland($scope, Utils, Geo)
-				initializeMap($scope, Utils, Geo)
-			}, 250)
-			*/
 
 		}
 	

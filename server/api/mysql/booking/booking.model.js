@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+		locked_by : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     periode: {
       type: DataTypes.INTEGER(11),
 			allowNull: true

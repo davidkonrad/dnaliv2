@@ -32,7 +32,12 @@ module.exports = function(sequelize, DataTypes) {
 		created_userName : {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		locked_by : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
 
 	}, {
 		tableName: 'resultat',

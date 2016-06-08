@@ -13,7 +13,7 @@
 				  <div class="form-group">
 				    <label for="proeve_nr" class="normal">PrøveNr</label>
 						<div class="input-group">
-							<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" size="11" placeholder="PrøeveNr" id="proeve_nr">
+							<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" ng-click="changeProeveNr()" size="11" placeholder="PrøeveNr" id="proeve_nr">
 						  <span class="input-group-btn">
 				        <button class="btn btn-primary btn-sm" type="button" title="Ret / skift prøveNr" ng-click="changeProeveNr()"><i class="fa fa-edit"></i></button>
 					   </span>
@@ -25,7 +25,7 @@
 						&nbsp;&nbsp;
 				    <label for="lokalitet" class="normal">Lokalitet</label>
 						<div class="input-group">
-						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" placeholder="Lokalitet" readonly style="background-color:#fff;" />
+						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" ng-click="showLokalitet(proeve.lokalitet_id)" placeholder="Lokalitet" readonly style="background-color:#fff;" />
 						  <span class="input-group-btn">
 								<button role="button" class="btn btn-primary btn-sm" ng-click="showLokalitet(proeve.lokalitet_id)" ng-disabled="!proeve.lokalitet_id"><i class="fa fa-edit"></i></button>
 							</span>

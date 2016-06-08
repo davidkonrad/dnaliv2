@@ -140,3 +140,7 @@ b.dk {
 .nav-tabs > li > a {
 	cursor: pointer !important;
 }
+
+#lockedRowsTable > thead > tr > th {
+	border-top: 0px !important;
+}
