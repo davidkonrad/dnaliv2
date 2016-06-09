@@ -1,10 +1,11 @@
 'use strict';
 var models = require('../');
-
+var qp = require('../nestedQueryParser');
 
 // Get list of resultats
 exports.index = function(req, res) {
-  models.Resultat.findAll().then(function(resultat){
+	var query = (req.query) ? qp.parseQueryString(req.query) : undefined;
+  models.Resultat.findAll(query).then(function(resultat){
   	return res.json(200, resultat);	
   }).catch(function(err){
 	  handleError(res, err);

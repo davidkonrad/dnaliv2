@@ -42,29 +42,15 @@ exports.update = function(req, res) {
 	  handleError(res, err);
   });
 };
-/*
-  models.Taxon.find(req.params.id).then(function(taxon){
-      if(!taxon) { return res.send(404); }  
-	  return taxon.updateAttributes(req.body);	  	
-  }).then(function(taxon){
-  	return res.json(200, taxon);
-  }).catch(function(err){
-	  handleError(res, err);
-  });
-};
-*/
 
 // Deletes a taxon from the DB.
 exports.destroy = function(req, res) {
-	models.Taxon.find(req.params.id).then(function(taxon){
-		if(!taxon) { return res.send(404); }
-		return taxon.destroy()
+  models.Taxon.destroy({ where : { taxon_id: req.params.id }} ).then(function(taxon){
 	}).then(function(){
-		return res.send(204);
+  	return res.json(200);
 	}).catch(function(err){
 	  handleError(res, err);
   });
-	
 };
 
 // Describe taxon

@@ -43,35 +43,41 @@
 		dnd-dragover="dragoverCallback(event, index, external, type)"
 		dnd-drop="dropCallback(event, index, item, external, type, 'itemType')"
 >
-    <li ng-repeat="item in taxonsUnordered | orderBy: taxonOrderBy" class="col-xs-10"
+    <li ng-repeat="item in taxonsUnordered | orderBy: taxonOrderBy" class="col-xs-12" data-taxon-id="{{ item.taxon_id }}"
         dnd-draggable="item"
         dnd-moved="taxonsUnordered.splice($index, 1)"
         dnd-effect-allowed="move"
 				dnd-disable-if="taxonOrderBy != 'taxon_prioritet'"
         >
 				<span class="col-xs-1">
-					<input type="checkbox" ng-model="item.taxon_basisliste" title="Medtages i basisliste / default" ng-change="item.edited = true" />
+					<input type="checkbox" class="input-sm" style="position:relative;top:-8px;" ng-model="item.taxon_basisliste" title="Medtages i basisliste / default" ng-change="item.edited = true" />
 				</span>
 
-				<span class="col-xs-3">
- 					<input type="text" ng-model="item.taxon_navn" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
+				<span class="col-xs-2">
+ 					<input type="text" class="form-control input-sm" ng-model="item.taxon_artsgruppe" class="form-control bold" ng-change="item.edited = true" />
 				</span>
 
-				<span class="col-xs-3">
-					<input type="text" ng-model="item.taxon_navn_dk" class="form-control bold" ng-change="item.edited = true" />
+				<span class="col-xs-2">
+ 					<input type="text" class="form-control input-sm" ng-model="item.taxon_navn" class="form-control bold" ng-change="item.edited = true" style="font-style:italic;" />
 				</span>
 
-				<span class="col-xs-3">
- 					<input type="text" ng-model="item.taxon_artsgruppe" class="form-control bold" ng-change="item.edited = true" />
+				<span class="col-xs-2">
+					<input type="text" class="form-control input-sm" ng-model="item.taxon_navn_dk" class="form-control bold" ng-change="item.edited = true" />
 				</span>
 
 				<span class="col-xs-2" style="width:60px;padding-left:5px;">
- 					<input type="text" style="width:45px;" ng-model="item.taxon_prioritet" class="form-control bold" ng-change="item.edited = true" />
+ 					<input type="text" class="form-control input-sm" style="width:45px;" ng-model="item.taxon_prioritet" class="form-control bold" ng-change="item.edited = true" />
 				</span>
 
 				<span class="col-xs-1">
-					<button type="button" class="btn" style="position:relative;top:-5px;" ng-class="{ 'btn-primary': (item.edited == true) }" ng-disabled="!item.edited" ng-click="saveTaxon(item)" title="Gem ændringer">
+					<button type="button" class="btn btn-sm" style="position:relative;top:-5px;" ng-class="{ 'btn-primary': (item.edited == true) }" ng-disabled="!item.edited" ng-click="saveTaxon(item)" title="Gem ændringer">
 						<i class="glyphicon glyphicon-ok"></i>
+					</button>
+				</span>
+
+				<span class="col-xs-1">
+					<button type="button" class="btn btn-sm" style="position:relative;top:-5px;" ng-disabled="taxonInUse(item.taxon_id)" ng-click="deleteTaxon(item)" title="Slet taxon" ng-class="{ 'btn-danger': (!taxonInUse(item.taxon_id)) }" >
+						<i class="glyphicon glyphicon-remove"></i>
 					</button>
 				</span>
 

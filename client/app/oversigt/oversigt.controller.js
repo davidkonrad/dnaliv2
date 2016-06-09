@@ -210,6 +210,8 @@ angular.module('dnalivApp')
 		}
 
 		$scope.lock = function(mode) {
+			//console.log('lock', $scope.booking)
+			if (!$scope.booking.booking_id) return
 			var booking = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
 			Booking.update({ id: $scope.booking.booking_id }, booking)
 		}
@@ -233,7 +235,9 @@ angular.module('dnalivApp')
 				})
 				$scope.$on('modal.hide', function(e, target){
 					if (target.$options.internalName == 'booking') {
+						//console.log('hidfe', $scope.booking)
 						$scope.lock(false)
+						//$scope.resetBooking()
 					}
 				})
 			})
@@ -258,14 +262,14 @@ angular.module('dnalivApp')
 		})
 
 		$scope.$watch('booking.DatoForBesoeg', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined) return
+			if (newVal == oldVal || !$scope.booking.booking_id) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBesoeg: $scope.booking.DatoForBesoeg }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBesoeg_fixed = Utils.fixDate($scope.booking.DatoForBesoeg)
 			})
 		})
 
 		$scope.$watch('booking.DatoForBooking', function(newVal, oldVal) {
-			if (newVal == oldVal || oldVal == undefined) return
+			if (newVal == oldVal || !$scope.booking.booking_id) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBooking: $scope.booking.DatoForBooking }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
 			})

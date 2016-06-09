@@ -292,13 +292,10 @@ angular.module('dnalivApp')
 				})
 
 				$scope.$on('modal.show', function(e, target) {
-					console.log(target.$options)
 					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
 						modal.initialized = true
 						Proeve.query().$promise.then(function(p) {
 							proever = p	
-							//$scope.proeveNrModal.proeve_nr = ''
-							//$('#input').val(proeve_nr)
 							$('#input').typeahead({
 								source: proever,
 								displayText: function(item) {

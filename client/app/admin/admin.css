@@ -122,15 +122,21 @@ b.dk {
 /*******************/
 
 #list-taxon .col-xs-1 {
-	width: 20px !important;
+	xwidth: 20px !important;
+	width: auto !important;
 	top: 5px;
-	padding-left: 0px !important;
-	padding-right: 0px !important;
+	padding-left: 5px !important;
+	padding-right: 1px !important;
 }	
 #list-taxon .col-xs-3 {
 	padding-left: 5px !important;
 	padding-right: 2px !important;
 }
+#list-taxon .col-xs-2 {
+	padding-left: 5px !important;
+	padding-right: 2px !important;
+}
+
 .dndDragover {
 	border: none;
 	background-color: transparent;

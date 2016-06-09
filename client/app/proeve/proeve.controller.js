@@ -1,18 +1,14 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat',
+  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat', 'Resultat_item', 
 			'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function ($scope, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat,
+	function ($scope, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat, Resultat_item,
 			LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		//??
 		L.Icon.Default.imagePath = '../bower_components/leaflet/dist/images/';
-
-		Resultat.query().$promise.then(function(resultater) {
-			$scope.resultater = resultater
-		})	
 
 		//global deferred activated in loadData, resolved in initComplete
 		var loadDeferred = null;
@@ -55,6 +51,19 @@ angular.module('dnalivApp')
 			})
 		}
 
+		$scope.loadResultater = function(proeve_id) {
+			$scope.proeve.resultater = []
+			Resultat.query({ where : { proeve_id: proeve_id }}).$promise.then(function(resultater) {
+				resultater.forEach(function(resultat) {
+					var obj = Utils.getObj(resultat)
+					Resultat_item.query({ where : { resultat_id: resultat.resultat_id }}).$promise.then(function(items) {
+						obj.replikater = items.length
+						$scope.proeve.resultater.push(obj)
+					})
+				})
+			})	
+		}
+
 		$scope.setProeve = function(proeve_id) {
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.proever.length; i++) {
@@ -64,6 +73,7 @@ angular.module('dnalivApp')
 						} else {
 							$scope.proeve = $scope.proever[i];
 							$scope.loadKommentarer(proeve_id)
+							$scope.loadResultater(proeve_id)
 							resolve(true)
 						}
 					}
@@ -74,7 +84,6 @@ angular.module('dnalivApp')
 
 		$scope.lock = function(mode) {
 			var proeve = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
-			console.log($scope.proeve.proeve_id, proeve)
 			Proeve.update({ id: $scope.proeve.proeve_id }, proeve)
 		}
 
@@ -106,7 +115,8 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
-		$scope.$watchGroup(['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse'], function(newVal, oldVal) {
+		var fields = ['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl']
+		$scope.$watchGroup(fields, function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 		})
@@ -334,7 +344,6 @@ angular.module('dnalivApp')
 					var lokalitet_id = $scope.proeve.lokalitet_id
 					Proeve.delete({ id : proeve_id }).$promise.then(function() {	
 						Lokalitet.delete({ id: lokalitet_id }).$promise.then(function() {	
-							console.log('lokalitet delete OK')
 						}) 
 						$scope.loadData()
 						$scope.proeveModal.hide()

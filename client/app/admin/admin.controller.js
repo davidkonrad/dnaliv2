@@ -1,15 +1,14 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['$scope', '$http', '$timeout', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Resultat', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
-	 function ($scope, $http, $timeout, Utils, Alert, Taxon, Proeve, Booking, Resultat, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('AdminCtrl', ['$scope', '$http', '$timeout', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Resultat', 'Resultat_item', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
+	 function ($scope, $http, $timeout, Utils, Alert, Taxon, Proeve, Booking, Resultat, Resultat_item, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		/*
 			pyramid of doom
 			this should really ber done in a more effective way
 		*/
 		$scope.reloadLockedRows = function() {
-			console.log('reloading ...')
 			$scope.lockedRows = []
 			Proeve.query().$promise.then(function(rows) {	
 				rows.forEach(function(row) {
@@ -88,7 +87,7 @@ angular.module('dnalivApp')
 							break;
 					}
 					$timeout(function() {
-						$scope.reloadData()
+						$scope.reloadLockedRows()
 					}, 100)
 				}
 			})
@@ -110,24 +109,43 @@ angular.module('dnalivApp')
 				Utils.dtNormalizeSearch()
 				*/
 			})
-		/*
-		$scope.lockedColumns = [
-      DTColumnBuilder.newColumn('locked_by').withTitle('Låst af bruger'),
-      DTColumnBuilder.newColumn('type').withTitle('Type'),
-      DTColumnBuilder.newColumn('desc').withTitle('Kode/Nr.'),
-      DTColumnBuilder.newColumn('id').withTitle('#id'),
-      DTColumnBuilder.newColumn('created_userName').withTitle('Oprettet af'),
-      DTColumnBuilder.newColumn('created_timestamp').withTitle('Oprettet'),
-      DTColumnBuilder.newColumn('').withTitle('')
-		]
-		*/
 
 		$scope.dndInserted = function() {
-			return false
+			//console.log(arguments)
+			/*
+			var count = 0;
+			return
+			$('#list-taxon li').each(function(index, li) {
+				var taxon_id = $(li).attr('data-taxon-id')
+				if (taxon_id) {
+					count++
+					console.log('updating '+taxon_id, count)
+					Taxon.update({ id: taxon_id }, { taxon_prioritet: count }).$promise.then(function(taxon) {	
+						console.log('ok')
+					})
+				}
+			}).promise().done( function(){
+				$scope.reloadTaxons()
+			})
+			*/
     }
 
 		$scope.dragoverCallback = function(event, index, external, type) {
 			return true
+		}
+
+		$scope.reorderTaxons = function() {
+			var count = 0;
+			$('#list-taxon li').each(function(index, li) {
+				var taxon_id = $(li).attr('data-taxon-id')
+				if (taxon_id) {
+					count++
+					Taxon.update({ id: taxon_id }, { taxon_prioritet: count }).$promise.then(function(taxon) {	
+					})
+				}
+			}).promise().done( function(){
+				$scope.reloadTaxons()
+			})
 		}
 
 		$scope.dropCallback = function(event, index, item, external, type) {
@@ -135,12 +153,14 @@ angular.module('dnalivApp')
 				if (taxon.taxon_id == item.taxon_id) {
 					taxon.taxon_prioritet = index
 					Taxon.update({ taxon_id: taxon.taxon_id }, taxon).$promise.then(function(taxon) {	
-						$scope.reloadTaxons()
+						$scope.reorderTaxons()
 					})
 				}
 			})
-			return item;
+			
+			return true;
 		}
+
 
 		$scope.taxonOrderBy = 'taxon_prioritet';
 
@@ -167,23 +187,6 @@ angular.module('dnalivApp')
 						edited: false
 					}
 				})
-
-				/*
-				$scope.taxons = {};
-				taxons.forEach(function(taxon) {
-					if (!$scope.taxons[taxon.taxon_artsgruppe]) $scope.taxons[taxon.taxon_artsgruppe] = [];
-					$scope.taxons[taxon.taxon_artsgruppe].push({ 
-						taxon_id: taxon.taxon_id,
-						taxon_navn: taxon.taxon_navn, 
-						taxon_navn_dk: taxon.taxon_navn_dk,
-						taxon_basisliste: taxon.taxon_basisliste,
-						taxon_prioritet: taxon.taxon_prioritet,
-						taxon_artsgruppe: taxon.taxon_artsgruppe,
-						edited: false
-					})
-				})
-				*/
-
 			})
 		}
 		$scope.reloadTaxons();
@@ -224,6 +227,31 @@ angular.module('dnalivApp')
 			art.edited = false
 		}
 
+		$scope.taxonInUse = function(taxon_id) {
+			return $scope.taxon_usage[taxon_id] && $scope.taxon_usage[taxon_id] > 0
+		}
+
+		$scope.buildTaxonMap = function() {
+			$scope.taxon_usage = [];
+			Taxon.query().$promise.then(function(taxons) {	
+				taxons.forEach(function(taxon) {
+					Resultat_item.query({ where: { taxon_id: taxon.taxon_id }}).$promise.then(function(resultat_items) {	
+						$scope.taxon_usage[taxon.taxon_id] = resultat_items.length
+					})
+				})
+			})
+		}
+		$scope.buildTaxonMap()
+
+		$scope.deleteTaxon = function(taxon) {
+			Alert.show($scope, 'Slet taxon?', 'Slet <em>'+taxon.taxon_navn+'</em>, <b>'+taxon.taxon_navn_dk+'</b> fra artsliten?').then(function(confirm) {	
+				if (confirm) {
+					Taxon.remove({ id: taxon.taxon_id}).$promise.then(function(result) {
+						$scope.reloadTaxons()
+					})
+				}
+			})
+		}
 
 }]);
 

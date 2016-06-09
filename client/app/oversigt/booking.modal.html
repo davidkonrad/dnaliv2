@@ -3,7 +3,7 @@
 		<div class="modal-content">
 			
 			<div class="modal-header">
-				<button type="button" class="close" ng-click="resetBooking();$hide()">×</button>
+				<button type="button" class="close" ng-click="$hide()">×</button>
 				<h4 class="modal-title">Booking: <strong>{{ booking.sagsNo }}</strong> </h4>
 			</div>
 			<div class="modal-body">
@@ -12,7 +12,7 @@
 				  <div class="form-group">
 				    <label for="sagsNo" class="normal">SagsNr:&nbsp;</label>
 						<div class="input-group">
-					    <input type="text" ng-model="booking.sagsNo" class="form-control bold" size="10" id="sagsNo" readonly style="background-color:white;">
+					    <input type="text" ng-model="booking.sagsNo" class="form-control bold" size="10" id="sagsNo" readonly style="background-color:white;" ng-click="changeSagsNo()">
 						  <span class="input-group-btn">
 				        <button class="btn btn-primary" type="button" title="Ret / skift sagsNr" ng-click="changeSagsNo()"><i class="fa fa-edit"></i></button>
 					   </span>
@@ -84,7 +84,7 @@
 					</button>
 				</span>
 
-				<button type="button" class="btn btn-primary" ng-click="resetBooking();$hide()"> 
+				<button type="button" class="btn btn-primary" ng-click="$hide()"> 
 					<i class="fa fa-ok"></i>Luk
 				</button> 
 			</div>

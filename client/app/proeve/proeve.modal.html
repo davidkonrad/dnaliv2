@@ -67,11 +67,15 @@
 						&nbsp;
 				  	<label for="ngUl" class="normal">ng/µl</label>
 				    <input type="text" ng-model="proeve.ngUl" class="form-control input-sm bold" size="10" id="ngUl" ng-change="proeve.edited = true" />
+						&nbsp;
+				  	<label for="AntalMl" class="normal">Antal ml.</label>
+				    <input type="text" ng-model="proeve.AntalMl" class="form-control input-sm bold" size="10" id="AntalMl" ng-change="proeve.edited = true" only-digits />
+
 					</div>
 
 					<br><hr><div class="rule-lg"></div>
 
-				  <div class="form-group" style="width:50%;">
+				  <div class="form-group" style="width:49%;">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
 						<table class="table-striped">
 							<tr ng-repeat="k in proeve.kommentarer" class="info">
@@ -83,15 +87,24 @@
 						</table>
 					</div>
 
+				  <div class="form-group" style="width:49%;">
+						<b>Resultater</b><br>
+						<table class="table-striped">
+							<tr ng-repeat="r in proeve.resultater" class="info">
+								<td>#{{ r.resultat_id }} &nbsp;</td>
+								<td>{{ r.created_userName }} &nbsp;</td>
+								<td>{{ r.created_timestamp |  date:'dd/MM/yyyy Kl. HH.mm' }} &nbsp;</td>
+								<td>{{ r.replikater }} replikater</td>
+							</tr>
+						</table>
+					</div>
+
 				</form>
 	
 			</div>
 			
 			<div class="modal-footer">
 				<span style="float:left;">
-					<!--
-					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="!proeveHasResultat(proeve.proeve_id)" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp | date }}">
-					-->
 					<button type="button" class="btn btn-danger" ng-click="deleteProeve(proeve.proeve_id)" ng-disabled="proeve.Resultat.length > 0" title="Prøve oprettet af {{ proeve.created_userName}}, {{ proeve.created_timestamp | date }}">
 						Slet Prøve
 					</button> 

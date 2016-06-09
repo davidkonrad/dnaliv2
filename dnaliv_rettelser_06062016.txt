@@ -1,0 +1,28 @@
+Prøver
+-      Mulighed for at knytte prøve til sagsnr.
+
+-      Under lokalitet: master marker, autoplacering efter ’hot spots’, OG skal placeres indenfor defineret polygon (eller indenfor lokaliteten)
+-      Under en specifik prøve skal der være link til [vis resultat for prøve] eller [opret nyt resultat]
+ 
+Booking
+-      Ny bookingliste vedhæftet. Bruges til at opdatere bookinglisten (ikke prøver)
+-      Mulighed for at knytte prøve til sagsnr
+-      Under specifik sagsnr.:
+o   fjern lokalitet
+o   Kuvert sendt: datafelt
+o   Prøver modtaget: fjernes
+o   Tilføj: Niveau (A, B, C)
+-      Oprettelse af sagsnr
+o   Jeg kan ikke oprette nyt sagsnr
+-      Undersøg muligheden for hive data fra auto-genereret email via bookingsystemet.
+ 
+Admin
+-      Under admin tilføjes fanen [Brugere]
+o   Beskrivelse af niveauer
+o   Liste med brugere
+o   Mulighed for admins kan ændre brugernes niveau/kategori
+ 
+Generelt
+-      Servers
+o   Ret alias fra dnaliv til dnaogliv
+ 

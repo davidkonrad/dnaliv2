@@ -36,6 +36,14 @@ angular.module('dnalivApp')
 					sagsNo: sagsNo
 				}
 
+				$scope.$on('modal.show', function(e, target) {
+					//console.log('ok')
+					$timeout(function() {
+						$scope.sagsNoModal.sagsNo = sagsNo
+						angular.element('#modal-sagsNo-input').focus()
+					})
+				})
+
 				$scope.$watch('sagsNoModal.sagsNo', function(newVal, oldVal) {
 					//what the heck, why not use jQuery since it is loaded anyway
 					var $input = $('#modal-sagsNo-input'),
@@ -55,17 +63,21 @@ angular.module('dnalivApp')
 						$scope.sagsNoModal.canSubmit = false
 					}
 
-					if (newVal != oldVal) {
-						if (sagsNoExists(newVal)) {
-							if (newVal != current_sagsNo) {
-								error()
+					if (newVal.trim() == '') {
+						error()
+					} else {
+						if (newVal != oldVal) {
+							if (sagsNoExists(newVal)) {
+								if (newVal != current_sagsNo) {
+									error()
+								} else {
+									ok()
+									//disallow submit id unchanged
+									$scope.sagsNoModal.canSubmit = false
+								}
 							} else {
 								ok()
-								//disallow submit id unchanged
-								$scope.sagsNoModal.canSubmit = false
 							}
-						} else {
-							ok()
 						}
 					}
 				}) 
@@ -163,7 +175,7 @@ angular.module('dnalivApp')
 				})
 
 				$scope.sagsNoModal = {
-					title: 'Find Booking / SagsNr',
+					title: 'Knyt til Booking / SagsNr',
 					message: 'SagsNr :',
 					canSubmit: false,
 					sagsNo: null
