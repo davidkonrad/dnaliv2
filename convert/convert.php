@@ -4,7 +4,7 @@ include('Db.php');
 
 class Convert extends Db {
 	//private $CSVFile = '../projectdata/Booking af klasser_DNA&LIV_v20160202.csv';
-	private $CSVFile = '../projectdata/DNA&liv_Bookingliste02.csv';
+	private $CSVFile = '../projectdata/DNA&liv_Bookingliste03.csv';
 	
 	public function __construct() {
 		parent::__construct();
@@ -108,7 +108,7 @@ class Convert extends Db {
 						$this->q($array['Longitude'], false) .
 					')';
 	
-					$lokalitet_id = $this->insertQuery($SQL);
+					//$lokalitet_id = $this->insertQuery($SQL);
 
 					//update klasse with lokalitet_id
 					$SQL='update klasse set lokalitet_id='.$lokalitet_id.' where klasse_id='.$klasseId;
@@ -162,13 +162,14 @@ class Convert extends Db {
 		$SQL='select * from booking where sagsNo = "'.$record['SagsNo'].'"';
 		$id = $this->getValue($SQL);
 		if (!$id) {
-			$SQL='insert into booking (sagsNo, status, DatoForBooking, DatoForBesoeg, aar_periode, periode) values('.
+			$SQL='insert into booking (sagsNo, status, DatoForBooking, DatoForBesoeg, aar_periode, periode, created_userName) values('.
 				$this->q($record['SagsNo']) .
 				$this->q($this->statusToNum($record['Status'])) .
 				$this->q($record['Bookingdato']) .
 				$this->q($record['DatoForBesoeg']) .
 				$this->q(isset($record['Aar_periode']) ? $record['Aar_periode'] : '') .
-				$this->q(isset($record['Periode']) ? $record['Periode'] : '', false) .
+				$this->q(isset($record['Periode']) ? $record['Periode'] : '') .
+				$this->q('{ Excel }', false) .
 			')';
 			$this->exec($SQL);
 			$id = mysql_insert_id();
