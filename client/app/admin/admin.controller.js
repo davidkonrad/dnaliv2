@@ -42,8 +42,8 @@ angular.module('dnalivApp')
 								$scope.lockedRows.push({
 									locked_by: row.locked_by,
 									type: 'Resultat',
-									desc: row.resultat_id,
-									id: '(B'+row.booking_id+',P'+row.proeve_id+')',
+									id: row.resultat_id,
+									desc: '(B'+row.booking_id+',P'+row.proeve_id+')',
 									created_userName: row.created_userName,
 									created_timestamp: row.created_timestamp
 								})
@@ -88,7 +88,7 @@ angular.module('dnalivApp')
 					}
 					$timeout(function() {
 						$scope.reloadLockedRows()
-					}, 100)
+					}, 500)
 				}
 			})
 		}			
@@ -109,26 +109,6 @@ angular.module('dnalivApp')
 				Utils.dtNormalizeSearch()
 				*/
 			})
-
-		$scope.dndInserted = function() {
-			//console.log(arguments)
-			/*
-			var count = 0;
-			return
-			$('#list-taxon li').each(function(index, li) {
-				var taxon_id = $(li).attr('data-taxon-id')
-				if (taxon_id) {
-					count++
-					console.log('updating '+taxon_id, count)
-					Taxon.update({ id: taxon_id }, { taxon_prioritet: count }).$promise.then(function(taxon) {	
-						console.log('ok')
-					})
-				}
-			}).promise().done( function(){
-				$scope.reloadTaxons()
-			})
-			*/
-    }
 
 		$scope.dragoverCallback = function(event, index, external, type) {
 			return true
@@ -214,6 +194,8 @@ angular.module('dnalivApp')
 				taxon_prioritet: 0, //sæt to lowest prioritet prossible
 				taxon_basisliste: 1
 			}).$promise.then(function(taxon) {	
+				$scope.taxon.Videnskabeligt_navn = ''
+				$scope.taxon.Dansk_navn = ''
 				$scope.reloadTaxons();
 			})
 		}
@@ -244,7 +226,7 @@ angular.module('dnalivApp')
 		$scope.buildTaxonMap()
 
 		$scope.deleteTaxon = function(taxon) {
-			Alert.show($scope, 'Slet taxon?', 'Slet <em>'+taxon.taxon_navn+'</em>, <b>'+taxon.taxon_navn_dk+'</b> fra artsliten?').then(function(confirm) {	
+			Alert.show($scope, 'Slet taxon?', 'Slet <em>'+taxon.taxon_navn+'</em>, <b>'+taxon.taxon_navn_dk+'</b>, fra artsliten?').then(function(confirm) {	
 				if (confirm) {
 					Taxon.remove({ id: taxon.taxon_id}).$promise.then(function(result) {
 						$scope.reloadTaxons()

@@ -1,13 +1,8 @@
-/**
- * Populate DB with sample data on server start
- * to disable, edit config/environment/index.js, and set `seedDB: false`
- */
-
 'use strict';
 
 var User = require('../api/mongo/user/user.model');
 
-User.find({}).remove(function() {
+User.find({}).remove(function() {	
   User.create({
     provider: 'local',
     name: 'guest',
@@ -64,4 +59,5 @@ Maja Elling						maja.elling@snm.ku.dk			sVq48mYhpk
 Marie Lillemark				marie.lillemark@snm.ku.dk	KPDt0p6AfG
 Pernille Selmer Olsen	pvsolsen@snm.ku.dk				eyHskF3gXY
 */
+
 

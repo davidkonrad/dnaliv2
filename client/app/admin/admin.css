@@ -146,7 +146,16 @@ b.dk {
 .nav-tabs > li > a {
 	cursor: pointer !important;
 }
-
 #lockedRowsTable > thead > tr > th {
 	border-top: 0px !important;
+}
+.btn .caret {
+	margin-left: 4px !important;
+}
+.table-condensed > thead > tr > th {
+	padding-bottom: 0px;
+}
+ul[dnd-list] li {
+	padding-top: 0px;
+	padding-bottom: 0px;
 }

@@ -1,6 +1,7 @@
 <span style="border-left: 1px solid #ddd;display:inline-block;">
 
-<table class="xtable table-condensed col-xs-6">
+<br>
+<table class="table-condensed col-xs-7">
 	<thead>
 		<tr>
 			<th></th>
@@ -12,26 +13,33 @@
 	</thead>
 
 	<tbody>
-		<tr xclass="success">
+		<tr>
 			<td>
-				<button type="button" class="btn btn-primary" title="Tilføj art til basisliste" ng-click="taxonCreate()">
+			</td>
+			<td>
+				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control input-sm" size="50" />
+			</td>
+			<td>
+				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control input-sm" id="new-taxon" size="50" />
+			</td>
+			<td>
+				<button type="button" class="btn btn-primary btn-sm" title="Tilføj art til basisliste" ng-click="taxonCreate()" ng-disabled="!taxon.Videnskabeligt_navn && !taxon.Dansk_navn ">
 					<i class="fa fa-plus"></i>
 				</button>
 			</td>
-			<td>
-				<input type="text" allearter-typeahead at-taxon="taxon" ng-model="taxon.Videnskabeligt_navn" class="form-control" size="20" />
-			</td>
-			<td>
-				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control" id="new-taxon" size="20" />
-			</td>
+
 			<td>
 			</td>
 			<td>
 				<button type="button" class="btn btn-default btn-sm bold" ng-model="taxonOrderBy" bs-options="s.value as s.text for s in taxonOrders" bs-select style="width:100px;">
-					<span class="caret"></span>
 				</button>
 			</td>
 		</tr>
+		<tr>
+			<td colspan="6" style="border-top:1px solid #fff;">
+			</td>
+		</tr>
+
 	</tbody>
 </table>
 
@@ -39,7 +47,6 @@
 
 
 <ul dnd-list="taxonsUnordered" id="list-taxon"
-		dnd-inserted="dndInserted('insert')"
 		dnd-dragover="dragoverCallback(event, index, external, type)"
 		dnd-drop="dropCallback(event, index, item, external, type, 'itemType')"
 >
@@ -65,8 +72,8 @@
 					<input type="text" class="form-control input-sm" ng-model="item.taxon_navn_dk" class="form-control bold" ng-change="item.edited = true" />
 				</span>
 
-				<span class="col-xs-2" style="width:60px;padding-left:5px;">
- 					<input type="text" class="form-control input-sm" style="width:45px;" ng-model="item.taxon_prioritet" class="form-control bold" ng-change="item.edited = true" />
+				<span class="col-xs-2" style="width:50px;padding-left:5px;">
+ 					<input type="text" class="form-control input-sm" style="width:45px;text-align:right !important;" ng-model="item.taxon_prioritet" class="form-control bold" ng-change="item.edited = true" />
 				</span>
 
 				<span class="col-xs-1">
@@ -76,7 +83,7 @@
 				</span>
 
 				<span class="col-xs-1">
-					<button type="button" class="btn btn-sm" style="position:relative;top:-5px;" ng-disabled="taxonInUse(item.taxon_id)" ng-click="deleteTaxon(item)" title="Slet taxon" ng-class="{ 'btn-danger': (!taxonInUse(item.taxon_id)) }" >
+					<button type="button" class="btn btn-danger btn-sm" style="position:relative;top:-5px;" ng-disabled="taxonInUse(item.taxon_id)" ng-click="deleteTaxon(item)" title="Der er ingen replikater tilknyttet arten, så den kan fjernes" ng-show="!taxonInUse(item.taxon_id)" >
 						<i class="glyphicon glyphicon-remove"></i>
 					</button>
 				</span>

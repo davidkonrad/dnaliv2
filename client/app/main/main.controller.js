@@ -42,7 +42,7 @@ angular.module('dnalivApp')
 					for (var i=0; i<replikater.length; i++) {
 						if (replikater[i].taxon_id == item.taxon_id) {
 							replikater[i].count++
-							if (item.eDNA && item.database_result) replikater[i].found++
+			 				if (item.eDNA && item.database_result) replikater[i].found++
 							return true
 						}
 					}
@@ -141,29 +141,6 @@ angular.module('dnalivApp')
 		angular.extend($scope, {
 			
 			layers: {
-				/*
-				overlays : {
-					topo_basis: {
-						name: "topo_basis",
-						type: 'wms',
-						visible: true,
-						url: "http://kortforsyningen.kms.dk/topo_basis",
-						layerOptions: {
-							layers: 'dtk_oversigt',
-							servicename: "topo_basis",
-							version: "1.1.1",
-							request: "GetMap",
-							format: "image/jpeg",
-							service: "WMS",
-							styles: "default",
-							exceptions: "application/vnd.ogc.se_inimage",
-							jpegquality: "80",
-							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-							ticket: TicketService.get()
-						}
-					},
-				},
-				*/
         baselayers: {
 					xyz: {
 						name: 'OpenStreetMap (XYZ)',
@@ -216,23 +193,5 @@ angular.module('dnalivApp')
 			LokalitetModal.show($scope, 8)
 		}
 
-
-/*
-					HERE_hybridDay: {
-						name: 'xxx',
-						url: 'http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/{type}/{mapID}/hybrid.day/{z}/{x}/{y}/{size}/{format}?app_id={app_id}&app_code={app_code}&lg={language}',
-						attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-						subdomains: '1234',
-						mapID: 'newest',
-						app_id: 'WQbz8ksVFNn4Y8ibFJ5M',
-						app_code: 'AV5ngGiwOzQyWmvyF1Hm1g',
-						base: 'aerial',
-						maxZoom: 20,
-						type: 'maptile',
-						language: 'eng',
-						format: 'png8',
-						size: '256'
-					}
-*/
 
   }]);

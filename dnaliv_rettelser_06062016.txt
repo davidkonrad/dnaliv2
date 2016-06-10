@@ -1,6 +1,6 @@
+
 Prøver
 -      Mulighed for at knytte prøve til sagsnr.
-
 -      Under lokalitet: master marker, autoplacering efter ’hot spots’, OG skal placeres indenfor defineret polygon (eller indenfor lokaliteten)
 -      Under en specifik prøve skal der være link til [vis resultat for prøve] eller [opret nyt resultat]
  

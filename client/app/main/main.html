@@ -24,7 +24,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="taxon in replikater | orderObjectBy:'taxon_prioritet':true ">
+				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' ">
 					<td> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.count }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.found }} &nbsp;&nbsp;</td>
