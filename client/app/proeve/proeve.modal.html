@@ -76,7 +76,8 @@
 					<br><hr><div class="rule-lg"></div>
 
 				  <div class="form-group" style="width:49%;">
-						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter
+						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()" title="Tilføj note / kommentar"><i class="fa fa-plus"></i></button>
+						<b>Noter</b>
 						<table class="table-striped">
 							<tr ng-repeat="k in proeve.kommentarer" class="info">
 								<td><span style="color:red;cursor:pointer;" ng-click="removeKommentar(k.kommentar_id)">×</span>&nbsp;</td>
@@ -88,9 +89,10 @@
 					</div>
 
 				  <div class="form-group" style="width:49%;">
-						<b>Resultater</b><br>
+						<button type="button" class="btn btn-primary btn-xs" ng-click="addResultat()" title="Tilføj nyt resultat"><i class="fa fa-plus"></i></button>
+						<b>Resultater</b>
 						<table class="table-striped">
-							<tr ng-repeat="r in proeve.resultater" class="info">
+							<tr ng-repeat="r in proeve.resultater" class="info resultat" title="Vis resultat" ng-click="showResultat(r)">
 								<td>#{{ r.resultat_id }} &nbsp;</td>
 								<td>{{ r.created_userName }} &nbsp;</td>
 								<td>{{ r.created_timestamp |  date:'dd/MM/yyyy Kl. HH.mm' }} &nbsp;</td>

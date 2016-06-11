@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
+  .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
 			'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $timeout, $q, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
+	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
 			Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
@@ -138,7 +138,8 @@ angular.module('dnalivApp')
 			return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.resultater.length; i++) {
 					if ($scope.resultater[i].resultat_id == resultat_id) {
-						if ($scope.resultater[i].locked_by) {
+						if ($scope.resultater[i].locked_by &&
+								$scope.resultater[i].locked_by != Auth.getCurrentUser().name ) {
 							Alert.show($scope, 'Resultatet er låst', 'Dette resultat redigeres pt. af <strong>'+$scope.resultater[i].locked_by+'</strong>.', true)
 						} else {
 							var resultat = $scope.resultater[i]
@@ -444,5 +445,15 @@ angular.module('dnalivApp')
 				}
 			})
 		}
+
+		/**
+			automatically show a resultat, i.e when resultater/id
+		*/
+		if ($routeParams.id) {
+			$timeout(function() {
+				$scope.showResultat($routeParams.id)
+			}, 500)
+		}
+
 
   }]);

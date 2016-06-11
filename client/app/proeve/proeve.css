@@ -95,3 +95,7 @@ td.td-wordwrap {
 	word-wrap: normal;
 }
 
+tr.resultat:hover {
+	cursor: pointer;
+	color: navy;
+}

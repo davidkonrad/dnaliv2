@@ -1,14 +1,18 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat', 'Resultat_item', 
-			'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+  .controller('ProeveCtrl', ['$scope', '$window', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat', 'Resultat_item', 
+			'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function ($scope, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat, Resultat_item,
-			LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+	function ($scope, $window, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat, Resultat_item,
+			Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		//??
 		L.Icon.Default.imagePath = '../bower_components/leaflet/dist/images/';
+
+		Taxon.query().$promise.then(function(taxons) {
+			$scope.taxons = taxons
+		})
 
 		//global deferred activated in loadData, resolved in initComplete
 		var loadDeferred = null;
@@ -68,7 +72,8 @@ angular.module('dnalivApp')
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.proever.length; i++) {
 					if ($scope.proever[i].proeve_id == proeve_id) {
-						if ($scope.proever[i].locked_by) {
+						if ($scope.proever[i].locked_by && 
+								$scope.proever[i].locked_by != Auth.getCurrentUser().name ) {
 							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
 						} else {
 							$scope.proeve = $scope.proever[i];
@@ -150,7 +155,6 @@ angular.module('dnalivApp')
 		$scope.$on('modal.hide', function(e, target){
 			if (target.$options.internalName == 'proeve') {
 				$scope.lock(false)
-				//$scope.proeve = {}
 			}
 		})
 
@@ -354,6 +358,30 @@ angular.module('dnalivApp')
 				}
 			})
 		}
+
+		/**
+			resultater
+		*/
+		$scope.showResultat = function(resultat) {
+			$scope.proeveModal.hide()
+			$window.location.href = '/resultater/'+resultat.resultat_id
+		}
+
+		$scope.addResultat = function() {
+			var ids = []
+			$scope.taxons.forEach(function(taxon) {
+				if (taxon.taxon_basisliste) ids.push(taxon.taxon_id)
+			}) 
+			var resultat = {
+				created_userName: Auth.getCurrentUser().name,
+				taxon_ids: ids.join(','),
+				proeve_id: $scope.proeve.proeve_id
+			}
+			Resultat.save({ resultat_id: ''}, resultat).$promise.then(function(resultat) {
+				$scope.showResultat(resultat)
+			})
+		}
+			
 
 
 
