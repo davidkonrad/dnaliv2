@@ -97,14 +97,13 @@ exports.update = function(req, res) {
  * Get my info
  */
 exports.me = function(req, res, next) {
-	/*
-	console.log('user', req.user)
+
 	if (!req.user) {
 		return
-		res.redirect('/');
+		//res.redirect('/');
 		//return res.json(401);	
 	}
-	*/
+
   var userId = req.user._id;
   User.findOne({
     _id: userId

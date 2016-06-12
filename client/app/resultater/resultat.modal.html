@@ -159,6 +159,20 @@
 								</tbody>
 							</table>
 				</form>
+
+				  <div class="form-group" style="width:90%;font-size:90%;">
+						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()" title="Tilføj note / kommentar"><i class="fa fa-plus"></i></button>
+						Noter
+						<table class="table-striped">
+							<tr ng-repeat="k in resultat.kommentarer" class="info">
+								<td><span style="color:red;cursor:pointer;" ng-click="removeKommentar(k.kommentar_id)" title="Slet">×</span>&nbsp;</td>
+								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}" style="white-space:normal !important;"> 
+									{{ k.kommentar }} 
+								</td>
+							</tr>
+						</table>
+					</div>
+
 			</div>
 			
 			<div class="modal-footer">

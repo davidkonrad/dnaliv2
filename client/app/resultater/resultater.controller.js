@@ -2,10 +2,10 @@
 
 angular.module('dnalivApp')
   .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
-			'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'Kommentar', 'KommentarModal', 'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
 	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
-			Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+			Kommentar, KommentarModal, Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Booking.query().$promise.then(function(bookings) {	
 			$scope.sagsNo = []
@@ -31,23 +31,6 @@ angular.module('dnalivApp')
 
 		Taxon.query().$promise.then(function(taxons) {	
 			$scope.taxon = taxons.map(function(taxon) {
-				/*
-				now stored as taxon_prioritet in database
-				switch (taxon.taxon_artsgruppe) {
-					case 'Fisk' :
-						taxon.sortOrder = 1; break;
-					case 'Guldsmede' :
-						taxon.sortOrder = 2; break;
-					case 'Biller' :
-						taxon.sortOrder = 2; break;
-					case 'Tibenede krebsdyr' :
-						taxon.sortOrder = 3; break;
-					case 'Padder' :
-						taxon.sortOrder = 4; break;
-					default :
-						taxon.sortOrder = 100; break;
-				}
-				*/
 				return Utils.getObj(taxon)
 			})
 		})
@@ -148,6 +131,7 @@ angular.module('dnalivApp')
 							$scope.resultat.datoForAnalyse_fixed = Utils.fixDate(resultat.datoForAnalyse)
 							$scope.idsToTaxon(resultat.taxon_ids)
 							$scope.rebuildResultatItems()
+							$scope.loadKommentarer()
 							resolve(true)
 						}
 					}
@@ -166,37 +150,6 @@ angular.module('dnalivApp')
 
 				$scope.lock(true)
 
-				//taxon
-				$scope.taxonOptions = DTOptionsBuilder.newOptions()
-					.withOption('destroy', true)
-					.withOption('paging', false)
-					.withOption('lengthChange', false)
-					.withOption('info', false)
-					.withOption('searching', false)
-					.withOption('autoWidth', true)
-			    .withDisplayLength(50)
-					.withOption('order', [[ 0, "desc" ]])
-					.withOption('initComplete', function() {
-					})
-					.withLanguage(Utils.dataTables_daDk)
-
-				$scope.taxonColumns = [
-		      DTColumnBuilder.newColumn(0).withTitle('Inkl.'),
-		      DTColumnBuilder.newColumn(1).withTitle('Artsgruppe'),
-		      DTColumnBuilder.newColumn(2).withTitle('Dansk navn'),
-		      DTColumnBuilder.newColumn(3).withTitle('Videnskabeligt navn')
-		    ]
-
-				$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col ) {
-			    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
-			       return $('input', td).prop('checked') ? '1' : '0';
-			    } );
-				}
-
-				$scope.taxonColumnDefs = [
-					{ targets: [0],  orderDataType: "dom-checkbox" }
-				]
-
 				$scope.resultatModal = $modal({
 					scope: $scope,
 					templateUrl: 'app/resultater/resultat.modal.html',
@@ -213,6 +166,7 @@ angular.module('dnalivApp')
 				})
 			})
 		}
+
 		$scope.$watch('resultat.datoForAnalyse', function(newVal, oldVal) {
 			var date = Date.parse(newVal)
 			if (newVal != oldVal && !isNaN(date)) {
@@ -225,6 +179,7 @@ angular.module('dnalivApp')
 		})
 
 		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
+			.withOption('destroy', true)
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
 			.withDOM('lBfrtip')
@@ -445,6 +400,41 @@ angular.module('dnalivApp')
 				}
 			})
 		}
+
+		/**
+			kommentarer
+		*/
+		$scope.loadKommentarer = function() {
+			Kommentar.query( { where: { relation_id: $scope.resultat.resultat_id, type_id: Utils.KOMMENTAR_TYPE.RESULTAT }} ).$promise.then(function(kommentarer) {	
+				$scope.resultat.kommentarer = kommentarer
+			})
+		}
+
+		$scope.addKommentar = function() {
+			KommentarModal.show($scope).then(function(kommentar) {	
+				var kommentar = {
+					kommentar: kommentar,
+					type_id: Utils.KOMMENTAR_TYPE.RESULTAT,
+					relation_id: $scope.resultat.resultat_id,
+					created_userName: Auth.getCurrentUser().name
+				}
+				Kommentar.save(kommentar).$promise.then(function() {	
+					$scope.loadKommentarer()
+				})
+			})
+		}	
+
+		$scope.removeKommentar = function(kommentar_id) {
+			Alert.show($scope,'Slet notat', 'Slet note / kommentar - er du sikker?').then(function(confirm) {
+				if (confirm) {
+					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
+						$scope.loadKommentarer()
+					})
+				}
+			})
+		}
+
+
 
 		/**
 			automatically show a resultat, i.e when resultater/id

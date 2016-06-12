@@ -49,12 +49,6 @@ angular.module('dnalivApp')
 		$scope.loadData().then(function() {
 		})
 
-		$scope.loadKommentarer = function(proeve_id) {
-			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
-				$scope.proeve.kommentarer = kommentarer
-			})
-		}
-
 		$scope.loadResultater = function(proeve_id) {
 			$scope.proeve.resultater = []
 			Resultat.query({ where : { proeve_id: proeve_id }}).$promise.then(function(resultater) {
@@ -274,7 +268,15 @@ angular.module('dnalivApp')
 			return typeof $scope.lokalitet.lokalitet_id == 'number'
 		}
 
-		/** kommentarer **/
+		/** 
+			kommentarer 
+		*/
+		$scope.loadKommentarer = function(proeve_id) {
+			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
+				$scope.proeve.kommentarer = kommentarer
+			})
+		}
+
 		$scope.addKommentar = function() {
 			KommentarModal.show($scope).then(function(kommentar) {	
 				var kommentar = {

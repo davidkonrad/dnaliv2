@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q, Booking) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, $cookieStore, $q) {
 
     var currentUser = {};
     if ($cookieStore.get('token')) {
@@ -20,10 +20,6 @@ angular.module('dnalivApp')
       login: function(user, callback) {
         var cb = callback || angular.noop;
         var deferred = $q.defer();
-
-				Booking.query().$promise.then(function(data) {
-					console.log(data)
-				});
 
         $http.post('/auth/local', {
           email: user.email,

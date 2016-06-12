@@ -1,3 +1,21 @@
+
+Prøve
+* oprettelse af nye resultater
+* link / gå til resultat
+
+Resultater
+* mht. butsnudet frø, der var nogle "forældreløse" replikater knyttet til resultat #1 osv (test), der forlængst er slettet. 
+* kommentar / noter
+
+Booking
+* det lykkedes at reproducere det der sker når du ikke kan oprette bookings (på en windows7, faktisk en spøjs anomali) det BURDE være rettet nu!
+
+
+
+
+
+
+--------------------------------------------
 Hej David
  
 Hermed noterne fra vores møde. Sig ENDELIG til hvis noget er uklart og lad mig vide hvis jeg/vi på BM kan gøre noget for at lette dit arbejde fx vedr. adgang til at opdatere serverne. Vi ses mandag kl. 12:30
@@ -5,7 +23,6 @@ Hermed noterne fra vores møde. Sig ENDELIG til hvis noget er uklart og lad mig 
 Noter
 Prøver
 -      Mulighed for at knytte prøve til sagsnr.
--      Under en specifik prøve skal der være link til [vis resultat for prøve] eller [opret nyt resultat]
 -      Evt
 ·        Under lokalitet: master marker, autoplacering efter definerede ’indsamlingssteder’, OG skal placeres indenfor defineret polygon (eller indenfor lokaliteten)
  
@@ -17,10 +34,6 @@ Booking
 -      Oprettelse af sagsnr
 ·        Jeg kan ikke oprette nyt sagsnr
 -      Undersøg muligheden for hive data fra auto-genereret email via bookingsystemet.
- 
-Resultat
--      Notefelt (á la prøver) til indtastet resultat
--      Der er indtastet resultater for Butsnudet frø, men ikke blandt de 15 resultater der pt. er indtastet.
  
 Datasøgning og download
 -      Søgning á la danmarks-edderkopper

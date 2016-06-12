@@ -30,13 +30,16 @@ require('./config/socketio')(socketio);
 require('./config/express')(app);
 require('./routes')(app);
 
+// Expose app
+exports = module.exports = app;
+
+console.log(app.db)
+
 // Start server
 server.listen(config.port, config.ip, function () {
 	console.log('DNA & Liv is running ...');
 });
 
 
-// Expose app
-exports = module.exports = app;
 
-console.log(app)
+

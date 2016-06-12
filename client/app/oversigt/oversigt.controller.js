@@ -58,7 +58,13 @@ angular.module('dnalivApp')
 		$scope.createBooking = function() {
 			SagsNo.create($scope).then(function(sagsNo) {
 				if (sagsNo) {
-					Booking.save({ booking_id: '' }, { sagsNo: sagsNo, status: 0 }).$promise.then(function(booking) {	
+					var booking = {
+						sagsNo: sagsNo,
+						status: 0,
+						periode: 0,
+						aar_periode: 0 
+					}
+					Booking.save({ booking_id: '' }, booking).$promise.then(function(booking) {	
 						$scope.newSagsNo = sagsNo
 						$scope.reloadData()
 					})

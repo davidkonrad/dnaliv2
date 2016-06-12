@@ -50,10 +50,6 @@ angular.module('dnalivApp')
 							}
 						})
 					})
-					$timeout(function() {
-						//$scope.dtInstance.reRender()
-						//console.log($scope.lockedRows)
-					}, 10)
 				})
 			})
 		}
@@ -109,6 +105,7 @@ angular.module('dnalivApp')
 				Utils.dtNormalizeSearch()
 				*/
 			})
+			.withLanguage(Utils.dataTables_daDk);
 
 		$scope.dragoverCallback = function(event, index, external, type) {
 			return true
@@ -137,7 +134,6 @@ angular.module('dnalivApp')
 					})
 				}
 			})
-			
 			return true;
 		}
 
