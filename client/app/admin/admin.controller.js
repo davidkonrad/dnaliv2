@@ -1,9 +1,16 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['$scope', '$http', '$timeout', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Resultat', 'Resultat_item', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
-	 function ($scope, $http, $timeout, Utils, Alert, Taxon, Proeve, Booking, Resultat, Resultat_item, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Resultat', 'Resultat_item', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
+	 function (ItemsService, $scope, $http, $timeout, Utils, Alert, Taxon, Proeve, Booking, Resultat, Resultat_item, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		$scope.items = ['qwerty', 'test'];
+
+		//$scope.items = ItemsService.get($scope.items)
+
+		console.log($scope.items)
+
+		ItemsService.put($scope.items)
 		/*
 			pyramid of doom
 			this should really ber done in a more effective way

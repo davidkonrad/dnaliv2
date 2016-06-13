@@ -8,7 +8,7 @@ Resultater
 * kommentar / noter
 
 Booking
-* det lykkedes at reproducere det der sker når du ikke kan oprette bookings (på en windows7, faktisk en spøjs anomali) det BURDE være rettet nu!
+* det lykkedes at reproducere det der sker, når du ikke kan oprette bookings (på en windows7, faktisk en spøjs anomali) det BURDE være rettet nu!
 
 
 
@@ -32,7 +32,6 @@ Booking
 ·        Kuvert sendt: DATOfelt
 ·        Tilføj: Niveau (A, B, C)
 -      Oprettelse af sagsnr
-·        Jeg kan ikke oprette nyt sagsnr
 -      Undersøg muligheden for hive data fra auto-genereret email via bookingsystemet.
  
 Datasøgning og download
