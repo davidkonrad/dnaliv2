@@ -186,8 +186,8 @@ angular.module('dnalivApp')
 					return data
 				}
 			}),
-      DTColumnBuilder.newColumn('DatoForBooking').withOption('type', 'date').withTitle('Dato for booking'),
-      DTColumnBuilder.newColumn('DatoForBesoeg').withOption('type', 'date').withTitle('Dato for besøg'),
+      DTColumnBuilder.newColumn('DatoForBooking').withOption('type', 'dna').withTitle('Dato for booking'),
+      DTColumnBuilder.newColumn('DatoForBesoeg').withOption('type', 'dna').withTitle('Dato for besøg'),
       DTColumnBuilder.newColumn('klasser').withTitle('Klasse'),
       DTColumnBuilder.newColumn('fag').withTitle('Fag'),
       DTColumnBuilder.newColumn('laerer').withTitle('Lærer'),

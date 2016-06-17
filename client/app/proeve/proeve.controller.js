@@ -212,8 +212,8 @@ angular.module('dnalivApp')
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
       DTColumnBuilder.newColumn('lokalitet').withOption('class', 'td-ellipsis').withTitle('Lokalitet'),
-      DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'date').withTitle('Indsamlingsdato'),
-      DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'date').withTitle('Dato for ekst.'),
+      DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'dna').withTitle('Indsamlingsdato'),
+      DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'dna').withTitle('Dato for ekst.'),
       DTColumnBuilder.newColumn('analyseDato_fixed').withOption('class', 'td-wordwrap').withOption('type', 'date').withTitle('Analysedato'),
       DTColumnBuilder.newColumn('Indsamler').withOption('visible', false).withOption('class', 'td-ellipsis').withTitle('Indsamler'),
       DTColumnBuilder.newColumn('Institutionsnavn').withOption('class', 'td-ellipsis').withTitle('Institutionsnavn'),

@@ -218,7 +218,7 @@ angular.module('dnalivApp')
 		$scope.resultaterColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøvenr.'),
-      DTColumnBuilder.newColumn('datoForAnalyse').withTitle('Dato for analyse'),
+      DTColumnBuilder.newColumn('datoForAnalyse').withOption('type', 'dna').withTitle('Dato for analyse'),
       DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
     ]
 
@@ -433,8 +433,6 @@ angular.module('dnalivApp')
 				}
 			})
 		}
-
-
 
 		/**
 			automatically show a resultat, i.e when resultater/id

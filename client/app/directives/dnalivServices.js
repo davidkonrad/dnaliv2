@@ -207,3 +207,17 @@ angular.module('dnalivApp').
         }
     };
 }]);
+
+
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "dna-pre": function ( a ) {
+      if (a == null || a == "") {
+         return 0;
+      }
+      var date = a.split('-');
+			return Date.parse(date[1] + '-' + date[0] + '-' + date[2])
+    }
+} );
+
+
