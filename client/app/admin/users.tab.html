@@ -1,0 +1,26 @@
+<span style="border-left: 1px solid #ddd;display:inline-block;">
+
+<br>
+
+&nbsp;&nbsp;
+<button class="btn btn-primary btn-xs">
+	<i class="fa fa-plus"></i>
+	Ny bruger
+</button>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button class="btn btn-primary btn-xs" disabled>
+	Opdater systembrugere
+</button>
+
+<table datatable="ng" class="table table-striped" id="usersTable" dt-options="usersOptions" dt-instance="usersInstance" dt-columns="usersColumns" dt-column-defs="usersColumnDefs">
+	<tbody>
+		<tr ng-repeat="user in users" ng-click="showUser(user)" >
+			<td> {{ user.name }} </td>
+			<td> {{ user.email }} </td>
+			<td> {{ user.password }} </td>
+			<td> {{ user.role }} </td>
+		</tr>
+	</tbody>
+</table>
+
+

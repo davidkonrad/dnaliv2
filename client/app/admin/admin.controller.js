@@ -1,16 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Resultat', 'Resultat_item', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
-	 function (ItemsService, $scope, $http, $timeout, Utils, Alert, Taxon, Proeve, Booking, Resultat, Resultat_item, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
+			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
+	 function (ItemsService, $scope, $http, $timeout, $modal, Utils, Alert, Taxon, Proeve, Booking, 
+			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		$scope.items = ['qwerty', 'test'];
-
-		//$scope.items = ItemsService.get($scope.items)
-
-		console.log($scope.items)
-
-		ItemsService.put($scope.items)
 		/*
 			pyramid of doom
 			this should really ber done in a more effective way
@@ -238,5 +233,46 @@ angular.module('dnalivApp')
 			})
 		}
 
+		/**
+			system users
+		*/
+		System_user.query().$promise.then(function(users) {
+			$scope.users = users
+		})
+
+		$scope.usersOptions = DTOptionsBuilder.newOptions()
+      .withPaginationType('full_numbers')
+      .withDisplayLength(-1)
+			//.withDOM('lfrtip')
+			.withDOM('t')
+			.withOption('destroy', true)
+			.withOption('initComplete', function() {
+				$.fn.dataTable.ext.search = []
+				Utils.dtNormalizeLengthMenu()
+				//Utils.dtNormalizeButtons()
+				Utils.dtNormalizeSearch()
+			})
+			.withLanguage(Utils.dataTables_daDk)
+
+		$scope.usersColumns = [
+      DTColumnBuilder.newColumn(0).withTitle('Navn'),
+      DTColumnBuilder.newColumn(1).withTitle('Email'),
+      DTColumnBuilder.newColumn(2).withTitle('Password'),
+      DTColumnBuilder.newColumn(3).withTitle('Role')
+    ];  
+
+		$scope.usersInstance = {}
+
+		$scope.showUser = function(user) {
+			$scope.userModal = $modal({
+				scope: $scope,
+				templateUrl: 'app/admin/user.modal.html',
+				backdrop: 'static',
+				show: true
+			})
+		}
+
+
+	
 }]);
 

@@ -19,7 +19,7 @@ module.exports = function(app) {
 	app.use('/api/resultat', require('./api/mysql/resultat'));
 	app.use('/api/resultat_item', require('./api/mysql/resultat_item'));
 	app.use('/api/kommentar', require('./api/mysql/kommentar'));
-	app.use('/api/mysqlusers', require('./api/mysql/users'));
+	app.use('/api/system_user', require('./api/mysql/system_user'));
 
 	//MongoDB
 	app.use('/api/users', require('./api/mongo/user'));

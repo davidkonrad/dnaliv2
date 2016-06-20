@@ -4,21 +4,21 @@
 
 'use strict';
 
-var Resultat_item = require('./resultat_item.model');
+var System_user = require('./system_user.model');
 
 exports.register = function(socket) {
-  Resultat_item.schema.post('save', function (doc) {
+  System_user.schema.post('save', function (doc) {
     onSave(socket, doc);
   });
-  Resultat_item.schema.post('remove', function (doc) {
+  System_user.schema.post('remove', function (doc) {
     onRemove(socket, doc);
   });
 }
 
 function onSave(socket, doc, cb) {
-  socket.emit('resultat_item:save', doc);
+  socket.emit('system_user:save', doc);
 }
 
 function onRemove(socket, doc, cb) {
-  socket.emit('resultat_item:remove', doc);
+  socket.emit('system_user:remove', doc);
 }
