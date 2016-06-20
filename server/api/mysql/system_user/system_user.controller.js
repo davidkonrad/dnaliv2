@@ -32,7 +32,7 @@ exports.create = function(req, res) {
 
 // Updates an existing system_user in the DB.
 exports.update = function(req, res) {
-  models.System_user.find({ where : { system_user_id: req.params.id }} ).then(function(system_user){
+  models.System_user.find({ where : { user_id: req.params.id }} ).then(function(system_user){
     if (!system_user) { 
 			return res.send(404); 
 		}  

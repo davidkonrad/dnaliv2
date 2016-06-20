@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
+  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
-	 function (ItemsService, $scope, $http, $timeout, $modal, Utils, Alert, Taxon, Proeve, Booking, 
+
+	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, 
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		/*
@@ -264,14 +265,54 @@ angular.module('dnalivApp')
 		$scope.usersInstance = {}
 
 		$scope.showUser = function(user) {
+			if (user) {
+				$scope.userModalUser = user
+				$scope.userModalUser.title = "Rediger bruger <b>"+user.name+'</b>'
+			} else {
+				$scope.userModalUser = {
+					name: 'bruger'+($scope.users.length+1).toString(),
+					password: '',
+					email: '',
+					role: 'Gæst',
+					title: 'Opret ny bruger'
+				}
+			}
 			$scope.userModal = $modal({
 				scope: $scope,
 				templateUrl: 'app/admin/user.modal.html',
 				backdrop: 'static',
-				show: true
+				user: user,
+				show: true,
+				internalName: 'modalUser'
+			})
+			$scope.$on('modal.hide', function(e, target){
+				if (target.$options.internalName == 'modalUser') {
+				}
+			})
+			$scope.$on('modal.show', function(e, target){
+				if (target.$options.internalName == 'modalUser') {
+				}
 			})
 		}
 
+		$scope.saveUser = function() {
+			if ($scope.userModalUser.user_id) {
+				System_user.update({ id: $scope.userModalUser.user_id }, $scope.userModalUser).$promise.then(function(user) {
+				})
+			} else {
+				System_user.save({ id: '' }, $scope.userModalUser).$promise.then(function(user) {
+					//should automatically update "background" / the user table as well
+					$scope.users.push(user)
+				})
+			}
+		}
+
+		/**
+			update the mongodb user with mySQL system_users 
+		*/
+		$scope.updateSystemUsers = function() {
+			console.log(User);
+		}			
 
 	
 }]);

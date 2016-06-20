@@ -165,5 +165,7 @@ ul[dnd-list] li {
 }
 
 /* user modal */
-
-
+#modal-user {
+	width: 400px;
+	max-width: 500px !important;	
+}

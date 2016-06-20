@@ -3,27 +3,43 @@
 		<div class="modal-content">
 			
 			<div class="modal-header">
-				<h4 class="modal-title"> {{ userModal.title }}</h4>
+				<h4 class="modal-title" ng-bind-html="userModalUser.title"></h4>
 			</div>
 
 			<div class="modal-body">
-			  <label class="control-label normal" for="input">{{ proeveNrModal.message }}</label>
-				<div class="form-group has-success has-feedback" id="modal-proeveNr-input">
-					<input type="text" class="form-control bold" ng-model="proeveNrModal.proeve_nr" id="input" aria-describedby="inputStatus">
-  				<span class="glyphicon glyphicon-ok form-control-feedback" id="modal-proeveNr-glyph" aria-hidden="true"></span>
-				  <span id="inputStatus" class="sr-only">(warning)</span>
-				</div>
-				<span class="text-danger" id="modal-proeveNr-exists" style="display:none;">prøveNr <b>{{ proeveNrModal.proeve_nr }}</b> er optaget!</span>
-				<span class="checkbox" id="modal-proeveNr-create" style="display:none;margin-top:1px;">
-					<label class="normal" style="padding-left:0px;font-size:85%;">
-						<input type="checkbox" ng-model="proeveNrModal.willCreate" /> Opret prøve med Prøvenr. <b>{{ proeveNrModal.proeve_nr }}</b>
-					</label>
-				</span>
+				<form role="form">
+
+					<div class="form-group">
+				    <label for="name">Navn</label>
+				    <input type="text" class="form-control" ng-model="userModalUser.name" id="name">
+				  </div>
+					<div class="form-group">
+				    <label for="email">Email</label>
+				    <input type="text" class="form-control" ng-model="userModalUser.email" id="email">
+				  </div>
+					<div class="form-group">
+				    <label for="password">Email</label>
+				    <input type="text" class="form-control" ng-model="userModalUser.password"  id="password">
+				  </div>
+
+					<div class="form-group">
+				    <label for="roole">Role</label>
+						<select class="form-control" name="role">
+							<option value="Gæst">Gæst</option>
+							<option value="Indtaster">Indtaster</option>
+							<option value="Admin">Admin</option>
+						</select>
+				  </div>
+				</form>				
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" ng-click="proeveNrClose(false)">Fortryd</button> 
-				<button type="button" class="btn btn-success" ng-disabled="!proeveNrModal.canSubmit" ng-click="proeveNrClose(true)">OK</button> 
+				<span style="float:left;">
+					<button type="button" class="btn btn-danger" ng-click="deleteUser(user)">Slet</button> 
+				</span>
+				<button type="button" class="btn btn-primary" ng-click="saveUser()" ng-if="!userModalUser.user_id">Opret bruger</button> 
+				<button type="button" class="btn btn-primary" ng-click="saveUser()" ng-if="userModalUser.user_id>0" >Gem</button> 
+				<button type="button" class="btn btn-success" ng-click="$hide()">Luk</button> 
 			</div>
 
 		</div>
