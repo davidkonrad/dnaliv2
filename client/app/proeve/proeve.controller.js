@@ -82,6 +82,8 @@ angular.module('dnalivApp')
 		}
 
 		$scope.lock = function(mode) {
+			//check if we not is about to update a record that is deleted, or is about to be deleted
+			if ($scope.isDeleting) return
 			var proeve = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
 			Proeve.update({ id: $scope.proeve.proeve_id }, proeve)
 		}
@@ -347,14 +349,17 @@ angular.module('dnalivApp')
 		$scope.deleteProeve = function(proeve_id) {
 			Alert.show($scope,'Slet Prøve?', 'Der er ingen resultater tilknyttet prøven, så sletning er sikker.').then(function(confirm) {
 				if (confirm) {
+					//set a flag, indicate that the record is about to be deleted
+					$scope.isDeleting = true 
+					$scope.proeveModal.hide()
 					var lokalitet_id = $scope.proeve.lokalitet_id
 					Proeve.delete({ id : proeve_id }).$promise.then(function() {	
 						Lokalitet.delete({ id: lokalitet_id }).$promise.then(function() {	
 						}) 
-						$scope.loadData()
-						$scope.proeveModal.hide()
-						$timeout(function() {
-							$scope.proeveInstance.DataTable.draw()
+						$scope.loadData().then(function() {
+							$scope.isDeleting = false
+							//console.log('loadData finished')
+							//$scope.proeveInstance.rerender()
 						})
 					})
 				}

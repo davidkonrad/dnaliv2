@@ -1,8 +1,7 @@
 'use strict';
 var models = require('../');
 
-
-// Get list of proeves
+// Get list of proever
 exports.index = function(req, res) {
   models.Proeve.findAll({ 
 		include: [{ 
@@ -73,3 +72,4 @@ exports.describe = function(req, res) {
 function handleError(res, err) {
   return res.send(500, err);
 }
+

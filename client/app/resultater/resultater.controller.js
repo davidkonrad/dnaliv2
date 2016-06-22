@@ -18,12 +18,13 @@ angular.module('dnalivApp')
 		$scope.loadProever = function() {
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proeve_nr = []
-				$scope.proever = proever.map(function(proeve) {
+				var temp = proever.map(function(proeve) {
 					return Utils.getObj(proeve)
 				})
-				proever.forEach(function(proeve) {
+				temp.forEach(function(proeve) {
 					$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
 				})
+				$scope.proever = temp
 				$scope.reloadData()
 			})
 		}
@@ -80,7 +81,7 @@ angular.module('dnalivApp')
 		}
 
 		$scope.reloadData = function() {
-			$('#dt-tools').detach().appendTo('body').hide()
+			console.log('Reloading ...')
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
@@ -156,13 +157,17 @@ angular.module('dnalivApp')
 					backdrop: 'static',
 					show: true
 				})
+
 				$scope.$on('modal.show', function(e, target) {
 					$('#unExcludeSelect').on('change', function() {
 						 $scope.includeTaxon($(this).val())
 					})
 				})
 				$scope.$on('modal.hide', function(e, target) {
+					//console.log('hide lock and reload')
 					$scope.lock(false)
+					//$scope.loadProever()
+					//$scope.reloadData()
 				})
 			})
 		}
@@ -185,6 +190,11 @@ angular.module('dnalivApp')
 			.withDOM('lBfrtip')
 			.withOption('order', [[1, 'asc']])
 			.withOption('initComplete', function() {
+				//console.log('initComplete', $scope.proever.length)
+
+				//console.log('initComplete', $scope.proever ? $scope.proever.length : 'proever ikke initialiseret')
+				//console.log('initComplete', $scope.resultater ? $scope.resultater.length : 'resultater ikke initialiseret')
+
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
 				Utils.dtNormalizeSearch()
@@ -246,7 +256,6 @@ angular.module('dnalivApp')
 			}
 		
 			Resultat_item.query({ where: { resultat_id: $scope.resultat.resultat_id }}).$promise.then(function(resultat_items) {	
-				//resultat_items.forEach(function(resultat_item) {
 				for (var i = 0, resultat_item = null, len = resultat_items.length; i < len; i++) {
 					//set a isNull value, indicating we should overrule first click values
 					resultat_item = resultat_items[i]

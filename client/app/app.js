@@ -58,7 +58,7 @@ angular.module('dnalivApp', [
       Auth.isLoggedInAsync(function(loggedIn) {
 				var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
 				if (typeof publicLocation == 'string') {
-					publicLocation = ['main.html','login.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
+					publicLocation = ['main.html', 'login.html', 'visualisering.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
 				} else {
 					publicLocation = false
 				}

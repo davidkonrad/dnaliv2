@@ -62,5 +62,12 @@ table.overview-taxon th.right {
 table.overview-taxon td.right {
 	text-align: right !important;
 	padding-right: 30px !important;
-
 }
+
+/* global setting, remove outline if FF buttons */
+a:focus {
+	outline:none;
+}
+
+
+

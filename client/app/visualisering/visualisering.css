@@ -1,0 +1,16 @@
+
+#proeve-map {
+}
+
+table.visualisering-popup td:nth-child(1) {
+	font-weight: bold;
+	padding-right: 5px;
+}
+
+.green {
+	color: green !important;
+}
+
+.leaflet-popup-content {
+	width:auto !important;
+}
