@@ -209,7 +209,6 @@ angular.module('dnalivApp').
 }]);
 
 
-
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "dna-pre": function ( a ) {
       if (a == null || a == "") {
@@ -219,5 +218,8 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 			return Date.parse(date[1] + '-' + date[0] + '-' + date[2])
     }
 } );
+
+//global path to leaflet defaults
+L.Icon.Default.imagePath = '/bower_components/leaflet/dist/images';
 
 

@@ -7,9 +7,6 @@ angular.module('dnalivApp')
 	function ($scope, $window, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat, Resultat_item,
 			Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		//??
-		L.Icon.Default.imagePath = '../bower_components/leaflet/dist/images/';
-
 		Taxon.query().$promise.then(function(taxons) {
 			$scope.taxons = taxons
 		})
