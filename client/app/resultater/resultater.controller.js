@@ -449,7 +449,7 @@ angular.module('dnalivApp')
 		if ($routeParams.id) {
 			$timeout(function() {
 				$scope.showResultat($routeParams.id)
-			}, 500)
+			}, 1000)
 		}
 
 

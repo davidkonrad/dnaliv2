@@ -1,0 +1,28 @@
+<span style="border-left: 1px solid #ddd;display:inline-block;">
+
+	<table datatable="ng" class="table table-striped" id="lockedRowsTable" dt-options="lockedOptions" dt-instance="lockedInstance" XXdt-columns="lockedColumns" >
+		<thead>
+			<tr>
+				<th>Bruger</th>
+				<th>Type</th>
+				<th>Kode / Nr</th>
+				<th>#id</th>
+				<th>Oprettet af</th>
+				<th>Oprettet</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="lockedRow in lockedRows" ng-click="unLock(lockedRow)">
+				<td> {{ lockedRow.locked_by }} </td>
+				<td> {{ lockedRow.type }} </td>
+				<td> {{ lockedRow.desc }} </td>
+				<td> {{ lockedRow.id }} </td>
+				<td> {{ lockedRow.created_userName }} </td>
+				<td> {{ lockedRow.created_timestamp | date }} </td>
+				<td> <button class="btn btn-primary btn-sm" >Lås op</button> </td>
+			</tr>
+		</tbody>
+	</table>
+
+</span>

@@ -296,7 +296,12 @@ angular.module('dnalivApp')
 		}
 
 		$scope.createKlasse = function() {
-			Klasse.save({ klasse_id: '' }, { booking_id : $scope.booking.booking_id, institutionsnavn: 'ikke sat' }).$promise.then(function(klasse) {	
+			var newKlasse = {
+				booking_id: $scope.booking.booking_id,
+				institutionsnavn: '<mangler>',
+				status: 0
+			}
+			Klasse.save({ klasse_id: '' }, newKlasse ).$promise.then(function(klasse) {	
 				$scope.booking.Klasse.push(klasse)
 			})
 		}

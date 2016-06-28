@@ -3,6 +3,12 @@
 angular.module('dnalivApp')
 	.controller('NavbarCtrl', function($rootScope, $scope, $location, Auth) {
 
+		//dirty "hack", simply return if we want the navbar to show
+		//this is used in footer.html as well
+		$scope.isObvious = function() {
+			return $location.path() == '/obvious'
+		}
+
 		$scope.isCollapsed = true;
 		$scope.isLoggedIn = Auth.isLoggedIn;
 		$scope.isAdmin = Auth.isAdmin;

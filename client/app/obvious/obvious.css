@@ -27,3 +27,16 @@ tags-input .tags.focused {
 	box-shadow: 1px 1px 1px 0 #ebebeb outset !important;
   border: 1px solid #ebebeb !important;
 }
+
+
+/** reset styling **/
+
+span, div {
+	margin: 0px;
+	padding: 0px;
+}
+
+#obvious-container {
+	width: 505px !important;
+	height: 600px !important;
+}

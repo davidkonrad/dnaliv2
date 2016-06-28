@@ -19,7 +19,6 @@ angular.module('dnalivApp')
 
 			Proeve.query().$promise.then(function(proever) {	
 				$scope.proever = proever.map(function(proeve) {
-			
 					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
 					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
 					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
