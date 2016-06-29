@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$window', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'ProeveNr', 'Resultat', 'Resultat_item', 
-			'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+  .controller('ProeveCtrl', ['$scope', '$window', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'Proeve_extras',
+			'ProeveNr', 'Resultat', 'Resultat_item', 'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 
+			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function ($scope, $window, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, ProeveNr, Resultat, Resultat_item,
-			Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+	function ($scope, $window, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, Proeve_extras,
+						ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
+						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		Taxon.query().$promise.then(function(taxons) {
 			$scope.taxons = taxons
@@ -385,6 +387,12 @@ angular.module('dnalivApp')
 			})
 		}
 			
+		/**
+			proeve extras
+		*/
+		Proeve_extras.query({ where : { active: true } }).$promise.then(function(extras) {
+			console.log(extras)
+		})
 
 
 

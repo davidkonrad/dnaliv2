@@ -1,42 +1,8 @@
-
-#proeve-map {
+body {
+	background-color: #fff;
 }
-
-table.visualisering-popup td:nth-child(1) {
-	font-weight: bold;
-	padding-right: 5px;
-}
-
-.green {
-	color: green !important;
-}
-
-.leaflet-popup-content {
-	width:auto !important;
-}
-
-tags-input .tags .tag-item {
-	background: #fff !important;
-	box-shadow: none;
-}
-tags-input .tags {
-	box-shadow: 1px 1px 1px 0 #ebebeb inset;
-  border: 1px solid #ebebeb !important;
-}
-tags-input .tags.focused {
-	box-shadow: 1px 1px 1px 0 #ebebeb outset !important;
-  border: 1px solid #ebebeb !important;
-}
-
-
-/** reset styling **/
-
-span, div {
-	margin: 0px;
-	padding: 0px;
-}
-
 #obvious-container {
-	width: 505px !important;
-	height: 600px !important;
+	width: 495px !important;
+	height: 380px !important;
+	background-color: #fff;
 }

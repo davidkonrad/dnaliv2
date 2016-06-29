@@ -1,0 +1,40 @@
+<span style="border-left: 1px solid #ddd;display:inline-block;">
+
+	<table datatable="ng" class="table table-striped" id="lockedRowsTable" dt-options="lockedOptions" dt-instance="lockedInstance" XXdt-columns="lockedColumns" >
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Tekst</th>
+				<th>Type</th>
+				<th>Aktiv</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="extra in proeve_extras">
+				<td> 
+					{{ extra.extras_id }} 
+				</td>
+				<td> 
+					<input type="text" class="form-control input-sm" ng-model="extra.caption" ng-change="extra.modified = true"/> 
+				</td>
+				<td> 
+					<button type="button" class="btn btn-default" ng-model="extra.type" bs-options="t as t for t in extrasType" bs-select placeholder="&lt;Ikke sat>" ng-change="extra.modified = true">
+						<span class="caret"></span>
+					</button>
+				</td>
+				<td>
+					<button type="button" id="status" class="btn btn-default btn-sm bold" ng-model="extra.active" bs-options="s.value as s.text for s in extrasActive" bs-select style="width:100px;" placeholder="" ng-change="extra.modified = true">
+  					<span class="caret"></span>
+					</button>
+				</td>
+				<td>
+					<button class="btn btn-primary btn-sm" ng-disabled="!extraModified(extra)" ng-click="updateExtra(extra)">
+						<i class="glyphicon glyphicon-ok"></i>
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</span>

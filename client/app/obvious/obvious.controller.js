@@ -60,8 +60,6 @@ angular.module('dnalivApp')
 			zoom: 6
 		}
 
-
-		//pyramid of doom, the fastest lookup anyway
 		Proeve.query().$promise.then(function(proever) {
 			$scope.proever = proever
 			$scope.salamandre = []
@@ -95,7 +93,6 @@ angular.module('dnalivApp')
 				})
 			})
 		})
-
 
 		$timeout(function() {
 			//$scope.map = L.map('obvious-map').setView([55.685255690177826, 12.572981195446564], 6);
@@ -171,6 +168,25 @@ angular.module('dnalivApp')
 							jpegquality: "80",
 							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
 							ticket: TicketService.get()
+						}
+					}
+				},
+	/**
+xyz,mapbox,geoJSON,utfGrid,cartodbTiles,cartodbUTFGrid,cartodbInteractive,wms,wmts,wfs,group,
+featureGroup,google,china,ags,dynamic,markercluster,bing,webGLHeatmap,heat,yandex,imageOverlay,custom,cartodb
+*/
+
+				overlays : {
+					Stamen_TonerLabels: {
+						name: 'Labels',
+						url: 'http://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.{ext}', 
+						type: 'xyz',
+            layerOptions: {
+							attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+							subdomains: 'abcd',
+							minZoom: 0,
+							maxZoom: 20,
+							ext: 'png'
 						}
 					}
 				}

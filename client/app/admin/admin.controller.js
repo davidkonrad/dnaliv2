@@ -1,12 +1,55 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
+  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Proeve_extras',
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, 
+	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		/*
+		$scope.extrasType = [
+			{ text: '<Ikke sat>' },
+			{ text: 'Heltal' },
+			{ text: 'Kommatal' },
+			{ text: 'Dato' },
+			{ text: 'Tekst (50)' },
+			{ text: 'Tekst (memo)' }
+		]
+		*/
+
+		$scope.extrasType = [
+			'<Ikke sat>',
+			'Heltal',
+			'Kommatal',
+			'Dato',
+			'Tekst (50)',
+			'Tekst (memo)'
+		]
+
+		$scope.extrasActive = [
+			{ "value": 0, "text": "Deaktiveret", "class": "btn-danger" }, 
+			{ "value": 1, "text": "Aktiveret", "class": "btn-success" }
+		]
+
+		Proeve_extras.query().$promise.then(function(extras) {
+			$scope.proeve_extras = extras.map(function(extra) {
+				extra.modified = false
+				return Utils.getObj(extra)
+			})
+		})
+
+		$scope.extraModified = function(extra) {
+			return extra.modified
+		}
+
+		$scope.updateExtra = function(extra) {
+			Proeve_extras.update({ id: extra.extras_id }, extra).$promise.then(function() {
+				extra.modified = false
+			})
+		}
+				
+	
 		/*
 			pyramid of doom
 			this should really ber done in a more effective way
