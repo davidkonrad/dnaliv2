@@ -107,6 +107,7 @@ angular.module('dnalivApp')
       .withDisplayLength(-1)
 			.withDOM('lB<"dt-custom">frtip')
 			.withOption('destroy', true)
+			.withOption('stateSave', true)
 			.withOption('initComplete', function() {
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
@@ -204,7 +205,7 @@ angular.module('dnalivApp')
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.bookings.length; i++) {
 					if ($scope.bookings[i].booking_id == booking_id) {
-						if ($scope.bookings[i].locked_by) {
+						if ($scope.bookings[i].locked_by && $scope.bookings[i].locked_by != Auth.getCurrentUser().name) {
 							Alert.show($scope, 'Bookingen er låst', 'Denne booking redigeres pt. af <strong>'+$scope.bookings[i].locked_by+'</strong>.', true)
 						} else {
 							$scope.booking = $scope.bookings[i]
@@ -289,9 +290,11 @@ angular.module('dnalivApp')
 				if (klasse.klasse_id == klasse_id) {
 					$scope.klasse = klasse
 				}
+				/*
 				Lokalitet.get({ id: klasse.lokalitet_id }).$promise.then(function(lokalitet) {
 					$scope.klasse.Lokalitet = lokalitet
 				})
+				*/
 			})
 		}
 
@@ -355,6 +358,52 @@ angular.module('dnalivApp')
 			})
 		}
 	
+		//we assume Wkt is loaded
+		var wkt = new Wkt.Wkt()
+
+		function geometryWktPolygon(geometryWkt) {
+			console.log(geometryWkt)
+			wkt.read(geometryWkt);
+			var points = ''
+			console.log('wkt', wkt.components)
+			for (var i=0; i<wkt.components[0][0].length; i++)  {
+				var xy = wkt.components[0][0][i]
+				console.log('xy', xy)
+				var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+				console.log(latLng)
+				if (points!='') points+=','
+				points+='['+ latLng.lat +',' +latLng.lng +']'
+			}
+			console.log('['+points+']')
+			return points;
+		}
+			
+			/*
+			if (wkt.components[0].length) {
+				for (var p=0; p<wkt.components.length;p++) {
+					console.log('wkt.components[p]', wkt.components[p])
+					var points = '';
+					for (var i=0; i<wkt.components[p].length; i++)  {
+						var xy = wkt.components[p][i]
+						console.log('xy', xy)
+						var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+						console.log(latLng)
+						if (points!='') points+=','
+						points+='['+ latLng.lng +',' +latLng.lat +']'
+					}
+					console.log(points)
+					polygons.push(points)
+				}
+			} else {
+				var points = wkt.components.map(function(xy) {
+					var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
+					return [latLng.lng, latLng.lat]
+				})
+				//console.log(points)
+				polygons.push(points)
+			}
+			*/
+
 		$scope.showKlasse = function(klasse_id) {
 			$scope.setKlasse(klasse_id)
 			$scope.loadKlasseKommentarer(klasse_id)
@@ -362,8 +411,48 @@ angular.module('dnalivApp')
 				scope: $scope,
 				templateUrl: 'app/oversigt/klasse.modal.html',
 				backdrop: 'static',
-				show: true
+				show: true,
+				internalName: 'klasse'
 			})
+			$scope.$on('modal.show', function(e, target){
+				if (target.$options.internalName == 'klasse') {
+
+					$('#institution').typeahead({
+						afterSelect: function (item) {
+							console.log('institution selected', item);
+							console.log(geometryWktPolygon(item.geometryWkt))
+						}, 
+						items : 20,
+						displayText: function(item) {
+							return item.presentationString
+						},
+					  source: function(query, process) {
+							//TODO: run service with tickets instead of hardcoded username / password
+							var login = "davidkonrad", 
+									password = "nhmdzm",
+									url = 'https://services.kortforsyningen.dk/Geosearch?search=*'+query+'*&resources=stednavne_v2&limit=100&login='+login+'&password='+password;
+
+					    return $.getJSON(url, function(resp) {
+								var newData = [],
+										types = ['gymnasium', 'uddannelsescenter', 'privatskoleFriskole', 'folkeskole', 'universitet', 'specialskole']
+								for (var i in resp.data) {
+									//console.log(resp.data[i]);
+									//console.log(resp.data[i].type, resp.data[i].subtype);
+									if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
+										//console.log(resp.data[i]);
+										//newData.push(resp.data[i].presentationString);
+										newData.push(resp.data[i]);
+									}
+								}			
+								return process(newData);		
+					    })
+					  }
+					})
+
+					console.log('klasse OK')
+				}
+			})
+
 		}
 
 		$scope.saveKlasse = function() {

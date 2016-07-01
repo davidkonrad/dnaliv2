@@ -1,6 +1,6 @@
 <div class="container">
 
-	<table datatable="ng" class="table table-striped" dt-options="proeveOptions" dt-columns="proeveColumns" dt-instance="proeveInstance" dt-column-defs="proeveColumnDefs" style="max-width:100% !important;">
+	<table datatable="ng" class="table table-striped" dt-options="proeveOptions" dt-columns="proeveColumns" dt-instance="proeveInstance" dt-column-defs="proeveColumnDefs" style="max-width:100% !important;" id="dtProeve">
 		<tbody>
 			<tr ng-repeat="proeve in proever" ng-click="showProeve(proeve.proeve_id)" ng-class="{ warning: (proeve.locked_by != null), 'text-muted': (proeve.locked_by != null) }" >
 				<td> {{ proeve.proeve_nr }} </td>

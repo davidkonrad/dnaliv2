@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('Utils', function() {
+  .factory('Utils', ['$window', function ($window) {
 		return {
 
 			getObj: function($resource, prefix) {
@@ -99,6 +99,14 @@ angular.module('dnalivApp')
 				input.className += 'form-control inject-control'
 				input.style.padding = '5px'
 				input.placeholder = 'skriv ..'
+
+				$(input).on('click', function () {
+					if (!$window.getSelection().toString()) {
+						// Required for mobile Safari
+						this.setSelectionRange(0, this.value.length)
+					}
+				})
+
 			},
 
 			dtPerformSearch: function(term) {
@@ -154,15 +162,16 @@ angular.module('dnalivApp')
 			}
 	
 		}
-	});
+	}]);
 
 
-	/**
+
+/**
 	defaults for jQuery dataTables
-	 **/	
-	$.extend( true, $.fn.dataTable.defaults, {
-	  "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Alle"] ]
-	});
+ **/	
+$.extend( true, $.fn.dataTable.defaults, {
+  "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Alle"] ]
+});
 
 
 angular.module('dnalivApp').

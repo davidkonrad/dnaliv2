@@ -30,8 +30,8 @@ angular.module('dnalivApp')
 				current_proeve_nr = proeve_nr
 
 				$scope.proeveNrModal = {
-					title: 'Ret PrøveNr ..',
-					message: 'Skriv nyt (unikt) prøveNr :',
+					title: 'Ret PrøveID ..',
+					message: 'Skriv nyt (unikt) PrøveID :',
 					canSubmit: false,
 					proeve_nr: proeve_nr
 				}
@@ -94,7 +94,7 @@ angular.module('dnalivApp')
 
 				$scope.proeveNrModal = {
 					title: 'Opret ny prøve ..',
-					message: 'Skriv nyt (unikt) prøveNr :',
+					message: 'Skriv nyt (unikt) PrøveID :',
 					canSubmit: false,
 					proeve_nr: null
 				}
@@ -253,7 +253,7 @@ angular.module('dnalivApp')
 			select: function($scope, proeve_nr) {
 				$scope.proeveNrModal = {
 					title: 'Knyt til Prøve ..',
-					message: 'Opslag på PrøveNr. :',
+					message: 'Opslag på PrøveID :',
 					canSubmit: false,
 					proeve_nr: proeve_nr
 				}

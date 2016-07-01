@@ -37,11 +37,14 @@ angular.module('dnalivApp').directive('wetlandTypeahead', function () {
 								types = ['sø', 'vandløb', 'vandloeb', 'soe', 'å', 'kilde', 'hav', 'fjord', 'bæk', 'mose', 'sump', 'moseSump']
 	
 						for (var i in resp.data) {
+							data.push(resp.data[i])
+							/*
 							if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
 								data.push(resp.data[i]);
 							} else {
-								//console.log(resp.data[i].subtype);
+								console.log(resp.data[i].subtype);
 							}
+							*/
 						}			
 						return process(data);		
 			    })

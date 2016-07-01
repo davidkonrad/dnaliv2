@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', '$compile', 'TicketService', 'Lokalitet', 'Proeve', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
+  .controller('MainCtrl', ['$scope', '$compile', 'TicketService', 'Lokalitet', 'Proeve', 'Db', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
 						'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function($scope, $compile, TicketService, Lokalitet, Proeve, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
+	 function($scope, $compile, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		var redIcon = {
@@ -24,16 +24,35 @@ angular.module('dnalivApp')
 				}
 
 		$scope.getTaxon = function(taxon_id) {
+			var taxons = Db.taxons()
+			for (var i=0; i<taxons.length; i++) {
+				if (taxons[i].taxon_id == taxon_id) {
+					return taxons[i]
+				}
+			}
+
+			/*
 			for (var i=0; i<$scope.taxons.length; i++) {
 				if ($scope.taxons[i].taxon_id == taxon_id) {
 					return $scope.taxons[i]
 				}
 			}
+			*/
 		}
 
+	/*
+		console.log(Db)
+		Db.Bookings.reload().then(function(test) {
+			console.log(test)
+		})
+*/
+
+/*
 		Taxon.query().$promise.then(function(taxons) {
 			$scope.taxons = taxons
+*/
 
+		Db.init().then(function() {
 			Resultat_item.query().$promise.then(function(resultat_items) {
 				$scope.replikatCount = resultat_items.length
 
@@ -43,6 +62,7 @@ angular.module('dnalivApp')
 						if (replikater[i].taxon_id == item.taxon_id) {
 							replikater[i].count++
 			 				if (item.eDNA && item.database_result) replikater[i].found++
+							if (!~replikater[i].resultat.indexOf(item.resultat_id)) replikater[i].resultat.push(item.resultat_id)
 							return true
 						}
 					}
@@ -50,6 +70,7 @@ angular.module('dnalivApp')
 					replikater.push({
 						count: 1,
 						found: item.eDNA && item.database_result ? 1 : 0,
+						resultat: [],
 						taxon_id: item.taxon_id,
 						taxon_navn: taxon.taxon_navn,
 						taxon_navn_dk : taxon.taxon_navn_dk,
@@ -63,7 +84,7 @@ angular.module('dnalivApp')
 
 				$scope.replikater = replikater
 			})
-		})
+	})
 
 		Resultat.query().$promise.then(function(resultater) {
 			$scope.resultatCount = resultater.length
@@ -77,9 +98,12 @@ angular.module('dnalivApp')
 			$scope.proeveCount = proever.length
 		})
 
-		Lokalitet.query().$promise.then(function(lokaliteter) {
+		//Lokalitet.query().$promise.then(function(lokaliteter) {
+		Proeve.query().$promise.then(function(proever) {
+			$scope.proever = proever
 			$scope.markers = []
-			lokaliteter.forEach(function(lokalitet) {
+			//lokaliteter.forEach(function(lokalitet) {
+			proever.forEach(function(lokalitet) {
 				var lat = parseFloat(lokalitet.latitude),
 						lng = parseFloat(lokalitet.longitude)
 
@@ -191,6 +215,12 @@ angular.module('dnalivApp')
 
 		$scope.test = function() {
 			LokalitetModal.show($scope, 8)
+		}
+
+		$scope.taxonClick = function(taxon) {
+			$scope.currentTaxon = ' (' + taxon.taxon_navn_dk +')'
+			$scope.markers = []	
+			console.log($scope.replikater[taxon.taxon_id])
 		}
 
 

@@ -25,6 +25,7 @@ angular.module('dnalivApp', [
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
+
   })
 
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
@@ -53,25 +54,35 @@ angular.module('dnalivApp', [
     };
   })
 
-  .run(function ($rootScope, $location, Auth) {
-	 
+  .run(function ($rootScope, $location, Auth, Db) {
+
+		//ensure all table is loaded
+		Db.init().then(function() {
+			console.log('initialized OK')
+
     $rootScope.$on('$routeChangeStart', function (event, next) {
       Auth.isLoggedInAsync(function(loggedIn) {
-				var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
-				if (typeof publicLocation == 'string') {
-					publicLocation = ['main.html', 'login.html', 'visualisering.html', 'obvious.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
-				} else {
-					publicLocation = false
-				}
-        if (!publicLocation && !loggedIn) {
-          $location.path('/'); //redirect to frontpage
-        }
-				/* original 
-        if (next.authenticate && !loggedIn) {
-          $location.path('/login');
-        }
-				*/
+
+					var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
+					if (typeof publicLocation == 'string') {
+						publicLocation = ['main.html', 'login.html', 'visualisering.html', 'obvious.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
+					} else {
+						publicLocation = false
+					}
+	        if (!publicLocation && !loggedIn) {
+	          $location.path('/'); //redirect to frontpage
+	        }
+					/* original 
+	        if (next.authenticate && !loggedIn) {
+	          $location.path('/login');
+	        }
+					*/
+
+				//})
       });
+		})
+	 
+
     });
   });
   

@@ -1,17 +1,15 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$window', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Utils', 'Geo', 'Proeve', 'Proeve_extras',
-			'ProeveNr', 'Resultat', 'Resultat_item', 'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 
+  .controller('ProeveCtrl', ['$scope', '$window', '$location', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Db', 'Utils',  'Geo', 
+			'Proeve', 'Proeve_extras', 'ProeveNr', 'Resultat', 'Resultat_item', 'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 
 			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function ($scope, $window, $modal, $timeout, $q, Auth, Alert, Utils, Geo, Proeve, Proeve_extras,
-						ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
+	function ($scope, $window, $location, $modal, $timeout, $q, Auth, Alert, Db, Utils, Geo, 
+						Proeve, Proeve_extras, ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		Taxon.query().$promise.then(function(taxons) {
-			$scope.taxons = taxons
-		})
+		$scope.taxons = Db.taxons()
 
 		//global deferred activated in loadData, resolved in initComplete
 		var loadDeferred = null;
@@ -171,10 +169,9 @@ angular.module('dnalivApp')
 			.withDOM('lBfrtip')
 			.withOption('destroy', true)
 			.withOption('autoWidth', false)
+			.withOption('stateSave', true)
 			.withOption('initComplete', function() {
 				//remove any previous set global filters
-				//console.log('initComplete')
-
 				$.fn.dataTable.ext.search = []
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
@@ -233,20 +230,18 @@ angular.module('dnalivApp')
 		$scope.map = false
 		$scope.wkt = new Wkt.Wkt()
 
+		/*
 		$scope.setLokalitet = function(lokalitet_id) {
 			console.log(lokalitet_id)
-			/*
-			$scope.lokaliteter.forEach(function(lokalitet) {
-				if (lokalitet.lokalitet_id == lokalitet_id) {
-					$scope.lokalitet = lokalitet
-				}
-			})
-			*/
 		}
+		*/
 
 		$scope.showLokalitet = function(lokalitet_id) {
-			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
-				console.log(success)
+			LokalitetModal.show($scope, lokalitet_id).then(function(lokalitet) {	
+				if (!$scope.proeve.lokalitet_id) {
+					Proeve.update({ id: $scope.proeve.proeve_id }, { lokalitet_id: lokalitet.lokalitet_id })
+				}
+				$scope.proeve.lokalitet = lokalitet.presentationString
 			})
 
 		}
@@ -301,7 +296,7 @@ angular.module('dnalivApp')
 			})
 		}
 
-		/** prøveNr **/
+		/** PrøveID **/
 		$scope.changeProeveNr = function() {
 			ProeveNr.change($scope, $scope.proeve.proeve_nr).then(function(newProeveNr) {	
 				if (newProeveNr) {
@@ -356,8 +351,6 @@ angular.module('dnalivApp')
 						}) 
 						$scope.loadData().then(function() {
 							$scope.isDeleting = false
-							//console.log('loadData finished')
-							//$scope.proeveInstance.rerender()
 						})
 					})
 				}
@@ -369,7 +362,9 @@ angular.module('dnalivApp')
 		*/
 		$scope.showResultat = function(resultat) {
 			$scope.proeveModal.hide()
-			$window.location.href = '/resultater/'+resultat.resultat_id
+			$scope.lock(false)
+			$location.path('/resultater/'+resultat.resultat_id)
+			//$window.location.href = '/resultater/'+resultat.resultat_id
 		}
 
 		$scope.addResultat = function() {
@@ -391,7 +386,7 @@ angular.module('dnalivApp')
 			proeve extras
 		*/
 		Proeve_extras.query({ where : { active: true } }).$promise.then(function(extras) {
-			console.log(extras)
+			//console.log(extras)
 		})
 
 

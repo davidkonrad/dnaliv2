@@ -38,6 +38,7 @@ angular.module('dnalivApp')
     };
 
     $scope.loginOauth = function(provider) {
+			console.log(provider)
       $window.location.href = '/auth/' + provider;
     };
   });

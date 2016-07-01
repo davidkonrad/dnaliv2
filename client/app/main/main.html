@@ -13,7 +13,7 @@
 		<span class="overview-left">Replikater</span>
 		<span class="overview-right">{{ replikatCount }}</span>
 
-		<hr style="margin-top:20px !important;clear:both;display:block;background-color: #ccc;">
+		<hr  class="col-sm-11" style="margin-top:5px;clear:both;display:block;background-color: #ccc;">
 
 		<table class="overview-taxon">
 			<thead>
@@ -24,8 +24,8 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' ">
-					<td> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
+				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' " style="line-height:16px;">
+					<td class="text-primary" style="cursor:pointer;" ng-click="taxonClick(taxon)"> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.count }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.found }} &nbsp;&nbsp;</td>
 				</tr>
@@ -34,8 +34,10 @@
 
 	</div>
 	<div class="col-sm-8">
-		<h4>Geografisk fordeling af prøveindsamlinger</h4>
-		<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" width="95%" height="550px" style="border:1px solid #ccc;"></leaflet>
+		<h4 style="margin-top:0px;">Geografisk fordeling af prøveindsamlinger  
+			<span style="color:gray;"> {{ currentTaxon }} </span>
+		</h4>
+		<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" width="95%" height="550px" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
 	</div>
 
 

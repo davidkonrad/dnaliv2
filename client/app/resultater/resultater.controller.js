@@ -1,18 +1,25 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Utils', 'Resultat', 'Resultat_item', 'Booking', 
+  .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Db', 'Utils', 'Resultat', 'Resultat_item', 
 			'Kommentar', 'KommentarModal', 'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 
-	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Utils, Resultat, Resultat_item, Booking, 
+	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Db, Utils, Resultat, Resultat_item, 
 			Kommentar, KommentarModal, Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		/*
 		Booking.query().$promise.then(function(bookings) {	
 			$scope.sagsNo = []
 			$scope.bookings = bookings
 			bookings.forEach(function(booking) {
 				$scope.sagsNo[booking.booking_id] = booking.sagsNo
 			})
+		})
+		*/
+		$scope.sagsNo = []
+		$scope.bookings = Db.bookings()
+		$scope.bookings.forEach(function(booking) {
+			$scope.sagsNo[booking.booking_id] = booking.sagsNo
 		})
 
 		$scope.loadProever = function() {
@@ -30,12 +37,14 @@ angular.module('dnalivApp')
 		}
 		$scope.loadProever()
 
+		/*
 		Taxon.query().$promise.then(function(taxons) {	
 			$scope.taxon = taxons.map(function(taxon) {
 				return Utils.getObj(taxon)
 			})
 		})
-
+		*/
+		$scope.taxon = Db.taxons()
 		$scope.getTaxon = function(taxon_id) {
 			for (var i=0;i<$scope.taxon.length; i++) {
 				if ($scope.taxon[i].taxon_id == taxon_id) {
@@ -81,7 +90,7 @@ angular.module('dnalivApp')
 		}
 
 		$scope.reloadData = function() {
-			console.log('Reloading ...')
+			//console.log('Reloading ...')
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
@@ -189,6 +198,7 @@ angular.module('dnalivApp')
       .withDisplayLength(-1)
 			.withDOM('lBfrtip')
 			.withOption('order', [[1, 'asc']])
+			.withOption('stateSave', true)
 			.withOption('initComplete', function() {
 				//console.log('initComplete', $scope.proever.length)
 
@@ -227,7 +237,7 @@ angular.module('dnalivApp')
 
 		$scope.resultaterColumns = [
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
-      DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøvenr.'),
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
       DTColumnBuilder.newColumn('datoForAnalyse').withOption('type', 'dna').withTitle('Dato for analyse'),
       DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
     ]

@@ -103,7 +103,7 @@ angular.module('dnalivApp')
 						popup += '<h3>'+proeve.Lokalitet.presentationString+'</h3>'
 	
 						popup += '<table class="visualisering-popup">'
-						popup += '<tr><td>PrøveNr.</td><td>'+ proeve.proeve_nr +'</td></tr>'
+						popup += '<tr><td>PrøveID</td><td>'+ proeve.proeve_nr +'</td></tr>'
 						popup += '<tr><td>Geolok.</td><td>'+ proeve.Lokalitet.latitude + ',' + proeve.Lokalitet.longitude +'</td></tr>'
 	
 						if (proeve.Indsamler && !~laerer.indexOf(proeve.Indsamler)) {
@@ -145,7 +145,7 @@ angular.module('dnalivApp')
 						popup += '<h3>'+proeve.Lokalitet.presentationString+'</h3>'
 
 						popup += '<table class="visualisering-popup">'
-						popup += '<tr><td>PrøveNr.</td><td>'+ proeve.proeve_nr +'</td></tr>'
+						popup += '<tr><td>PrøveID</td><td>'+ proeve.proeve_nr +'</td></tr>'
 						popup += '<tr><td>Geolok.</td><td>'+ proeve.Lokalitet.latitude+',' + proeve.Lokalitet.longitude +'</td></tr>'
 						popup += '<tr><td>Indsamler</td><td>'+ proeve.Indsamler +'</td></tr>'
 						popup += '<tr><td>Indsamlingsdato</td><td>'+ Utils.fixDate(proeve.indsamlingsdato) +'</td></tr>'
