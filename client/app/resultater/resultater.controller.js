@@ -199,16 +199,13 @@ angular.module('dnalivApp')
 			.withDOM('lBfrtip')
 			.withOption('order', [[1, 'asc']])
 			.withOption('stateSave', true)
+			.withFixedHeader({
+				alwaysCloneTop: true
+			})
 			.withOption('initComplete', function() {
-				//console.log('initComplete', $scope.proever.length)
-
-				//console.log('initComplete', $scope.proever ? $scope.proever.length : 'proever ikke initialiseret')
-				//console.log('initComplete', $scope.resultater ? $scope.resultater.length : 'resultater ikke initialiseret')
-
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
 				Utils.dtNormalizeSearch()
-
 				if ($scope.newProeveNr) {
 					Utils.dtPerformSearch($scope.newProeveNr)
 					$scope.newProeveNr = false

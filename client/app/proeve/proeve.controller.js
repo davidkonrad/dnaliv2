@@ -3,14 +3,126 @@
 angular.module('dnalivApp')
   .controller('ProeveCtrl', ['$scope', '$window', '$location', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Db', 'Utils',  'Geo', 
 			'Proeve', 'Proeve_extras', 'ProeveNr', 'Resultat', 'Resultat_item', 'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 
-			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'DTDefaultOptions',
 
 	function ($scope, $window, $location, $modal, $timeout, $q, Auth, Alert, Db, Utils, Geo, 
 						Proeve, Proeve_extras, ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
-						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, DTDefaultOptions) {
+
+		Db.init()
 
 		$scope.taxons = Db.taxons()
 
+		var vm = this;
+
+		//new loadData
+		vm.reloadData = function() {
+			loadDeferred = $q.defer() //promisfy it
+/*
+Filtreringsvolumen
+Modtagelsesdato
+Ekstraktionsdato
+Elueringsvolumen
+DNA ng/µl
+Aliquot volumen
+Analysedato
+Datasæt
+Note
+Bruger
+*/
+			//Proeve.query().$promise.then(function(proever) {	
+			//Db.proever().then 
+			var proever = Db.proever()
+			$scope.proever = proever
+
+				var spotString = function(spots) {
+					var s = ''
+					for (var i=0; i<spots.length; i++) {
+						if (s != '') s += "<br>"
+						s += spots[i].beskrivelse
+					}
+					return s
+				}
+					
+				var lokalitet, spots, items = []
+
+				for (var i=0,l=proever.length; i<l; i++) {
+					lokalitet = proever[i].Lokalitet
+					spots = lokalitet ? Db.lokalitet_spot(lokalitet.lokalitet_id) : []
+					var item = {
+						proeve_id: proever[i].proeve_id,
+						proeve_nr: proever[i].proeve_nr,
+						sagsNo: proever[i].booking_id,
+
+						indsamlingsDato: proever[i].indsamlingsDato,
+						indsamlingsDato_fixed: Utils.fixDate(proever[i].indsamlingsDato),
+
+						lokalitet: lokalitet ? lokalitet.presentationString : '',
+						latitude: lokalitet ? lokalitet.latitude : '',
+						longitude: lokalitet ? lokalitet.longitude : '',
+
+						antalIndsamlingsteder: spotString(spots),
+						indsamlerNavn: proever[i].indsamlerNavn,
+						indsamlerInstitution: proever[i].indsamlerInstitution,
+
+						modtagelsesDato: proever[i].modtagelsesDato,
+						modtagelsesDato_fixed: Utils.fixDate(proever[i].modtagelsesDato),
+
+						ekstraktionsDato: proever[i].ekstraktionsDato,
+						ekstraktionsDato_fixed: Utils.fixDate(proever[i].ekstraktionsDato),
+
+						analyseDato: proever[i].analyseDato,
+						analyseDato_fixed: Utils.fixDate(proever[i].analyseDato),
+
+						elueringsVolumen: proever[i].elueringsVolumen,
+						dataset: proever[i].dataset,
+						ngUl: proever[i].ngUl,
+						filtreringsVolumen: proever[i].filtreringsVolumen,
+						aliquotVolumen: proever[i].aliquotVolumen,
+
+						created_userName: proever[i].created_userName
+					}
+					items.push(item)
+				}					
+
+				$scope.lookupDataset = []
+				$scope.lookupIndsamler = []
+				$scope.lookupInstitutionsnavn = []
+				for (var i=0,l=proever.length; i<l; i++) {
+					var proeve = proever[i]
+					if (proeve.dataset != undefined && !~$scope.lookupDataset.indexOf(proeve.dataset)) {
+						$scope.lookupDataset.push(proeve.dataset)
+					}
+					if (proeve.indsamlerNavn != undefined && !~$scope.lookupIndsamler.indexOf(proeve.indsamlerNavn)) {
+						$scope.lookupIndsamler.push(proeve.indsamlerNavn)
+					}
+					if (proeve.indsamlerInstitution != undefined && !~$scope.lookupInstitutionsnavn.indexOf(proeve.indsamlerInstitution)) {
+						$scope.lookupInstitutionsnavn.push(proeve.indsamlerInstitution)
+					}
+					if (i == (l-1)) loadDeferred.resolve(items)
+				}
+					
+				/*
+				$scope.proever = proever.map(function(proeve) {
+					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
+					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
+					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
+					proeve.lokalitet = proeve.Lokalitet ? proeve.Lokalitet.presentationString : ''
+
+					proeve.analyseDato_fixed = proeve.Resultat.map(function(resultat) {
+						return Utils.fixDate(resultat.datoForAnalyse)
+					}).join("\t\t")
+
+					return Utils.getObj(proeve)
+				})
+				*/
+
+			//})
+      return loadDeferred.promise
+		}
+
+
+		//
 		//global deferred activated in loadData, resolved in initComplete
 		var loadDeferred = null;
 
@@ -42,9 +154,10 @@ angular.module('dnalivApp')
 			})
       return loadDeferred.promise
 		}
+		/*
 		$scope.loadData().then(function() {
 		})
-
+		*/
 		$scope.loadResultater = function(proeve_id) {
 			$scope.proeve.resultater = []
 			Resultat.query({ where : { proeve_id: proeve_id }}).$promise.then(function(resultater) {
@@ -62,6 +175,7 @@ angular.module('dnalivApp')
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.proever.length; i++) {
 					if ($scope.proever[i].proeve_id == proeve_id) {
+						//console.log($scope.proever[i].locked_by, Auth.getCurrentUser().name)
 						if ($scope.proever[i].locked_by && 
 								$scope.proever[i].locked_by != Auth.getCurrentUser().name ) {
 							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
@@ -163,14 +277,27 @@ angular.module('dnalivApp')
 			})
 		}
 
-		$scope.proeveOptions = DTOptionsBuilder.newOptions()
-      .withPaginationType('full_numbers')
-      .withDisplayLength(-1)
-			.withDOM('lBfrtip')
-			.withOption('destroy', true)
-			.withOption('autoWidth', false)
-			.withOption('stateSave', true)
-			.withOption('initComplete', function() {
+		DTDefaultOptions.setLoadingTemplate('<img src="assets/images/ajax-loader.gif">')
+
+		$scope.proeveOptions = DTOptionsBuilder.fromFnPromise(function() {
+			return vm.reloadData()
+    })
+    .withPaginationType('full_numbers')
+    .withDisplayLength(-1)
+		.withDOM('lBfrtip')
+		.withOption('destroy', true)
+		.withOption('autoWidth', false)
+		.withOption('stateSave', true)
+		.withFixedHeader({
+			alwaysCloneTop: true
+		})
+		.withOption('initComplete', function() {
+
+			$('table tbody').on('click', 'tr', function() {
+				var proeve = $scope.proeveInstance.DataTable.row(this).data()
+				$scope.showProeve(proeve.proeve_id)
+			})
+
 				//remove any previous set global filters
 				$.fn.dataTable.ext.search = []
 				Utils.dtNormalizeLengthMenu()
@@ -206,7 +333,48 @@ angular.module('dnalivApp')
 			])
 			.withLanguage(Utils.dataTables_daDk)
 
+/*
+SagsNr
+PrøveID
+Indsamlingsdato
+Lokalitet
+Latitude
+Longitude
+Antal indsamlingsteder
+Indsamlernavn
+Indsamler institutionsnavn
+Filtreringsvolumen
+Modtagelsesdato
+Ekstraktionsdato
+Elueringsvolumen
+DNA ng/µl
+Aliquot volumen
+Analysedato
+Datasæt
+Note
+Bruger
+*/
 		$scope.proeveColumns = [
+      DTColumnBuilder.newColumn('proeve_id').withTitle('#'),
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
+      DTColumnBuilder.newColumn('indsamlingsDato_fixed').withOption('type', 'dna').withTitle('Indsamlingsdato'),
+      DTColumnBuilder.newColumn('lokalitet').withOption('type', 'locale-compare').withTitle('Lokalitet'),
+      DTColumnBuilder.newColumn('latitude').withOption('type', 'number').withTitle('Latitude'),
+      DTColumnBuilder.newColumn('longitude').withOption('type', 'number').withTitle('Longitude'),
+      DTColumnBuilder.newColumn('antalIndsamlingsteder').withTitle('Antal indsamlingsteder'),
+      DTColumnBuilder.newColumn('indsamlerNavn').withTitle('Indsamlernavn'),
+      DTColumnBuilder.newColumn('indsamlerInstitution').withTitle('Indsamler institutionsnavn'),
+      DTColumnBuilder.newColumn('filtreringsVolumen').withTitle('Filtreringsvolumen'),
+      DTColumnBuilder.newColumn('modtagelsesDato_fixed').withOption('type', 'dna').withTitle('Modtagelsesdato'),
+      DTColumnBuilder.newColumn('ekstraktionsDato_fixed').withOption('type', 'dna').withTitle('Ekstraktionsdato'),
+      DTColumnBuilder.newColumn('elueringsVolumen').withTitle('Elueringsvolumen'),
+      DTColumnBuilder.newColumn('ngUl').withTitle('DNA ng/µl'),
+      DTColumnBuilder.newColumn('aliquotVolumen').withTitle('Aliquot volumen'),
+      DTColumnBuilder.newColumn('analyseDato_fixed').withOption('type', 'dna').withTitle('Analysedato'),
+      DTColumnBuilder.newColumn('dataset').withTitle('Datasæt'),
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('Note'),
+      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
+			/*
       DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
       DTColumnBuilder.newColumn('lokalitet').withOption('class', 'td-ellipsis').withTitle('Lokalitet'),
       DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'dna').withTitle('Indsamlingsdato'),
@@ -219,6 +387,7 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn('ElueretI').withOption('visible', false).withTitle('Elueret i'),
       DTColumnBuilder.newColumn('ngUl').withOption('visible', false).withTitle('ng/µl'),
       DTColumnBuilder.newColumn('dataset').withTitle('Datasæt')
+			*/
     ];  
 
 		$scope.proeveInstance = {}

@@ -51,7 +51,7 @@ User.find({}).remove(function() {
   )
 })
 
-
+//pernille mpz457
 /*
 Andreas Kelager				akelager@snm.ku.dk				kelager
 Mette Grøn						mette.groen@snm.ku.dk			wuVb5tA3Sw

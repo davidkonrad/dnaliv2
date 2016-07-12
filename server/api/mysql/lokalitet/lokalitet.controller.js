@@ -3,8 +3,12 @@ var models = require('../');
 
 // Get list of lokalitets
 exports.index = function(req, res) {
-  models.Lokalitet.findAll().then(function(lokalitet){
-  	return res.json(200, lokalitet);	
+ // models.Lokalitet.findAll().then(function(lokalitet){
+  models.Lokalitet.findAll({ include: [{  
+		model: models.Lokalitet_spot,
+		as: 'Spot'
+	}]}).then(function(lokalitet){
+		return res.json(200, lokalitet);	
   }).catch(function(err){
 	  handleError(res, err);
   });

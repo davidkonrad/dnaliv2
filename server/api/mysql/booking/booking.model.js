@@ -14,11 +14,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    DatoForBooking: {
+    bookingDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    DatoForBesoeg: {
+    besoegsDato: {
       type: DataTypes.DATE,
       allowNull: true
     },

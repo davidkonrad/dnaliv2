@@ -99,3 +99,26 @@ tr.resultat:hover {
 	cursor: pointer;
 	color: navy;
 }
+
+/** fieldset **/
+fieldset {
+	border: 1px solid #ccc !important;
+	padding: 0 1.4em 1.4em 1.4em !important;
+	margin: 0 0 1.5em 0 !important;
+	-webkit-box-shadow:  0px 0px 0px 0px #ccc;
+	box-shadow:  0px 0px 0px 0px #ccc;
+	border-radius: 3px;
+}
+legend {
+	font-size: 100% !important;
+	xxfont-weight: bold !important;
+	text-align: left !important;
+	width:auto;
+	padding:0 10px;
+	border-bottom:none;
+}
+
+.datepicker {
+	z-index:1151 !important;
+}
+

@@ -107,6 +107,13 @@ angular.module('dnalivApp')
 					}
 				})
 
+				//reset fixedheader https://l-lin.github.io/angular-datatables/#/withFixedHeader
+				var fixedHeaderEle = document.getElementsByClassName('fixedHeader');
+				console.log(fixedHeaderEle)
+				angular.element(fixedHeaderEle).remove();
+				var fixedFooterEle = document.getElementsByClassName('fixedFooter');
+				angular.element(fixedFooterEle).remove();
+
 			},
 
 			dtPerformSearch: function(term) {
@@ -227,6 +234,39 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 			return Date.parse(date[1] + '-' + date[0] + '-' + date[2])
     }
 } );
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+	"dk-pre": function ( a ) {
+		return a.localeCompare(a, 'dk')
+	}
+} );
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+  "locale-compare-asc": function ( a, b ) {
+		return a.localeCompare(b, 'da', { sensitivity: 'accent' })
+  },
+  "locale-compare-desc": function ( a, b ) {
+		return b.localeCompare(a, 'da', { sensitivity: 'accent' })
+  }
+});
+
+/*
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+	"date-dna": function ( a ) {
+		if (a == null || a == "") {
+			return 0;
+		}
+		var ukDatea = a.split('/');
+		return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+	},
+	"date-dna": function ( a, b ) {
+		return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+	},
+	"date-uk-desc": function ( a, b ) {
+		return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+	}
+} );
+*/
 
 //global path to leaflet defaults
 L.Icon.Default.imagePath = '/bower_components/leaflet/dist/images';

@@ -7,7 +7,8 @@
 		<input type="checkbox" ng-model="dateFilterActive" style="position:relative;left:0px;top:10px;" title="Datofilter til / fra" />
 	</span>
 
-	<table datatable="ng" class="table table-striped" id="bookingTable" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
+	<table datatable="" class="table table-striped" id="bookingTable" dt-options="bookingOptions" dt-instance="bookingInstance" dt-columns="bookingColumns" dt-column-defs="bookingColumnDefs">
+		<!--
 		<tbody>
 			<tr ng-repeat="booking in bookings" ng-click="showBooking(booking.booking_id)"  ng-class="{ warning: (booking.locked_by != null), 'text-muted': (booking.locked_by != null) }" >
 				<td> {{ booking.sagsNo }} </td>
@@ -20,6 +21,7 @@
 				<td> {{ booking.antal_elever }} </td>
 			</tr>
 		</tbody>
+		-->
 	</table>
 
 

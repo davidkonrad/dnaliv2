@@ -10,19 +10,30 @@
 
 				<form class="form-inline" role="form" id="proeve-form">
 
-				  <div class="form-group">
+					<fieldset>
+						<legend>Prøvestamdata</legend>
+
 				    <label for="proeve_nr" class="normal">PrøveID</label>
 						<div class="input-group">
 							<input type="text" ng-model="proeve.proeve_nr" class="form-control input-sm bold" ng-click="changeProeveNr()" size="16" placeholder="PrøeveNr" id="proeve_nr">
-						  <span class="input-group-btn">
+							<span class="input-group-btn">
 				        <button class="btn btn-primary btn-sm" type="button" title="Ret / skift PrøveID" ng-click="changeProeveNr()"><i class="fa fa-edit"></i></button>
-					   </span>
+							</span>
 						</div>
 
-						&nbsp;&nbsp;
+						&nbsp;
 				  	<label for="dataset" class="normal">Datasæt</label>
 				    <input type="text" ng-model="proeve.dataset" class="form-control input-sm bold" size="12" id="dataset" ng-change="proeve.edited = true" />
-						&nbsp;&nbsp;
+						&nbsp;
+				  	<label for="ProeverModtaget" class="normal">Modtagelsesdato</label>
+				    <input type="text" ng-model="proeve.modtagelsesDato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" data-container="body" id="ProeverModtaget" ng-change="proeve.edited = true" />
+
+					</fieldset>
+
+
+					<fieldset>
+						<legend>Prøvedata</legend>
+
 				    <label for="lokalitet" class="normal">Lokalitet</label>
 						<div class="input-group">
 						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="proeve.lokalitet" ng-click="showLokalitet(proeve.lokalitet_id)" placeholder="Lokalitet" readonly style="background-color:#fff;" />
@@ -31,49 +42,47 @@
 							</span>
 						</div>
 
-				  </div>
-
-					<br><br>
-
-				  <div class="form-group">
+						&nbsp;
 				  	<label for="indsamlingsdato" class="normal">Indsamlingsdato</label>
-				    <input type="text" ng-model="proeve.indsamlingsdato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato" ng-change="proeve.edited = true" />
-						&nbsp;
-				  	<label for="ProeverModtaget" class="normal">Prøver modtaget</label>
-				    <input type="text" ng-model="proeve.ProeverModtaget" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="ProeverModtaget" ng-change="proeve.edited = true" />
-						&nbsp;
-				  	<label for="DatoForEkst" class="normal">Dato for ekstrakt</label>
-				    <input type="text" ng-model="proeve.DatoForEkst" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst" ng-change="proeve.edited = true" />
-				  </div>
+				    <input type="text" ng-model="proeve.indsamlingsDato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato" ng-change="proeve.edited = true" />
 
-					<br><div class="rule-lg"></div>
+						&nbsp;
+				  	<label for="filtreringsVolumen" class="normal">Filtreringsvolumen</label>
+				    <input type="text" ng-model="proeve.filtreringsVolumen" class="form-control input-sm bold" size="10" id="filtreringsVolumen" ng-change="proeve.edited = true" only-digits />
 
-				  <div class="form-group">
-				  	<label for="Indsamler" class="normal">Indsamler</label>
-				    <input type="text" ng-model="proeve.Indsamler" class="form-control input-sm bold" size="20" id="Indsamler" ng-change="proeve.edited = true" />
+					</fieldset>
+
+					<fieldset>
+						<legend>Indsamlerdata</legend>
+
+				  	<label for="Indsamler" class="normal">Indsamlernavn</label>
+				    <input type="text" ng-model="proeve.indsamlerNavn" class="form-control input-sm bold" size="20" id="Indsamler" ng-change="proeve.edited = true" />
+
 						&nbsp;
 				  	<label for="Mailadresse" class="normal">Email</label>
-				    <input type="text" ng-model="proeve.Mailadresse" class="form-control input-sm bold" size="18" id="Mailadresse" ng-change="proeve.edited = true" />
+				    <input type="text" ng-model="proeve.indsamlerEmail" class="form-control input-sm bold" size="18" id="Mailadresse" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="Institutionsnavn" class="normal">Institutionsnavn</label>
 				    <input type="text" ng-model="proeve.Institutionsnavn" class="form-control input-sm bold" size="30" id="Institutionsnavn" ng-change="proeve.edited = true" />
-					</div>
 
-					<br><div class="rule-lg"></div>
+					</fieldset>
 
-				  <div class="form-group">
-				  	<label for="ElueretI" class="normal">Elueret i</label>
-				    <input type="text" ng-model="proeve.ElueretI" class="form-control input-sm bold" size="10" id="ElueretI" ng-change="proeve.edited = true" />
+					<fieldset>
+						<legend>Ekstraktionsdata</legend>
+
+				  	<label for="DatoForEkst" class="normal">Ekstraktionsdato</label>
+				    <input type="text" ng-model="proeve.ekstraktionsDato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="DatoForEkst" ng-change="proeve.edited = true" />
 						&nbsp;
-				  	<label for="ngUl" class="normal">ng/µl</label>
-				    <input type="text" ng-model="proeve.ngUl" class="form-control input-sm bold" size="10" id="ngUl" ng-change="proeve.edited = true" />
+				  	<label for="ElueretI" class="normal">Elueringsvolumen</label>
+				    <input type="text" ng-model="proeve.elueringsVolumen" class="form-control input-sm bold" size="6" id="ElueretI" ng-change="proeve.edited = true" />
 						&nbsp;
-				  	<label for="AntalMl" class="normal">Antal ml.</label>
-				    <input type="text" ng-model="proeve.AntalMl" class="form-control input-sm bold" size="10" id="AntalMl" ng-change="proeve.edited = true" only-digits />
+				  	<label for="ngUl" class="normal">DNA ng/µl</label>
+				    <input type="text" ng-model="proeve.ngUl" class="form-control input-sm bold" size="6" id="ngUl" ng-change="proeve.edited = true" />
+						&nbsp;
+				  	<label for="aliquot" class="normal">Aliquot volumen</label>
+				    <input type="text" ng-model="proeve.aliquotVolumen" class="form-control input-sm bold" size="6" id="aliquot" ng-change="proeve.edited = true" />
 
-					</div>
-
-					<br><hr><div class="rule-lg"></div>
+					</fieldset>
 
 				  <div class="form-group" style="width:49%;">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()" title="Tilføj note / kommentar"><i class="fa fa-plus"></i></button>

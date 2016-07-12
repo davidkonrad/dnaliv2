@@ -1,6 +1,0 @@
-
-1.      PRØVE: PrøveNr rettes til PrøveID
-5.      PRØVE: alle administrative enheder skal bruges, ikke kun dem relateret til vand
-
-
-

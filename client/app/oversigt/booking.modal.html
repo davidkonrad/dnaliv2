@@ -9,22 +9,70 @@
 			<div class="modal-body">
 		
 				<form class="form-inline" role="form">
-				  <div class="form-group">
-				    <label for="sagsNo" class="normal">SagsNr:&nbsp;</label>
+
+					<fieldset>
+						<legend>Bookingstamdata</legend>
+
+				    <label for="sagsNo" class="normal">SagsNr&nbsp;</label>
 						<div class="input-group">
-					    <input type="text" ng-model="booking.sagsNo" class="form-control bold" size="10" id="sagsNo" readonly style="background-color:white;" ng-click="changeSagsNo()">
+					    <input type="text" ng-model="booking.sagsNo" class="form-control bold input-sm" size="16" id="sagsNo" readonly style="background-color:white;" ng-click="changeSagsNo()">
 						  <span class="input-group-btn">
-				        <button class="btn btn-primary" type="button" title="Ret / skift sagsNr" ng-click="changeSagsNo()"><i class="fa fa-edit"></i></button>
+				        <button class="btn btn-primary btn-sm" type="button" title="Ret / skift sagsNr" ng-click="changeSagsNo()"><i class="fa fa-edit"></i></button>
 					   </span>
 						</div>
-					</div>
-					&nbsp;&nbsp;
-				  <div class="form-group">
-						<label class="normal" for="status">Status:&nbsp;</label>
-						<button type="button" id="status" class="btn btn-default btn-sm bold" ng-model="booking.status" data-html="1" bs-options="s.value as s.text for s in statusOptions" ng-class="statusSelectClass" bs-select style="width:100px;">
+
+						&nbsp;
+						<label class="normal" for="status">Status&nbsp;</label>
+						<button type="button" id="status" class="btn btn-default bold btn-sm" ng-model="booking.status" data-html="1" bs-options="s.value as s.text for s in statusOptions" ng-class="statusSelectClass" bs-select style="width:120px;">
 	  					<span class="caret"></span>
 						</button>
-				  </div>
+
+						&nbsp;
+				    <label for="DatoForBesoeg" class="normal">Besøgsdato&nbsp;</label>
+				    <input type="text" class="form-control bold input-sm" ng-model="booking.besoegsDato" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" data-autoclose="true" />
+
+					</fieldset>
+
+					<fieldset>
+						<legend>
+							<button type="button" class="btn btn-primary btn-xs" ng-click="createKlasse()" title="Tilføj en ny Institution">
+								<i class="fa fa-plus"></i>
+							</button>
+							Institution og klasse
+						</legend>
+
+						<table class="col-sm-12 klasse">
+							<tbody>
+								<tr ng-repeat="klasse in booking.Klasse" ng-click="showKlasse(klasse.klasse_id)" class="no-select">
+									<td >
+										{{ klasse.institutionsnavn }}
+									</td>
+									<td>
+										{{ klasse.fag }}
+									</td>
+									<td>
+										{{ klasse.niveau }}
+									</td>
+									<td>
+										{{ klasse.klassetrin }}
+									</td>
+									<td>
+										{{ klasse.bookingDato }}
+									<td>
+										{{ klasse.kitTilsendt }}
+									</td>
+
+								</tr>
+							</tbody>
+						</table>	
+					
+
+					</fieldset>
+
+					<!--
+				  <div class="form-group">
+					</div>
+					&nbsp;&nbsp;
 					&nbsp;&nbsp;&nbsp;
 				  <div class="form-group">
     				<label for="DatoForBooking" class="normal">Dato for Booking:&nbsp;</label>
@@ -32,27 +80,11 @@
 				  </div>
 					&nbsp;&nbsp;&nbsp;
 				  <div class="form-group">
-				    <label for="DatoForBesoeg" class="normal">Dato for Besøg:&nbsp;</label>
-				    <input type="text" class="form-control bold" ng-model="booking.DatoForBesoeg" bs-datepicker data-date-format="dd-MM-yyyy" class="form-control input-sm" size="7" id="DatoForBesoeg" data-autoclose="true" />
-				  </div>
-
-					<!---
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				  <div class="form-group">
-				    <label for="aar_periode" class="normal">Årsperiode;&nbsp;</label>
-				    <input type="number" ng-model="booking.aar_periode" class="form-control input-sm bold" size="1" id="aar_periode" ng-disabled="bookingLoaded()">
-				  </div>
-
-				  <div class="form-group">
-				    <label for="periode" class="normal">Periode</label>
-				    <input type="number" ng-model="booking.periode" class="form-control input-sm bold" size="1" id="periode" ng-disabled="bookingLoaded()">
 				  </div>
 					-->
+
 				</form>
 
-				<br>
-
-				<br>
 				<div class="form-group">
 					<button type="button" class="btn btn-primary btn-xs" ng-click="createKlasse()" title="Tilføj en ny klasse / institution">
 						<i class="fa fa-plus"></i>

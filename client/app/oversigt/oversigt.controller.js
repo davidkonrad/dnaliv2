@@ -3,18 +3,45 @@
 angular.module('dnalivApp')
   .controller('OversigtCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
-			'$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 
+			'DTDefaultOptions', '$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 'Db',  
 
 	function ($scope, $q, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
-						$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User) {
+						DTDefaultOptions,	$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User, Db) {
 
+		var vm = this
 
 		$scope.statusOptions = [
 				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
+
+/*
+SagsNr [default]	
+Status [default]	
+Bookingdato [tilvalg]	
+Besøgsdato [default]	
+Institutionsnavn [default]	
+Adresse [tilvalg]	
+Postnr [tilvalg]	
+By [tilvalg]	
+Kommune [tilvalg]	
+Region [tilvalg]	
+Lærerens navn [default]	
+Telefon [tilvalg]	
+Email [tilvalg]	
+Klasse [default]	
+Antal elever [default]	
+Antal lærer [tilvalg]	
+Kit tilsendt [tilvalg]	
+PrøveID [tilvalg]	
+Lokalitet [tilvalg]	
+EAN-Blanket [tilvalg]	
+Note [tilvalg]	
+Bruger [tilvalg]
+
+*/
 
 		/**
 			format and adds klasser, laerer etc attributes to the booking item
@@ -23,37 +50,83 @@ angular.module('dnalivApp')
 			booking.klasser = ''
 			booking.laerer = ''
 			booking.fag = ''
+			booking.adresser = ''
+			booking.postnr = ''
+			booking.by = ''
+			booking.kommune = ''
+			booking.region = ''
+			booking.telefon = ''
+			booking.email = ''
 			booking.antal_elever = 0
 
 			booking.Klasse.forEach(function(klasse) {
-				if (booking.laerer != '') booking.laerer += '\n';
+				//lærere
+				if (booking.laerer != '') booking.laerer += "\n";
 				booking.laerer += klasse.laererNavn
 
-				if (booking.klasser != '') booking.klasser += '\n';
-				booking.klasser += klasse.institutionsnavn
+				//adresse
+				if (booking.adresser != '') booking.adresser += "\n";
+				booking.adresser += klasse.adresse
 
+				//institutionsnavne
+				if (booking.klasser != '') booking.klasser += "\n";
+				booking.klasser += '<span class="no-break">' + klasse.institutionsnavn + '</span>'
+
+				//akkumuleret fag
 				if (booking.fag != '') booking.fag += '\n';
 				booking.fag += klasse.fag
 				if (klasse.klassetrin) booking.fag += ', ' + klasse.klassetrin
 
+				//postnr
+				if (booking.postnr != '') booking.postnr += "\n";
+				booking.postnr += klasse.postnr
+
+				//by
+				if (booking.by != '') booking.by += "\n";
+				booking.by += klasse.by
+
+				//kommune
+				if (booking.kommune != '') booking.kommune += "\n";
+				booking.kommune += klasse.kommune
+
+				//region
+				if (booking.region != '') booking.region += "\n";
+				booking.region += klasse.region
+
+				//telefon
+				if (booking.telefon != '') booking.telefon += "\n";
+				booking.telefon += klasse.laererTlf
+
+				//email
+				if (booking.email != '') booking.email += "\n";
+				booking.email += klasse.laererEmail
+
+				//antal elever
 				if (!isNaN(parseInt(klasse.antalElever))) booking.antal_elever += parseInt(klasse.antalElever)
 
-				//update status with klasse status
-				//booking.status = klasse.status
 			})
-			booking.DatoForBesoeg_fixed = Utils.fixDate(booking.DatoForBesoeg)
-			booking.DatoForBooking_fixed = Utils.fixDate(booking.DatoForBooking)
+			booking.besoegsDato_fixed = Utils.fixDate(booking.besoegsDato)
+			booking.bookingDato_fixed = Utils.fixDate(booking.bookingDato)
+				
 		}
 
-		$scope.reloadData = function() {
-			Booking.query().$promise.then(function(bookings) {	
-				$scope.bookings = bookings.map(function(booking) {
-					$scope.initBookingInfo(booking)
-					return Utils.getObj(booking)
-				})
-			})
+		vm.reloadData = function() {
+			var loadDeferred = $q.defer(),
+					bookings = Db.bookings(), 
+					items = [], 
+					booking;
+
+			//$scope.bookings is used as reference
+			$scope.bookings = bookings
+
+			for (var i=0, l=bookings.length; i<l; i++) {					
+				booking = bookings[i]
+				$scope.initBookingInfo(booking)
+				items.push(booking)
+				if (i == l-1) loadDeferred.resolve(items)
+			}
+      return loadDeferred.promise
 		}
-		$scope.reloadData()
 
 		$scope.createBooking = function() {
 			SagsNo.create($scope).then(function(sagsNo) {
@@ -97,83 +170,123 @@ angular.module('dnalivApp')
 		}
 
 		/* dataTable */
+		DTDefaultOptions.setLoadingTemplate('<img src="assets/images/ajax-loader.gif">')
+
 		$scope.fromDate = Date.parse('1/1/2014')
 		$scope.toDate = new Date()
 		$scope.dateFilterActive = false
 		$scope.bookingInstance = {}
 
-		$scope.bookingOptions = DTOptionsBuilder.newOptions()
-      .withPaginationType('full_numbers')
-      .withDisplayLength(-1)
-			.withDOM('lB<"dt-custom">frtip')
-			.withOption('destroy', true)
-			.withOption('stateSave', true)
-			.withOption('initComplete', function() {
-				Utils.dtNormalizeLengthMenu()
-				Utils.dtNormalizeButtons()
-				Utils.dtNormalizeSearch()
-				
-				$timeout(function() {
-					$scope.$apply($compile(angular.element('.dt-buttons'))($scope))
-				}, 200)
+		//$scope.bookingOptions = DTOptionsBuilder.newOptions()
+		$scope.bookingOptions = DTOptionsBuilder.fromFnPromise(function() {
+			return vm.reloadData()
+    })
+    .withPaginationType('full_numbers')
+    .withDisplayLength(-1)
+		.withDOM('lB<"dt-custom">frtip')
+		.withOption('destroy', true)
+		.withOption('stateSave', true)
+		.withFixedHeader({
+			alwaysCloneTop: true
+		})
+		.withOption('initComplete', function() {
+			Utils.dtNormalizeLengthMenu()
+			Utils.dtNormalizeButtons()
+			Utils.dtNormalizeSearch()
 
-				//set filter to newly inserted sagsNo
-				if ($scope.newSagsNo) {
-					Utils.dtPerformSearch($scope.newSagsNo)
-					$scope.newSagsNo = false
-				}
-
-				//remove any previous set global filters
-				$.fn.dataTable.ext.search = []
-				//custom date filter
-				$.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
-					if (!$scope.dateFilterActive) return true
-					var date = Date.parse(data[2])
-					return (date >= $scope.fromDate && date <= $scope.toDate)
-				})
-				$scope.$on('$destroy', function() { 
-					$.fn.dataTable.ext.search.pop()
-				})
-
-				$scope.$watchGroup(['fromDate', 'toDate', 'dateFilterActive'], function() {
-					if ($scope.finalized) {
-						$scope.bookingInstance.DataTable.draw()
-					}
-				})
-
-				//reattach date-filter element
-				$timeout(function() {
-					$('#date-filter').detach().appendTo('.dt-custom').show()
-					$scope.finalized = true
-				}, 1000)
+			$('table tbody').on('click', 'tr', function() {
+				var booking = $scope.bookingInstance.DataTable.row(this).data()
+				$scope.showBooking(booking.booking_id)
 			})
-			.withLanguage(Utils.dataTables_daDk)
-			.withButtons([ 
-				{ extend : 'colvis',
-					overlayFade: 0,
-					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
-					className: 'btn btn-default btn-xs colvis-btn'
-				}, { 
-					extend : 'excelHtml5',
-					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
-					filename: 'bookings', 
-					className: 'btn btn-default btn-xs ml25px'
-				},{ 
-					extend : 'pdfHtml5',
-					text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
-					filename: 'bookings', 
-					className: 'btn btn-default btn-xs'
-				}, { 
-					text: 'Ny booking',
-					className: 'btn btn-primary btn-xs ml25px mr25px',
-					action: function ( e, dt, node, config ) {
-						$scope.createBooking()
- 					}
+				
+			$timeout(function() {
+				$scope.$apply($compile(angular.element('.dt-buttons'))($scope))
+			}, 200)
+
+			//set filter to newly inserted sagsNo
+			if ($scope.newSagsNo) {
+				Utils.dtPerformSearch($scope.newSagsNo)
+				$scope.newSagsNo = false
+			}
+
+			//remove any previous set global filters
+			$.fn.dataTable.ext.search = []
+			//custom date filter
+			$.fn.dataTable.ext.search.push(function( settings, data, dataIndex ) {
+				if (!$scope.dateFilterActive) return true
+				var date = Date.parse(data[2])
+				return (date >= $scope.fromDate && date <= $scope.toDate)
+			})
+			$scope.$on('$destroy', function() { 
+				$.fn.dataTable.ext.search.pop()
+			})
+
+			$scope.$watchGroup(['fromDate', 'toDate', 'dateFilterActive'], function() {
+				if ($scope.finalized) {
+					$scope.bookingInstance.DataTable.draw()
 				}
-			])
+			})
+
+			//reattach date-filter element
+			$timeout(function() {
+				$('#date-filter').detach().appendTo('.dt-custom').show()
+				$scope.finalized = true
+			}, 1000)
+		})
+		.withLanguage(Utils.dataTables_daDk)
+		.withButtons([ 
+			{ extend : 'colvis',
+				overlayFade: 0,
+				text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+				className: 'btn btn-default btn-xs colvis-btn'
+			}, { 
+				extend : 'excelHtml5',
+				text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
+				filename: 'bookings', 
+				className: 'btn btn-default btn-xs ml25px'
+			},{ 
+				extend : 'pdfHtml5',
+				text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
+				filename: 'bookings', 
+				className: 'btn btn-default btn-xs'
+			}, { 
+				text: 'Ny booking',
+				className: 'btn btn-primary btn-xs ml25px mr25px',
+				action: function ( e, dt, node, config ) {
+					$scope.createBooking()
+				}
+			}
+		])
+
+/*
+SagsNr [default]	
+Status [default]	
+Bookingdato [tilvalg]	
+Besøgsdato [default]	
+Institutionsnavn [default]	
+Adresse [tilvalg]	
+Postnr [tilvalg]	
+By [tilvalg]	
+Kommune [tilvalg]	
+Region [tilvalg]	
+Lærerens navn [default]	
+Telefon [tilvalg]	
+Email [tilvalg]	
+Klasse [default]	
+Antal elever [default]	
+Antal lærer [tilvalg]	
+Kit tilsendt [tilvalg]	
+PrøveID [tilvalg]	
+Lokalitet [tilvalg]	
+EAN-Blanket [tilvalg]	
+Note [tilvalg]	
+Bruger [tilvalg]
+
+*/
 
 		$scope.bookingColumns = [
-      DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
+      DTColumnBuilder.newColumn('booking_id').withTitle('#'),
+      DTColumnBuilder.newColumn('sagsNo').withTitle('SagsNr'),
       DTColumnBuilder.newColumn('status').withTitle('Status').renderWith(function(data, type, full) {
 				if (type == 'display') {
 					var s = '';
@@ -187,12 +300,20 @@ angular.module('dnalivApp')
 					return data
 				}
 			}),
-      DTColumnBuilder.newColumn('DatoForBooking').withOption('type', 'dna').withTitle('Dato for booking'),
-      DTColumnBuilder.newColumn('DatoForBesoeg').withOption('type', 'dna').withTitle('Dato for besøg'),
-      DTColumnBuilder.newColumn('klasser').withTitle('Klasse'),
-      DTColumnBuilder.newColumn('fag').withTitle('Fag'),
-      DTColumnBuilder.newColumn('laerer').withTitle('Lærer'),
-      DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev')
+      DTColumnBuilder.newColumn('bookingDato_fixed').withOption('type', 'dna').withTitle('Bookingdato'),
+      DTColumnBuilder.newColumn('besoegsDato_fixed').withOption('type', 'dna').withTitle('Besøgsdato'),
+      DTColumnBuilder.newColumn('klasser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Institutionsnavn'),
+      DTColumnBuilder.newColumn('adresser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Adresse'),
+      DTColumnBuilder.newColumn('postnr').withOption('className', 'may-break').withTitle('Postnr'),
+      DTColumnBuilder.newColumn('by').withOption('className', 'may-break').withTitle('By'),
+      DTColumnBuilder.newColumn('kommune').withOption('visible', false).withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Kommune'),
+      DTColumnBuilder.newColumn('region').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Region'),
+      DTColumnBuilder.newColumn('fag').withOption('className', 'may-break').withTitle('Klasse'),
+      DTColumnBuilder.newColumn('laerer').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Lærerens navn'),
+      DTColumnBuilder.newColumn('telefon').withOption('className', 'may-break').withTitle('Telefon'),
+			DTColumnBuilder.newColumn('email').withOption('className', 'may-break').withTitle('Email'),
+      DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev'),
+      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
     ];  
 
 		$scope.bookingColumnDefs = []

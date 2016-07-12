@@ -16,20 +16,36 @@
 					{{ extra.extras_id }} 
 				</td>
 				<td> 
-					<input type="text" class="form-control input-sm" ng-model="extra.caption" ng-change="extra.modified = true"/> 
+					<input type="text" class="form-control input-sm bold" ng-model="extra.caption" ng-change="extra.modified = true"/> 
 				</td>
 				<td> 
-					<button type="button" class="btn btn-default" ng-model="extra.type" bs-options="t as t for t in extrasType" bs-select placeholder="&lt;Ikke sat>" ng-change="extra.modified = true">
+					<button type="button" 
+									class="btn btn-default" 
+									ng-model="extra.type" 
+									bs-options="t as t for t in extrasType" 
+									bs-select 
+									style="width:100px;" 
+									placeholder="&lt;Ikke sat>" 
+									ng-change="extra.modified = true">
 						<span class="caret"></span>
 					</button>
 				</td>
 				<td>
-					<button type="button" id="status" class="btn btn-default btn-sm bold" ng-model="extra.active" bs-options="s.value as s.text for s in extrasActive" bs-select style="width:100px;" placeholder="" ng-change="extra.modified = true">
+					<button type="button" 
+									id="status" 
+									class="btn btn-sm bold" 
+									ng-model="extra.active" 
+									ng-class="{ 'btn-success': extra.active == 1 }"
+									bs-options="s.value as s.text for s in extrasActive" 
+									bs-select 
+									style="width:100px;" 
+									placeholder="" 
+									ng-change="extra.modified = true">
   					<span class="caret"></span>
 					</button>
 				</td>
 				<td>
-					<button class="btn btn-primary btn-sm" ng-disabled="!extraModified(extra)" ng-click="updateExtra(extra)">
+					<button class="btn btn-default btn-sm" ng-disabled="!extraModified(extra)" ng-click="updateExtra(extra)">
 						<i class="glyphicon glyphicon-ok"></i>
 					</button>
 				</td>

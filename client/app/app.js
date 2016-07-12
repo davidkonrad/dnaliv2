@@ -14,6 +14,8 @@ angular.module('dnalivApp', [
 	'datatables',
 	'datatables.buttons',
 	'datatables.bootstrap',
+	'datatables.fixedheader',
+	'datatables.options',
 	'dndLists',
 	'ngTagsInput'
 ])
@@ -58,10 +60,10 @@ angular.module('dnalivApp', [
 
 		//ensure all table is loaded
 		Db.init().then(function() {
-			console.log('initialized OK')
 
     $rootScope.$on('$routeChangeStart', function (event, next) {
-      Auth.isLoggedInAsync(function(loggedIn) {
+
+			Auth.isLoggedInAsync(function(loggedIn) {
 
 					var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
 					if (typeof publicLocation == 'string') {

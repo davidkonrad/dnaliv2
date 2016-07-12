@@ -1,0 +1,11 @@
+
+1.      PRØVE: PrøveNr rettes til PrøveID
+2.      PRØVE: man skal kunne rette i PrøveID
+	-        ex: DL_F13_004 rettes til DL_F13_004_1
+11.   PRØVE: alle administrative enheder skal bruges, ikke kun dem relateret til vand
+22.   GENERELT: tabeller skal gemme deres sortering settings og filter settings (i cookies)
+23.   GENERELT: Fixed header: Menulinjen skal låses (ved scroll-down kan menuen/kolonnenavne ses)
+
+
+
+

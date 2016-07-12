@@ -16,35 +16,39 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: true
     },
-    indsamlingsdato: {
+    indsamlingsDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    Analyseret: {
+    analyseDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    Indsamler: {
+    indsamlerNavn: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    Institutionsnavn: {
+    indsamlerInstitution: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    Mailadresse: {
+    indsamlerEmail: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    ProeverModtaget: {
+    modtagelsesDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    DatoForEkst: {
+    ekstraktionsDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    ElueretI: {
+    elueringsVolumen: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    aliquotVolumen: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -52,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
-    AntalMl: {
+    filtreringsVolumen: {
       type: DataTypes.INTEGER(11),
       allowNull: true
     },

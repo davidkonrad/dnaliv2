@@ -74,8 +74,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: true
     },
-    KuvertProeverAfsendt: {
-      type: DataTypes.BOOLEAN,
+    kitTilsendt: {
+      type: DataTypes.DATE,
       allowNull: true
     },
     Proevermodtaget: {

@@ -143,8 +143,16 @@ angular.module('dnalivApp')
 			.withDOM('t')
 			.withOption('destroy', true)
 			.withOption('autoWidth', false)
+			.withFixedHeader({
+				header: false
+			})
 			.withOption('initComplete', function() {
 				$.fn.dataTable.ext.search = []
+
+				var fixedHeaderEle = document.getElementsByClassName('fixedHeader-floating');
+				console.log(fixedHeaderEle)
+				angular.element(fixedHeaderEle).remove();
+
 				/*
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()
@@ -287,10 +295,14 @@ angular.module('dnalivApp')
 		$scope.usersOptions = DTOptionsBuilder.newOptions()
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
-			//.withDOM('lfrtip')
 			.withDOM('t')
 			.withOption('destroy', true)
 			.withOption('initComplete', function() {
+
+				var fixedHeaderEle = document.getElementsByClassName('fixedHeader-floating');
+				console.log(fixedHeaderEle)
+				angular.element(fixedHeaderEle).remove();
+
 				$.fn.dataTable.ext.search = []
 				Utils.dtNormalizeLengthMenu()
 				//Utils.dtNormalizeButtons()
