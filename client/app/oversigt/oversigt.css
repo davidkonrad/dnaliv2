@@ -41,8 +41,12 @@ table.hover tbody tr:hover {
 }
 
 td.may-break {
-	min-width: 250px;
+	min-width: 50px;
+	max-width: 500px;
 	white-space: pre-line;
+}
+td.px {
+	min-width: 200px !important;
 }
 
 span.no-break {

@@ -62,11 +62,11 @@ Bruger [tilvalg]
 			booking.Klasse.forEach(function(klasse) {
 				//lærere
 				if (booking.laerer != '') booking.laerer += "\n";
-				booking.laerer += klasse.laererNavn
+				booking.laerer += '<span class="no-break">' + klasse.laererNavn + '</span>'
 
 				//adresse
 				if (booking.adresser != '') booking.adresser += "\n";
-				booking.adresser += klasse.adresse
+				booking.adresser += '<span class="no-break">' + klasse.adresse + '</span>'
 
 				//institutionsnavne
 				if (booking.klasser != '') booking.klasser += "\n";
@@ -74,16 +74,17 @@ Bruger [tilvalg]
 
 				//akkumuleret fag
 				if (booking.fag != '') booking.fag += '\n';
-				booking.fag += klasse.fag
-				if (klasse.klassetrin) booking.fag += ', ' + klasse.klassetrin
+				var fag = klasse.fag;
+				if (klasse.klassetrin) fag += ', ' + klasse.klassetrin
+				booking.fag += '<span class="no-break">' + fag + '</span>'
 
 				//postnr
 				if (booking.postnr != '') booking.postnr += "\n";
-				booking.postnr += klasse.postnr
+				booking.postnr += klasse.postnr 
 
 				//by
 				if (booking.by != '') booking.by += "\n";
-				booking.by += klasse.by
+				booking.by += klasse.by ? klasse.by : ''
 
 				//kommune
 				if (booking.kommune != '') booking.kommune += "\n";
@@ -186,6 +187,7 @@ Bruger [tilvalg]
 		.withDOM('lB<"dt-custom">frtip')
 		.withOption('destroy', true)
 		.withOption('stateSave', true)
+		//.withOption('autoWidth', false)
 		.withFixedHeader({
 			alwaysCloneTop: true
 		})
@@ -306,10 +308,10 @@ Bruger [tilvalg]
       DTColumnBuilder.newColumn('adresser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Adresse'),
       DTColumnBuilder.newColumn('postnr').withOption('className', 'may-break').withTitle('Postnr'),
       DTColumnBuilder.newColumn('by').withOption('className', 'may-break').withTitle('By'),
-      DTColumnBuilder.newColumn('kommune').withOption('visible', false).withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Kommune'),
+      DTColumnBuilder.newColumn('kommune').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Kommune'),
       DTColumnBuilder.newColumn('region').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Region'),
       DTColumnBuilder.newColumn('fag').withOption('className', 'may-break').withTitle('Klasse'),
-      DTColumnBuilder.newColumn('laerer').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Lærerens navn'),
+      DTColumnBuilder.newColumn('laerer').withOption('className', 'may-break px').withOption('type', 'locale-compare').withTitle('Lærerens navn'),
       DTColumnBuilder.newColumn('telefon').withOption('className', 'may-break').withTitle('Telefon'),
 			DTColumnBuilder.newColumn('email').withOption('className', 'may-break').withTitle('Email'),
       DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev'),

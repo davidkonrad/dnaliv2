@@ -11,9 +11,45 @@
 				<form class="form-inline" role="form" id="klasse-form">
 
 				  <div class="form-group">
-				    <label for="status" class="normal">Status</label>
-						<select class="form-control input-sm bold" ng-options="s.value as s.text for s in statusOptions" ng-model="klasse.status"></select>
+						&nbsp;&nbsp;
+				  	<label for="DatoForBooking" class="normal">Bookingdato</label>
+				    <input type="text" id="DatoForBooking" ng-model="klasse.DatoForBooking" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
 				  </div>
+
+					<fieldset>
+						<legend>Institutionsdata</legend>
+
+				  	<label for="status" class="normal">Institution</label>
+						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm bold" XXXinstitution-typeahead placeholder="Institutionsnavn" id="institution">
+						&nbsp;
+				    <label for="adressse" class="normal">Adresse</label>
+						<input type="text" ng-model="klasse.adresse" class="form-control input-sm bold" id="adresse" placeholder="Adresse" />
+						&nbsp;
+				    <label for="postnr" class="normal">Postnr</label>
+						<input type="text" ng-model="klasse.postnr" class="form-control input-sm bold" id="postnr" size="4" placeholder="Postnr." />
+						&nbsp;
+				    <label for="by" class="normal">By</label>
+						<input type="text" ng-model="klasse.by" class="form-control input-sm bold" id="by" placeholder="By" />
+						&nbsp;
+				    <label for="kommune" class="normal">Kommune</label>
+						<input type="text" ng-model="klasse.kommune" class="form-control input-sm bold" id="kommune" placeholder="Kommune" />
+						&nbsp;
+				    <label for="region" class="normal">Region</label>
+						<input type="text" ng-model="klasse.region" class="form-control input-sm bold" id="region" placeholder="Region" />
+					</fieldset>
+
+					<fieldset>
+						<legend>Klassedata</legend>
+
+				    <label for="laererNavn" class="normal">Lærerens navn</label>
+				    <input type="text" class="form-control input-sm bold" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn" />
+						&nbsp;
+				    <label for="laererTlf" class="normal">Tlf.</label>
+				    <input type="text" class="form-control input-sm bold" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon" />
+						&nbsp;
+				    <label for="laererEmail" class="normal">Email</label>
+				    <input type="email" class="form-control input-sm bold" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
+					<fieldset>
 
 				  <div class="form-group">
 						&nbsp;&nbsp;
@@ -24,20 +60,10 @@
 				    <input type="text" id="DatoForBesoeg" ng-model="klasse.DatoForBesoeg" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
 				  </div>
 
-					<!--
-						<div class="input-group">
-						  <input type="text" class="form-control input-sm bold" id="lokalitet" size="30" ng-model="klasse.Lokalitet.presentationString" placeholder="Lokalitet" readonly style="background-color:#fff;" />
-						  <span class="input-group-btn">
-								<button role="button" class="btn btn-primary btn-sm" ng-click="showKlasseLokalitet(klasse.Lokalitet.lokalitet_id)"><i class="fa fa-edit"></i></button>
-							</span>
-						</div>
-					-->
 
 					<div class="rule"></div>
 
 					<div class="form-group">
-				  	<label for="status" class="normal">Institution</label>
-						<input type="text" ng-model="klasse.institutionsnavn" size="60" class="form-control input-sm bold" XXXinstitution-typeahead placeholder="Institutionsnavn" id="institution">
 						<div class="checkbox">
 							<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
 					  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
@@ -54,36 +80,9 @@
 					<div class="rule-sm"></div>	
 
 					<div class="form-group">
-				    <label for="adressse" class="normal">Adresse</label>
-						<input type="text" ng-model="klasse.adresse" class="form-control input-sm bold" id="adresse" placeholder="Adresse">
-						&nbsp;&nbsp;
-				    <label for="postnr" class="normal">Postnr</label>
-						<input type="text" ng-model="klasse.postnr" class="form-control input-sm bold" id="postnr" size="4" placeholder="Postnr.">
-						&nbsp;&nbsp;
-				    <label for="kommune" class="normal">Kommune</label>
-						<input type="text" ng-model="klasse.kommune" class="form-control input-sm bold" id="kommune" placeholder="Kommune">
-						&nbsp;&nbsp;
-				    <label for="region" class="normal">Region</label>
-						<input type="text" ng-model="klasse.region" class="form-control input-sm bold" id="region" placeholder="Region">
 					</div>
 
 					<div class="rule-lg"></div>
-
-					<div class="form-group">
-				    <label for="laererNavn" class="normal">Lærers navn</label>
-				    <input type="text" class="form-control input-sm bold" id="learerNavn" ng-model="klasse.laererNavn" placeholder="Navn">
-
-						&nbsp;&nbsp;
-				    <label for="laererTlf" class="normal">Tlf.</label>
-				    <input type="text" class="form-control input-sm bold" id="laererTlf" ng-model="klasse.laererTlf" placeholder="Telefon">
-
-						&nbsp;&nbsp;
-				    <label for="laererEmail" class="normal">Email</label>
-				    <input type="email" class="form-control input-sm bold" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
-
-					</div>
-
-					<div class="rule"></div>
 
 					<div class="form-group">
 				    <label for="fag" class="normal">Fag</label>
