@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('VisualiseringCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
+  .controller('SoegCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
 	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, 
@@ -22,6 +22,8 @@ angular.module('dnalivApp')
 
 		$scope.arter = []
 
+		$scope.soeg = {
+		}
 
 		Taxon.query().$promise.then(function(taxons) {
 			$scope.taxonTags = taxons.map(function(taxon) {

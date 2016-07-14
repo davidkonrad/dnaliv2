@@ -1,0 +1,131 @@
+<div class="container">
+
+	<div style="float:left;clear:left;width: 400px;">
+		<br>
+		<h4>Analysedata</h4>
+
+		<form class="form-inline" id="formSoeg">
+		  <div class="form-group">
+		  	<label for="sagsNr" class="normal">SagsNr</label>&nbsp;
+				<input type="text" class="form-control input-sm bold" placeholder="" id="sagsNr" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="analyseDato" class="normal">Analysedato</label>&nbsp;
+				<input type="text" ng-model="soeg.analyseDatoFra" class="form-control input-sm bold no-padding" size="7" placeholder="" id="analyseDatoFra" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+				-
+				<input type="text" ng-model="soeg.analyseDatoTil" class="form-control input-sm bold no-padding" size="7" placeholder="" id="analyseDatoTil" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="institution" class="normal">Institutionsnavn</label>&nbsp;
+				<input type="text" class="form-control input-sm bold" placeholder="" id="institution" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="laererNavn" class="normal">Lærerens navn</label>&nbsp;
+				<input type="text" class="form-control input-sm bold" placeholder="" id="laererNavn" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="kommune" class="normal">Kommune</label>&nbsp;
+				<input type="text" class="form-control input-sm bold" placeholder="" id="kommune" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="region" class="normal">Region</label>&nbsp;
+				<input type="text" class="form-control input-sm bold" placeholder="" id="region" />
+		  </div>
+
+			<h4>Prøvedata</h4>
+
+		  <div class="form-group">
+		  	<label for="proeveId" class="normal">PrøveID</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="proeveId" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="indsamlingsDatoFra" class="normal">Indsamlingsdato</label>
+				<input type="text" ng-model="soeg.indsamlingsDatoFra" class="form-control input-sm bold no-padding" size="7" placeholder="" id="indsamlingsDatoFra" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true"  />
+				-
+				<input type="text" ng-model="soeg.indsamlingsDatoTil" class="form-control input-sm bold no-padding" size="7" placeholder="" id="indsamlingsDatoTil" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="indsamler" class="normal">Indsamler</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamler" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="indsamlerInstitution" class="normal">Institution</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerInstitution" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="indsamlerKommune" class="normal">Kommune</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerKommune" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="indsamlerRegion" class="normal">Region</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerRegion" />
+		  </div>
+
+			<h4>Artsdata</h4>
+
+		  <div class="form-group">
+		  	<label for="artDk" class="normal">Art (dansk navn)</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="artDk" />
+		  </div>
+
+		  <div class="form-group">
+		  	<label for="artLatin" class="normal">Art (latin)</label>
+				<input type="text" class="form-control input-sm bold" placeholder="" id="artLatin" />
+		  </div>
+
+		  <div class="form-group">
+				<div class="checkbox">
+			  	<label for="paalidelig" class="normal">Pålidelig / alt</label>
+					<input type="checkbox" style="position:relative;top:-3px;" class="form-control input-sm bold" placeholder="" id="paalidelig" />
+				</div>
+		  </div>
+
+		</form>
+
+
+
+	</div>
+
+	<div style="float:left;clear:none;width:300px;" bs-tabs>
+
+		<div bs-pane data-title="Resultater">
+		</div>
+
+		<div bs-pane data-title="Kort">
+			<div class="col-sm-10" id="proeve-map" style="height: 600px;"></div>
+		</div>
+
+		<!--
+		<div bs-pane data-title="Arter">
+			<br>
+			<form class="form-inline" role="form">
+			  <div class="form-group checkbox">
+					<tags-input ng-model="arter" add-on-paste="true" placeholder="Tilføj art" class="col-sm-10" >
+			      <auto-complete source="taxonTags" min-length="1" ></auto-complete>
+			    </tags-input>
+
+					&nbsp;&nbsp;
+					<input type="checkbox" ng-model="arterFound" />
+			    <label for="arterFound" class="normal">Undersøgt og fundet</label>
+					&nbsp;&nbsp;
+					<input type="checkbox" ng-model="arterNotFound" />
+			    <label for="arterNotFound" class="normal">Undersøgt og ej fundet</label>
+			  </div>
+			</form>
+			<div class="col-sm-10" id="arter-map" style="height: 600px;"></div>
+		</div>
+		-->
+
+	</div>
+
+</div>

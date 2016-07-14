@@ -8,12 +8,12 @@
 			</div>
 			<div class="modal-body">
 
-				<form class="form-inline" role="form" id="klasse-form">
+			<form class="form-inline" role="form" id="klasse-form">
 
 				  <div class="form-group">
-						&nbsp;&nbsp;
 				  	<label for="DatoForBooking" class="normal">Bookingdato</label>
 				    <input type="text" id="DatoForBooking" ng-model="klasse.DatoForBooking" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+						<br>
 				  </div>
 
 					<fieldset>
@@ -49,63 +49,45 @@
 						&nbsp;
 				    <label for="laererEmail" class="normal">Email</label>
 				    <input type="email" class="form-control input-sm bold" id="laererEmail" ng-model="klasse.laererEmail" placeholder="Email">
-					<fieldset>
 
-				  <div class="form-group">
-						&nbsp;&nbsp;
-				  	<label for="DatoForBooking" class="normal">Dato booking</label>
-				    <input type="text" id="DatoForBooking" ng-model="klasse.DatoForBooking" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
-							&nbsp;&nbsp;
-				  	<label for="DatoForBesoeg" class="normal">Dato Besøg</label>
-				    <input type="text" id="DatoForBesoeg" ng-model="klasse.DatoForBesoeg" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
-				  </div>
+						<br><br>
 
-
-					<div class="rule"></div>
-
-					<div class="form-group">
-						<div class="checkbox">
-							<input type="checkbox" id="KuvertProeverAfsendt" ng-model="klasse.KuvertProeverAfsendt"> 
-					  	<label for="KuvertProeverAfsendt">Kuvert prøver afsendt</label>
-						</div>
-						<!--
-						&nbsp;&nbsp;
-						<div class="checkbox">
-							<input type="checkbox" id="Proevermodtaget" ng-model="klasse.Proevermodtaget"> 
-					  	<label for="Proevermodtaget">Prøver modtaget</label>
-						</div>
-						-->
-					</div>
-
-					<div class="rule-sm"></div>	
-
-					<div class="form-group">
-					</div>
-
-					<div class="rule-lg"></div>
-
-					<div class="form-group">
 				    <label for="fag" class="normal">Fag</label>
 						<select class="form-control input-sm bold" ng-model="klasse.fag" id="fag">
 							<option>{{ klasse.fag }}</option>
 							<option ng-repeat="f in fag" value="{{ f.fag_navn }}">{{ f.fag_navn }}</option>
 						</select>
-
-						&nbsp;&nbsp;
+						&nbsp;
+				    <label for="niveau" class="normal">Niveau</label>
+						<select class="form-control input-sm bold" ng-model="klasse.niveau" id="fag">
+							<option>{{ klasse.niveau }}</option>
+							<option ng-repeat="n in niveauOptions" value="{{ n.text }}">{{ n.text }}</option>
+						</select>
+						&nbsp;
 				    <label for="klassetrin" class="normal">Klassetrin</label>
 						<select class="form-control input-sm bold" ng-model="klasse.klassetrin" id="klassetrin">
 							<option>{{ klasse.klassetrin }}</option>
 							<option ng-repeat="klasse in klassetrin" value="{{ klasse.klassetrin_navn }}">{{ klasse.klassetrin_navn }}</option>
 						</select>
-
-						&nbsp;&nbsp;
+						&nbsp;
 				    <label for="antalElever" class="normal">Antal elever</label>
 				    <input type="number" ng-model="klasse.antalElever" class="form-control input-sm bold" id="antalElever" placeholder="0">
-
-						&nbsp;&nbsp;
+						&nbsp;
 				    <label for="antalLaerer" class="normal">Antal lærere</label>
 				    <input type="number" ng-model="klasse.antalLaerer" class="form-control input-sm bold" id="antalLaerer" placeholder="0">
-					</div>
+
+						<br><br>
+
+				  	<label for="kitTilsendt" class="normal">Kit tilsendt</label>
+				    <input type="text" id="kitTilsendt" ng-model="klasse.kitTilsendt" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+						&nbsp;
+				    <label for="ean" class="normal">EAN-blanket</label>
+						<select class="form-control input-sm bold" ng-model="klasse.EANblanket" id="ean">
+							<option>{{ klasse.EANblanket }}</option>
+							<option ng-repeat="e in eanOptions" value="{{ e.text }}">{{ e.text }}</option>
+						</select>
+
+					</fieldset>
 
 					<div class="rule"></div>
 

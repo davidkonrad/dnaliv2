@@ -27,3 +27,16 @@ tags-input .tags.focused {
 	box-shadow: 1px 1px 1px 0 #ebebeb outset !important;
   border: 1px solid #ebebeb !important;
 }
+
+#formSoeg label {
+	width: 110px;
+	margin-left: 10px;
+}
+#formSoeg .form-group {
+	padding-bottom: 2px;
+}
+
+input.no-padding {
+	padding-left: 2px;
+	padding-right: 2px;
+}

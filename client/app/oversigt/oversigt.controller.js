@@ -16,6 +16,18 @@ angular.module('dnalivApp')
 				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
 				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
 			]
+		$scope.niveauOptions = [
+				{ "value": 1, "text": "A" }, 
+				{ "value": 2, "text": "B" }, 
+				{ "value": 3, "text": "C" }
+			]
+
+		$scope.eanOptions = [
+				{ "value": '<blank>', "text": "<blank>" },
+				{ "value": 'Modtaget', "text": "Modtaget" }, 
+				{ "value": 'Kontaktet', "text": "Kontaktet" },  
+				{ "value": 'Regnskab', "text": "Regnskab" }
+			]
 
 /*
 SagsNr [default]	
