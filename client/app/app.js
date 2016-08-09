@@ -1,4 +1,4 @@
-'use strict';
+	'use strict';
 
 angular.module('dnalivApp', [
   'ngCookies',
@@ -17,7 +17,8 @@ angular.module('dnalivApp', [
 	'datatables.fixedheader',
 	'datatables.options',
 	'dndLists',
-	'ngTagsInput'
+	'ngTagsInput',
+	'bootstrap3-typeahead'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider
@@ -67,7 +68,7 @@ angular.module('dnalivApp', [
 
 					var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
 					if (typeof publicLocation == 'string') {
-						publicLocation = ['main.html', 'login.html', 'visualisering.html', 'obvious.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
+						publicLocation = ['main.html', 'login.html', 'soeg.html', 'obvious.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
 					} else {
 						publicLocation = false
 					}

@@ -109,7 +109,6 @@ angular.module('dnalivApp')
 
 				//reset fixedheader https://l-lin.github.io/angular-datatables/#/withFixedHeader
 				var fixedHeaderEle = document.getElementsByClassName('fixedHeader');
-				console.log(fixedHeaderEle)
 				angular.element(fixedHeaderEle).remove();
 				var fixedFooterEle = document.getElementsByClassName('fixedFooter');
 				angular.element(fixedFooterEle).remove();

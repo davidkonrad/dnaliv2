@@ -40,3 +40,23 @@ input.no-padding {
 	padding-left: 2px;
 	padding-right: 2px;
 }
+
+.resultTable thead {
+	border-color: none !important;
+}
+.resultTable thead th {
+	border-bottom: 0px !important;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+	border-bottom: 1px solid #ebebeb;
+}
+
+/** tagsinput **/
+.label {
+	font-size: 90%
+}
+.label-info {
+	background-color: #2e6da4;
+}
+

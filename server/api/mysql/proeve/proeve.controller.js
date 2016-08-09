@@ -21,8 +21,15 @@ exports.index = function(req, res) {
 
 // Get a single proeve
 exports.show = function(req, res) {
-  models.Proeve.find(req.params.id).then(function(proeve){
-  	return res.json(200, proeve);	
+  //models.Proeve.find(req.params.id).then(function(proeve){
+	//models.Proeve.findById(req.params.id).then(function(proeve){
+	models.Proeve.findById(req.params.id, {
+		include: { 
+			model: models.Lokalitet,
+			as: 'Lokalitet'
+		}
+	}).then(function(proeve){
+	  	return res.json(200, proeve);	
   }).catch(function(err){
 	  handleError(res, err);
   });

@@ -1,14 +1,17 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('Db', ['$q', '$interval', 'Booking', 'Taxon', 'Lokalitet_spot', 'Proeve', 
-		function($q, $interval, Booking, Taxon, Lokalitet_spot, Proeve) {
+  .factory('Db', ['$q', '$interval', 'Booking', 'Taxon', 'Lokalitet_spot', 'Proeve', 'Resultat_item', 'Resultat', 'Klasse',
+		function($q, $interval, Booking, Taxon, Lokalitet_spot, Proeve, Resultat_item, Resultat, Klasse) {
 
 		var	initialized = false,
 				bookings = null,
 				lokalitet = null,
 				lokalitet_spot = null,
+				resultat_items = null,
+				resultater = null,
 				proever = null,
+				klasser = null,
 				taxons = null;
 
 		return {
@@ -38,7 +41,38 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
-
+			reloadResultat_items: function() {
+				var deferred = $q.defer()
+				Resultat_item.query().$promise.then(function(data) {	
+					resultat_items = data
+			    deferred.resolve(resultat_items)
+				})
+				return deferred.promise
+			},
+			reloadResultater: function() {
+				var deferred = $q.defer()
+				Resultat.query().$promise.then(function(data) {	
+					resultater = data
+			    deferred.resolve(resultater)
+				})
+				return deferred.promise
+			},
+			reloadKlasser: function() {
+				var deferred = $q.defer()
+				Klasse.query().$promise.then(function(data) {	
+					klasser = data
+			    deferred.resolve(klasser)
+				})
+				return deferred.promise
+			},
+			reloadProever: function() {
+				var deferred = $q.defer()
+				Proeve.query().$promise.then(function(data) {	
+					proever = data
+			    deferred.resolve(proever)
+				})
+				return deferred.promise
+			},
 
 			//data methods
 			bookings: function() {
@@ -56,7 +90,10 @@ angular.module('dnalivApp')
 			proever: function() {
 				return proever
 			},
-				
+			klasser: function() {
+				return klasser
+			},
+			
 
 			//initialize
 			init: function() {

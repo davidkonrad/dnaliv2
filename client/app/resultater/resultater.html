@@ -5,7 +5,10 @@
 			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" ng-class="{ warning: (resultat.locked_by != null), 'text-muted': (resultat.locked_by != null) }" >
 				<td> {{ resultat.sagsNo }} </td>
 				<td> {{ resultat.proeve_nr }} </td>
+				<td> {{ resultat.lokalitet }} </td>
 				<td> {{ resultat.datoForAnalyse_fixed }} </td>
+				<td> {{ resultat.dataset }} </td>
+				<td> {{ resultat.noter }} </td>
 				<td> {{ resultat.created_userName }} </td>
 			</tr>
 		</tbody>

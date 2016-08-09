@@ -82,6 +82,7 @@ Bruger
 
 						created_userName: proever[i].created_userName
 					}
+					//console.log(item)
 					items.push(item)
 				}					
 
@@ -181,6 +182,7 @@ Bruger
 							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
 						} else {
 							$scope.proeve = $scope.proever[i];
+							//console.log($scope.proeve)
 							$scope.loadKommentarer(proeve_id)
 							$scope.loadResultater(proeve_id)
 							resolve(true)

@@ -45,14 +45,20 @@ User.find({}).remove(function() {
     email: 'pvsolsen@snm.ku.dk',
     password: 'eyHskF3gXY',
 		role: 'User' 
+	}, {
+    provider: 'local',
+    name: 'Pernille Hjort',
+    email: 'phjort@snm.ku.dk',
+    password: 'mpz457',
+		role: 'Admin' 
 	}, function() {
       console.log('finished populating users');
     }
   )
 })
 
-//pernille mpz457
 /*
+Pernille Hjort				phjort@snm.ku.dk					mpz457
 Andreas Kelager				akelager@snm.ku.dk				kelager
 Mette Grøn						mette.groen@snm.ku.dk			wuVb5tA3Sw
 Maja Elling						maja.elling@snm.ku.dk			sVq48mYhpk

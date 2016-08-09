@@ -7,6 +7,31 @@ angular.module('dnalivApp')
 	 function($scope, $compile, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
+		//new load of data
+		Resultat_item.query().$promise.then(function(items) {
+			$scope.resultat_items = items
+		})
+		Resultat.query().$promise.then(function(items) {
+			$scope.resultat = items
+		})
+		Proeve.query().$promise.then(function(items) {
+			console.log(items)
+			$scope.proeve = items
+		})
+
+
+		$scope.lokalitetByResultatId = function(resultat_id) {
+			for (var i=0, l=$scope.proeve.length; i<l; i++) {
+				for (var ri=0, rl=$scope.proeve[i].Resultat.length; ri<rl; ri++) {
+					if ($scope.proeve[i].Resultat[ri].resultat_id == resultat_id) {
+						return $scope.proeve[i].Lokalitet
+					}
+				}
+			}
+			console.log('lokalitet not found', resultat_id)
+		}
+
+		/*
 		var redIcon = {
 					iconUrl: 'assets/images/Circle_Red.png',
 					iconAnchor: [0,0], 
@@ -22,6 +47,20 @@ angular.module('dnalivApp')
 					iconAnchor: [0,0], 
 					popupAnchor: [9,0] 
 				}
+		*/
+		var iconRed = {
+			iconUrl: 'assets/images/red.png',
+			iconSize: [25, 41],
+			shadowSize: [50, 64], // size of the shadow
+			iconAnchor: [12, 41],  // point of the icon which will correspond to marker's location
+			shadowAnchor: [4, 62],  // the same for the shadow
+			popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+		}
+		var iconGreen = {
+			iconUrl: 'assets/images/green.png',
+			iconSize: [25, 41]
+		}
+
 
 		$scope.getTaxon = function(taxon_id) {
 			var taxons = Db.taxons()
@@ -54,6 +93,7 @@ angular.module('dnalivApp')
 
 		Db.init().then(function() {
 			Resultat_item.query().$promise.then(function(resultat_items) {
+				$scope.resultat_items = resultat_items
 				$scope.replikatCount = resultat_items.length
 
 				var replikater = [] 
@@ -98,15 +138,34 @@ angular.module('dnalivApp')
 			$scope.proeveCount = proever.length
 		})
 
+		/*
+		$scope.markers = []
+		$scope.markers.push({
+			lat: 55.224049986110835,
+			lng: 9.99449362606125
+		})
+		*/
+
+/*
+	var marker = new L.marker(
+								[parseFloat(proeve.Lokalitet.latitude), parseFloat(proeve.Lokalitet.longitude)],
+								{ icon: redIcon }
+							).addTo(proeveMap)
+						   .bindPopup(popup)
+latitude: "", longitude: ""
+*/
+
 		//Lokalitet.query().$promise.then(function(lokaliteter) {
 		Proeve.query().$promise.then(function(proever) {
 			$scope.proever = proever
-			$scope.markers = []
+			//$scope.markers = []
+
 			//lokaliteter.forEach(function(lokalitet) {
 			proever.forEach(function(lokalitet) {
 				var lat = parseFloat(lokalitet.latitude),
 						lng = parseFloat(lokalitet.longitude)
 
+				/*
 				if (lat && lng) {
 					$scope.markers.push({ 
 						lat: lat, 
@@ -115,6 +174,7 @@ angular.module('dnalivApp')
 						icon: greenIcon
  					})
 				}
+				*/
 			})
 		})
 
@@ -209,18 +269,144 @@ angular.module('dnalivApp')
 							ticket: TicketService.get()
 						}
 					}
+				},
+				overlays: {
+					cars: {
+          	name: 'Cars',
+						type: 'markercluster',
+						visible: true
+					}
 				}
-			}
+			},
+markers: {
+                    m1: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: "I'm a moving car"
+                    },
+                    m2: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: "I'm a taxon marker"
+                    },
+                    m3: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: 'Iam a taxon marker'
+                    },
+                    m4: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    },
+                    m5: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    },
+                    m6: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    }
+                }
 		})
+
+		/*
+		$scope.markers = markers: {
+                    m1: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: "I'm a moving car"
+                    },
+                    m2: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: "I'm a car"
+                    },
+                    m3: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars',
+                        message: 'A bike!!'
+                    },
+                    m4: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    },
+                    m5: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    },
+                    m6: {
+			lat: 55.224049986110835,
+			lng: 9.99449362606125,
+
+                        layer: 'cars'
+                    }
+                }
+		*/
 
 		$scope.test = function() {
 			LokalitetModal.show($scope, 8)
 		}
 
 		$scope.taxonClick = function(taxon) {
+			function lokalitetByResultatId(resultat_id) {
+				for (var i=0, l=$scope.proeve.length; i<l; i++) {
+					for (var ri=0, rl=$scope.proeve[i].Resultat.length; ri<rl; ri++) {
+						if ($scope.proeve[i].Resultat[ri].resultat_id == resultat_id) {
+							return $scope.proeve[i].Lokalitet
+						}
+					}
+				}
+				return null
+			}
+
 			$scope.currentTaxon = ' (' + taxon.taxon_navn_dk +')'
 			$scope.markers = []	
-			console.log($scope.replikater[taxon.taxon_id])
+			//console.log($scope.replikater[taxon.taxon_id])
+			//Resultat_item.query().$promise.then(function(resultat_items) {
+			$scope.resultat_items.forEach(function(item) {
+				if (item.taxon_id == taxon.taxon_id) {
+					var lokalitet = lokalitetByResultatId(item.resultat_id)
+					var trusty = item.negativ == false && item.positiv == true
+				
+					var icon = trusty && item.eDNA ? iconGreen : iconRed
+					console.log(item, lokalitet)
+				
+
+					if (lokalitet && lokalitet.latitude && lokalitet.longitude) {
+						console.log('OK', lokalitet)
+						$scope.markers.push({
+							lat: parseFloat(lokalitet.latitude),
+							lng: parseFloat(lokalitet.longitude),
+							icon: icon
+						})
+					}
+					
+				}
+			})
+				
+
 		}
 
 

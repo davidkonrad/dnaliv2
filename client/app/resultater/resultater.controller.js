@@ -91,14 +91,61 @@ angular.module('dnalivApp')
 
 		$scope.reloadData = function() {
 			//console.log('Reloading ...')
+
+			/*
+			function getLokalitet(proeve_id) {
+				var proever = Db.proever()
+				for (var i=0, l=proever.length; i<l; i++) {
+					if (proever[i].proeve_id == proeve_id) {
+						return proever[i].Lokalitet ? proever[i].Lokalitet.presentationString : ''
+					}
+				}
+				return ''
+			}
+			*/
+			function getProeveData(proeve_id, resultat) {
+				var proever = Db.proever()
+				for (var i=0, l=proever.length; i<l; i++) {
+					if (proever[i].proeve_id == proeve_id) {
+						resultat.lokalitet = proever[i].Lokalitet ? proever[i].Lokalitet.presentationString : ''
+						resultat.dataset = proever[i].dataset
+						return
+					}
+				}
+				return ''
+			}
+
+			function getKommentarer(resultat_id, resultat) {
+				Kommentar.query( { where: { relation_id: resultat_id, type_id: Utils.KOMMENTAR_TYPE.RESULTAT }} ).$promise.then(function(kommentarer) {	
+					//console.log(kommentarer)
+					//resultat.noter = 'test'
+					return 'test'
+				})
+			}
+
 			Resultat.query().$promise.then(function(resultater) {	
 				$scope.resultater = resultater.map(function(resultat) {
+
+					//resultat.lokalitet = getLokalitet(resultat.proeve_id)
+
+					getProeveData(resultat.proeve_id, resultat)
+					resultat.noter = getKommentarer(resultat.resultat_id)
+
+					/*
+					Proeve.get( { id: resultat.proeve_id }).$promise.then(function(items) {
+						resultat.lokalitet = items.Lokalitet && items.Lokalitet.presentationString ? items.Lokalitet.presentationString : ''
+					})
+					*/
+					
 					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
 					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '?'
 					resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
 
 					//convert to date to so we can format the string properly
 					resultat.created_timestamp = Date.parse(resultat.created_timestamp)
+
+					//console.log(resultat)
+
 					return Utils.getObj(resultat)
 				})
 			})
@@ -233,10 +280,13 @@ angular.module('dnalivApp')
 		$scope.resultaterInstance = {}
 
 		$scope.resultaterColumns = [
-      DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
-      DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
-      DTColumnBuilder.newColumn('datoForAnalyse').withOption('type', 'dna').withTitle('Dato for analyse'),
-      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
+      DTColumnBuilder.newColumn(0).withTitle('Sagsnr.'),
+      DTColumnBuilder.newColumn(1).withTitle('PrøveID'),
+      DTColumnBuilder.newColumn(2).withTitle('Lokalitet'),
+      DTColumnBuilder.newColumn(3).withOption('type', 'dna').withTitle('Dato for analyse'),
+      DTColumnBuilder.newColumn(4).withTitle('Datasæt'),
+      DTColumnBuilder.newColumn(5).withTitle('Noter'),
+      DTColumnBuilder.newColumn(6).withTitle('Bruger')
     ]
 
 		$scope.resultaterColumnDefs = []
