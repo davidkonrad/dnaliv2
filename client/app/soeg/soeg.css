@@ -10,6 +10,9 @@ table.visualisering-popup td:nth-child(1) {
 .green {
 	color: green !important;
 }
+.red {
+	color: maroon !important;
+}
 
 .leaflet-popup-content {
 	width:auto !important;

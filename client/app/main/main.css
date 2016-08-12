@@ -69,16 +69,18 @@ table.overview-taxon td.right {
 	padding-right: 30px !important;
 }
 
+table.overview-taxon tr.selected {
+	background-color: #ebebeb;
+}
+
 /* global setting, remove outline if FF buttons */
 a:focus {
 	outline:none;
 }
-
 
 .leaflet-popup-content {
 	width:auto !important;
 	white-space: nowrap;
 }
 
- xxhr { margin: 10px 0 10px 0; }
 

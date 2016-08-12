@@ -26,6 +26,11 @@ angular.module('dnalivApp')
 				return toObject
 			},
 
+			//insert value into array IF the value is unique and not null
+			arrayInsert: function(array, value) {
+				if (value && !~array.indexOf(value)) array.push(value)
+			},
+			
 			fixDate : function(date) {
 				var d = new Date(date);
 				if (!isNaN(d.getTime())) {
@@ -38,8 +43,8 @@ angular.module('dnalivApp')
 			formIsEdited : function(id) {
 				var form = document.querySelector(id)
 				if (form) {
-					var i=0, inputs = form.querySelectorAll('input');
-					for (i; i<inputs.length; i++) {
+					var i=0, inputs = form.querySelectorAll('select,input');
+					for (var i, l=inputs.length; i<l; i++) {
 						if (angular.element(inputs[i]).hasClass('ng-dirty')) return true
 					}
 				}
@@ -57,7 +62,7 @@ angular.module('dnalivApp')
 			},
 
 			dataTables_daDk: {
-		    "sEmptyTable":     "Ingen tilgængelige data (prøv en anden søgning)",
+		    "sEmptyTable":     "Ingen resultater (prøv en anden søgning)",
 		    "sInfo":           "Viser _START_ til _END_ af _TOTAL_ rækker",
 		    "sInfoEmpty":      "Viser 0 til 0 af 0 rækker",
   		  "sInfoFiltered":   "(filtreret ud af _MAX_ rækker ialt)",
@@ -249,25 +254,7 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
   }
 });
 
-/*
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-	"date-dna": function ( a ) {
-		if (a == null || a == "") {
-			return 0;
-		}
-		var ukDatea = a.split('/');
-		return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
-	},
-	"date-dna": function ( a, b ) {
-		return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-	},
-	"date-uk-desc": function ( a, b ) {
-		return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-	}
-} );
-*/
-
 //global path to leaflet defaults
-L.Icon.Default.imagePath = '/bower_components/leaflet/dist/images';
+L.Icon.Default.imagePath = 'client/bower_components/leaflet/dist/images';
 
 

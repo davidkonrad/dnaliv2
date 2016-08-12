@@ -1,7 +1,7 @@
 <div class="container">
 
 	<div style="float:left;clear:left;width: 345px;xxwhite-space: nowrap;">
-		<button class="btn btn-sm pull-right" style="margin-right:10px;" ng-class="{ 'btn-primary': soegHasParams() }" >Download</button>
+		<button class="btn btn-sm pull-right" style="margin-right:10px;" ng-class="{ 'btn-primary': soegHasParams() }" ng-click="downloadCSV()">Download</button>
 		<button class="btn btn-sm pull-right" style="margin-right:10px;" ng-class="{ 'btn-primary': soegHasParams() }" ng-click="resetForm()">Nullstil</button>
 		<br>
 		<h4>Analysedata</h4>
@@ -183,12 +183,12 @@
 		</form>
 	</div>
 
-
 	<div style="float:left;clear:none;width:750px;" xxbs-tabs xxbs-active-pane="tabs.activeTab">
 		<div xxbs-pane data-title="Resultater" id="tab-resultater">
 			<table datatable="ng" class="table table-striped resultTable" dt-options="searchOptions" dt-columns="searchColumns" dt-instance="searchInstance" xxdt-column-defs="searchColumnDefs" style="max-width:100% !important;">
 				<tbody>
 					<tr ng-repeat="result in searchResults" >
+						<td> {{ result.proeve_nr }} </td>
 						<td> {{ result.lokalitet }} </td>
 						<td> {{ result.analyseDato }} </td>
 						<td> {{ result.taxon_navn_dk }} </td>						
@@ -198,7 +198,15 @@
 		</div>
 
 		<div xxbs-pane data-title="Kort" id="tab-kort">
+			<!--
 			<div id="proeve-map" style="height: 600px; width:100%;"></div>
+			-->
+			<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" id="proeve-map" style="height: 600px; width:100%;" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
+			<i class="fa fa-check green"></i>&nbsp;Fundet i eDNA
+			&nbsp;&nbsp;&nbsp;
+			<i class="fa fa-remove red"></i>&nbsp;Ej fundet i eDNA
+			&nbsp;&nbsp;&nbsp;
+			<i class="fa fa-question"></i>&nbsp;eDNA upålidelig
 		</div>
 
 		<!--

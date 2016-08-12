@@ -65,6 +65,7 @@ span.no-break {
 table.klasse {
 	border-collapse: separate; 
 	border-spacing: 0px 5px;
+	margin-left: 10px;
 }
 table.klasse tr {
 	cursor: pointer;

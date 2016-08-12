@@ -1,25 +1,39 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', '$compile', 'TicketService', 'Lokalitet', 'Proeve', 'Db', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
+  .controller('MainCtrl', ['$scope', '$compile', '$timeout', 'TicketService', 'Lokalitet', 'Proeve', 'Db', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
 						'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function($scope, $compile, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
+	 function($scope, $compile, $timeout, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 		//new load of data
 		Resultat_item.query().$promise.then(function(items) {
 			$scope.resultat_items = items
 		})
+
+
 		Resultat.query().$promise.then(function(items) {
-			$scope.resultat = items
-		})
-		Proeve.query().$promise.then(function(items) {
-			console.log(items)
-			$scope.proeve = items
+
+			function lokalitetByResultatId(resultat_id) {
+				var proever = Db.proever()
+				for (var i=0, l=proever.length; i<l; i++) {
+					for (var ri=0, rl=proever[i].Resultat.length; ri<rl; ri++) {
+						if (proever[i].Resultat[ri].resultat_id == resultat_id) {
+							return proever[i].Lokalitet
+						}
+					}
+				}
+				return null
+			}
+
+			$scope.resultat = items.filter(function(item) {
+				item.Lokalitet = lokalitetByResultatId(item.resultat_id)
+				return item
+			})
 		})
 
-
+		/*
 		$scope.lokalitetByResultatId = function(resultat_id) {
 			for (var i=0, l=$scope.proeve.length; i<l; i++) {
 				for (var ri=0, rl=$scope.proeve[i].Resultat.length; ri<rl; ri++) {
@@ -30,37 +44,24 @@ angular.module('dnalivApp')
 			}
 			console.log('lokalitet not found', resultat_id)
 		}
-
-		/*
-		var redIcon = {
-					iconUrl: 'assets/images/Circle_Red.png',
-					iconAnchor: [0,0], 
-					popupAnchor: [9,5] 
-				},
-				redIcon = {
-					iconUrl: 'assets/images/Circle_Yellow.png',
-					iconAnchor: [0,0], 
-					popupAnchor: [9,5] 
-				},
-				greenIcon = {
-					iconUrl: 'assets/images/Circle_Green.png',
-					iconAnchor: [0,0], 
-					popupAnchor: [9,0] 
-				}
 		*/
+
 		var iconRed = {
 			iconUrl: 'assets/images/red.png',
 			iconSize: [25, 41],
-			shadowSize: [50, 64], // size of the shadow
-			iconAnchor: [12, 41],  // point of the icon which will correspond to marker's location
-			shadowAnchor: [4, 62],  // the same for the shadow
-			popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+			shadowSize: [50, 64], 
+			iconAnchor: [12, 41], 
+			shadowAnchor: [4, 62], 
+			popupAnchor: [-2, -46] 
 		}
 		var iconGreen = {
 			iconUrl: 'assets/images/green.png',
-			iconSize: [25, 41]
+			iconSize: [25, 41],
+			shadowSize: [50, 64], 
+			iconAnchor: [12, 41], 
+			shadowAnchor: [4, 62], 
+			popupAnchor: [-2, -46] 
 		}
-
 
 		$scope.getTaxon = function(taxon_id) {
 			var taxons = Db.taxons()
@@ -69,27 +70,7 @@ angular.module('dnalivApp')
 					return taxons[i]
 				}
 			}
-
-			/*
-			for (var i=0; i<$scope.taxons.length; i++) {
-				if ($scope.taxons[i].taxon_id == taxon_id) {
-					return $scope.taxons[i]
-				}
-			}
-			*/
 		}
-
-	/*
-		console.log(Db)
-		Db.Bookings.reload().then(function(test) {
-			console.log(test)
-		})
-*/
-
-/*
-		Taxon.query().$promise.then(function(taxons) {
-			$scope.taxons = taxons
-*/
 
 		Db.init().then(function() {
 			Resultat_item.query().$promise.then(function(resultat_items) {
@@ -138,44 +119,9 @@ angular.module('dnalivApp')
 			$scope.proeveCount = proever.length
 		})
 
-		/*
-		$scope.markers = []
-		$scope.markers.push({
-			lat: 55.224049986110835,
-			lng: 9.99449362606125
-		})
-		*/
-
-/*
-	var marker = new L.marker(
-								[parseFloat(proeve.Lokalitet.latitude), parseFloat(proeve.Lokalitet.longitude)],
-								{ icon: redIcon }
-							).addTo(proeveMap)
-						   .bindPopup(popup)
-latitude: "", longitude: ""
-*/
-
 		//Lokalitet.query().$promise.then(function(lokaliteter) {
 		Proeve.query().$promise.then(function(proever) {
 			$scope.proever = proever
-			//$scope.markers = []
-
-			//lokaliteter.forEach(function(lokalitet) {
-			proever.forEach(function(lokalitet) {
-				var lat = parseFloat(lokalitet.latitude),
-						lng = parseFloat(lokalitet.longitude)
-
-				/*
-				if (lat && lng) {
-					$scope.markers.push({ 
-						lat: lat, 
-						lng: lng,
-            message: lokalitet.presentationString,
-						icon: greenIcon
- 					})
-				}
-				*/
-			})
 		})
 
 		$scope.mapClick = function() {
@@ -195,14 +141,8 @@ latitude: "", longitude: ""
 			},
 		})
 
-		$scope.center = {
-			lat: 56.126627523318206,
-			lng: 11.457741782069204,
-			zoom: 7
-		}
-
 		$scope.$on('leafletDirectiveMarker.click', function(e, marker) {
-			$scope.center = { lat: marker.model.lat, lng: marker.model.lng, zoom: 14 }			
+			//$scope.center = { lat: marker.model.lat, lng: marker.model.lng, zoom: 14 }			
 			marker.leafletObject.openPopup()
 		})
 
@@ -211,47 +151,26 @@ latitude: "", longitude: ""
 		})
 
 		angular.extend($scope, {
-			defaults: {
-				tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png",
-				maxZoom: 17,
-				path: {
-					weight: 1,
-					color: '#800000',
-					opacity: 1
-				}
-			}
-		})
-
-		angular.extend($scope, {
-			
+			markers: [],
+			center: {
+				lat: 56.126627523318206,
+				lng: 11.457741782069204,
+				zoom: 7
+			},
 			layers: {
         baselayers: {
-					xyz: {
-						name: 'OpenStreetMap (XYZ)',
-						url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-						type: 'xyz'
-					},
-					dk4: {
-						name: "DK 4cm kort",
-						type: 'wms',
-						visible: true,
-						url: "http://kortforsyningen.kms.dk/topo_skaermkort",
-						layerOptions: {
-							layers: "topo25_klassisk",
-							servicename: "topo25",
-							version: "1.1.1",
-							request: "GetMap",
-							format: "image/jpeg",
-							service: "WMS",
-							styles: "default",
-							exceptions: "application/vnd.ogc.se_inimage",
-							jpegquality: "80",
-							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
-							ticket: TicketService.get()
-						}
-					},
+					googleTerrain: {
+				    name: 'Google Terrain',
+				    layerType: 'TERRAIN',
+				    type: 'google'
+				  },
+				  googleHybrid: {
+				    name: 'Google Hybrid',
+				    layerType: 'HYBRID',
+				    type: 'google'
+				  },
 					luftfoto: {
-						name: "DK luftfoto",
+						name: "Orto forår",
 						type: 'wms',
 						visible: true,
 						url: "http://kortforsyningen.kms.dk/topo_skaermkort",
@@ -271,138 +190,90 @@ latitude: "", longitude: ""
 					}
 				},
 				overlays: {
-					cars: {
-          	name: 'Cars',
+					indsamlingssted: {
+          	name: 'Indsamlingssted',
 						type: 'markercluster',
+						layerOptions: {
+							maxClusterRadius: function(zoom) { 
+								return 50; 
+							}
+						},
 						visible: true
+					},
+					proever: {
+          	name: 'Samtlige prøver',
+						type: 'markercluster',
+						layerOptions: {
+							maxClusterRadius: function(zoom) { 
+								return 50; 
+							}
+						},
+						visible: false
 					}
 				}
-			},
-markers: {
-                    m1: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: "I'm a moving car"
-                    },
-                    m2: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: "I'm a taxon marker"
-                    },
-                    m3: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: 'Iam a taxon marker'
-                    },
-                    m4: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    },
-                    m5: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    },
-                    m6: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    }
-                }
+			}
 		})
 
-		/*
-		$scope.markers = markers: {
-                    m1: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: "I'm a moving car"
-                    },
-                    m2: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: "I'm a car"
-                    },
-                    m3: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars',
-                        message: 'A bike!!'
-                    },
-                    m4: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    },
-                    m5: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    },
-                    m6: {
-			lat: 55.224049986110835,
-			lng: 9.99449362606125,
-
-                        layer: 'cars'
-                    }
-                }
-		*/
-
-		$scope.test = function() {
-			LokalitetModal.show($scope, 8)
-		}
-
 		$scope.taxonClick = function(taxon) {
-			function lokalitetByResultatId(resultat_id) {
-				for (var i=0, l=$scope.proeve.length; i<l; i++) {
+
+			$scope.currentTaxonId = taxon.taxon_id
+			$scope.markers = []	
+
+			$timeout(function() {
+				console.log('markers:', $scope.markers.length, $scope.markers)
+			})
+
+			$scope.center = {
+				lat: 56.126627523318206,
+				lng: 11.457741782069204,
+				zoom: 7
+			}
+		
+			function resultatByResultatId(resultat_id) {
+				/*
+				for (var i=0, l=$scope.resultat.length; i<l; i++) {
 					for (var ri=0, rl=$scope.proeve[i].Resultat.length; ri<rl; ri++) {
 						if ($scope.proeve[i].Resultat[ri].resultat_id == resultat_id) {
-							return $scope.proeve[i].Lokalitet
+							return $scope.proeve[i].Resultat[ri]
 						}
 					}
 				}
+				*/
+				for (var i=0, l=$scope.resultat.length; i<l; i++) {
+					if ($scope.resultat[i].resultat_id == resultat_id) return $scope.resultat[i]
+				}
 				return null
 			}
-
-			$scope.currentTaxon = ' (' + taxon.taxon_navn_dk +')'
-			$scope.markers = []	
-			//console.log($scope.replikater[taxon.taxon_id])
-			//Resultat_item.query().$promise.then(function(resultat_items) {
+	
 			$scope.resultat_items.forEach(function(item) {
 				if (item.taxon_id == taxon.taxon_id) {
+					/*
+					var booking = bookingByResultatId(item.resultat_id)
 					var lokalitet = lokalitetByResultatId(item.resultat_id)
-					var trusty = item.negativ == false && item.positiv == true
-				
-					var icon = trusty && item.eDNA ? iconGreen : iconRed
-					console.log(item, lokalitet)
-				
+					*/
+					var resultat = resultatByResultatId(item.resultat_id)
 
-					if (lokalitet && lokalitet.latitude && lokalitet.longitude) {
-						console.log('OK', lokalitet)
-						$scope.markers.push({
-							lat: parseFloat(lokalitet.latitude),
-							lng: parseFloat(lokalitet.longitude),
-							icon: icon
-						})
-					}
-					
+					//console.log('RESULTAT', resultat)
+
+					if (resultat && resultat.Lokalitet) {
+						var trusty = item.negativ == false && item.positiv == true
+				
+						var icon = trusty && item.eDNA ? iconGreen : iconRed
+						//console.log('not null')
+				
+						var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>'
+						if (resultat) message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse)
+
+						if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
+							$scope.markers.push({
+								lat: parseFloat(resultat.Lokalitet.latitude),
+								lng: parseFloat(resultat.Lokalitet.longitude),
+								layer: 'indsamlingssted',
+								icon: icon,
+								message: message
+							})
+						}
+					}					
 				}
 			})
 				
@@ -410,4 +281,4 @@ markers: {
 		}
 
 
-  }]);
+}]);

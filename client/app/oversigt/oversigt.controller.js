@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 
+  .controller('OversigtCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'TicketService',
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 			'DTDefaultOptions', '$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 'Db',  
 
-	function ($scope, $q, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, 
+	function ($scope, $q, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, TicketService,
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
 						DTDefaultOptions,	$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User, Db) {
 
@@ -30,23 +30,6 @@ angular.module('dnalivApp')
 			]
 
 /*
-SagsNr [default]	
-Status [default]	
-Bookingdato [tilvalg]	
-Besøgsdato [default]	
-Institutionsnavn [default]	
-Adresse [tilvalg]	
-Postnr [tilvalg]	
-By [tilvalg]	
-Kommune [tilvalg]	
-Region [tilvalg]	
-Lærerens navn [default]	
-Telefon [tilvalg]	
-Email [tilvalg]	
-Klasse [default]	
-Antal elever [default]	
-Antal lærer [tilvalg]	
-Kit tilsendt [tilvalg]	
 PrøveID [tilvalg]	
 Lokalitet [tilvalg]	
 EAN-Blanket [tilvalg]	
@@ -70,6 +53,12 @@ Bruger [tilvalg]
 			booking.telefon = ''
 			booking.email = ''
 			booking.antal_elever = 0
+			booking.antal_laerer = 0
+			booking.niveau = ''
+			booking.kitTilsendt = ''
+			booking.proeve_nr = ''
+
+			console.log(booking)
 
 			booking.Klasse.forEach(function(klasse) {
 				//lærere
@@ -117,6 +106,19 @@ Bruger [tilvalg]
 				//antal elever
 				if (!isNaN(parseInt(klasse.antalElever))) booking.antal_elever += parseInt(klasse.antalElever)
 
+				//antal laerer
+				if (!isNaN(parseInt(klasse.antalLaerer))) booking.antal_laerer += parseInt(klasse.antalLaerer)
+
+				//niveau
+				if (booking.niveau != '') booking.niveau += "\n";
+				booking.niveau += !klasse.niveau ? '' : klasse.niveau 
+
+				//kit tilsendt
+				if (booking.kitTilsendt != '') booking.kitTilsendt += "\n";
+				booking.kitTilsendt += (!klasse.kitTilsendt ? '' : Utils.fixDate(klasse.kitTilsendt) ) 
+
+				//prøevenr
+				//booking.proeve_nr = 				
 			})
 			booking.besoegsDato_fixed = Utils.fixDate(booking.besoegsDato)
 			booking.bookingDato_fixed = Utils.fixDate(booking.bookingDato)
@@ -208,11 +210,6 @@ Bruger [tilvalg]
 			Utils.dtNormalizeButtons()
 			Utils.dtNormalizeSearch()
 
-			$('table tbody').on('click', 'tr', function() {
-				var booking = $scope.bookingInstance.DataTable.row(this).data()
-				$scope.showBooking(booking.booking_id)
-			})
-				
 			$timeout(function() {
 				$scope.$apply($compile(angular.element('.dt-buttons'))($scope))
 			}, 200)
@@ -243,6 +240,7 @@ Bruger [tilvalg]
 
 			//reattach date-filter element
 			$timeout(function() {
+				console.log($scope.bookingInstance.DataTable)
 				$('#date-filter').detach().appendTo('.dt-custom').show()
 				$scope.finalized = true
 			}, 1000)
@@ -252,7 +250,7 @@ Bruger [tilvalg]
 			{ extend : 'colvis',
 				overlayFade: 0,
 				text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
-				className: 'btn btn-default btn-xs colvis-btn'
+				className: 'btn btn-default btn-xs colvis-btn',
 			}, { 
 				extend : 'excelHtml5',
 				text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
@@ -272,24 +270,13 @@ Bruger [tilvalg]
 			}
 		])
 
+		$('#bookingTable').on('click', 'tr', function() {
+			var booking = $scope.bookingInstance.DataTable.row(this).data()
+			$scope.showBooking(booking.booking_id)
+		})
+				
+
 /*
-SagsNr [default]	
-Status [default]	
-Bookingdato [tilvalg]	
-Besøgsdato [default]	
-Institutionsnavn [default]	
-Adresse [tilvalg]	
-Postnr [tilvalg]	
-By [tilvalg]	
-Kommune [tilvalg]	
-Region [tilvalg]	
-Lærerens navn [default]	
-Telefon [tilvalg]	
-Email [tilvalg]	
-Klasse [default]	
-Antal elever [default]	
-Antal lærer [tilvalg]	
-Kit tilsendt [tilvalg]	
 PrøveID [tilvalg]	
 Lokalitet [tilvalg]	
 EAN-Blanket [tilvalg]	
@@ -299,7 +286,7 @@ Bruger [tilvalg]
 */
 
 		$scope.bookingColumns = [
-      DTColumnBuilder.newColumn('booking_id').withTitle('#'),
+      DTColumnBuilder.newColumn('booking_id').withTitle('#').withOption('visible', false),
       DTColumnBuilder.newColumn('sagsNo').withTitle('SagsNr'),
       DTColumnBuilder.newColumn('status').withTitle('Status').renderWith(function(data, type, full) {
 				if (type == 'display') {
@@ -314,20 +301,24 @@ Bruger [tilvalg]
 					return data
 				}
 			}),
-      DTColumnBuilder.newColumn('bookingDato_fixed').withOption('type', 'dna').withTitle('Bookingdato'),
+      DTColumnBuilder.newColumn('bookingDato_fixed').withOption('type', 'dna').withTitle('Bookingdato').withOption('visible', false),
       DTColumnBuilder.newColumn('besoegsDato_fixed').withOption('type', 'dna').withTitle('Besøgsdato'),
       DTColumnBuilder.newColumn('klasser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Institutionsnavn'),
-      DTColumnBuilder.newColumn('adresser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Adresse'),
-      DTColumnBuilder.newColumn('postnr').withOption('className', 'may-break').withTitle('Postnr'),
-      DTColumnBuilder.newColumn('by').withOption('className', 'may-break').withTitle('By'),
-      DTColumnBuilder.newColumn('kommune').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Kommune'),
-      DTColumnBuilder.newColumn('region').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Region'),
+      DTColumnBuilder.newColumn('adresser').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Adresse').withOption('visible', false),
+      DTColumnBuilder.newColumn('postnr').withOption('className', 'may-break').withTitle('Postnr').withOption('visible', false),
+      DTColumnBuilder.newColumn('by').withOption('className', 'may-break').withTitle('By').withOption('visible', false),
+      DTColumnBuilder.newColumn('kommune').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Kommune').withOption('visible', false),
+      DTColumnBuilder.newColumn('region').withOption('className', 'may-break').withOption('type', 'locale-compare').withTitle('Region').withOption('visible', false),
       DTColumnBuilder.newColumn('fag').withOption('className', 'may-break').withTitle('Klasse'),
+      DTColumnBuilder.newColumn('niveau').withTitle('Niveau').withOption('className', 'may-break').withOption('visible', false),
       DTColumnBuilder.newColumn('laerer').withOption('className', 'may-break px').withOption('type', 'locale-compare').withTitle('Lærerens navn'),
-      DTColumnBuilder.newColumn('telefon').withOption('className', 'may-break').withTitle('Telefon'),
-			DTColumnBuilder.newColumn('email').withOption('className', 'may-break').withTitle('Email'),
-      DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev'),
-      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
+      DTColumnBuilder.newColumn('telefon').withOption('className', 'may-break').withTitle('Telefon').withOption('visible', false),
+			DTColumnBuilder.newColumn('email').withOption('className', 'may-break').withTitle('Email').withOption('visible', false),
+      DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev.'),
+      DTColumnBuilder.newColumn('antal_laerer').withTitle('#Lær.').withOption('visible', false),
+      DTColumnBuilder.newColumn('kitTilsendt').withOption('className', 'may-break').withTitle('Kit tilsendt'),
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøeveID').withOption('visible', false),
+      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger').withOption('visible', false)
     ];  
 
 		$scope.bookingColumnDefs = []
@@ -476,7 +467,7 @@ Bruger [tilvalg]
 
 		$scope.showKlasseLokalitet = function(lokalitet_id) {
 			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
-				console.log(success)
+				//console.log(success)
 			})
 		}
 
@@ -493,52 +484,6 @@ Bruger [tilvalg]
 			})
 		}
 	
-		//we assume Wkt is loaded
-		var wkt = new Wkt.Wkt()
-
-		function geometryWktPolygon(geometryWkt) {
-			console.log(geometryWkt)
-			wkt.read(geometryWkt);
-			var points = ''
-			console.log('wkt', wkt.components)
-			for (var i=0; i<wkt.components[0][0].length; i++)  {
-				var xy = wkt.components[0][0][i]
-				console.log('xy', xy)
-				var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
-				console.log(latLng)
-				if (points!='') points+=','
-				points+='['+ latLng.lat +',' +latLng.lng +']'
-			}
-			console.log('['+points+']')
-			return points;
-		}
-			
-			/*
-			if (wkt.components[0].length) {
-				for (var p=0; p<wkt.components.length;p++) {
-					console.log('wkt.components[p]', wkt.components[p])
-					var points = '';
-					for (var i=0; i<wkt.components[p].length; i++)  {
-						var xy = wkt.components[p][i]
-						console.log('xy', xy)
-						var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
-						console.log(latLng)
-						if (points!='') points+=','
-						points+='['+ latLng.lng +',' +latLng.lat +']'
-					}
-					console.log(points)
-					polygons.push(points)
-				}
-			} else {
-				var points = wkt.components.map(function(xy) {
-					var latLng = Geo.EPSG25832_to_WGS84(xy.x, xy.y)
-					return [latLng.lng, latLng.lat]
-				})
-				//console.log(points)
-				polygons.push(points)
-			}
-			*/
-
 		$scope.showKlasse = function(klasse_id) {
 			$scope.setKlasse(klasse_id)
 			$scope.loadKlasseKommentarer(klasse_id)
@@ -554,28 +499,18 @@ Bruger [tilvalg]
 
 					$('#institution').typeahead({
 						afterSelect: function (item) {
-							console.log('institution selected', item);
-							console.log(geometryWktPolygon(item.geometryWkt))
+							//
 						}, 
 						items : 20,
 						displayText: function(item) {
 							return item.presentationString
 						},
 					  source: function(query, process) {
-							//TODO: run service with tickets instead of hardcoded username / password
-							var login = "davidkonrad", 
-									password = "nhmdzm",
-									url = 'https://services.kortforsyningen.dk/Geosearch?search=*'+query+'*&resources=stednavne_v2&limit=100&login='+login+'&password='+password;
-
-					    return $.getJSON(url, function(resp) {
+					    return $.getJSON('https://services.kortforsyningen.dk/Geosearch?search=*'+query+'*&resources=stednavne_v2&limit=100&ticket='+TicketService.get(), function(resp) {
 								var newData = [],
 										types = ['gymnasium', 'uddannelsescenter', 'privatskoleFriskole', 'folkeskole', 'universitet', 'specialskole']
 								for (var i in resp.data) {
-									//console.log(resp.data[i]);
-									//console.log(resp.data[i].type, resp.data[i].subtype);
 									if (~types.indexOf(resp.data[i].type) || ~types.indexOf(resp.data[i].subtype)) {
-										//console.log(resp.data[i]);
-										//newData.push(resp.data[i].presentationString);
 										newData.push(resp.data[i]);
 									}
 								}			
@@ -583,8 +518,6 @@ Bruger [tilvalg]
 					    })
 					  }
 					})
-
-					console.log('klasse OK')
 				}
 			})
 
@@ -595,6 +528,8 @@ Bruger [tilvalg]
 				Utils.formReset('#klasse-form')
 				Booking.get({ id: $scope.booking.booking_id }).$promise.then(function(booking) {
 					$scope.booking = booking
+					//vm.reloadData()
+					$scope.bookingInstance._renderer.rerender()
 				})
 			})
 		}
@@ -618,6 +553,39 @@ Bruger [tilvalg]
 				return k
 			})
 		})
+
+		/*
+			booking noter
+		*/
+		$scope.loadBookingKommentarer = function(booking_id) {
+			Kommentar.query( { where: { relation_id: booking_id, type_id: Utils.KOMMENTAR_TYPE.BOOKING }} ).$promise.then(function(kommentarer) {	
+				$scope.booking.kommentarer = kommentarer
+			})
+		}
+
+		$scope.addBookingKommentar = function() {
+			KommentarModal.show($scope).then(function(kommentar) {	
+				var kommentar = {
+					kommentar: kommentar,
+					type_id: Utils.KOMMENTAR_TYPE.BOOKING,
+					relation_id: $scope.booking.booking_id,
+					created_userName: Auth.getCurrentUser().name
+				}
+				Kommentar.save(kommentar).$promise.then(function() {	
+					$scope.loadBookingKommentarer($scope.booking.booking_id)
+				})
+			})
+		}	
+
+		$scope.removeBookingKommentar = function(kommentar_id) {
+			Alert.show($scope,'Slet notat', 'Slet note / kommentar - er du sikker?').then(function(confirm) {
+				if (confirm) {
+					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
+						$scope.loadBookingKommentarer($scope.booking.booking_id)
+					})
+				}
+			})
+		}
 
 		
 }]);

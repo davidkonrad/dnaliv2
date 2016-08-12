@@ -97,7 +97,12 @@ module.exports = function(sequelize, DataTypes) {
 		EANBlanket : {
 			type: DataTypes.STRING,
 			allowNull: true
+		},
+		niveau : {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
+
 
   }, {
 		tableName: 'klasse',

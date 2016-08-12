@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('SoegCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Proeve', 'Booking', 
+  .controller('SoegCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Proeve', 'Booking', 'TicketService', 
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'Db',
 
-	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Proeve, Booking, 
+	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Proeve, Booking, TicketService,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, Db) {
 
 		Db.init()
@@ -27,28 +27,16 @@ angular.module('dnalivApp')
 
 		//prøveData lookups
 		Db.reloadProever().then(function(proever) {	
-			/*
-			$scope.proeveIdArray = []
-			$scope.indsamlerArray = []
-			proever.forEach(function(proeve) {
-				//console.log(proeve.indsamlerNavn, $scope.indsamlerArray)
-				if (!~$scope.proeveIdArray.indexOf(proeve.proeve_nr)) $scope.proeveIdArray.push(proeve.proeve_nr)
-				if (!~$scope.indsamlerArray.indexOf(proeve.indsamlerNavn)) $scope.indsamlerArray.push(proeve.indsamlerNavn)
-			})
-			*/
 			var proeveIdArray = [], 
 					indsamlerArray = [],
+					indsamlerKommune = [],
 					indsamlerInstitutionArray = [];
-
-			function checkValue(array, value) {
-				if (value && !~array.indexOf(value)) array.push(value)
-			}
 
 			for (var i=0, l=proever.length; i<l; i++) {
 				if (!~proeveIdArray.indexOf(proever[i].proeve_nr)) proeveIdArray.push(proever[i].proeve_nr)
-				
-				checkValue(indsamlerArray, proever[i].indsamlerNavn)
-				checkValue(indsamlerInstitutionArray, proever[i].indsamlerInstitution)
+
+				Utils.arrayInsert(indsamlerArray, proever[i].indsamlerNavn)
+				Utils.arrayInsert(indsamlerInstitutionArray, proever[i].indsamlerInstitution)
 
 				if (i==(l-1)) {
 					$scope.indsamlerArray = indsamlerArray.sort()
@@ -66,16 +54,21 @@ angular.module('dnalivApp')
 			})
 
 			//institutioner og lærer
-			$scope.institutionArray = []
-			$scope.laererArray = []
-			bookings.forEach(function(booking) {
+			var institutionArray = [], laererArray = [], booking
+
+			for (var i=0, l=bookings.length; i<l; i++) {
+				booking = bookings[i]
 				if (booking.Klasse) {
 					booking.Klasse.forEach(function(klasse) {
-						if (!~$scope.institutionArray.indexOf(klasse.institutionsnavn)) $scope.institutionArray.push(klasse.institutionsnavn)
-						if (!~$scope.laererArray.indexOf(klasse.laererNavn)) $scope.laererArray.push(klasse.laererNavn)
+						Utils.arrayInsert(institutionArray, klasse.institutionsnavn)
+						Utils.arrayInsert(laererArray, klasse.laererNavn)
 					})
 				}
-			})
+				if (i==(l-1)) {
+					$scope.institutionArray = institutionArray.sort()
+					$scope.laererArray = laererArray.sort()
+				}
+			}
 		})
 
 		Resultat.query().$promise.then(function(resultater) {
@@ -163,7 +156,9 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn(2).withTitle('Art'),
 		]
 
-		//----------------------------------------
+		/** 
+			filter results by user input
+		*/
 		$scope.performSearch = function() {
 			$scope.searchResults = [
 				{ lokalitet: 'test', analyseDato: 'qwerty' }
@@ -175,6 +170,7 @@ angular.module('dnalivApp')
 					laererNavn = soeg.laererNavn,
 					proeveId = soeg.proeveId,
 					indsamlerNavn = soeg.indsamlerNavn,
+					indsamlerInstitution = soeg.indsamlerInstitution,
 					analyseDato = Date.parse(soeg.analyseDato),
 					analyseDatoFra = analyseDato>0 ? analyseDato - (86400000/2) : 0,
 					analyseDatoTil = analyseDato>0 ? analyseDato + (86400000/2) : 9999999999999999999
@@ -210,7 +206,7 @@ angular.module('dnalivApp')
 			if (laererNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
 					for (var i=0;i<resultat.Booking.Klasse.length; i++) {
-						console.log(laererNavn, resultat.Booking.Klasse[i].laererNavn)
+						//console.log(laererNavn, resultat.Booking.Klasse[i].laererNavn)
 						if (laererNavn == resultat.Booking.Klasse[i].laererNavn) return resultat
 					}
 				}
@@ -220,7 +216,6 @@ angular.module('dnalivApp')
 
 			//proeveId
 			if (proeveId) filter = filter.filter(function(resultat) {
-				console.log(proeveId, resultat.Proeve.proeve_nr)
 				if (resultat.Proeve && resultat.Proeve.proeve_nr) {
 					if (resultat.Proeve.proeve_nr == proeveId) return resultat
 				}
@@ -229,6 +224,12 @@ angular.module('dnalivApp')
 			if (indsamlerNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Proeve && resultat.Proeve.indsamlerNavn) {
 					if (resultat.Proeve.indsamlerNavn == indsamlerNavn) return resultat
+				}
+			})
+			//indsamlerInstitution
+			if (indsamlerInstitution) filter = filter.filter(function(resultat) {
+				if (resultat.Proeve && resultat.Proeve.indsamlerInstitution) {
+					if (resultat.Proeve.indsamlerInstitution == indsamlerInstitution) return resultat
 				}
 			})
 
@@ -246,9 +247,13 @@ angular.module('dnalivApp')
 			var dataset = [], 
 					taxon = null;
 
+			$scope.markers = []
+
+			/* 09082016
 			filter.forEach(function(resultat) {
 				resultat.Resultat_items.forEach(function(item) {
 					taxon = $scope.getTaxon(item.taxon_id)
+
 					dataset.push({
 						taxon_navn_dk: taxon.taxon_navn_dk,
 						taxon_navn: taxon.taxon_navn,
@@ -257,8 +262,114 @@ angular.module('dnalivApp')
 						lng: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
 						analyseDato: Utils.fixDate(resultat.datoForAnalyse)
 					})
+
+					if (resultat.Proeve.Lokalitet && resultat.Proeve.Lokalitet.latitude && resultat.Proeve.Lokalitet.longitude) {
+						var message = resultat.Proeve.Lokalitet.presentationString + '<br>'
+						message += taxon.taxon_navn_dk + '<br>'
+						message += 'Analyseret ' + Utils.fixDate(resultat.datoForAnalyse)
+
+						$scope.markers.push({
+							lat: parseFloat(resultat.Proeve.Lokalitet.latitude),
+							lng: parseFloat(resultat.Proeve.Lokalitet.longitude),
+							layer: 'resultater',
+							icon: greenIcon,
+							message: message
+						})
+					}
 				})
 			})
+			*/
+
+			filter.forEach(function(resultat) {
+				console.log(resultat)
+
+				dataset.push({
+					//taxon_navn_dk: taxon.taxon_navn_dk,
+					//taxon_navn: taxon.taxon_navn,
+					proeve_nr: resultat.Proeve.proeve_nr,
+					lokalitet: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '',
+					lat: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
+					lng: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
+					analyseDato: Utils.fixDate(resultat.datoForAnalyse)
+				})
+
+				var message = resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '(ikke defineret)'
+				message = '<b>'+ message + '</b><br>'
+
+				var taxonMap = []
+				resultat.Resultat_items.forEach(function(item) {
+
+					taxon = $scope.getTaxon(item.taxon_id)
+
+					if (!taxonMap[item.taxon_id]) {
+						taxonMap[item.taxon_id] = { 
+							found: false, 
+							paalidelig: false, 
+							taxon: taxon.taxon_navn_dk,
+							taxon_prioritet: taxon.taxon_prioritet
+						}
+					}
+
+					console.log(item)
+					//any paalidelig and eDNA overrules all other items
+					if (item.eDNA == true && item.database_result) {
+						taxonMap[item.taxon_id].found = true
+						taxonMap[item.taxon_id].paalidelig = true
+					} 
+					if (item.eDNA == false && item.database_result) {
+						//taxonMap[item.taxon_id].found = false
+						taxonMap[item.taxon_id].paalidelig = true
+					} 
+
+					/*					
+					if (resultat.Proeve.Lokalitet && resultat.Proeve.Lokalitet.latitude && resultat.Proeve.Lokalitet.longitude) {
+						var message = resultat.Proeve.Lokalitet.presentationString + '<br>'
+						message += taxon.taxon_navn_dk + '<br>'
+						message += 'Analyseret ' + Utils.fixDate(resultat.datoForAnalyse)
+
+						$scope.markers.push({
+							lat: parseFloat(resultat.Proeve.Lokalitet.latitude),
+							lng: parseFloat(resultat.Proeve.Lokalitet.longitude),
+							layer: 'resultater',
+							icon: greenIcon,
+							message: message
+						})
+					}
+					*/
+				})
+
+				//sort by taxon_prioritet
+				taxonMap.sort(function(a, b) {
+					if (!a.paalidelig) return 100
+			    return parseFloat(a.taxon_prioritet) - parseFloat(b.taxon_prioritet)
+				})
+
+				taxonMap.forEach(function(item) {
+		
+					if (item.found && item.paalidelig) {
+						message += '<i class="fa fa-check green"></i>&nbsp;' 
+					} else if (!item.found && item.paalidelig) {
+						message += '<i class="fa fa-remove red"></i>&nbsp;'
+					} else {
+						message += '<i class="fa fa-question"></i>&nbsp;' 
+					}
+
+					message += item.taxon
+					message += '<br>'
+				})
+	
+				console.log(message)
+
+				$scope.markers.push({
+					lat: parseFloat(resultat.Proeve.Lokalitet.latitude),
+					lng: parseFloat(resultat.Proeve.Lokalitet.longitude),
+					layer: 'resultater',
+					icon: greenIcon,
+					message: message
+				})
+
+			})
+
 			console.log(dataset)
 			$scope.searchResults = dataset
 			//
@@ -275,14 +386,11 @@ angular.module('dnalivApp')
 			iconAnchor: [6,6], 
 			popupAnchor: [9,0] 
 		})
-
-			
 		var greenIcon = L.icon({
 			iconUrl: 'assets/images/Circle_Green.png',
 			iconAnchor: [0,0], 
 			popupAnchor: [9,0] 
 		})
-
 		var grayIcon = L.icon({
 			iconUrl: 'assets/images/Circle_Grey.png',
 			iconAnchor: [0,0], 
@@ -307,13 +415,6 @@ angular.module('dnalivApp')
 				}
 			}
 		}
-
-		$timeout(function() {
-			proeveMap = L.map('proeve-map').setView([55.685255690177826, 12.572981195446564], 7);
-			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-			}).addTo(proeveMap)
-		})
 
 		/*
 		$scope.loadData = function() {
@@ -397,21 +498,6 @@ angular.module('dnalivApp')
 		}
 		*/
 
-		//tab navigation
-		$scope.tabs = {
-			activeTab: 0
-		}
-
-		$timeout(function() {
-			$('a[data-toggle="tab"]').on('click', function (e) {	
-				//console.log(L)
-				//L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);
-				//L.invalidateSize()
-				//console.dir(e)
-				proeveMap.invalidateSize()
-			})
-		})
-
 		//taxon art DK
 		$scope.arter = []
 			
@@ -440,12 +526,157 @@ angular.module('dnalivApp')
 		})
 		*/
 
+		/*
 		$('#artDk').tagsinput({
 		  typeahead: {
 		    source: ['Amsterdam', 'Washington', 'Sydney', 'Beijing', 'Cairo']
 		  }
 		})
+		*/
 
+		//map
+		/*
+		$scope.center = {
+			lat: 56.126627523318206,
+			lng: 11.457741782069204,
+			zoom: 7
+		}
+		*/
+
+		angular.extend($scope, {
+			events: {
+				map: {
+					enable: ['zoomstart', 'drag', 'click', 'dblclick', 'mouseover'],
+					logic: 'emit'
+				}
+			},
+			center: {
+				lat: 56.126627523318206,
+				lng: 11.457741782069204,
+				zoom: 7
+			},
+			markers: [],
+			layers: {
+        baselayers: {
+
+					xyz: {
+						name: 'OpenStreetMap (XYZ)',
+						url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+						type: 'xyz'
+					},
+					dk4: {
+						name: "DK 4cm kort",
+						type: 'wms',
+						visible: true,
+						url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+						layerOptions: {
+							layers: "topo25_klassisk",
+							servicename: "topo25",
+							version: "1.1.1",
+							request: "GetMap",
+							format: "image/jpeg",
+							service: "WMS",
+							styles: "default",
+							exceptions: "application/vnd.ogc.se_inimage",
+							jpegquality: "80",
+							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+							ticket: TicketService.get()
+						}
+					},
+					luftfoto: {
+						name: "DK luftfoto",
+						type: 'wms',
+						visible: true,
+						url: "http://kortforsyningen.kms.dk/topo_skaermkort",
+						layerOptions: {
+							layers: "orto_foraar",
+							servicename: "orto_foraar",
+							version: "1.1.1",
+							request: "GetMap",
+							format: "image/jpeg",
+							service: "WMS",
+							styles: "default",
+							exceptions: "application/vnd.ogc.se_inimage",
+							jpegquality: "80",
+							attribution: "Indeholder data fra GeoDatastyrelsen, WMS-tjeneste",
+							ticket: TicketService.get()
+						}
+					}
+				},
+				overlays: {
+					resultater: {
+          	name: 'Søgeresultater',
+						type: 'markercluster',
+						layerOptions: {
+							maxClusterRadius: function(zoom) { 
+								//console.log('zoom', zoom)
+								return 1; 
+							}
+						},
+						visible: true
+					},
+					stamen_toner: {
+						name: 'By og vej navne',
+						url: "http://tile.stamen.com/toner-labels/{z}/{x}/{y}.png",
+						layerOptions: {
+							attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',
+							showOnSelector: false,
+							detectRetina: true,
+							updateWhenIdle: true,
+							reuseTiles: true
+						},
+						type: 'xyz',
+						visible: false
+					}
+				}
+			}
+		})
+
+		/*
+			CSV
+		*/
+
+		$scope.downloadCSV = function() {
+			//some darwin core fields
+			var darwinCore = [
+				'occurrenceID',			//id
+				'datasetName',			//dataset
+				'basisOfRecord',		//MachineObservation
+				'eventDate',				//analyseDato
+				'scientificName',		//taxon
+				'vernacularName',		//dknavn
+				'countryCode',			//dk
+				'decimalLatitude',	//lat
+				'decimalLongitude',	//lng
+				'identifiedBY',			//DNALab
+				'kingdom'						//animalia
+			]
+
+	
+
+			var A = [['n','sqrt(n)']];
+	
+			for(var j=1; j<10; ++j){ 
+		    A.push([j, Math.sqrt(j)]);
+			}
+
+			var csvRows = [];
+
+			for(var i=0, l=A.length; i<l; ++i){
+		    csvRows.push(A[i].join(','));
+			}
+			var csvString = csvRows.join("%0A");
+			var a         = document.createElement('a');
+			a.href        = 'data:attachment/csv,' +  encodeURIComponent(csvString);
+			a.target      = '_blank';
+			a.download    = 'dnaogliv.csv';
+
+			document.body.appendChild(a);
+			a.click();
+		}
+
+
+//});
 
 
 }]);
