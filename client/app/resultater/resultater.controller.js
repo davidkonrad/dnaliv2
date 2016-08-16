@@ -259,6 +259,11 @@ angular.module('dnalivApp')
 				}
 			})
 			.withButtons([ 
+				{ extend : 'colvis',
+					overlayFade: 0,
+					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+					className: 'btn btn-default btn-xs colvis-btn',
+				}, 
 				{ text: 'Nyt resultat',
 					className: 'btn btn-primary btn-xs colvis-btn',
 					action: function ( e, dt, node, config ) {
@@ -283,7 +288,7 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn(0).withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn(1).withTitle('PrøveID'),
       DTColumnBuilder.newColumn(2).withTitle('Lokalitet'),
-      DTColumnBuilder.newColumn(3).withOption('type', 'dna').withTitle('Dato for analyse'),
+      DTColumnBuilder.newColumn(3).withOption('type', 'dna').withTitle('Analysedato'),
       DTColumnBuilder.newColumn(4).withTitle('Datasæt'),
       DTColumnBuilder.newColumn(5).withTitle('Noter'),
       DTColumnBuilder.newColumn(6).withTitle('Bruger')
@@ -337,10 +342,17 @@ angular.module('dnalivApp')
 		}
 
 		$scope.deleteResultat = function(resultat_id) {
+
 			var date = new Date($scope.resultat.created_timestamp).toLocaleString('da-DK', { hour12: false } ),
 					author = $scope.resultat.created_userName;
 			Alert.show($scope,'Slet Resultat?', 'Oprettet <b>'+date+'</b> af <b>'+author+'</b>.<br><br>Resultat samt tilhørende replikater vil blive slettet permanent. Vil du fortsætte?').then(function(confirm) {
 				if (confirm) {
+					$scope.resultat.resultat_items.forEach(function(item) {
+						if (item.length) {
+							Resultat_item.delete({ id: item[0].resultat_item_id })
+							//console.log('sletter resultat_item_id', item[0].resultat_item_id)
+						}
+					})
 					Resultat.delete({ id : resultat_id }).$promise.then(function() {	
 						$scope.resultatModal.hide()
 						$scope.reloadData()

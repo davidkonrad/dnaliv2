@@ -94,7 +94,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
-		EANBlanket : {
+		EANblanket : {
 			type: DataTypes.STRING,
 			allowNull: true
 		},

@@ -133,13 +133,38 @@
 		  </div>
 
 		  <div class="form-group">
-		  	<label for="indsamlerKommune" class="normal">Kommune</label>
+		  	<label for="kommune" class="normal">Kommune</label>
+				<!--
 				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerKommune" />
+				-->
+				<input type="text" 
+							class="form-control input-sm bold" 
+							id="kommune"
+							placeholder="" 
+							ng-model="soeg.kommune"
+						  bs3-typeahead
+							bs3-promise="kommuneArray"
+							bs3-afterSelect="getKommunePolygon"
+							bs3-showHintOnFocus="true"
+				/>
+
 		  </div>
 
 		  <div class="form-group">
-		  	<label for="indsamlerRegion" class="normal">Region</label>
-				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerRegion" />
+		  	<label for="region" class="normal">Region</label>
+				<!--
+				<input type="text" class="form-control input-sm bold" placeholder="" id="region" />
+				-->
+				<input type="text" 
+							class="form-control input-sm bold" 
+							id="region"
+							placeholder="" 
+							ng-model="soeg.region"
+						  bs3-typeahead
+							bs3-promise="regionArray"
+							bs3-showHintOnFocus="true"
+				/>
+
 		  </div>
 
 			<h4>Artsdata</h4>
@@ -201,7 +226,7 @@
 			<!--
 			<div id="proeve-map" style="height: 600px; width:100%;"></div>
 			-->
-			<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" id="proeve-map" style="height: 600px; width:100%;" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
+			<leaflet center="center" geojson="geojson" layers="layers" markers="markers" event-broadcast="events" id="proeve-map" style="height: 600px; width:100%;" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
 			<i class="fa fa-check green"></i>&nbsp;Fundet i eDNA
 			&nbsp;&nbsp;&nbsp;
 			<i class="fa fa-remove red"></i>&nbsp;Ej fundet i eDNA

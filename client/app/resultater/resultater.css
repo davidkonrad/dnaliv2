@@ -149,3 +149,12 @@ input.bold {
 .dataTable > thead > tr > th[class*="sort"]:after{
     content: "" !important;
 }
+
+
+/* */
+th.vmiddle {
+	vertical-align: middle !important;
+}
+th.hmiddle {
+	text-align: center;
+}

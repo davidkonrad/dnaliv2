@@ -30,8 +30,7 @@ Datasæt
 Note
 Bruger
 */
-			//Proeve.query().$promise.then(function(proever) {	
-			//Db.proever().then 
+
 			var proever = Db.proever()
 			$scope.proever = proever
 
@@ -61,8 +60,9 @@ Bruger
 						latitude: lokalitet ? lokalitet.latitude : '',
 						longitude: lokalitet ? lokalitet.longitude : '',
 
-						antalIndsamlingsteder: spotString(spots),
+						antalIndsamlingsteder: spots.length+1, //spotString(spots),
 						indsamlerNavn: proever[i].indsamlerNavn,
+						indsamlerEmail: proever[i].indsamlerEmail,
 						indsamlerInstitution: proever[i].indsamlerInstitution,
 
 						modtagelsesDato: proever[i].modtagelsesDato,
@@ -365,6 +365,7 @@ Bruger
       DTColumnBuilder.newColumn('longitude').withOption('type', 'number').withTitle('Longitude'),
       DTColumnBuilder.newColumn('antalIndsamlingsteder').withTitle('Antal indsamlingsteder'),
       DTColumnBuilder.newColumn('indsamlerNavn').withTitle('Indsamlernavn'),
+      DTColumnBuilder.newColumn('indsamlerEmail').withTitle('Indsamler email'),
       DTColumnBuilder.newColumn('indsamlerInstitution').withTitle('Indsamler institutionsnavn'),
       DTColumnBuilder.newColumn('filtreringsVolumen').withTitle('Filtreringsvolumen'),
       DTColumnBuilder.newColumn('modtagelsesDato_fixed').withOption('type', 'dna').withTitle('Modtagelsesdato'),

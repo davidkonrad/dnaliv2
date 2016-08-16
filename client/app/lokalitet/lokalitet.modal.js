@@ -272,6 +272,7 @@ angular.module('dnalivApp')
 
 						})
 					} else {
+						console.log(item.geometryWkt)
 						lokalitetPolygon = geometryWktPolygon(item.geometryWkt)
 						var center = geometryWktLatLng(item.geometryWkt)
 						$timeout(function() {

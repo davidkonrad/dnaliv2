@@ -14,7 +14,6 @@ angular.module('dnalivApp')
 
 
 		Resultat.query().$promise.then(function(items) {
-
 			function lokalitetByResultatId(resultat_id) {
 				var proever = Db.proever()
 				for (var i=0, l=proever.length; i<l; i++) {

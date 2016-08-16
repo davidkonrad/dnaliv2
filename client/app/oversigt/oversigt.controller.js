@@ -32,10 +32,7 @@ angular.module('dnalivApp')
 /*
 PrøveID [tilvalg]	
 Lokalitet [tilvalg]	
-EAN-Blanket [tilvalg]	
 Note [tilvalg]	
-Bruger [tilvalg]
-
 */
 
 		/**
@@ -57,8 +54,9 @@ Bruger [tilvalg]
 			booking.niveau = ''
 			booking.kitTilsendt = ''
 			booking.proeve_nr = ''
+			booking.EANblanket = ''
 
-			console.log(booking)
+			//console.log(booking)
 
 			booking.Klasse.forEach(function(klasse) {
 				//lærere
@@ -117,8 +115,13 @@ Bruger [tilvalg]
 				if (booking.kitTilsendt != '') booking.kitTilsendt += "\n";
 				booking.kitTilsendt += (!klasse.kitTilsendt ? '' : Utils.fixDate(klasse.kitTilsendt) ) 
 
+				//EANblanket
+				if (booking.EANblanket != '') booking.EANblanket += "\n";
+				booking.EANblanket += !klasse.EANblanket ? '' : klasse.EANblanket
+
 				//prøevenr
-				//booking.proeve_nr = 				
+				booking.proeve_nr = ''
+
 			})
 			booking.besoegsDato_fixed = Utils.fixDate(booking.besoegsDato)
 			booking.bookingDato_fixed = Utils.fixDate(booking.bookingDato)
@@ -256,11 +259,6 @@ Bruger [tilvalg]
 				text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
 				filename: 'bookings', 
 				className: 'btn btn-default btn-xs ml25px'
-			},{ 
-				extend : 'pdfHtml5',
-				text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
-				filename: 'bookings', 
-				className: 'btn btn-default btn-xs'
 			}, { 
 				text: 'Ny booking',
 				className: 'btn btn-primary btn-xs ml25px mr25px',
@@ -279,7 +277,6 @@ Bruger [tilvalg]
 /*
 PrøveID [tilvalg]	
 Lokalitet [tilvalg]	
-EAN-Blanket [tilvalg]	
 Note [tilvalg]	
 Bruger [tilvalg]
 
@@ -317,6 +314,7 @@ Bruger [tilvalg]
       DTColumnBuilder.newColumn('antal_elever').withTitle('#Elev.'),
       DTColumnBuilder.newColumn('antal_laerer').withTitle('#Lær.').withOption('visible', false),
       DTColumnBuilder.newColumn('kitTilsendt').withOption('className', 'may-break').withTitle('Kit tilsendt'),
+      DTColumnBuilder.newColumn('EANblanket').withOption('className', 'may-break').withTitle('EAN-blanket').withOption('visible', false),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøeveID').withOption('visible', false),
       DTColumnBuilder.newColumn('created_userName').withTitle('Bruger').withOption('visible', false)
     ];  

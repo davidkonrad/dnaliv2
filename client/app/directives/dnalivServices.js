@@ -257,4 +257,8 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 //global path to leaflet defaults
 L.Icon.Default.imagePath = 'client/bower_components/leaflet/dist/images';
 
+//neat quote method
+String.prototype.quote = function() {
+	return '"' + this + '"'
+}
 
