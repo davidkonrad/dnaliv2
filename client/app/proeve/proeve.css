@@ -111,7 +111,6 @@ fieldset {
 }
 legend {
 	font-size: 100% !important;
-	xxfont-weight: bold !important;
 	text-align: left !important;
 	width:auto;
 	padding:0 10px;
@@ -122,3 +121,17 @@ legend {
 	z-index:1151 !important;
 }
 
+#dtProeve td.dt-note {
+	max-width: 300px !important;
+	overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+td.proeve-kommentar  {
+	max-width: 100% !important;
+	width: 500px;
+	overflow-x: hidden;
+  text-overflow: ellipsis;
+	display: inline-block;
+	white-space: nowrap;
+	word-break: keep-all;
+}

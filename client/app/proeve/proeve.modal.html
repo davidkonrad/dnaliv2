@@ -84,20 +84,38 @@
 
 					</fieldset>
 
-				  <div class="form-group" style="width:49%;">
+					<fieldset>
+						<legend>Anden data</legend>
+	
+						<span ng-repeat="extra in extra_fields">
+					  	<label for="extra{{ extra.extras_id }}" class="normal">{{ extra.caption }} </label>
+					    <input ng-if="extra.type == 'Dato'" type="text" dynamic-model="'proeve.extra' + extra.extras_id" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" ng-change="proeve.edited = true" />
+					    <input ng-if="extra.type == 'Heltal'" only-numbers type="text" size="10" dynamic-model="'proeve.extra' + extra.extras_id" class="form-control input-sm bold" ng-change="proeve.edited = true" />
+					    <input ng-if="extra.type == 'Kommatal'" only-digits type="text" size="10" dynamic-model="'proeve.extra' + extra.extras_id" class="form-control input-sm bold" ng-change="proeve.edited = true" />
+					    <input ng-if="extra.type == 'Tekst (50)'" type="text" size="40" dynamic-model="'proeve.extra' + extra.extras_id" class="form-control input-sm bold" ng-change="proeve.edited = true" />
+					    <textarea ng-if="extra.type == 'Tekst (memo)'" rows="3" cols="40" dynamic-model="'proeve.extra' + extra.extras_id" class="form-control input-sm bold" ng-change="proeve.edited = true" /></textarea>
+							&nbsp;&nbsp;
+				      <br ng-if="!(($index + 1) % 3)" />
+				      <br ng-if="!(($index + 1) % 3)" />
+						</span>
+
+					</fieldset>
+					
+
+				  <div class="form-group col-sm-6">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKommentar()" title="Tilføj note / kommentar"><i class="fa fa-plus"></i></button>
 						<b>Noter</b>
 						<table class="table-striped">
-							<tr ng-repeat="k in proeve.kommentarer" class="info">
+							<tr ng-repeat="k in proeve.Kommentar" class="info">
 								<td><span style="color:red;cursor:pointer;" ng-click="removeKommentar(k.kommentar_id)">×</span>&nbsp;</td>
-								<td title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }}" style="white-space:normal !important;"> 
+								<td class="proeve-kommentar" title="Oprettet af {{ k.created_userName }} {{ k.created_timestamp | date:'dd/MM/yyyy Kl. HH.mm' }} : {{ k.kommentar }} "> 
 									{{ k.kommentar }} 
 								</td>
 							</tr>
 						</table>
 					</div>
 
-				  <div class="form-group" style="width:49%;">
+				  <div class="form-group col-sm-6">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addResultat()" title="Tilføj nyt resultat"><i class="fa fa-plus"></i></button>
 						<b>Resultater</b>
 						<table class="table-striped">

@@ -16,6 +16,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+    caption_export: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     type: {
       type: DataTypes.STRING,
       allowNull: true

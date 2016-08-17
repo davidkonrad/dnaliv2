@@ -7,15 +7,6 @@ angular.module('dnalivApp')
 	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Proeve, Booking, TicketService,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, Db, leafletData) {
 
-/*
-			console.log(TicketService.get())
-http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&regkode=1084&geometry=true&ticket=193baa661ba71cb6e7e14456f073b542
-http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn="København"&geometry=true&ticket=193baa661ba71cb6e7e14456f073b542
-		$http.get('http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&regkode=1084&geometry=true&ticket='+TicketService.get(), function(response) {
-				console.log('xxxx', response)
-			})
-*/
-
 		Db.init()
 
 		angular.extend($scope, {
@@ -70,7 +61,8 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 						layerOptions: {
 							maxClusterRadius: function(zoom) { 
 								//console.log('zoom', zoom)
-								return 1; 
+				        return (zoom <= 14) ? 80 : 1; // radius in pixels
+								//return 1; 
 							}
 						},
 						visible: true
@@ -112,7 +104,6 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 
 		//analalyseData lookups
 		Db.reloadBookings().then(function(bookings) {	
-
 			$scope.sagsNoArray = bookings.map(function(booking) {
 				return booking.sagsNo
 			})
@@ -191,7 +182,6 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 			$scope.taxonDkArray = taxons.map(function(taxon) {
 				return taxon.taxon_navn_dk
 			})
-			//console.log('TTTT', $scope.taxonDkArray)
 		})
 
 		$scope.arter = []
@@ -204,15 +194,26 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 				if ($scope.soeg[key] && $scope.soeg[key].toString() != '') return true
 			}
 			return false
-			//return Object.keys().length > 0
 		}
 
-		$scope.$watch('soeg', function(newVal, oldVal){
+		$scope.$watchGroup(['soeg.sagsNo', 'soeg.institutionsNavn', 'soeg.laererNavn', 'soeg.proeveId', 'soeg.indsamlerNavn',
+			'soeg.indsamlerInstitution', 'soeg.analyseDato', 'soeg.taxon_id'], function(newVal, oldVal){
 			if (newVal == oldVal) return
 			if ($scope.soegHasParams()) {
-				$timeout(function() {
-					$scope.performSearch()
-				}, 1000)
+				$scope.performSearch()
+			}
+		}, true);
+
+		$scope.$watchGroup(['soeg.kommune', 'soeg.region'], function(newVal, oldVal){
+			$scope.soeg.jsonIsReady = null;
+			if (newVal == oldVal) return
+			if ($scope.soegHasParams()) {
+				var watch = $scope.$watch('soeg.jsonIsReady', function(newVal, oldVal) {
+					if (newVal) {
+						watch() //clear $watch
+						$scope.performSearch()
+					}
+				})
 			}
 		}, true);
 
@@ -248,6 +249,7 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 					indsamlerInstitution = soeg.indsamlerInstitution,
 					kommune = soeg.kommune,
 					region = soeg.region,
+					taxon_id = soeg.taxon_id, 
 					analyseDato = Date.parse(soeg.analyseDato),
 					analyseDatoFra = analyseDato>0 ? analyseDato - (86400000/2) : 0,
 					analyseDatoTil = analyseDato>0 ? analyseDato + (86400000/2) : 9999999999999999999
@@ -255,6 +257,7 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 			//console.log(analyseDatoFra, analyseDatoTil)
 
 			var filter = angular.copy($scope.resultater)
+			console.log(filter)
 
 			//analysedato
 			if (analyseDato) filter = filter.filter(function(resultat) {
@@ -273,7 +276,6 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 			if (institutionsNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
 					for (var i=0;i<resultat.Booking.Klasse.length; i++) {
-						//console.log(institutionsNavn, resultat.Booking.Klasse[i].institutionsnavn)
 						if (institutionsNavn == resultat.Booking.Klasse[i].institutionsnavn) return resultat
 					}
 				}
@@ -288,26 +290,24 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 				}
 			})
 			//kommune
-			/*
-			if (kommune) filter = filter.filter(function(resultat) {
-				if (resultat.Booking && resultat.Booking.Klasse) {
-					for (var i=0;i<resultat.Booking.Klasse.length; i++) {
-						if (kommune == resultat.Booking.Klasse[i].kommune) return resultat
-					}
-				}
-			})
-			*/
 			if (kommune) filter = filter.filter(function(resultat) {
 				if (resultat.Proeve && resultat.Proeve.Lokalitet) {
-					return $scope.pointInGeoJSON(resultat.Proeve.Lokalitet.latitude, resultat.Proeve.Lokalitet.lomgitude)
+					return $scope.pointInGeoJSON(resultat.Proeve.Lokalitet.latitude, resultat.Proeve.Lokalitet.longitude)
 				}
 			})
-
 			//region
 			if (region) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
 					for (var i=0;i<resultat.Booking.Klasse.length; i++) {
 						if (region == resultat.Booking.Klasse[i].region) return resultat
+					}
+				}
+			})
+			//taxon
+			if (taxon_id) filter = filter.filter(function(resultat) {
+				if (resultat.Resultat_items && resultat.Resultat_items.length) {
+					for (var i=0;i<resultat.Resultat_items.length; i++) {
+						if (taxon_id == resultat.Resultat_items[i].taxon_id) return resultat
 					}
 				}
 			})
@@ -332,16 +332,6 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 					if (resultat.Proeve.indsamlerInstitution == indsamlerInstitution) return resultat
 				}
 			})
-
-
-			/*
-			filter = filter.filter(function(resultat) {
-				var resAnalyseDato = Date.parse(resultat.datoForAnalyse)
-				if (analyseDatoFra <= resAnalyseDato && analyseDatoTil >= resAnalyseDato) {
-					return resultat
-				}
-			})
-			*/
 
 			//create dataset
 			var dataset = [], 
@@ -389,8 +379,8 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 					//taxon_navn: taxon.taxon_navn,
 					proeve_nr: resultat.Proeve ? resultat.Proeve.proeve_nr : '',
 					lokalitet: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '',
-					lat: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
-					lng: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
+					lat: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
+					lng: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
 					analyseDato: Utils.fixDate(resultat.datoForAnalyse)
 				})
 
@@ -451,8 +441,15 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 				//construct basic exportItem to use for exportDataset
 				var proeve_id = resultat.Proeve ? resultat.Proeve.proeve_id : null
 						
-				console.log(proeve_id, $scope.proeveIdHash)
+				//console.log(proeve_id, $scope.proeveIdHash)
+				//console.log(resultat)
 
+				var institutioner = resultat.Booking && resultat.Booking.Klasse 
+					? resultat.Booking.Klasse.map(function(klasse) {
+							return klasse.institutionsnavn
+						}).join(', ')
+					: '(ikke sat) '
+	
 				var exportItemBase = {
 					proeve_id: proeve_id,
 					ProeveId: $scope.proeveIdHash[proeve_id] ? $scope.proeveIdHash[proeve_id] : '(PrøveID ikke sat)',
@@ -460,17 +457,17 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 					dataset: resultat.Proeve ? resultat.Proeve.dataset : '',
 					lat: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
 					lng: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
-					analyseDato: Utils.fixDate(resultat.datoForAnalyse)
+					analyseDato: Utils.fixDate(resultat.datoForAnalyse),
+					indsamlingsDato: resultat.Proeve && resultat.Proeve.indsamlingsDato ? Utils.fixDate(resultat.Proeve.indsamlingsDato) : '(ikke sat)',
+					indsamlerNavn: resultat.Proeve && resultat.Proeve.indsamlerNavn ? resultat.Proeve.indsamlerNavn : '(ikke sat)',
+					institutioner: institutioner
 				}
 
 				var message = ''
 				message += '<b>' + exportItemBase.ProeveId + '</b><br>'
 				message += '<b>'+ exportItemBase.lokalitet + '</b><br>'
-
-				/*
-				var message = resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '(lokalitet ikke defineret)'
-				message = '<b>'+ message + '</b><br>'
-				*/
+				message += 'Indsamlingdato : <b>'+ exportItemBase.indsamlingsDato + ', ' + exportItemBase.indsamlerNavn +' </b><br>'
+				message += 'Analysedato : <b>'+ exportItemBase.analyseDato + ', ' + institutioner + '</b><br>'
 
 				taxonMap.forEach(function(item) {
 					var exportItem = angular.copy(exportItemBase)
@@ -500,9 +497,7 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 					exportDataset.push(exportItem)
 				})
 	
-				//console.log(message)
-
-				$scope.markers.push({
+				if (exportItemBase.lat && exportItemBase.lng) $scope.markers.push({
 					lat: parseFloat(resultat.Proeve.Lokalitet.latitude),
 					lng: parseFloat(resultat.Proeve.Lokalitet.longitude),
 					layer: 'resultater',
@@ -656,36 +651,73 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 			for (var i in $scope.geojson.data.features[0].geometry.coordinates) {
 				var coord = $scope.geojson.data.features[0].geometry.coordinates[i];
 				for (var j in coord) {
+					/*
 					var points = coord[j];
+					console.log(coord[j])
 					for (var k in points) {
+						console.log(points[k])
 						latlngs.push(L.GeoJSON.coordsToLatLng(points[k]));
 					}
+					*/
+					latlngs.push(L.GeoJSON.coordsToLatLng(coord[j]));
 				}
 			}
 			$scope.map.fitBounds(latlngs);
 		}
+
 		$scope.pointInGeoJSON = function(lat, lng) {
+			var latlngs = [];
+			for (var i in $scope.geojson.data.features[0].geometry.coordinates) {
+				var coord = $scope.geojson.data.features[0].geometry.coordinates[i];
+				for (var j in coord) {
+					latlngs.push(L.GeoJSON.coordsToLatLng(coord[j]));
+				}
+			}
+
+			var x = lat, y = lng;
+
+		  var inside = false;
+    	for (var i = 0, j = latlngs.length - 1; i < latlngs.length; j = i++) {
+        var xi = latlngs[i].lat, yi = latlngs[i].lng;
+        var xj = latlngs[j].lat, yj = latlngs[j].lng;
+
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    	}
+
+    	return inside;
+
+			/*
+			console.log('pointInGeoJSON', lat, lng)
+			if (!lat || !lng) return false
 			console.log($scope.geojson)
 			var latlngs = [];
 			for (var i in $scope.geojson.data.features[0].geometry.coordinates) {
 				var coord = $scope.geojson.data.features[0].geometry.coordinates[i];
 				for (var j in coord) {
-					var points = coord[j];
-					for (var k in points) {
-						latlngs.push(L.GeoJSON.coordsToLatLng(points[k]));
-					}
+					
+					//var points = coord[j];
+					//for (var k in points) {
+					//	latlngs.push(L.GeoJSON.coordsToLatLng(points[k]));
+					//}
+
+					latlngs.push(L.GeoJSON.coordsToLatLng(coord[j]));
 				}
 			}
 			//$scope.map.fitBounds(latlngs);
 			//console.log(L.GeoJSON.getBounds())
-			console.log($scope.map.getBounds(latlngs))
+			console.log('getBounds', $scope.map.getBounds(latlngs))
 			return $scope.map.getBounds(latlngs).contains(L.latLng(lat, lng))
+			*/
 		}
 
 		$scope.loadKommune = function(kommune) {
 			console.log('LOADKOMMUNE')
 			var url = 'http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn='+kommune+'&geometry=true&outgeoref=EPSG:4326&ticket='+TicketService.get()
+			console.log(url)
 			$http.get(url).success(function(data, status) {
+				console.log('LOADKOMMUNE', data)
 				angular.extend($scope, {
 					geojson: {
 						data: data,
@@ -699,7 +731,41 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
         })
 				$timeout(function() {
 					$scope.centerJSON()
-				})
+					$scope.soeg.jsonIsReady = true
+				}, 200)
+			})
+		}
+
+		var regionsKoder = {
+			'Nordjylland' : 1081,
+			'Midtjylland' : 1082,
+			'Syddanmark'  : 1083,
+			'Hovedstaden' : 1084,
+			'Sjælland'    : 1085
+		}
+
+		$scope.loadRegion = function(region) {
+			var regKode = regionsKoder[region] ? regionsKoder[region] : false
+			console.log('LOAD REGION')
+			var url = 'http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&regkode='+regKode+'&geometry=true&outgeoref=EPSG:4326&ticket='+TicketService.get()
+			console.log(url)
+			$http.get(url).success(function(data, status) {
+				console.log('LOAD REGION', data)
+				angular.extend($scope, {
+					geojson: {
+						data: data,
+						style: {
+							fillColor: '#ff0000',
+							color: '#ffff00',
+							weight: 3,
+							fillRule: 'nonzero'
+						}
+					}
+        })
+				$timeout(function() {
+					$scope.centerJSON()
+					$scope.soeg.jsonIsReady = true
+				}, 1000)
 			})
 		}
 
@@ -801,10 +867,10 @@ http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&ko
 			var csvString = csvRows.join("\n");
 			*/	
 
-			var a         = document.createElement('a');
-			a.href        = 'data:attachment/csv,' +  encodeURIComponent(csvString);
-			a.target      = '_blank';
-			a.download    = 'dnaogliv.csv';
+			var a = document.createElement('a');
+			a.href = 'data:attachment/csv,' +  encodeURIComponent(csvString);
+			a.target = '_blank';
+			a.download = 'dnaogliv.csv';
 
 			document.body.appendChild(a);
 			a.click();

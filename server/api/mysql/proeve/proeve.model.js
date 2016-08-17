@@ -79,6 +79,47 @@ module.exports = function(sequelize, DataTypes) {
 		locked_by : {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		//extra fields
+		extra1 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra2 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra3 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra4 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra5 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra6 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra7 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra8 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra9 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra10 : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
 
 
@@ -90,6 +131,8 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         models.Proeve.belongsTo(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
         models.Proeve.hasMany(models.Resultat, { foreignKey : 'proeve_id', as : 'Resultat' })
+
+        models.Proeve.hasMany(models.Kommentar, { foreignKey : 'relation_id', type_id: 3 , as : 'Kommentar' })
 			}
 		}
 

@@ -216,6 +216,8 @@ angular.module('dnalivApp')
 		$scope.taxonClick = function(taxon) {
 
 			$scope.currentTaxonId = taxon.taxon_id
+			console.log($scope.markers)
+
 			$scope.markers = []	
 
 			$timeout(function() {

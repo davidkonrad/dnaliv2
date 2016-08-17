@@ -162,6 +162,7 @@
 							ng-model="soeg.region"
 						  bs3-typeahead
 							bs3-promise="regionArray"
+							bs3-afterSelect="loadRegion"
 							bs3-showHintOnFocus="true"
 				/>
 
@@ -171,7 +172,10 @@
 
 		  <div class="form-group">
 		  	<label for="artDk" class="normal">Art (dansk navn)</label>
-				<input type="text" id="artDk"> 				
+				<select ng-model="soeg.taxon_id" class="form-control input-sm">
+					<option></option>
+					<option ng-repeat="taxon in taxons" value="{{ taxon.taxon_id }}"> {{ taxon.taxon_navn_dk }}</option>
+				</select>
 
 				<!--
 				<tags-input ng-model="arter">

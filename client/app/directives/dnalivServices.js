@@ -184,7 +184,7 @@ $.extend( true, $.fn.dataTable.defaults, {
   "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "Alle"] ]
 });
 
-
+//http://stackoverflow.com/a/25886951/1407478
 angular.module('dnalivApp').
 	directive('onlyDigits', function () {
     return {
@@ -210,7 +210,30 @@ angular.module('dnalivApp').
         ctrl.$parsers.push(inputValue);
       }
     };
- });
+});
+angular.module('dnalivApp')
+	.directive('onlyNumbers', function () {
+    return {
+      require: 'ngModel',
+      restrict: 'A',
+      link: function (scope, element, attr, ctrl) {
+        function inputValue(val) {
+          if (val) {
+            var digits = val.replace(/[^0-9]/g, '');
+
+            if (digits !== val) {
+              ctrl.$setViewValue(digits);
+              ctrl.$render();
+            }
+            return parseInt(digits,10);
+          }
+          return undefined;
+        }            
+        ctrl.$parsers.push(inputValue);
+      }
+    };
+});
+
 
 //http://stackoverflow.com/q/14995884/1407478
 angular.module('dnalivApp').
@@ -228,6 +251,22 @@ angular.module('dnalivApp').
     };
 }]);
 
+//to be able to set dynamic ng-model for proeve_extras
+//http://stackoverflow.com/a/32096328/1407478
+angular.module('dnalivApp').
+	directive('dynamicModel', ['$compile', '$parse', function ($compile, $parse) {
+    return {
+			restrict: 'A',
+			terminal: true,
+			priority: 100000,
+			link: function (scope, elem) {
+				var name = $parse(elem.attr('dynamic-model'))(scope);
+				elem.removeAttr('dynamic-model');
+				elem.attr('ng-model', name);
+				$compile(elem)(scope);
+			}
+		};
+}]);
 
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
     "dna-pre": function ( a ) {

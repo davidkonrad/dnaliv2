@@ -11,6 +11,8 @@ angular.module('dnalivApp')
 
 		Db.init()
 
+		var loadDeferred = null;
+
 		$scope.taxons = Db.taxons()
 
 		var vm = this;
@@ -18,21 +20,9 @@ angular.module('dnalivApp')
 		//new loadData
 		vm.reloadData = function() {
 			loadDeferred = $q.defer() //promisfy it
-/*
-Filtreringsvolumen
-Modtagelsesdato
-Ekstraktionsdato
-Elueringsvolumen
-DNA ng/µl
-Aliquot volumen
-Analysedato
-Datasæt
-Note
-Bruger
-*/
 
-			var proever = Db.proever()
-			$scope.proever = proever
+			Db.reloadProever().then(function(proever) {
+				$scope.proever = proever
 
 				var spotString = function(spots) {
 					var s = ''
@@ -42,46 +32,66 @@ Bruger
 					}
 					return s
 				}
+				var kommentarString = function(kommentarer) {
+					var s = ''
+					for (var i=0; i<kommentarer.length; i++) {
+						if (s != '') s += "\n" //'<br>' //&nbsp;//&nbsp;"
+						s += kommentarer[i].kommentar
+					}
+					return s
+				}
 					
 				var lokalitet, spots, items = []
-
+	
 				for (var i=0,l=proever.length; i<l; i++) {
+					//console.log(proever[i])
 					lokalitet = proever[i].Lokalitet
 					spots = lokalitet ? Db.lokalitet_spot(lokalitet.lokalitet_id) : []
 					var item = {
-						proeve_id: proever[i].proeve_id,
-						proeve_nr: proever[i].proeve_nr,
-						sagsNo: proever[i].booking_id,
+							proeve_id: proever[i].proeve_id,
+							proeve_nr: proever[i].proeve_nr,
+							sagsNo: proever[i].booking_id,
+	
+							kommentar_fixed: !proever[i].Kommentar.length ? '' : kommentarString(proever[i].Kommentar),
 
-						indsamlingsDato: proever[i].indsamlingsDato,
-						indsamlingsDato_fixed: Utils.fixDate(proever[i].indsamlingsDato),
+							indsamlingsDato: proever[i].indsamlingsDato,
+							indsamlingsDato_fixed: Utils.fixDate(proever[i].indsamlingsDato),
 
-						lokalitet: lokalitet ? lokalitet.presentationString : '',
-						latitude: lokalitet ? lokalitet.latitude : '',
-						longitude: lokalitet ? lokalitet.longitude : '',
+							lokalitet: lokalitet ? lokalitet.presentationString : '',
+							latitude: lokalitet ? lokalitet.latitude : '',
+							longitude: lokalitet ? lokalitet.longitude : '',
 
-						antalIndsamlingsteder: spots.length+1, //spotString(spots),
-						indsamlerNavn: proever[i].indsamlerNavn,
-						indsamlerEmail: proever[i].indsamlerEmail,
-						indsamlerInstitution: proever[i].indsamlerInstitution,
+							antalIndsamlingsteder: spots.length+1, //spotString(spots),
+							indsamlerNavn: proever[i].indsamlerNavn,
+							indsamlerEmail: proever[i].indsamlerEmail,
+							indsamlerInstitution: proever[i].indsamlerInstitution,
 
-						modtagelsesDato: proever[i].modtagelsesDato,
-						modtagelsesDato_fixed: Utils.fixDate(proever[i].modtagelsesDato),
+							modtagelsesDato: proever[i].modtagelsesDato,
+							modtagelsesDato_fixed: Utils.fixDate(proever[i].modtagelsesDato),
 
-						ekstraktionsDato: proever[i].ekstraktionsDato,
-						ekstraktionsDato_fixed: Utils.fixDate(proever[i].ekstraktionsDato),
+							ekstraktionsDato: proever[i].ekstraktionsDato,
+							ekstraktionsDato_fixed: Utils.fixDate(proever[i].ekstraktionsDato),
 
-						analyseDato: proever[i].analyseDato,
-						analyseDato_fixed: Utils.fixDate(proever[i].analyseDato),
+							analyseDato: proever[i].analyseDato,
+							analyseDato_fixed: Utils.fixDate(proever[i].analyseDato),
 
-						elueringsVolumen: proever[i].elueringsVolumen,
-						dataset: proever[i].dataset,
-						ngUl: proever[i].ngUl,
-						filtreringsVolumen: proever[i].filtreringsVolumen,
-						aliquotVolumen: proever[i].aliquotVolumen,
+							elueringsVolumen: proever[i].elueringsVolumen,
+							dataset: proever[i].dataset,
+							ngUl: proever[i].ngUl,
+							filtreringsVolumen: proever[i].filtreringsVolumen,
+							aliquotVolumen: proever[i].aliquotVolumen,
 
-						created_userName: proever[i].created_userName
+							created_userName: proever[i].created_userName
+
 					}
+				
+					//extra fields
+					for (var f=1; f<11; f++) {
+						var field = 'extra'+f;	
+						//console.log(field, proever[i][field]) 				
+						item[field] = proever[i][field]
+					}
+
 					//console.log(item)
 					items.push(item)
 				}					
@@ -102,30 +112,11 @@ Bruger
 					}
 					if (i == (l-1)) loadDeferred.resolve(items)
 				}
-					
-				/*
-				$scope.proever = proever.map(function(proeve) {
-					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
-					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
-					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
-					proeve.lokalitet = proeve.Lokalitet ? proeve.Lokalitet.presentationString : ''
-
-					proeve.analyseDato_fixed = proeve.Resultat.map(function(resultat) {
-						return Utils.fixDate(resultat.datoForAnalyse)
-					}).join("\t\t")
-
-					return Utils.getObj(proeve)
-				})
-				*/
-
-			//})
-      return loadDeferred.promise
+			})
+			//
+			return loadDeferred.promise
 		}
 
-
-		//
-		//global deferred activated in loadData, resolved in initComplete
-		var loadDeferred = null;
 
 		$scope.loadData = function() {
 			loadDeferred = $q.defer() //promisfy it
@@ -155,10 +146,7 @@ Bruger
 			})
       return loadDeferred.promise
 		}
-		/*
-		$scope.loadData().then(function() {
-		})
-		*/
+
 		$scope.loadResultater = function(proeve_id) {
 			$scope.proeve.resultater = []
 			Resultat.query({ where : { proeve_id: proeve_id }}).$promise.then(function(resultater) {
@@ -183,7 +171,7 @@ Bruger
 						} else {
 							$scope.proeve = $scope.proever[i];
 							//console.log($scope.proeve)
-							$scope.loadKommentarer(proeve_id)
+							//$scope.loadKommentarer(proeve_id)
 							$scope.loadResultater(proeve_id)
 							resolve(true)
 						}
@@ -228,8 +216,10 @@ Bruger
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
-		var fields = ['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl']
+		var fields = ['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
+			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10' ]
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
+			console.log(arguments)
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 		})
@@ -335,27 +325,6 @@ Bruger
 			])
 			.withLanguage(Utils.dataTables_daDk)
 
-/*
-SagsNr
-PrøveID
-Indsamlingsdato
-Lokalitet
-Latitude
-Longitude
-Antal indsamlingsteder
-Indsamlernavn
-Indsamler institutionsnavn
-Filtreringsvolumen
-Modtagelsesdato
-Ekstraktionsdato
-Elueringsvolumen
-DNA ng/µl
-Aliquot volumen
-Analysedato
-Datasæt
-Note
-Bruger
-*/
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_id').withTitle('#'),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
@@ -375,22 +344,11 @@ Bruger
       DTColumnBuilder.newColumn('aliquotVolumen').withTitle('Aliquot volumen'),
       DTColumnBuilder.newColumn('analyseDato_fixed').withOption('type', 'dna').withTitle('Analysedato'),
       DTColumnBuilder.newColumn('dataset').withTitle('Datasæt'),
-      DTColumnBuilder.newColumn('proeve_nr').withTitle('Note'),
+      DTColumnBuilder.newColumn('kommentar_fixed').withOption('class', 'dt-note').withOption('type', 'locale-compare').withTitle('Note')
+				.withOption('createdCell', function(td, cellData, rowData, row, col) {
+					$(td).attr('title', cellData)
+				}),
       DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
-			/*
-      DTColumnBuilder.newColumn('proeve_nr').withTitle('Prøve nr.'),
-      DTColumnBuilder.newColumn('lokalitet').withOption('class', 'td-ellipsis').withTitle('Lokalitet'),
-      DTColumnBuilder.newColumn('indsamlingsdato').withOption('type', 'dna').withTitle('Indsamlingsdato'),
-      DTColumnBuilder.newColumn('DatoForEkst').withOption('type', 'dna').withTitle('Dato for ekst.'),
-      DTColumnBuilder.newColumn('analyseDato_fixed').withOption('class', 'td-wordwrap').withOption('type', 'date').withTitle('Analysedato'),
-      DTColumnBuilder.newColumn('Indsamler').withOption('visible', false).withOption('class', 'td-ellipsis').withTitle('Indsamler'),
-      DTColumnBuilder.newColumn('Institutionsnavn').withOption('class', 'td-ellipsis').withTitle('Institutionsnavn'),
-      DTColumnBuilder.newColumn('KuvertAfsendt').withOption('visible', false).withOption('type', 'date').withTitle('Kuverter afsendt'),
-      DTColumnBuilder.newColumn('ProeverModtaget').withOption('visible', false).withOption('type', 'date').withTitle('Prøver modtaget'),
-      DTColumnBuilder.newColumn('ElueretI').withOption('visible', false).withTitle('Elueret i'),
-      DTColumnBuilder.newColumn('ngUl').withOption('visible', false).withTitle('ng/µl'),
-      DTColumnBuilder.newColumn('dataset').withTitle('Datasæt')
-			*/
     ];  
 
 		$scope.proeveInstance = {}
@@ -401,12 +359,6 @@ Bruger
 		$scope.lokalitet = {}
 		$scope.map = false
 		$scope.wkt = new Wkt.Wkt()
-
-		/*
-		$scope.setLokalitet = function(lokalitet_id) {
-			console.log(lokalitet_id)
-		}
-		*/
 
 		$scope.showLokalitet = function(lokalitet_id) {
 			LokalitetModal.show($scope, lokalitet_id).then(function(lokalitet) {	
@@ -440,7 +392,12 @@ Bruger
 		*/
 		$scope.loadKommentarer = function(proeve_id) {
 			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
-				$scope.proeve.kommentarer = kommentarer
+				$scope.proeve.Kommentar = kommentarer
+				//
+				//vm.reloadData()
+				$scope.proeveInstance.DataTable.draw()
+				//$scope.proeveInstance._renderer.rerender()
+				//console.log($scope.proeveInstance)//.rerender()
 			})
 		}
 
@@ -558,7 +515,10 @@ Bruger
 			proeve extras
 		*/
 		Proeve_extras.query({ where : { active: true } }).$promise.then(function(extras) {
-			//console.log(extras)
+			$scope.extra_fields = extras.map(function(extra) {
+				extra.model = 'extra'+extra.extras_id
+				return extra
+			})
 		})
 
 

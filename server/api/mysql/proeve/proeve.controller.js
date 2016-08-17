@@ -10,6 +10,10 @@ exports.index = function(req, res) {
 		}, {
 			model: models.Resultat,
 			as: 'Resultat'
+		},
+		{
+			model: models.Kommentar,
+			as: 'Kommentar'
 		}
 	]
 	}).then(function(proeve){
