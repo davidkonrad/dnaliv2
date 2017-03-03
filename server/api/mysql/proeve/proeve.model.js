@@ -131,7 +131,6 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         models.Proeve.belongsTo(models.Lokalitet, { foreignKey : 'lokalitet_id', as : 'Lokalitet' })
         models.Proeve.hasMany(models.Resultat, { foreignKey : 'proeve_id', as : 'Resultat' })
-
         models.Proeve.hasMany(models.Kommentar, { foreignKey : 'relation_id', type_id: 3 , as : 'Kommentar' })
 			}
 		}

@@ -5,6 +5,7 @@ var controller = require('./proeve.controller');
 var auth = require('../../../auth/auth.service');
 
 var router = express.Router();
+router.get('/withExtras', controller.withExtras);
 router.get('/', controller.index);
 router.get('/:id', controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);

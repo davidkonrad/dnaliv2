@@ -15,6 +15,38 @@ angular.module('dnalivApp')
 
 		$scope.taxons = Db.taxons()
 
+		/**
+			proeve extras
+		*/
+		Proeve_extras.query({ where : { active: true } }).$promise.then(function(extras) {
+			$scope.extra_fields = extras.map(function(extra) {
+				extra.model = 'extra'+extra.extras_id
+				return extra
+			})
+		})
+		var proeveExtraActive = function(fieldName) {
+			var extras = Db.extras();
+			for (var i=0, l=extras.length; i<l; i++) {
+				if (extras[i].model == fieldName) return true;
+			}
+			return false;
+		}				
+		var proeveExtraCaption = function(fieldName) {
+			var extras = Db.extras();
+			for (var i=0, l=extras.length; i<l; i++) {
+				if (extras[i].model == fieldName) return extras[i].caption;
+			}
+			return false;
+		}				
+		var proeveExtraCaptionExport = function(fieldName) {
+			var extras = Db.extras();
+			for (var i=0, l=extras.length; i<l; i++) {
+				if (extras[i].model == fieldName) return extras[i].caption_export;
+			}
+			return false;
+		}				
+
+
 		var vm = this;
 
 		//new loadData
@@ -44,7 +76,6 @@ angular.module('dnalivApp')
 				var lokalitet, spots, items = []
 	
 				for (var i=0,l=proever.length; i<l; i++) {
-					//console.log(proever[i])
 					lokalitet = proever[i].Lokalitet
 					spots = lokalitet ? Db.lokalitet_spot(lokalitet.lokalitet_id) : []
 					var item = {
@@ -81,7 +112,18 @@ angular.module('dnalivApp')
 							filtreringsVolumen: proever[i].filtreringsVolumen,
 							aliquotVolumen: proever[i].aliquotVolumen,
 
-							created_userName: proever[i].created_userName
+							created_userName: proever[i].created_userName,
+
+							extra1: proever[i].extra1,
+							extra2: proever[i].extra2,
+							extra3: proever[i].extra3,
+							extra4: proever[i].extra4,
+							extra5: proever[i].extra5,
+							extra6: proever[i].extra6,
+							extra7: proever[i].extra7,
+							extra8: proever[i].extra8,
+							extra9: proever[i].extra9,
+							extra10: proever[i].extra10
 
 					}
 				
@@ -170,8 +212,6 @@ angular.module('dnalivApp')
 							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
 						} else {
 							$scope.proeve = $scope.proever[i];
-							//console.log($scope.proeve)
-							//$scope.loadKommentarer(proeve_id)
 							$scope.loadResultater(proeve_id)
 							resolve(true)
 						}
@@ -308,14 +348,18 @@ angular.module('dnalivApp')
 				}, { 
 					extend : 'excelHtml5',
 					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
-					filename: 'bookings', 
+					filename: 'DNAogLiv_Proever_'+Utils.todayStr(),
 					className: 'btn btn-default btn-xs ml25px'
-				},{ 
+				},
+				/*
+				{ 
 					extend : 'pdfHtml5',
 					text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
-					filename: 'bookings', 
+					filename: 'DNAogLiv_Proever_'+Utils.todayStr(), 
 					className: 'btn btn-default btn-xs'
-				}, { 
+				}, 
+				*/
+				{ 
 					text: 'Opret ny prøve',
 					className: 'btn btn-primary btn-xs colvis-btn',
 					action: function ( e, dt, node, config ) {
@@ -350,6 +394,16 @@ angular.module('dnalivApp')
 				}),
       DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
     ];  
+
+		//include active extra fields
+		for (var i=1;i<11;i++) {
+			var fieldName = 'extra'+i;
+			if (proeveExtraActive(fieldName)) {
+				$scope.proeveColumns.push(
+		      DTColumnBuilder.newColumn(fieldName).withTitle(proeveExtraCaption(fieldName))
+				)
+			}
+		}
 
 		$scope.proeveInstance = {}
 
@@ -511,16 +565,6 @@ angular.module('dnalivApp')
 			})
 		}
 			
-		/**
-			proeve extras
-		*/
-		Proeve_extras.query({ where : { active: true } }).$promise.then(function(extras) {
-			$scope.extra_fields = extras.map(function(extra) {
-				extra.model = 'extra'+extra.extras_id
-				return extra
-			})
-		})
-
 
 
 }]);

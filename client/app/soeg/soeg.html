@@ -1,8 +1,32 @@
 <div class="container">
 
 	<div style="float:left;clear:left;width: 345px;xxwhite-space: nowrap;">
-		<button class="btn btn-sm pull-right" style="margin-right:10px;" ng-class="{ 'btn-primary': soegHasParams() }" ng-click="downloadCSV()">Download</button>
-		<button class="btn btn-sm pull-right" style="margin-right:10px;" ng-class="{ 'btn-primary': soegHasParams() }" ng-click="resetForm()">Nullstil</button>
+		<button class="btn btn-sm pull-right" 
+						style="margin-right:10px;" 
+						ng-class="{ 'btn-primary': soegHasParams() }" 
+						ng-disabled="!soegHasParams()"
+						ng-click="downloadGBIF()">
+				Download data
+		</button>
+
+		<!--
+		<button class="btn btn-sm pull-right" 
+						style="margin-right:10px;" 
+						ng-class="{ 'btn-primary': soegHasParams() }" 
+						ng-click="downloadCSV()"
+						ng-disabled="!soegHasParams()"
+						ng-click="downloadGBIF()">
+			CSV Download
+		</button>
+		-->
+		<button class="btn btn-sm pull-right" 
+						style="margin-right:10px;" 
+						ng-class="{ 'btn-primary': soegHasParams() }" 
+						ng-disabled="!soegHasParams()"
+						ng-click="resetForm()">
+			Nulstil
+		</button>
+
 		<br>
 		<h4>Analysedata</h4>
 
@@ -18,14 +42,20 @@
 							ng-model="soeg.sagsNo"
 						  bs3-typeahead
 							bs3-promise="sagsNoArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
 
 		  <div class="form-group">
 		  	<label for="analyseDato" class="normal">Analysedato</label>&nbsp;
-				<input type="text" ng-model="soeg.analyseDato" class="form-control input-sm bold no-padding" size="7" placeholder="" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
+				<input type="text" 
+							ng-model="soeg.analyseDato" 
+							class="form-control input-sm bold no-padding" 
+							placeholder="" 
+							data-date-format="dd-MM-yyyy" 
+							size="8" 
+							bs-datepicker data-autoclose="true" />
 				<!--
 				<input type="text" ng-model="soeg.analyseDatoFra" class="form-control input-sm bold no-padding" size="7" placeholder="" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
 				-
@@ -41,7 +71,7 @@
 							ng-model="soeg.institutionsNavn"
 						  bs3-typeahead
 							bs3-promise="institutionArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 				<!--
 				<input type="text" class="form-control input-sm bold" placeholder="" id="institution" />
@@ -56,7 +86,7 @@
 							ng-model="soeg.laererNavn"
 						  bs3-typeahead
 							bs3-promise="laererArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 				<!--
 				<input type="text" class="form-control input-sm bold" placeholder="" id="laererNavn" />
@@ -88,7 +118,7 @@
 							ng-model="soeg.proeveId"
 						  bs3-typeahead
 							bs3-promise="proeveIdArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
@@ -111,7 +141,7 @@
 							ng-model="soeg.indsamlerNavn"
 						  bs3-typeahead
 							bs3-promise="indsamlerArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
@@ -127,7 +157,7 @@
 							ng-model="soeg.indsamlerInstitution"
 						  bs3-typeahead
 							bs3-promise="indsamlerInstitutionArray"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
@@ -145,7 +175,7 @@
 						  bs3-typeahead
 							bs3-promise="kommuneArray"
 							bs3-afterSelect="getKommunePolygon"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
@@ -163,11 +193,12 @@
 						  bs3-typeahead
 							bs3-promise="regionArray"
 							bs3-afterSelect="loadRegion"
-							bs3-showHintOnFocus="true"
+							XXXbs3-showHintOnFocus="true"
 				/>
 
 		  </div>
 
+<!---
 			<h4>Artsdata</h4>
 
 		  <div class="form-group">
@@ -176,24 +207,6 @@
 					<option></option>
 					<option ng-repeat="taxon in taxons" value="{{ taxon.taxon_id }}"> {{ taxon.taxon_navn_dk }}</option>
 				</select>
-
-				<!--
-				<tags-input ng-model="arter">
-					<auto-complete source="filterTaxons($query)"></auto-complete>
-				</tags-input>
-				-->
-
-				<!--
-				<input type="text" 
-							class="form-control input-sm bold" 
-							placeholder="" 
-							id="artDk" 
-							ng-model="soeg.taxon_dk"
-						  bs3-typeahead
-							bs3-promise="taxonDkArray"
-							bs3-showHintOnFocus="true"
-				/>
-				-->
 
 		  </div>
 
@@ -208,6 +221,7 @@
 					<input type="checkbox" style="position:relative;top:-3px;" class="form-control input-sm bold" placeholder="" id="paalidelig" />
 				</div>
 		  </div>
+--->
 
 		</form>
 	</div>
@@ -238,7 +252,7 @@
 			<i class="fa fa-question"></i>&nbsp;eDNA upålidelig
 		</div>
 
-		<!--
+<!---
 		<div bs-pane data-title="Arter">
 			<br>
 			<form class="form-inline" role="form">
@@ -257,7 +271,7 @@
 			</form>
 			<div class="col-sm-10" id="arter-map" style="height: 600px;"></div>
 		</div>
-		-->
+--->
 
 	</div>
 

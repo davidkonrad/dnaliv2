@@ -40,6 +40,14 @@ angular.module('dnalivApp')
 				}
 			},
 
+			todayStr: function() {
+				var d = new Date();	
+				var s = d.getDate();
+				s+= '-'+(d.getMonth()+1);
+				s+= '-'+d.getFullYear();
+				return s;
+			},
+
 			formIsEdited : function(id) {
 				var form = document.querySelector(id)
 				if (form) {
@@ -300,4 +308,34 @@ L.Icon.Default.imagePath = 'client/bower_components/leaflet/dist/images';
 String.prototype.quote = function() {
 	return '"' + this + '"'
 }
+
+
+/** 
+	default google stylers 
+*/
+var DefaultGoogleStyles = [
+	//remove unwanted transport lines, færgeruter osv	
+	{
+    featureType: "transit.line",
+    elementType: "geometry",
+    stylers: [{ 
+			visibility: "off" 
+		}]
+	},
+	{
+   //remove "Danmark / Denmark"
+   featureType: "administrative.country",
+   elementType: 'labels',
+   stylers: [{
+     visibility: 'off'
+   }]
+  }, {
+   //remove points of interest
+   featureType: "poi",
+   elementType: 'all',
+   stylers: [{
+     visibility: 'off'
+   }]
+	}, 
+];
 

@@ -57,6 +57,10 @@ Note [tilvalg]
 			booking.EANblanket = ''
 
 			//console.log(booking)
+			angular.element('#bookingTable').on('order.dt', function(event, settings, column, colSettings ) {
+				console.log(column[0].col)
+			})
+
 
 			booking.Klasse.forEach(function(klasse) {
 				//lærere

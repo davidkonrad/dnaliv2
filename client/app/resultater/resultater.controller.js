@@ -264,6 +264,12 @@ angular.module('dnalivApp')
 					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
 					className: 'btn btn-default btn-xs colvis-btn',
 				}, 
+				{ 
+					extend : 'excelHtml5',
+					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
+					filename: 'DNAogLiv_Resultater_'+Utils.todayStr(),
+					className: 'btn btn-default btn-xs ml25px'
+				},
 				{ text: 'Nyt resultat',
 					className: 'btn btn-primary btn-xs colvis-btn',
 					action: function ( e, dt, node, config ) {

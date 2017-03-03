@@ -27,12 +27,22 @@ angular.module('dnalivApp')
 					googleTerrain: {
 				    name: 'Google Terrain',
 				    layerType: 'TERRAIN',
-				    type: 'google'
+				    type: 'google',
+						layerOptions: {
+							mapOptions: {
+								styles: DefaultGoogleStyles
+						  }
+						}
 				  },
 				  googleHybrid: {
 				    name: 'Google Hybrid',
 				    layerType: 'HYBRID',
-				    type: 'google'
+				    type: 'google',
+						layerOptions: {
+							mapOptions: {
+								styles: DefaultGoogleStyles
+						  }
+						}
 				  },
 					luftfoto: {
 						name: "Orto forår",
@@ -60,9 +70,7 @@ angular.module('dnalivApp')
 						type: 'markercluster',
 						layerOptions: {
 							maxClusterRadius: function(zoom) { 
-								//console.log('zoom', zoom)
-				        return (zoom <= 14) ? 80 : 1; // radius in pixels
-								//return 1; 
+				        return (zoom > 10) ? 10 : 0.1; // radius in pixels
 							}
 						},
 						visible: true
@@ -196,8 +204,10 @@ angular.module('dnalivApp')
 			return false
 		}
 
-		$scope.$watchGroup(['soeg.sagsNo', 'soeg.institutionsNavn', 'soeg.laererNavn', 'soeg.proeveId', 'soeg.indsamlerNavn',
-			'soeg.indsamlerInstitution', 'soeg.analyseDato', 'soeg.taxon_id'], function(newVal, oldVal){
+		$scope.$watchGroup(['soeg.sagsNo', 'soeg.institutionsNavn', 'soeg.laererNavn', 
+												'soeg.proeveId', 'soeg.indsamlerNavn', 'soeg.indsamlerInstitution', 
+												'soeg.analyseDato', 'soeg.taxon_id', 
+												'soeg.indsamlingsDatoFra', 'soeg.indsamlingsDatoTil'], function(newVal, oldVal){
 			if (newVal == oldVal) return
 			if ($scope.soegHasParams()) {
 				$scope.performSearch()
@@ -240,6 +250,8 @@ angular.module('dnalivApp')
 				{ lokalitet: 'test', analyseDato: 'qwerty' }
 			]
 
+			//console.log('XXXX', $scope.soeg.indsamlingsDatoTil, Date.parse($scope.soeg.indsamlingsDatoTil));
+
 			var soeg = $scope.soeg,
 					sagsNo = soeg.sagsNo,
 					institutionsNavn = soeg.institutionsNavn,
@@ -252,12 +264,14 @@ angular.module('dnalivApp')
 					taxon_id = soeg.taxon_id, 
 					analyseDato = Date.parse(soeg.analyseDato),
 					analyseDatoFra = analyseDato>0 ? analyseDato - (86400000/2) : 0,
-					analyseDatoTil = analyseDato>0 ? analyseDato + (86400000/2) : 9999999999999999999
+					analyseDatoTil = analyseDato>0 ? analyseDato + (86400000/2) : 9999999999999999999,
+					indsamlingsDatoFra = soeg.indsamlingsDatoFra ? Date.parse(soeg.indsamlingsDatoFra) : null,
+					indsamlingsDatoTil = soeg.indsamlingsDatoTil ? Date.parse(soeg.indsamlingsDatoTil) : null;
 
 			//console.log(analyseDatoFra, analyseDatoTil)
 
 			var filter = angular.copy($scope.resultater)
-			console.log(filter)
+			//console.log(filter)
 
 			//analysedato
 			if (analyseDato) filter = filter.filter(function(resultat) {
@@ -266,9 +280,28 @@ angular.module('dnalivApp')
 					return resultat
 				}
 			})
+
+			//indsamlingsdatoFra
+			if (indsamlingsDatoFra) filter = filter.filter(function(resultat) {
+				var resIndsamlingsDato = Date.parse(resultat.Proeve.indsamlingsDato)
+				if (indsamlingsDatoFra <= resIndsamlingsDato) {
+					return resultat
+				}
+			})
+			//indsamlingsdatoTil
+			if (indsamlingsDatoTil) filter = filter.filter(function(resultat) {
+				var resIndsamlingsDato = resultat.Proeve ? Date.parse(resultat.Proeve.indsamlingsDato) : 0;
+				//console.log(indsamlingsDatoTil, resIndsamlingsDato);
+				//console.log('resIndsamlingsDato', resIndsamlingsDato);
+				if (indsamlingsDatoTil >= resIndsamlingsDato) {
+					return resultat
+				}
+			})
+
 			//sagsNo
 			if (sagsNo) filter = filter.filter(function(resultat) {
-				if (resultat.Booking && resultat.Booking.sagsNo == sagsNo) {
+				//console.log('"'+sagsNo+'"', resultat.Booking ? '"'+resultat.Booking.sagsNo+'"' : 'empty');
+				if (resultat.Booking && resultat.Booking.sagsNo === sagsNo) {
 					return resultat
 				}
 			})
@@ -322,8 +355,8 @@ angular.module('dnalivApp')
 			})
 			//indsamlerNavn
 			if (indsamlerNavn) filter = filter.filter(function(resultat) {
-				if (resultat.Proeve && resultat.Proeve.indsamlerNavn) {
-					if (resultat.Proeve.indsamlerNavn == indsamlerNavn) return resultat
+				if (resultat.Proeve && resultat.Proeve.indsamlerNavn == indsamlerNavn) {
+					return resultat
 				}
 			})
 			//indsamlerInstitution
@@ -372,8 +405,6 @@ angular.module('dnalivApp')
 			*/
 
 			filter.forEach(function(resultat) {
-				//console.log(resultat)
-
 				dataset.push({
 					//taxon_navn_dk: taxon.taxon_navn_dk,
 					//taxon_navn: taxon.taxon_navn,
@@ -384,11 +415,10 @@ angular.module('dnalivApp')
 					analyseDato: Utils.fixDate(resultat.datoForAnalyse)
 				})
 
-				var taxonMap = []
-				resultat.Resultat_items.forEach(function(item) {
+				var taxonMap = [];
+				if (resultat.Resultat_items) resultat.Resultat_items.forEach(function(item) {
 
 					taxon = $scope.getTaxon(item.taxon_id)
-
 					if (!taxonMap[item.taxon_id]) {
 						taxonMap[item.taxon_id] = { 
 							found: false, 
@@ -404,7 +434,6 @@ angular.module('dnalivApp')
 						}
 					}
 
-					//console.log(item)
 					//any paalidelig and eDNA overrules all other items
 					if (item.eDNA == true && item.database_result) {
 						taxonMap[item.taxon_id].found = true
@@ -441,9 +470,6 @@ angular.module('dnalivApp')
 				//construct basic exportItem to use for exportDataset
 				var proeve_id = resultat.Proeve ? resultat.Proeve.proeve_id : null
 						
-				//console.log(proeve_id, $scope.proeveIdHash)
-				//console.log(resultat)
-
 				var institutioner = resultat.Booking && resultat.Booking.Klasse 
 					? resultat.Booking.Klasse.map(function(klasse) {
 							return klasse.institutionsnavn
@@ -455,8 +481,8 @@ angular.module('dnalivApp')
 					ProeveId: $scope.proeveIdHash[proeve_id] ? $scope.proeveIdHash[proeve_id] : '(PrøveID ikke sat)',
 					lokalitet: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '',
 					dataset: resultat.Proeve ? resultat.Proeve.dataset : '',
-					lat: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
-					lng: resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
+					lat: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
+					lng: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.longitude : null,
 					analyseDato: Utils.fixDate(resultat.datoForAnalyse),
 					indsamlingsDato: resultat.Proeve && resultat.Proeve.indsamlingsDato ? Utils.fixDate(resultat.Proeve.indsamlingsDato) : '(ikke sat)',
 					indsamlerNavn: resultat.Proeve && resultat.Proeve.indsamlerNavn ? resultat.Proeve.indsamlerNavn : '(ikke sat)',
@@ -507,14 +533,27 @@ angular.module('dnalivApp')
 
 			})
 
-			console.log(dataset)
+			//console.log(dataset)
 			$scope.searchResults = dataset
 			$scope.exportDataset = exportDataset
 			//
 		}
 
 		$scope.resetForm = function() {
-			$scope.soeg = {}
+			$scope.soeg = {};
+			//reset map
+			angular.extend($scope, {
+				geojson: {},
+				center: {
+					lat: 56.126627523318206,
+					lng: 11.457741782069204,
+					zoom: 7
+				},
+				markers: []
+			})
+			//reset search results
+			$scope.searchResults = [];
+			$scope.exportDataset = [];
 		}
 
 		var proeveMap
@@ -712,12 +751,19 @@ angular.module('dnalivApp')
 			*/
 		}
 
+//http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn=H
+//http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn=Ålborg&geometry=true&outgeoref=EPSG:4326&ticket=96a08ea2f739e0a643378527042b1957
+
 		$scope.loadKommune = function(kommune) {
-			console.log('LOADKOMMUNE')
+			$scope.soeg.region = ''; //reset region
+
+			if (kommune == 'Høje-Taastrup') kommune = 'Høje Taastrup';
+			if (kommune == 'Birkerød') kommune = 'Rudersdal';
+
 			var url = 'http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn='+kommune+'&geometry=true&outgeoref=EPSG:4326&ticket='+TicketService.get()
-			console.log(url)
+			//console.log(url)
 			$http.get(url).success(function(data, status) {
-				console.log('LOADKOMMUNE', data)
+				//console.log('LOADKOMMUNE', JSON.stringify(data))
 				angular.extend($scope, {
 					geojson: {
 						data: data,
@@ -732,7 +778,7 @@ angular.module('dnalivApp')
 				$timeout(function() {
 					$scope.centerJSON()
 					$scope.soeg.jsonIsReady = true
-				}, 200)
+				}, 1000)
 			})
 		}
 
@@ -745,12 +791,13 @@ angular.module('dnalivApp')
 		}
 
 		$scope.loadRegion = function(region) {
+			$scope.soeg.kommune = ''; //reset kommune
 			var regKode = regionsKoder[region] ? regionsKoder[region] : false
-			console.log('LOAD REGION')
+			//console.log('LOAD REGION')
 			var url = 'http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&regkode='+regKode+'&geometry=true&outgeoref=EPSG:4326&ticket='+TicketService.get()
-			console.log(url)
+			//console.log(url)
 			$http.get(url).success(function(data, status) {
-				console.log('LOAD REGION', data)
+				//console.log('LOAD REGION', data)
 				angular.extend($scope, {
 					geojson: {
 						data: data,
@@ -773,35 +820,13 @@ angular.module('dnalivApp')
 			$scope.loadKommune(kommune)
 		}
 
-
-		/*
-		$timeout(function() {
-			//sagsnr
-			$scope.sagsNoArray = Db.bookings().map(function(booking) {
-				return booking.sagsNo
-			})
-
-			//institutioner og lærer
-			$scope.institutionArray = []
-			$scope.laererArray = []
-			Db.bookings().forEach(function(booking) {
-				if (booking.Klasse) {
-					booking.Klasse.forEach(function(klasse) {
-						if (!~$scope.institutionArray.indexOf(klasse.institutionsnavn)) $scope.institutionArray.push(klasse.institutionsnavn)
-						if (!~$scope.laererArray.indexOf(klasse.laererNavn)) $scope.laererArray.push(klasse.laererNavn)
-					})
-				}
-			})
-		})
-		*/
-
-
 		/*
 			CSV
 		*/
 
-		$scope.downloadCSV = function() {
+		$scope.downloadGBIF = function() {
 			//some darwin core fields
+			/*
 			var darwinCore = [
 				'occurrenceID',			//id
 				'datasetName',			//dataset
@@ -816,10 +841,7 @@ angular.module('dnalivApp')
 				'kingdom'						//animalia
 				
 			]
-
-
-			console.log($scope.exportDataset)
-			//return
+			*/
 
 			var csv = [['occurrenceID', 
 									'datasetName',
@@ -830,6 +852,7 @@ angular.module('dnalivApp')
 									'scientificName',
 									'vernacularName',
 									'occurrenceStatus',
+									'eventDate',
 									'dateIdentified'
 			]]
 			for (var i=0, l=$scope.exportDataset.length; i<l; i++) {
@@ -844,33 +867,21 @@ angular.module('dnalivApp')
 					item.taxon.quote(),
 					item.taxon_dk.quote(),
 					item.eDNA && item.paalidelig ? 'present' : 'absent',
+					item.indsamlingsDato.quote(),
 					item.analyseDato.quote()
-
 				])
 			}
 					
 			var csvRows = [];
 			for(var i=0, l=csv.length; i<l; ++i){
-		    csvRows.push(csv[i].join(','));
+		    csvRows.push(csv[i].join(';'));
 			}
 			var csvString = csvRows.join("\n");
 			
-			/*
-			var A = [['n','sqrt(n)']];
-				for(var j=1; j<10; ++j){ 
-		    A.push([j, Math.sqrt(j)]);
-			}
-			var csvRows = [];
-			for(var i=0, l=A.length; i<l; ++i){
-		    csvRows.push(A[i].join(','));
-			}
-			var csvString = csvRows.join("\n");
-			*/	
-
 			var a = document.createElement('a');
 			a.href = 'data:attachment/csv,' +  encodeURIComponent(csvString);
 			a.target = '_blank';
-			a.download = 'dnaogliv.csv';
+			a.download = 'dnaogliv_soegning_' + Utils.fixDate(new Date()) +'.csv';
 
 			document.body.appendChild(a);
 			a.click();

@@ -45,7 +45,8 @@ angular.module('dnalivApp')
 
 		$scope.updateExtra = function(extra) {
 			Proeve_extras.update({ id: extra.extras_id }, extra).$promise.then(function() {
-				extra.modified = false
+				extra.modified = false;
+				Db.reloadExtras();
 			})
 		}
 				
@@ -150,9 +151,7 @@ angular.module('dnalivApp')
 				$.fn.dataTable.ext.search = []
 
 				var fixedHeaderEle = document.getElementsByClassName('fixedHeader-floating');
-				console.log(fixedHeaderEle)
 				angular.element(fixedHeaderEle).remove();
-
 				/*
 				Utils.dtNormalizeLengthMenu()
 				Utils.dtNormalizeButtons()

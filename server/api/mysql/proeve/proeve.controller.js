@@ -10,8 +10,7 @@ exports.index = function(req, res) {
 		}, {
 			model: models.Resultat,
 			as: 'Resultat'
-		},
-		{
+		}, {
 			model: models.Kommentar,
 			as: 'Kommentar'
 		}
@@ -22,6 +21,41 @@ exports.index = function(req, res) {
 	  handleError(res, err);
   });
 };
+
+//
+exports.withExtras = function(req, res) {
+/*
+	var sql = ''
+		+'select '
+		+'data.data_id, '
+		+'data.eksperiment_id, '
+		+'data.madding, '
+		+'data.madding_stjaalet, '
+		+'data.myrer_indsamlet, '
+		+'data.myrer_frysning, '
+		+'date_format(data.proeve_modtaget, "%d/%m/%Y") as proeve_modtaget, '
+		+'data.proeve_analyseret, '
+
+		+'eksperiment.myrejagt_id, '
+		+'eksperiment.user_id, '
+		+'date_format(eksperiment.dato, "%d/%m/%Y") as "eksperiment_dato", '
+
+		+'resultat.resultat_id, '
+		+'resultat.antal '
+
+		+'from data '
+		+'left join eksperiment on data.eksperiment_id = eksperiment.eksperiment_id '
+		+'left join resultat on data.data_id = resultat.data_id '
+		+'group by data.data_id ';
+	
+	models.sequelize.query(sql,	{ bind: ['active'], type: models.sequelize.QueryTypes.SELECT }).then(function(data) {
+		return res.json(200, data);
+	}).catch(function(err){
+	  handleError(res, err);
+  });
+*/
+};
+
 
 // Get a single proeve
 exports.show = function(req, res) {

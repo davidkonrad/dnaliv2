@@ -169,3 +169,13 @@ ul[dnd-list] li {
 	width: 400px;
 	max-width: 500px !important;	
 }
+
+/* prøvefelter */
+.btn-type {
+	min-width: 140px;
+	text-align: left;
+}
+.caret {
+	float: right;
+	margin-top: 7%;
+}

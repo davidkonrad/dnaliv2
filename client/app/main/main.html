@@ -1,21 +1,17 @@
 <div class="container" style="width: 1200px !important;">
 
 	<div class="col-sm-4">
-		<!--
-		<span class="overview-left">Bookings</span>
-		<span class="overview-right">{{ bookingCount }}</span>
 
-		<span class="overview-left">Prøver</span>
-		<span class="overview-right">{{ proeveCount }}</span>
+		<div class="proever" 
+				ng-class="{ proeveSelected: !currentTaxonId }" 
+				ng-click="proeverClick()"
+		>
+			<span class="overview-left text-primary">Prøver</span>
+			<span class="overview-right">{{ proeveCount }}</span>
+		</div>
 
-		<span class="overview-left">Resultater</span>
-		<span class="overview-right">{{ resultatCount }}</span>
+		<hr class="col-sm-11" style="margin-top:5px;clear:both;display:block;background-color: #ccc;">
 
-		<span class="overview-left">Replikater</span>
-		<span class="overview-right">{{ replikatCount }}</span>
-
-		<hr  class="col-sm-11" style="margin-top:5px;clear:both;display:block;background-color: #ccc;">
-		-->
 		<table class="overview-taxon">
 			<thead>
 				<tr>
@@ -25,7 +21,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' " style="line-height:16px;" ng-class=" { selected: currentTaxonId == taxon.taxon_id }">
+				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' " 
+						style="line-height:16px;" 
+						ng-class=" { selected: currentTaxonId == taxon.taxon_id }">
+
 					<td class="text-primary" style="cursor:pointer;" ng-click="taxonClick(taxon)"> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.count }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.found }} &nbsp;&nbsp;</td>
@@ -35,7 +34,15 @@
 
 	</div>
 	<div class="col-sm-8">
-		<leaflet center="center" defaults="defaults" layers="layers" markers="markers" event-broadcast="events" width="95%" height="550px" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
+		<leaflet center="center" 
+						defaults="defaults" 
+						layers="layers" 
+						markers="markers" 
+						XXXXevent-broadcast="events" 
+						width="95%" 
+						height="550px" 
+						style="border:1px solid #ccc;border-radius:5px;">
+		</leaflet>
 	</div>
 
 

@@ -38,20 +38,23 @@ table.dataTable tbody td {
 .overview-left {
 	float: left;
 	clear: left;
-	font-size: 150%;
+	font-size: 140%;
 }
 .overview-right {
 	float: right;
-	font-size: 150%;
+	font-size: 140%;
 	clear: right;
 }
 
+/*
 span.overview-right:last-child {
     background: #ff0000;
 }
 span.overview-left:last-child {
     background: #ff0000;
 }
+*/
+
 
 table.overview-taxon {
 	width: 99% !important;
@@ -70,6 +73,15 @@ table.overview-taxon td.right {
 }
 
 table.overview-taxon tr.selected {
+	background-color: #ebebeb;
+}
+
+div.proever {
+	display: block;
+	height:28px;
+	cursor:pointer;
+}
+.proeveSelected {
 	background-color: #ebebeb;
 }
 

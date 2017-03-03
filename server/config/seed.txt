@@ -26,64 +26,44 @@ User.find({}).remove(function() {
     name: 'Mette Grøn',
     email: 'mette.groen@snm.ku.dk',
     password: 'wuVb5tA3Sw',
-		role: 'Admin' 
+		role: 'User' 
 	}, {
     provider: 'local',
     name: 'Maja Elling',
     email: 'maja.elling@snm.ku.dk',
     password: 'sVq48mYhpk',
-		role: 'Admin' 
+		role: 'User' 
 	}, {
     provider: 'local',
     name: 'Marie Lillemark',
     email: 'marie.lillemark@snm.ku.dk',
     password: 'KPDt0p6AfG',
-		role: 'Admin' 
+		role: 'User' 
 	}, {
     provider: 'local',
     name: 'Pernille Selmer Olsen',
     email: 'pvsolsen@snm.ku.dk',
     password: 'eyHskF3gXY',
-		role: 'Admin' 
+		role: 'User' 
 	}, {
     provider: 'local',
     name: 'Pernille Hjort',
     email: 'phjort@snm.ku.dk',
     password: 'mpz457',
 		role: 'Admin' 
-	}, 
-	//new, 02.03.2017
-	{
-    provider: 'local',
-    name: 'bruger1',
-    email: 'dnalab@snm.ku.dk',
-    password: 'Dyndsmerling1234',
-	  role: 'Admin'
-	},
-	{
-    provider: 'local',
-    name: 'Steen Knudsen',
-    email: 'swknudsen@snm.ku.dk',
-    password: 'swknudsen1234',
-    role: 'Admin'
-	},
-	{
-    provider: 'local',
-    name: 'Karsten Elmose Vad',
-    email: 'kevad@snm.ku.dk',
-    password: 'kevad1234',
-    role: 'Admin'
-	},
-	{
-    provider: 'local',
-    name: 'Sara Tougaard',
-    email: 'saratougaard@snm.ku.dk',
-    password: 'stougaard1234',
-    role: 'Admin'
-	},
-	function() {
+	}, function() {
       console.log('finished populating users');
-	})
+    }
+  )
 })
+
+/*
+Pernille Hjort				phjort@snm.ku.dk					mpz457
+Andreas Kelager				akelager@snm.ku.dk				kelager
+Mette Grøn						mette.groen@snm.ku.dk			wuVb5tA3Sw
+Maja Elling						maja.elling@snm.ku.dk			sVq48mYhpk
+Marie Lillemark				marie.lillemark@snm.ku.dk	KPDt0p6AfG
+Pernille Selmer Olsen	pvsolsen@snm.ku.dk				eyHskF3gXY
+*/
 
 

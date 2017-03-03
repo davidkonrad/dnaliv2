@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('Db', ['$q', '$interval', 'Booking', 'Taxon', 'Lokalitet_spot', 'Proeve', 'Resultat_item', 'Resultat', 'Klasse',
-		function($q, $interval, Booking, Taxon, Lokalitet_spot, Proeve, Resultat_item, Resultat, Klasse) {
+  .factory('Db', ['$q', '$interval', 'Booking', 'Taxon', 'Lokalitet_spot', 'Proeve', 'Resultat_item', 'Resultat', 'Klasse', 'Proeve_extras', 
+		function($q, $interval, Booking, Taxon, Lokalitet_spot, Proeve, Resultat_item, Resultat, Klasse, Proeve_extras) {
 
 		var	initialized = false,
 				bookings = null,
@@ -12,7 +12,8 @@ angular.module('dnalivApp')
 				resultater = null,
 				proever = null,
 				klasser = null,
-				taxons = null;
+				taxons = null,
+				extras = null;
 
 		return {
 
@@ -73,6 +74,18 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+			reloadExtras: function() {
+				var deferred = $q.defer()
+				Proeve_extras.query({ where : { active: true } }).$promise.then(function(data) {
+					extras = data.map(function(extra) {
+						extra.model = 'extra'+extra.extras_id
+						return extra
+					})
+			    deferred.resolve(proever)
+				})
+				return deferred.promise
+			},
+
 
 			//data methods
 			bookings: function() {
@@ -92,6 +105,9 @@ angular.module('dnalivApp')
 			},
 			klasser: function() {
 				return klasser
+			},
+			extras: function() {
+				return extras
 			},
 			
 
@@ -114,6 +130,12 @@ angular.module('dnalivApp')
 				})
 				Proeve.query().$promise.then(function(data) {	
 					proever = data
+				})
+				Proeve_extras.query({ where : { active: true } }).$promise.then(function(data) {
+					extras = data.map(function(extra) {
+						extra.model = 'extra'+extra.extras_id
+						return extra
+					})
 				})
 
 				var stop = $interval(function() {
