@@ -3,11 +3,11 @@ public
 .tmp
 rettelser.txt
 client/bower_components
-projectdata/Booking af klasser_DNA&LIV_v20160202.xlsx
-projectdata/DNA-og-LIV-indtastning-visning-kravspec_v02.pdf
+projectdata/
+projectdata/
 npm-debug.log
 dist
 server/config/local.env.js
+server/config/seed.js
 server/config/environment/development.js
-130.225.99.91
-projektdata/02062016/
+

@@ -28,28 +28,12 @@ function isAuthenticated() {
     .use(function(req, res, next) {
       User.findById(req.user._id, function (err, user) {
         if (err) return next(err);
-        //if (!user) return res.sendStatus(401); //dadk send()
 				if (!user && res.sendStatus) return res.sendStatus(401); //dadk send()
 				req.user = user;
         next();
       });
     })
-	//.use(attachSpecifyUser());
 }
-
-/*
-function attachSpecifyUser(){
-	return compose()
-	.use(function(req, res, next){
-		specifydb.Specifyuser.find(req.user.specifyUserId).then(function(specifyuser){
-			req.specifyuser = specifyuser;
-			next();
-		}).catch(function(){
-			res.send(401);
-		});
-	});
-}
-*/
 
 /**
  * Checks if the user role meets the minimum requirements of the route
