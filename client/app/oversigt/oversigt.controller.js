@@ -9,25 +9,31 @@ angular.module('dnalivApp')
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
 						DTDefaultOptions,	$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User, Db) {
 
-		var vm = this
+
+		if (!Auth.isLoggedIn()) {
+	    $location.path('/');
+		}
+
+		var vm = this;
 
 		$scope.statusOptions = [
-				{ "value": -1, "text": "Aflyst", "class": "btn-danger" }, 
-				{ "value": 0, "text": "Ikke bekræftet", "class": "btn-inverse" }, 
-				{ "value": 1, "text": "Bekræftet", "class": "btn-success" }
-			]
+				{ 'value': -1, 'text': 'Aflyst', 'class': 'btn-danger' }, 
+				{ 'value': 0, 'text': 'Ikke bekræftet', 'class': 'btn-inverse' }, 
+				{ 'value': 1, 'text': 'Bekræftet', 'class': 'btn-success' }
+			];
+
 		$scope.niveauOptions = [
-				{ "value": 1, "text": "A" }, 
-				{ "value": 2, "text": "B" }, 
-				{ "value": 3, "text": "C" }
-			]
+				{ 'value': 1, 'text': 'A' }, 
+				{ 'value': 2, 'text': 'B' }, 
+				{ 'value': 3, 'text': 'C' }
+			];
 
 		$scope.eanOptions = [
-				{ "value": '<blank>', "text": "<blank>" },
-				{ "value": 'Modtaget', "text": "Modtaget" }, 
-				{ "value": 'Kontaktet', "text": "Kontaktet" },  
-				{ "value": 'Regnskab', "text": "Regnskab" }
-			]
+				{ 'value': '<blank>', 'text': '<blank>' },
+				{ 'value': 'Modtaget', 'text': 'Modtaget' }, 
+				{ 'value': 'Kontaktet', 'text': 'Kontaktet' },  
+				{ 'value': 'Regnskab', 'text': 'Regnskab' }
+			];
 
 /*
 PrøveID [tilvalg]	
@@ -158,8 +164,11 @@ Note [tilvalg]
 						aar_periode: 0 
 					}
 					Booking.save({ booking_id: '' }, booking).$promise.then(function(booking) {	
-						$scope.newSagsNo = sagsNo
-						$scope.reloadData()
+						$scope.newSagsNo = sagsNo;
+						$scope.bookingInstance.reloadData(function() {
+							Utils.dtPerformSearch(sagsNo);
+							$scope.showBooking(booking.booking_id);
+						});
 					})
 				}
 			})
@@ -172,8 +181,8 @@ Note [tilvalg]
 						Klasse.delete({ id: klasse.klasse_id })
 					})
 					Booking.delete({ id: $scope.booking.booking_id }).$promise.then(function() {
-						$scope.bookingModal.hide()
-						$scope.reloadData()
+						$scope.bookingModal.hide();
+						$scope.bookingInstance.reloadData();
 					})
 				}
 			})
