@@ -130,11 +130,8 @@ angular.module('dnalivApp')
 					//extra fields
 					for (var f=1; f<11; f++) {
 						var field = 'extra'+f;	
-						//console.log(field, proever[i][field]) 				
 						item[field] = proever[i][field]
 					}
-
-					//console.log(item)
 					items.push(item)
 				}					
 
@@ -159,36 +156,6 @@ angular.module('dnalivApp')
 			return loadDeferred.promise
 		}
 
-
-		$scope.loadData = function() {
-			loadDeferred = $q.defer() //promisfy it
-
-			Proeve.query().$promise.then(function(proever) {	
-				$scope.proever = proever.map(function(proeve) {
-					proeve.indsamlingsdato_fixed = Utils.fixDate(proeve.indsamlingsdato)
-					proeve.DatoForEkst_fixed = Utils.fixDate(proeve.DatoForEkst)
-					proeve.ProeverModtaget_fixed = Utils.fixDate(proeve.ProeverModtaget)
-					proeve.lokalitet = proeve.Lokalitet ? proeve.Lokalitet.presentationString : ''
-
-					proeve.analyseDato_fixed = proeve.Resultat.map(function(resultat) {
-						return Utils.fixDate(resultat.datoForAnalyse)
-					}).join("\t\t")
-
-					return Utils.getObj(proeve)
-				})
-
-				$scope.lookupDataset = []
-				$scope.lookupIndsamler = []
-				$scope.lookupInstitutionsnavn = []
-				proever.forEach(function(proeve) {
-					if (proeve.dataset != undefined && !~$scope.lookupDataset.indexOf(proeve.dataset)) $scope.lookupDataset.push(proeve.dataset)
-					if (proeve.Indsamler != undefined && !~$scope.lookupIndsamler.indexOf(proeve.Indsamler)) $scope.lookupIndsamler.push(proeve.Indsamler)
-					if (proeve.Institutionsnavn != undefined && !~$scope.lookupInstitutionsnavn.indexOf(proeve.Institutionsnavn)) $scope.lookupInstitutionsnavn.push(proeve.Institutionsnavn)
-				})
-			})
-      return loadDeferred.promise
-		}
-
 		$scope.loadResultater = function(proeve_id) {
 			$scope.proeve.resultater = []
 			Resultat.query({ where : { proeve_id: proeve_id }}).$promise.then(function(resultater) {
@@ -206,7 +173,6 @@ angular.module('dnalivApp')
 		  return $q(function(resolve, reject) {
 				for (var i=0; i<$scope.proever.length; i++) {
 					if ($scope.proever[i].proeve_id == proeve_id) {
-						//console.log($scope.proever[i].locked_by, Auth.getCurrentUser().name)
 						if ($scope.proever[i].locked_by && 
 								$scope.proever[i].locked_by != Auth.getCurrentUser().name ) {
 							Alert.show($scope, 'Prøven er låst', 'Denne prøve redigeres pt. af <strong>'+$scope.proever[i].locked_by+'</strong>.', true)
@@ -232,7 +198,7 @@ angular.module('dnalivApp')
 			Proeve.update({ id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
 				$scope.proeve.edited = false
 				$timeout(function() {
-					$scope.proeveInstance.DataTable.draw()
+					$scope.dtProeveInstance.DataTable.draw()
 				})
 			})
 		}
@@ -259,7 +225,6 @@ angular.module('dnalivApp')
 		var fields = ['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10' ]
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
-			console.log(arguments)
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 		})
@@ -326,7 +291,7 @@ angular.module('dnalivApp')
 		.withOption('initComplete', function() {
 
 			$('table tbody').on('click', 'tr', function() {
-				var proeve = $scope.proeveInstance.DataTable.row(this).data()
+				var proeve = $scope.dtProeveInstance.DataTable.row(this).data()
 				$scope.showProeve(proeve.proeve_id)
 			})
 
@@ -351,14 +316,6 @@ angular.module('dnalivApp')
 					filename: 'DNAogLiv_Proever_'+Utils.todayStr(),
 					className: 'btn btn-default btn-xs ml25px'
 				},
-				/*
-				{ 
-					extend : 'pdfHtml5',
-					text: '<i class="fa fa-download" title="Download aktuelle rækker som PDF"></i>&nbsp;PDF',
-					filename: 'DNAogLiv_Proever_'+Utils.todayStr(), 
-					className: 'btn btn-default btn-xs'
-				}, 
-				*/
 				{ 
 					text: 'Opret ny prøve',
 					className: 'btn btn-primary btn-xs colvis-btn',
@@ -405,7 +362,12 @@ angular.module('dnalivApp')
 			}
 		}
 
-		$scope.proeveInstance = {}
+		//$scope.proeveInstance = {}
+		$scope.dtProeveInstance = undefined;
+		$scope.dtProeveInstanceCallback = function(instance) {
+			$scope.dtProeveInstance = instance;
+    };
+
 
 		/**
 			Lokalitet
@@ -447,11 +409,7 @@ angular.module('dnalivApp')
 		$scope.loadKommentarer = function(proeve_id) {
 			Kommentar.query( { where: { relation_id: proeve_id, type_id: Utils.KOMMENTAR_TYPE.PROEVE }} ).$promise.then(function(kommentarer) {	
 				$scope.proeve.Kommentar = kommentarer
-				//
-				//vm.reloadData()
-				$scope.proeveInstance.DataTable.draw()
-				//$scope.proeveInstance._renderer.rerender()
-				//console.log($scope.proeveInstance)//.rerender()
+				$scope.dtProeveInstance.DataTable.draw()
 			})
 		}
 
@@ -504,9 +462,10 @@ angular.module('dnalivApp')
 						}
 						//create proeve
 						Proeve.save({ proeve_id: '' }, proeve ).$promise.then(function(proeve) {
-							$scope.loadData().then(function() {
-								$scope.showProeve(proeve.proeve_id)								
-							})
+							Utils.dtPerformSearch(newProeveNr);
+							$scope.dtProeveInstance.reloadData(function() {
+								$scope.showProeve(proeve.proeve_id)
+							}, false)
 						})
 					})
 				}
