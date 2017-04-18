@@ -4,28 +4,29 @@ angular.module('dnalivApp')
   .factory('Db', ['$q', '$interval', 'Booking', 'Taxon', 'Lokalitet_spot', 'Proeve', 'Resultat_item', 'Resultat', 'Klasse', 'Proeve_extras', 
 		function($q, $interval, Booking, Taxon, Lokalitet_spot, Proeve, Resultat_item, Resultat, Klasse, Proeve_extras) {
 
-		var	initialized = false,
-				bookings = null,
-				lokalitet = null,
-				lokalitet_spot = null,
-				resultat_items = null,
-				resultater = null,
-				proever = null,
-				klasser = null,
-				taxons = null,
-				extras = null;
+		var	initialized = false;
+		var	bookings = null;
+		var	lokalitet = null;
+		var	lokalitet_spot = null;
+		var	resultat_items = null;
+		var	resultater = null;
+		var	proever = null;
+		var	klasser = null;
+		var	taxons = null;
+		var	extras = null;
 
 		return {
 
 			//reload methods
 			reloadBookings: function() {
-				var deferred = $q.defer()
+				var deferred = $q.defer();
 				Booking.query().$promise.then(function(data) {	
-					bookings = data
+					bookings = data;
 					deferred.resolve(bookings)
 				})
 				return deferred.promise
 			},
+
 			reloadTaxons: function() {
 				var deferred = $q.defer()
 				Taxon.query().$promise.then(function(data) {	
@@ -34,6 +35,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadLokalitetSpots: function() {
 				var deferred = $q.defer()
 				Lokalitet_spot.query().$promise.then(function(data) {	
@@ -42,6 +44,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadResultat_items: function() {
 				var deferred = $q.defer()
 				Resultat_item.query().$promise.then(function(data) {	
@@ -50,6 +53,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadResultater: function() {
 				var deferred = $q.defer()
 				Resultat.query().$promise.then(function(data) {	
@@ -58,6 +62,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadKlasser: function() {
 				var deferred = $q.defer()
 				Klasse.query().$promise.then(function(data) {	
@@ -66,6 +71,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadProever: function() {
 				var deferred = $q.defer()
 				Proeve.query().$promise.then(function(data) {	
@@ -74,6 +80,7 @@ angular.module('dnalivApp')
 				})
 				return deferred.promise
 			},
+
 			reloadExtras: function() {
 				var deferred = $q.defer()
 				Proeve_extras.query({ where : { active: true } }).$promise.then(function(data) {

@@ -56,9 +56,7 @@ Note [tilvalg]
 			booking.proeve_nr = ''
 			booking.EANblanket = ''
 
-			//console.log(booking)
 			angular.element('#bookingTable').on('order.dt', function(event, settings, column, colSettings ) {
-				console.log(column[0].col)
 			})
 
 
@@ -133,21 +131,21 @@ Note [tilvalg]
 		}
 
 		vm.reloadData = function() {
-			var loadDeferred = $q.defer(),
-					bookings = Db.bookings(), 
-					items = [], 
-					booking;
+			var loadDeferred = $q.defer();
+			var items = [];
+			var booking;
 
-			//$scope.bookings is used as reference
-			$scope.bookings = bookings
+			Db.reloadBookings().then(function(bookings) {
+				$scope.bookings = bookings
 
-			for (var i=0, l=bookings.length; i<l; i++) {					
-				booking = bookings[i]
-				$scope.initBookingInfo(booking)
-				items.push(booking)
-				if (i == l-1) loadDeferred.resolve(items)
-			}
-      return loadDeferred.promise
+				for (var i=0, l=bookings.length; i<l; i++) {					
+					booking = bookings[i]
+					$scope.initBookingInfo(booking)
+					items.push(booking)
+					if (i == l-1) loadDeferred.resolve(items)
+				}
+			})
+			return loadDeferred.promise
 		}
 
 		$scope.createBooking = function() {
@@ -247,7 +245,6 @@ Note [tilvalg]
 
 			//reattach date-filter element
 			$timeout(function() {
-				console.log($scope.bookingInstance.DataTable)
 				$('#date-filter').detach().appendTo('.dt-custom').show()
 				$scope.finalized = true
 			}, 1000)
@@ -272,7 +269,7 @@ Note [tilvalg]
 			}
 		])
 
-		$('#bookingTable').on('click', 'tr', function() {
+		$('#bookingTable').on('click', 'tbody tr', function() {
 			var booking = $scope.bookingInstance.DataTable.row(this).data()
 			$scope.showBooking(booking.booking_id)
 		})
@@ -283,7 +280,6 @@ PrøveID [tilvalg]
 Lokalitet [tilvalg]	
 Note [tilvalg]	
 Bruger [tilvalg]
-
 */
 
 		$scope.bookingColumns = [
@@ -345,7 +341,6 @@ Bruger [tilvalg]
 		}
 
 		$scope.lock = function(mode) {
-			//console.log('lock', $scope.booking)
 			if (!$scope.booking.booking_id) return
 			var booking = mode ? { locked_by: Auth.getCurrentUser().name } : { locked_by: null }
 			Booking.update({ id: $scope.booking.booking_id }, booking)
@@ -368,11 +363,10 @@ Bruger [tilvalg]
 					show: true,
 					internalName: 'booking'
 				})
-				$scope.$on('modal.hide', function(e, target){
+				$scope.$on('modal.hide', function(e, target) {
 					if (target.$options.internalName == 'booking') {
-						//console.log('hidfe', $scope.booking)
+						$scope.bookingInstance.reloadData();
 						$scope.lock(false)
-						//$scope.resetBooking()
 					}
 				})
 			})
@@ -390,16 +384,15 @@ Bruger [tilvalg]
 					$scope.statusSelectClass = $scope.statusOptions[s].class
 					if (oldVal == undefined) return
 					Booking.update({ id: $scope.booking.booking_id }, { status: $scope.booking.status }).$promise.then(function(booking) {	
-						//$scope.bookingInstance.rerender()
 					})
 				}
 			}
 		})
 
-		$scope.$watch('booking.DatoForBesoeg', function(newVal, oldVal) {
+		$scope.$watch('booking.besoegsDato', function(newVal, oldVal) {
 			if (newVal == oldVal || !$scope.booking.booking_id) return
-			Booking.update({ id: $scope.booking.booking_id }, { DatoForBesoeg: $scope.booking.DatoForBesoeg }).$promise.then(function(booking) {	
-				$scope.booking.DatoForBesoeg_fixed = Utils.fixDate($scope.booking.DatoForBesoeg)
+			Booking.update({ id: $scope.booking.booking_id }, { besoegsDato: $scope.booking.besoegsDato }).$promise.then(function(booking) {	
+				$scope.booking.besoegsDato_fixed = Utils.fixDate($scope.booking.besoegsDato)
 			})
 		})
 
@@ -469,7 +462,6 @@ Bruger [tilvalg]
 
 		$scope.showKlasseLokalitet = function(lokalitet_id) {
 			LokalitetModal.show($scope, lokalitet_id).then(function(success) {	
-				//console.log(success)
 			})
 		}
 

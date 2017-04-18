@@ -117,11 +117,11 @@ angular.module('dnalivApp')
 			})
 
 			//institutioner og lærer
-			var institutionArray = [], 
-					laererArray = [], 
-					kommuneArray = [],
-					regionArray = [],
-					booking;
+			var institutionArray = [];
+			var laererArray = [];
+			var	kommuneArray = [];
+			var	regionArray = [];
+			var	booking;
 
 			for (var i=0, l=bookings.length; i<l; i++) {
 				booking = bookings[i]
