@@ -1,17 +1,11 @@
 <div class="container">
 
-	<table datatable="ng" class="table table-striped" dt-options="resultaterOptions" dt-columns="resultaterColumns" dt-column-defs="resultaterColumnDefs" dt-instance="resultaterInstance" id="dtResultat">
-		<tbody>
-			<tr ng-repeat="resultat in resultater" ng-click="showResultat(resultat.resultat_id)" ng-class="{ warning: (resultat.locked_by != null), 'text-muted': (resultat.locked_by != null) }" >
-				<td> {{ resultat.sagsNo }} </td>
-				<td> {{ resultat.proeve_nr }} </td>
-				<td> {{ resultat.lokalitet }} </td>
-				<td> {{ resultat.datoForAnalyse_fixed }} </td>
-				<td> {{ resultat.dataset }} </td>
-				<td> {{ resultat.noter }} </td>
-				<td> {{ resultat.created_userName }} </td>
-			</tr>
-		</tbody>
+	<table datatable="" 
+		class="table table-striped" 
+		id="resultaterTable"
+		dt-options="resultaterOptions" 
+		dt-columns="resultaterColumns" 
+		dt-instance="resultaterInstance">
 	</table>
 
 </div>

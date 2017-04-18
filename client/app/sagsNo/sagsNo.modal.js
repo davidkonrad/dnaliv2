@@ -12,7 +12,7 @@ angular.module('dnalivApp')
 		function loadBookings() {
 			Booking.query().$promise.then(function(p) {
 				bookings = p;
-			})
+			});
 		}
 
 		function sagsNoExists(sagsNo) {
@@ -64,8 +64,8 @@ angular.module('dnalivApp')
 						$scope.sagsNoModal.canSubmit = false;
 					}
 
-					if (newVal.trim() == '') {
-						error()
+					if (newVal.trim() === '') {
+						error();
 					} else {
 						if (newVal != oldVal) {
 							if (sagsNoExists(newVal)) {

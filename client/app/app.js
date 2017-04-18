@@ -61,11 +61,8 @@ angular.module('dnalivApp', [
 
 		//ensure all table is loaded
 		Db.init().then(function() {
-
-    $rootScope.$on('$routeChangeStart', function (event, next) {
-
-			Auth.isLoggedInAsync(function(loggedIn) {
-
+			$rootScope.$on('$routeChangeStart', function (event, next) {
+				Auth.isLoggedInAsync(function(loggedIn) {
 					var publicLocation = next.$$route.templateUrl || next.$$route.loadedTemplateUrl;
 					if (typeof publicLocation == 'string') {
 						publicLocation = ['main.html', 'login.html', 'soeg.html', 'obvious.html'].indexOf(publicLocation.split('/').splice(-1,1)[0])>0
@@ -75,18 +72,9 @@ angular.module('dnalivApp', [
 	        if (!publicLocation && !loggedIn) {
 	          $location.path('/'); //redirect to frontpage
 	        }
-					/* original 
-	        if (next.authenticate && !loggedIn) {
-	          $location.path('/login');
-	        }
-					*/
-
-				//})
-      });
+				})
+			})
 		})
-	 
-
-    });
   });
   
   

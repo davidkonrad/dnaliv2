@@ -2,48 +2,25 @@
 
 angular.module('dnalivApp')
   .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Db', 'Utils', 'Resultat', 'Resultat_item', 
-			'Kommentar', 'KommentarModal', 'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
+			'Kommentar', 'KommentarModal', 'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	
+			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'DTDefaultOptions', 
 
 	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Db, Utils, Resultat, Resultat_item, 
-			Kommentar, KommentarModal, Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
+			Kommentar, KommentarModal, Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, 
+			DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, DTDefaultOptions) {
 
-		/*
-		Booking.query().$promise.then(function(bookings) {	
-			$scope.sagsNo = []
-			$scope.bookings = bookings
-			bookings.forEach(function(booking) {
-				$scope.sagsNo[booking.booking_id] = booking.sagsNo
-			})
-		})
-		*/
-		$scope.sagsNo = []
-		$scope.bookings = Db.bookings()
+		$scope.sagsNo = [];
+		$scope.bookings = Db.bookings();
 		$scope.bookings.forEach(function(booking) {
 			$scope.sagsNo[booking.booking_id] = booking.sagsNo
-		})
+		});
 
-		$scope.loadProever = function() {
-			Proeve.query().$promise.then(function(proever) {	
-				$scope.proeve_nr = []
-				var temp = proever.map(function(proeve) {
-					return Utils.getObj(proeve)
-				})
-				temp.forEach(function(proeve) {
-					$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
-				})
-				$scope.proever = temp
-				$scope.reloadData()
-			})
-		}
-		$scope.loadProever()
+		$scope.proeve_nr = [];
+		$scope.proever = Db.proever();
+		$scope.proever.forEach(function(proeve) {
+			$scope.proeve_nr[proeve.proeve_id] = proeve.proeve_nr
+		});
 
-		/*
-		Taxon.query().$promise.then(function(taxons) {	
-			$scope.taxon = taxons.map(function(taxon) {
-				return Utils.getObj(taxon)
-			})
-		})
-		*/
 		$scope.taxon = Db.taxons()
 		$scope.getTaxon = function(taxon_id) {
 			for (var i=0;i<$scope.taxon.length; i++) {
@@ -89,20 +66,10 @@ angular.module('dnalivApp')
 			return selected ? 'active' : 'danger'
 		}
 
-		$scope.reloadData = function() {
-			//console.log('Reloading ...')
+		var vm = this;
+		vm.reloadData = function() {
+			var loadDeferred = $q.defer();
 
-			/*
-			function getLokalitet(proeve_id) {
-				var proever = Db.proever()
-				for (var i=0, l=proever.length; i<l; i++) {
-					if (proever[i].proeve_id == proeve_id) {
-						return proever[i].Lokalitet ? proever[i].Lokalitet.presentationString : ''
-					}
-				}
-				return ''
-			}
-			*/
 			function getProeveData(proeve_id, resultat) {
 				var proever = Db.proever()
 				for (var i=0, l=proever.length; i<l; i++) {
@@ -114,42 +81,43 @@ angular.module('dnalivApp')
 				}
 				return ''
 			}
-
-			function getKommentarer(resultat_id, resultat) {
-				Kommentar.query( { where: { relation_id: resultat_id, type_id: Utils.KOMMENTAR_TYPE.RESULTAT }} ).$promise.then(function(kommentarer) {	
-					//console.log(kommentarer)
-					//resultat.noter = 'test'
-					return 'test'
-				})
-			}
-
-			Resultat.query().$promise.then(function(resultater) {	
-				$scope.resultater = resultater.map(function(resultat) {
-
-					//resultat.lokalitet = getLokalitet(resultat.proeve_id)
-
-					getProeveData(resultat.proeve_id, resultat)
-					resultat.noter = getKommentarer(resultat.resultat_id)
-
-					/*
-					Proeve.get( { id: resultat.proeve_id }).$promise.then(function(items) {
-						resultat.lokalitet = items.Lokalitet && items.Lokalitet.presentationString ? items.Lokalitet.presentationString : ''
-					})
-					*/
-					
-					resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
-					resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '?'
-					resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
-
-					//convert to date to so we can format the string properly
-					resultat.created_timestamp = Date.parse(resultat.created_timestamp)
-
-					//console.log(resultat)
-
-					return Utils.getObj(resultat)
-				})
+		
+			var resultatKommentarer = [];
+			Kommentar.query( { where: { type_id: Utils.KOMMENTAR_TYPE.RESULTAT }} ).$promise.then(function(kommentarer) {	
+				resultatKommentarer = kommentarer;
+				function getKommentarer(resultat_id, resultat) {
+					var k='';
+					for (var i=0, l=resultatKommentarer.length; i<l; i++) {
+						if (resultatKommentarer[i].relation_id == resultat_id) {
+							if (k!='') k+='<br>';
+							k+=resultatKommentarer[i].kommentar;
+						}
+					}
+					return k
+				}
+			
+				Resultat.query().$promise.then(function(resultater) {	
+					$scope.resultater = [];
+					var resultat;
+					for (var i=0, l=resultater.length; i<l; i++) {
+						resultat = resultater[i];
+						getProeveData(resultat.proeve_id, resultat)
+						resultat.noter = getKommentarer(resultat.resultat_id)
+						resultat.sagsNo = resultat.booking_id > 0 ? $scope.sagsNo[resultat.booking_id] : '?'
+						resultat.proeve_nr = resultat.proeve_id > 0 ? $scope.proeve_nr[resultat.proeve_id] : '?'
+						resultat.datoForAnalyse_fixed = resultat.datoForAnalyse ? Utils.fixDate(resultat.datoForAnalyse) : ''
+						resultat.created_timestamp = Date.parse(resultat.created_timestamp)
+						$scope.resultater.push(Utils.getObj(resultat));
+	
+						if (i == l-1) {
+							loadDeferred.resolve($scope.resultater)
+						}
+					}
+				})  
 			})
+			return loadDeferred.promise
 		}
+
 
 		$scope.$watch('resultat', function() {
 			if ($scope.resultat) $scope.resultat.isEdited = true
@@ -160,7 +128,7 @@ angular.module('dnalivApp')
 			if (userFilter) {
 				$.fn.dataTable.ext.search.push(
 			    function( settings, data, dataIndex ) {
-						return data[3] == Auth.getCurrentUser().name
+						return data[6] == Auth.getCurrentUser().name
 					}
 				)
 			} else {
@@ -220,10 +188,8 @@ angular.module('dnalivApp')
 					})
 				})
 				$scope.$on('modal.hide', function(e, target) {
-					//console.log('hide lock and reload')
-					$scope.lock(false)
-					//$scope.loadProever()
-					//$scope.reloadData()
+					$scope.lock(false);
+					$scope.resultaterInstance.reloadData();
 				})
 			})
 		}
@@ -239,8 +205,13 @@ angular.module('dnalivApp')
 			}
 		})
 
-		$scope.resultaterOptions = DTOptionsBuilder.newOptions()
-			.withOption('destroy', true)
+		/* dataTable */
+		DTDefaultOptions.setLoadingTemplate('<img src="assets/images/ajax-loader.gif">')
+
+		$scope.resultaterOptions = DTOptionsBuilder.fromFnPromise(function() {
+				return vm.reloadData()
+	    })
+			//.withOption('destroy', true)
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
 			.withDOM('lBfrtip')
@@ -284,23 +255,27 @@ angular.module('dnalivApp')
 						$scope.setUserFilter($scope.userFilter)
  					}
 				}
-
 			])
 			.withLanguage(Utils.dataTables_daDk);
 
 		$scope.resultaterInstance = {}
 
 		$scope.resultaterColumns = [
-      DTColumnBuilder.newColumn(0).withTitle('Sagsnr.'),
-      DTColumnBuilder.newColumn(1).withTitle('PrøveID'),
-      DTColumnBuilder.newColumn(2).withTitle('Lokalitet'),
-      DTColumnBuilder.newColumn(3).withOption('type', 'dna').withTitle('Analysedato'),
-      DTColumnBuilder.newColumn(4).withTitle('Datasæt'),
-      DTColumnBuilder.newColumn(5).withTitle('Noter'),
-      DTColumnBuilder.newColumn(6).withTitle('Bruger')
+      DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
+      DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
+      DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet'),
+      DTColumnBuilder.newColumn('datoForAnalyse_fixed').withOption('type', 'dna').withTitle('Analysedato'),
+      DTColumnBuilder.newColumn('dataset').withTitle('Datasæt'),
+      DTColumnBuilder.newColumn('noter').withTitle('Noter'),
+      DTColumnBuilder.newColumn('created_userName').withTitle('Bruger')
     ]
 
-		$scope.resultaterColumnDefs = []
+		$('#resultaterTable').on('click', 'tbody tr', function() {
+			var resultat = $scope.resultaterInstance.DataTable.row(this).data();
+			$scope.showResultat(resultat.resultat_id)
+		})
+
+		//$scope.resultaterColumnDefs = []
 
 	
 		/**
@@ -356,12 +331,11 @@ angular.module('dnalivApp')
 					$scope.resultat.resultat_items.forEach(function(item) {
 						if (item.length) {
 							Resultat_item.delete({ id: item[0].resultat_item_id })
-							//console.log('sletter resultat_item_id', item[0].resultat_item_id)
 						}
 					})
 					Resultat.delete({ id : resultat_id }).$promise.then(function() {	
 						$scope.resultatModal.hide()
-						$scope.reloadData()
+						//$scope.reloadData()
 					})
 				}
 			})
@@ -424,7 +398,7 @@ angular.module('dnalivApp')
 					if (typeof proeve == 'number') {
 						resultat.proeve_id = proeve
 						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
-							$scope.reloadData()
+							//$scope.reloadData()
 							$scope.newProeveNr = $scope.getProeveNr(proeve)
 						})
 					} else {
@@ -460,7 +434,7 @@ angular.module('dnalivApp')
 
 					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
 						$scope.resultat.sagsNo = response.sagsNo
-						$scope.reloadData()
+						//$scope.reloadData()
 						$timeout(function() {
 							$scope.resultaterInstance.rerender()
 						}, 200)
@@ -476,7 +450,7 @@ angular.module('dnalivApp')
 					$scope.resultat.proeve_id = proeve.proeve_id
 					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
 						$scope.resultat.proeve_nr = proeve.proeve_nr
-						$scope.reloadData()
+						//$scope.reloadData()
 						$timeout(function() {
 							$scope.resultaterInstance.rerender()
 						}, 200)

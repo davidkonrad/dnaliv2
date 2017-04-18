@@ -139,11 +139,18 @@ input.bold {
 }
 
 /* egne resultater button */
+.userFilter {
+	position:relative;
+	top: 4px;
+}
+	
 .userFilter label {
 	cursor: pointer;
 	font-weight: normal;
 	vertical-align: top;
 	color: #333 !important;
+	position: relative;
+	top: 1px;
 }
 
 .dataTable > thead > tr > th[class*="sort"]:after{
