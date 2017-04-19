@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('ProeveNr', ['$modal', '$q', '$timeout', 'Proeve', function($modal, $q, $timeout, Proeve) {
+  .factory('ProeveNr', ['$modal', '$q', '$timeout', 'Db', function($modal, $q, $timeout, Db) {
 
 		var deferred = null,
 				modal = null,
@@ -10,9 +10,12 @@ angular.module('dnalivApp')
 				proever = null;
 
 		function loadProever() {
+			/*
 			Proeve.query().$promise.then(function(p) {
 				proever = p	
 			})
+			*/
+			proever = Db.proever();
 		}
 
 		function proeveNrExists(proeve_nr) {
@@ -214,6 +217,7 @@ angular.module('dnalivApp')
 				$scope.$on('modal.show', function(e, target) {
 					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
 						$('#input').typeahead({
+							showHintOnFocus: true,
 							source: proever,
 							displayText: function(item) {
 								//prevent crashing if proeve_nr is null
@@ -251,11 +255,13 @@ angular.module('dnalivApp')
 				this should REALLY be trivialised 
 			**/
 			select: function($scope, proeve_nr) {
+				loadProever();
+
 				$scope.proeveNrModal = {
-					title: 'Knyt til Prøve ..',
+					title: 'Knyt til Prøve / PrøveID ..',
 					message: 'Opslag på PrøveID :',
 					canSubmit: false,
-					proeve_nr: proeve_nr
+					proeve_nr:  null//proeve_nr
 				}
 				$scope.$watch('proeveNrModal.proeve_nr', function(newVal, oldVal) {
 					var $input = $('#modal-proeveNr-input'),
@@ -294,21 +300,18 @@ angular.module('dnalivApp')
 				$scope.$on('modal.show', function(e, target) {
 					if (target.$options.internalName == 'proeveNr' && !modal.initialized) {
 						modal.initialized = true
-						Proeve.query().$promise.then(function(p) {
-							proever = p	
-							$('#input').typeahead({
-								source: proever,
-								displayText: function(item) {
-									return item.proeve_nr
-								},
-								items: 10,
-								afterSelect: function(item) {
-								}
-							})
-							angular.element('#input').focus()
+						$('#input').typeahead({
+							source: proever,
+							showHintOnFocus: true,
+							displayText: function(item) {
+								return item.proeve_nr
+							},
+							items: 10,
+							afterSelect: function(item) {
+							}
 						})
 					}
-				})
+				});
 
 				$scope.proeveNrClose = function(success) {
 					modal.hide()

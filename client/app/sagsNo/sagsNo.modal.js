@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .factory('SagsNo', ['$modal', '$q', '$timeout', 'Booking', function($modal, $q, $timeout, Booking) {
+  .factory('SagsNo', ['$modal', '$q', '$timeout', 'Db', function($modal, $q, $timeout, Db) {
 
 		var deferred = null;
 		var	modal = null;
@@ -10,9 +10,12 @@ angular.module('dnalivApp')
 		var	bookings = null;
 
 		function loadBookings() {
+			/*
 			Booking.query().$promise.then(function(p) {
 				bookings = p;
 			});
+			*/
+			bookings = Db.bookings();
 		}
 
 		function sagsNoExists(sagsNo) {

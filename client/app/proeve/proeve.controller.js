@@ -463,6 +463,7 @@ angular.module('dnalivApp')
 						//create proeve
 						Proeve.save({ proeve_id: '' }, proeve ).$promise.then(function(proeve) {
 							Utils.dtPerformSearch(newProeveNr);
+							Db.reloadProever();
 							$scope.dtProeveInstance.reloadData(function() {
 								$scope.showProeve(proeve.proeve_id)
 							}, false)

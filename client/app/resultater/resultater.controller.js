@@ -399,7 +399,9 @@ angular.module('dnalivApp')
 						resultat.proeve_id = proeve
 						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
 							//$scope.reloadData()
-							$scope.newProeveNr = $scope.getProeveNr(proeve)
+							$scope.newProeveNr = $scope.getProeveNr(proeve);
+							console.log('realod');
+							$scope.resultaterInstance.reloadData();
 						})
 					} else {
 						//create lokalitet for the proeve we are about to create
@@ -415,6 +417,7 @@ angular.module('dnalivApp')
 								$scope.loadProever()
 								resultat.proeve_id = proeve.proeve_id
 								Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
+									$scope.resultaterInstance.reloadData();
 									//$scope.reloadData()
 									//$scope.newProeveNr = proeve.proeve_nr
 								})
@@ -449,11 +452,8 @@ angular.module('dnalivApp')
 				if (proeve) {
 					$scope.resultat.proeve_id = proeve.proeve_id
 					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
-						$scope.resultat.proeve_nr = proeve.proeve_nr
-						//$scope.reloadData()
-						$timeout(function() {
-							$scope.resultaterInstance.rerender()
-						}, 200)
+						$scope.resultat.proeve_nr = proeve.proeve_nr;
+						$scope.resultaterInstance.reloadData();
 					})
 				}
 			})
