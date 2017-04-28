@@ -9,7 +9,7 @@ angular.module('dnalivApp')
 						Proeve, Proeve_extras, ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, DTDefaultOptions) {
 
-		Db.init()
+		Db.init(); //should not be neccesary, why did I do that?
 
 		var loadDeferred = null;
 
@@ -222,7 +222,7 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
-		var fields = ['proeve.Indsamler','proeve.Institutionsnavn','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
+		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10' ]
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
@@ -250,14 +250,15 @@ angular.module('dnalivApp')
 					source: $scope.lookupInstitutionsnavn,
 					showHintOnFocus: true,
 					afterSelect: function(value) {
-						$scope.proeve.Institutionsnavn = value
+						$scope.proeve.indsamlerInstitution = value
 					}
 				})
 			}
 		})
 		$scope.$on('modal.hide', function(e, target){
 			if (target.$options.internalName == 'proeve') {
-				$scope.lock(false)
+				$scope.dtProeveInstance.reloadData();
+				$scope.lock(false);
 			}
 		})
 
@@ -290,41 +291,41 @@ angular.module('dnalivApp')
 		})
 		.withOption('initComplete', function() {
 
-			$('table tbody').on('click', 'tr', function() {
+			$('#dtProeve').on('click', 'tbody tr', function() {
 				var proeve = $scope.dtProeveInstance.DataTable.row(this).data()
 				$scope.showProeve(proeve.proeve_id)
 			})
 
-				//remove any previous set global filters
-				$.fn.dataTable.ext.search = []
-				Utils.dtNormalizeLengthMenu()
-				Utils.dtNormalizeButtons()
-				Utils.dtNormalizeSearch()
+			//remove any previous set global filters
+			$.fn.dataTable.ext.search = [];
+			Utils.dtNormalizeLengthMenu();
+			Utils.dtNormalizeButtons();
+			Utils.dtNormalizeSearch();
 
-				if (loadDeferred) {
-		      loadDeferred.resolve(true)
-				}
+			if (loadDeferred) {
+	      loadDeferred.resolve(true)
+			}
 
-			})
-			.withButtons([ 
-				{ extend : 'colvis',
-					text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
+		})
+		.withButtons([ 
+			{ extend : 'colvis',
+				text: 'Vis kolonner &nbsp;<i class="fa fa-sort-down" style="position:relative;top:-3px;"></i>',
 					className: 'btn btn-default btn-xs colvis-btn'
-				}, { 
-					extend : 'excelHtml5',
-					text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
-					filename: 'DNAogLiv_Proever_'+Utils.todayStr(),
-					className: 'btn btn-default btn-xs ml25px'
-				},
-				{ 
-					text: 'Opret ny prøve',
-					className: 'btn btn-primary btn-xs colvis-btn',
-					action: function ( e, dt, node, config ) {
-						$scope.createProeve()
- 					}
-				}
-			])
-			.withLanguage(Utils.dataTables_daDk)
+			}, { 
+				extend : 'excelHtml5',
+				text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
+				filename: 'DNAogLiv_Proever_'+Utils.todayStr(),
+				className: 'btn btn-default btn-xs ml25px'
+			},
+			{ 
+				text: 'Opret ny prøve',
+				className: 'btn btn-primary btn-xs colvis-btn',
+				action: function ( e, dt, node, config ) {
+					$scope.createProeve()
+ 				}
+			}
+		])
+		.withLanguage(Utils.dataTables_daDk);
 
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_id').withTitle('#'),

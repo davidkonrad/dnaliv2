@@ -63,7 +63,7 @@
 				    <input type="text" ng-model="proeve.indsamlerEmail" class="form-control input-sm bold" size="18" id="Mailadresse" ng-change="proeve.edited = true" />
 						&nbsp;
 				  	<label for="Institutionsnavn" class="normal">Institutionsnavn</label>
-				    <input type="text" ng-model="proeve.Institutionsnavn" class="form-control input-sm bold" size="30" id="Institutionsnavn" ng-change="proeve.edited = true" />
+				    <input type="text" ng-model="proeve.indsamlerInstitution" class="form-control input-sm bold" size="50" id="Institutionsnavn" ng-change="proeve.edited = true" />
 
 					</fieldset>
 
@@ -84,7 +84,7 @@
 
 					</fieldset>
 
-					<fieldset>
+					<fieldset ng-if="extra_fields.length>0">
 						<legend>Anden data</legend>
 	
 						<span ng-repeat="extra in extra_fields">

@@ -25,11 +25,11 @@ angular.module('dnalivApp')
 			showHotspotMarkers: false,
 			showHotspotPopups: false,
 			showHotspotPolygon: true,
-			latitude: BM.lat, 
-			longitude: BM.lng,
+			latitude: 0, //BM.lat, 
+			longitude: 0, //BM.lng,
 			Spots: [],
 			//db fields
-			presentationString: 'BM',
+			presentationString: '<Ikke sat>', //BM
 			geometryWkt: '',
 			type: '',
 			subtype: '',
@@ -231,9 +231,12 @@ angular.module('dnalivApp')
 			}
 						
 			//ensure valid lat, lng
-			if (!obj.latitude || !obj.longitude) {
-				obj.latitude = BM.lat
-				obj.longitude = BM.lng
+			//if (!obj.latitude || !obj.longitude) {
+			if (!parseFloat(obj.latitude)>0 || !parseFloat(obj.longitude)>0) {			
+				/*
+				obj.latitude = BM.lat;
+				obj.longitude = BM.lng;
+				*/
 			}
 
 			obj.hasHotspots = obj.Spot && obj.Spot.length > 0;
@@ -243,8 +246,12 @@ angular.module('dnalivApp')
 			if (lokalitet.geometryWkt && lokalitet.geometryWkt != '') {
 				lokalitetPolygon = geometryWktPolygon(lokalitet.geometryWkt)
 			}	
-			createLokalitetPopup(lokalitet) 
-			createHotspotMarkers($scope, lokalitet)
+
+			//
+			if (!parseFloat(obj.latitude)>0 || !parseFloat(obj.longitude)>0) {			
+				createLokalitetPopup(lokalitet) 
+				createHotspotMarkers($scope, lokalitet)
+			}
 		}
 
 		function createLokalitetPopup(lokalitet) {
@@ -263,7 +270,6 @@ angular.module('dnalivApp')
 					return splice(item.presentationString, item.presentationString.indexOf('(')+1, item.subtype+', ')
 				},
 				afterSelect: function(item) {
-					console.log(item)
 					Utils.mergeObj($scope.__lokalitet, item);
 					if (lokalitetPolygon) map.removeLayer(lokalitetPolygon)
 
@@ -272,7 +278,6 @@ angular.module('dnalivApp')
 
 						})
 					} else {
-						console.log(item.geometryWkt)
 						lokalitetPolygon = geometryWktPolygon(item.geometryWkt)
 						var center = geometryWktLatLng(item.geometryWkt)
 						$timeout(function() {
