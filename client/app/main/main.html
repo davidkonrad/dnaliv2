@@ -2,10 +2,7 @@
 
 	<div class="col-sm-4">
 
-		<div class="proever" 
-				ng-class="{ proeveSelected: !currentTaxonId }" 
-				ng-click="proeverClick()"
-		>
+		<div class="proever" ng-class="{ proeveSelected: !currentTaxonId }" ng-click="proeverClick()" title="Klik for at vise alle prøver">
 			<span class="overview-left text-primary">Prøver</span>
 			<span class="overview-right">{{ proeveCount }}</span>
 		</div>
@@ -25,7 +22,7 @@
 						style="line-height:16px;" 
 						ng-class=" { selected: currentTaxonId == taxon.taxon_id }">
 
-					<td class="text-primary" style="cursor:pointer;" ng-click="taxonClick(taxon)"> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
+					<td class="text-primary" style="cursor:pointer;padding-left: 5px;" ng-click="taxonClick(taxon)"> {{ taxon.taxon_navn_dk }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.count }} &nbsp;&nbsp;</td>
 					<td class="right"> {{ taxon.found }} &nbsp;&nbsp;</td>
 				</tr>

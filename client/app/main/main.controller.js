@@ -45,39 +45,6 @@ angular.module('dnalivApp')
 			})
 		})
 
-		/*
-		$scope.lokalitetByResultatId = function(resultat_id) {
-			for (var i=0, l=$scope.proeve.length; i<l; i++) {
-				for (var ri=0, rl=$scope.proeve[i].Resultat.length; ri<rl; ri++) {
-					if ($scope.proeve[i].Resultat[ri].resultat_id == resultat_id) {
-						return $scope.proeve[i].Lokalitet
-					}
-				}
-			}
-			console.log('lokalitet not found', resultat_id)
-		}
-		*/
-
-/*
-		var iconRed = {
-			iconUrl: 'assets/images/red.png',
-			//iconSize: [25, 41],
-			iconSize: [15, 26],
-			shadowSize: [50, 64], 
-			iconAnchor: [12, 41], 
-			shadowAnchor: [4, 62], 
-			popupAnchor: [-2, -46] 
-		}
-		var iconGreen = {
-			iconUrl: 'assets/images/green.png',
-			iconSize: [25, 41],
-			shadowSize: [50, 64], 
-			iconAnchor: [12, 41], 
-			shadowAnchor: [4, 62], 
-			popupAnchor: [-2, -46] 
-		}
-*/
-
 		var iconBlue = {
 			iconUrl: 'assets/images/blue.png',
 			iconSize: [15, 26],
@@ -229,10 +196,8 @@ angular.module('dnalivApp')
 					indsamlingssted: {
           	name: 'Indsamlingssted',
 						type: 'markercluster',
-						//type: 'group',
 						layerOptions: {
 							maxClusterRadius: function(zoom) { 
-				        //return (zoom > 10) ? 80 : 1; // radius in pixels
 								return 0.01;
 							}
 						},
@@ -241,7 +206,6 @@ angular.module('dnalivApp')
 					proever: {
           	name: 'Samtlige prøver',
 						type: 'markercluster',
-						//type: 'group',
 						layerOptions: {
 							maxClusterRadius: function(zoom) { 
 								return -1; 
@@ -318,14 +282,11 @@ angular.module('dnalivApp')
 							var trusty = item.negativ == false && item.positiv == true
 							var icon = trusty && item.eDNA ? iconGreen : iconRed
 							var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>';
-							//console.log(resultat);
 							message += getProeveNr(resultat.proeve_id) + '<br><br>';
-							message += 'Dato for indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
 							message += 'Indsamlet af: ' + getIndsamlingsInstitution(resultat.proeve_id) + '<br>';
+							message += 'Dato for Indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
+							message += 'Analyseret af: '+ getInstitution(resultat.Booking) + '<br>';
 							message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse) + '<br>';
-							message += 'Analyseret af : '+ getInstitution(resultat.Booking) + '<br>';
-
-							message += getInstitution(resultat.Booking) + '<br>';
 
 							if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
 								$scope.markers.push({
@@ -354,8 +315,10 @@ angular.module('dnalivApp')
 			Proeve.query().$promise.then(function(proever) {
 				proever.forEach(function(proeve) {
 					if (proeve.Lokalitet && proeve.Lokalitet.latitude>0 && proeve.Lokalitet.longitude>0) {
+						//console.log(proeve);
 						var message = '<b>'+proeve.Lokalitet.presentationString+'</b><br>';
 						message += proeve.Lokalitet.latitude + ' ,' + proeve.Lokalitet.longitude +'<br>';
+						message += 'PrøveID: <strong>'+proeve.proeve_nr+'</strong><br>';
 						if (proeve.indsamlingsDato) message += 'Indsamlet '+ Utils.fixDate(proeve.indsamlingsDato) +'<br>';
 						if (proeve.indsamlerNavn) message += 'Af '+ proeve.indsamlerNavn +'<br>';
 						if (proeve.indsamlerInstitution) message += proeve.indsamlerInstitution +'<br>';
