@@ -101,8 +101,6 @@ b.dk {
  */
  ul[dnd-list] li {
     background-color: #fff;
-    xxborder: 1px solid #ddd;
-		xxborder-left: 1px solid #ddd;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
     display: block;
@@ -122,7 +120,6 @@ b.dk {
 /*******************/
 
 #list-taxon .col-xs-1 {
-	xwidth: 20px !important;
 	width: auto !important;
 	top: 5px;
 	padding-left: 5px !important;

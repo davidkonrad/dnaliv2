@@ -7,17 +7,10 @@ angular.module('dnalivApp')
 	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
-		/*
-		$scope.extrasType = [
-			{ text: '<Ikke sat>' },
-			{ text: 'Heltal' },
-			{ text: 'Kommatal' },
-			{ text: 'Dato' },
-			{ text: 'Tekst (50)' },
-			{ text: 'Tekst (memo)' }
-		]
-		*/
 
+/**
+	extra fields
+**/
 		$scope.extrasType = [
 			'<Ikke sat>',
 			'Heltal',
@@ -152,14 +145,13 @@ angular.module('dnalivApp')
 
 				var fixedHeaderEle = document.getElementsByClassName('fixedHeader-floating');
 				angular.element(fixedHeaderEle).remove();
-				/*
-				Utils.dtNormalizeLengthMenu()
-				Utils.dtNormalizeButtons()
-				Utils.dtNormalizeSearch()
-				*/
 			})
 			.withLanguage(Utils.dataTables_daDk);
 
+
+/**
+	taxons
+**/
 		$scope.dragoverCallback = function(event, index, external, type) {
 			return true
 		}
@@ -287,6 +279,7 @@ angular.module('dnalivApp')
 		/**
 			system users
 		*/
+		/*
 		System_user.query().$promise.then(function(users) {
 			$scope.users = users
 		})
@@ -304,7 +297,6 @@ angular.module('dnalivApp')
 
 				$.fn.dataTable.ext.search = []
 				Utils.dtNormalizeLengthMenu()
-				//Utils.dtNormalizeButtons()
 				Utils.dtNormalizeSearch()
 			})
 			.withLanguage(Utils.dataTables_daDk)
@@ -355,19 +347,15 @@ angular.module('dnalivApp')
 				})
 			} else {
 				System_user.save({ id: '' }, $scope.userModalUser).$promise.then(function(user) {
-					//should automatically update "background" / the user table as well
 					$scope.users.push(user)
 				})
 			}
 		}
 
-		/**
-			update the mongodb user with mySQL system_users 
-		*/
 		$scope.updateSystemUsers = function() {
 			console.log(User);
 		}			
-
+		*/
 	
 }]);
 

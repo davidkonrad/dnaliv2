@@ -123,7 +123,18 @@ angular.module('dnalivApp')
 							extra7: proever[i].extra7,
 							extra8: proever[i].extra8,
 							extra9: proever[i].extra9,
-							extra10: proever[i].extra10
+							extra10: proever[i].extra10,
+
+							extra11: proever[i].extra11,
+							extra12: proever[i].extra12,
+							extra13: proever[i].extra13,
+							extra14: proever[i].extra14,
+							extra15: proever[i].extra15,
+							extra16: proever[i].extra16,
+							extra17: proever[i].extra17,
+							extra18: proever[i].extra18,
+							extra19: proever[i].extra19,
+							extra20: proever[i].extra20
 
 					}
 				
@@ -354,7 +365,7 @@ angular.module('dnalivApp')
     ];  
 
 		//include active extra fields
-		for (var i=1;i<11;i++) {
+		for (var i=1;i<21;i++) {
 			var fieldName = 'extra'+i;
 			if (proeveExtraActive(fieldName)) {
 				$scope.proeveColumns.push(
