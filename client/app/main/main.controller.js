@@ -247,6 +247,7 @@ angular.module('dnalivApp')
 			}
 
 			function getInstitution(booking) {
+				if (!booking) return '';
 				var s = '';
 				for (var i=0, l=booking.Klasse.length; i<l; i++) {
 					if (s != '') s+= ', ';
@@ -273,7 +274,33 @@ angular.module('dnalivApp')
 				return 'Ikke sat'
 			}
 
-			$timeout(function() {
+		Resultat_item.query({ where: { taxon_id: taxon.taxon_id }}).$promise.then(function(items) {
+			items.forEach(function(item) {
+				var resultat = resultatByResultatId(item.resultat_id)
+				if (resultat && resultat.Lokalitet) {
+					var trusty = item.negativ == false && item.positiv == true
+					var icon = trusty && item.eDNA ? iconGreen : iconRed
+					var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>';
+					message += getProeveNr(resultat.proeve_id) + '<br><br>';
+					message += 'Indsamlet af: ' + getIndsamlingsInstitution(resultat.proeve_id) + '<br>';
+					message += 'Dato for Indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
+					message += 'Analyseret af: '+ getInstitution(resultat.Booking) + '<br>';
+					message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse) + '<br>';
+
+					if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
+						$scope.markers.push({
+							lat: parseFloat(resultat.Lokalitet.latitude),
+							lng: parseFloat(resultat.Lokalitet.longitude),
+							layer: 'indsamlingssted',
+							icon: icon,
+							message: message
+						})
+					}
+				}					
+			})
+		});
+
+/*			$timeout(function() {
 				$scope.resultat_items.forEach(function(item) {
 					if (item.taxon_id == taxon.taxon_id) {
 						var resultat = resultatByResultatId(item.resultat_id)
@@ -301,6 +328,7 @@ angular.module('dnalivApp')
 					}
 				})
 			})
+*/
 		}
 
 		/** **/

@@ -139,7 +139,7 @@ angular.module('dnalivApp')
 					}
 				
 					//extra fields
-					for (var f=1; f<11; f++) {
+					for (var f=1; f<21; f++) {
 						var field = 'extra'+f;	
 						item[field] = proever[i][field]
 					}
