@@ -20,10 +20,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     },
+		/*
     analyseDato: {
       type: DataTypes.DATE,
       allowNull: true
     },
+		*/
     indsamlerNavn: {
       type: DataTypes.STRING,
       allowNull: true

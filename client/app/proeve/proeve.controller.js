@@ -67,8 +67,16 @@ angular.module('dnalivApp')
 				var kommentarString = function(kommentarer) {
 					var s = ''
 					for (var i=0; i<kommentarer.length; i++) {
-						if (s != '') s += "\n" //'<br>' //&nbsp;//&nbsp;"
-						s += kommentarer[i].kommentar
+						if (s != '') s += "<br>";
+						s += kommentarer[i].kommentar;
+					}
+					return s
+				}
+				var analyseDatoerString = function(resultater) {
+					var s = ''
+					for (var i=0; i<resultater.length; i++) {
+						if (s != '') s += "<br>";
+						s += Utils.fixDate(resultater[i].datoForAnalyse);
 					}
 					return s
 				}
@@ -92,7 +100,7 @@ angular.module('dnalivApp')
 							latitude: lokalitet ? lokalitet.latitude : '',
 							longitude: lokalitet ? lokalitet.longitude : '',
 
-							antalIndsamlingsteder: spots.length+1, //spotString(spots),
+							antalIndsamlingsteder: spots.length+1, 
 							indsamlerNavn: proever[i].indsamlerNavn,
 							indsamlerEmail: proever[i].indsamlerEmail,
 							indsamlerInstitution: proever[i].indsamlerInstitution,
@@ -103,8 +111,7 @@ angular.module('dnalivApp')
 							ekstraktionsDato: proever[i].ekstraktionsDato,
 							ekstraktionsDato_fixed: Utils.fixDate(proever[i].ekstraktionsDato),
 
-							analyseDato: proever[i].analyseDato,
-							analyseDato_fixed: Utils.fixDate(proever[i].analyseDato),
+							analyseDatoer: analyseDatoerString(proever[i].Resultat),
 
 							elueringsVolumen: proever[i].elueringsVolumen,
 							dataset: proever[i].dataset,
@@ -286,7 +293,7 @@ angular.module('dnalivApp')
 			})
 		}
 
-		DTDefaultOptions.setLoadingTemplate('<img src="assets/images/ajax-loader.gif">')
+		DTDefaultOptions.setLoadingTemplate('<img src="assets/images/ajax-loader.gif">');
 
 		$scope.proeveOptions = DTOptionsBuilder.fromFnPromise(function() {
 			return vm.reloadData()
@@ -355,7 +362,8 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn('elueringsVolumen').withTitle('Elueringsvolumen'),
       DTColumnBuilder.newColumn('ngUl').withTitle('DNA ng/µl'),
       DTColumnBuilder.newColumn('aliquotVolumen').withTitle('Aliquot volumen'),
-      DTColumnBuilder.newColumn('analyseDato_fixed').withOption('type', 'dna').withTitle('Analysedato'),
+			DTColumnBuilder.newColumn('analyseDatoer').withTitle('Analysedatoer'),
+
       DTColumnBuilder.newColumn('dataset').withTitle('Datasæt'),
       DTColumnBuilder.newColumn('kommentar_fixed').withOption('class', 'dt-note').withOption('type', 'locale-compare').withTitle('Note')
 				.withOption('createdCell', function(td, cellData, rowData, row, col) {
@@ -374,7 +382,6 @@ angular.module('dnalivApp')
 			}
 		}
 
-		//$scope.proeveInstance = {}
 		$scope.dtProeveInstance = undefined;
 		$scope.dtProeveInstanceCallback = function(instance) {
 			$scope.dtProeveInstance = instance;
@@ -412,7 +419,7 @@ angular.module('dnalivApp')
 		}
 
 		$scope.lokalitetLoaded = function() {
-			return typeof $scope.lokalitet.lokalitet_id == 'number'
+			return typeof $scope.lokalitet.lokalitet_id == 'number';
 		}
 
 		/** 
@@ -443,7 +450,7 @@ angular.module('dnalivApp')
 			Alert.show($scope,'Slet notat', 'Slet note / kommentar - er du sikker?').then(function(confirm) {
 				if (confirm) {
 					Kommentar.delete({ id: kommentar_id}).$promise.then(function() {	
-						$scope.loadKommentarer($scope.proeve.proeve_id)
+						$scope.loadKommentarer($scope.proeve.proeve_id);
 					})
 				}
 			})
