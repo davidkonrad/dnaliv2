@@ -10,10 +10,16 @@
 
 			<form class="form-inline" role="form" id="klasse-form">
 
-				  <div class="form-group">
+				  <div class="form-group" style="margin-bottom: 10px;">
 				  	<label for="DatoForBooking" class="normal">Bookingdato</label>
-				    <input type="text" id="DatoForBooking" ng-model="klasse.DatoForBooking" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
-						<br>
+				    <input type="text" 
+							id="DatoForBooking" 
+							ng-model="klasse.DatoForBooking" 
+							class="form-control input-sm bold" 
+							data-date-format="dd-MM-yyyy" 
+							size="8" 
+							bs-datepicker 
+							data-autoclose="true" />
 				  </div>
 
 					<fieldset>
@@ -27,7 +33,9 @@
 						&nbsp;
 				    <label for="postnr" class="normal">Postnr</label>
 						<input type="text" ng-model="klasse.postnr" class="form-control input-sm bold" id="postnr" size="4" placeholder="Postnr." />
-						&nbsp;
+
+						<br><br>
+
 				    <label for="by" class="normal">By</label>
 						<input type="text" ng-model="klasse.by" class="form-control input-sm bold" id="by" placeholder="By" />
 						&nbsp;
@@ -36,6 +44,7 @@
 						&nbsp;
 				    <label for="region" class="normal">Region</label>
 						<input type="text" ng-model="klasse.region" class="form-control input-sm bold" id="region" placeholder="Region" />
+
 					</fieldset>
 
 					<fieldset>
@@ -88,8 +97,6 @@
 						</select>
 
 					</fieldset>
-
-					<div class="rule"></div>
 
 				  <div class="form-group" style="width:50%;">
 						<button type="button" class="btn btn-primary btn-xs" ng-click="addKlasseKommentar()"><i class="fa fa-plus"></i></button>&nbsp;Noter

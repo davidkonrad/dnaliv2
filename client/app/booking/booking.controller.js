@@ -35,12 +35,6 @@ angular.module('dnalivApp')
 				{ 'value': 'Regnskab', 'text': 'Regnskab' }
 			];
 
-/*
-PrøveID [tilvalg]	
-Lokalitet [tilvalg]	
-Note [tilvalg]	
-*/
-
 		/**
 			format and adds klasser, laerer etc attributes to the booking item
 		*/
@@ -206,7 +200,6 @@ Note [tilvalg]
 		$scope.dateFilterActive = false
 		$scope.bookingInstance = {}
 
-		//$scope.bookingOptions = DTOptionsBuilder.newOptions()
 		$scope.bookingOptions = DTOptionsBuilder.fromFnPromise(function() {
 			return vm.reloadData()
     })
@@ -215,7 +208,6 @@ Note [tilvalg]
 		.withDOM('lB<"dt-custom">frtip')
 		.withOption('destroy', true)
 		.withOption('stateSave', true)
-		//.withOption('autoWidth', false)
 		.withFixedHeader({
 			alwaysCloneTop: true
 		})
@@ -283,14 +275,6 @@ Note [tilvalg]
 			$scope.showBooking(booking.booking_id)
 		})
 				
-
-/*
-PrøveID [tilvalg]	
-Lokalitet [tilvalg]	
-Note [tilvalg]	
-Bruger [tilvalg]
-*/
-
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('booking_id').withTitle('#').withOption('visible', false),
       DTColumnBuilder.newColumn('sagsNo').withTitle('SagsNr'),
@@ -367,7 +351,7 @@ Bruger [tilvalg]
 				$scope.lock(true)
 				$scope.bookingModal = $modal({
 					scope: $scope,
-					templateUrl: 'app/oversigt/booking.modal.html',
+					templateUrl: 'app/booking/booking.modal.html',
 					backdrop: 'static',
 					show: true,
 					internalName: 'booking'
@@ -375,7 +359,7 @@ Bruger [tilvalg]
 				$scope.$on('modal.hide', function(e, target) {
 					if (target.$options.internalName == 'booking') {
 						$scope.bookingInstance.reloadData();
-						$scope.lock(false)
+						$scope.lock(false);
 					}
 				})
 			})
@@ -492,7 +476,7 @@ Bruger [tilvalg]
 			$scope.loadKlasseKommentarer(klasse_id)
 			$scope.klasseModal = $modal({
 				scope: $scope,
-				templateUrl: 'app/oversigt/klasse.modal.html',
+				templateUrl: 'app/booking/klasse.modal.html',
 				backdrop: 'static',
 				show: true,
 				internalName: 'klasse'
@@ -531,7 +515,6 @@ Bruger [tilvalg]
 				Utils.formReset('#klasse-form')
 				Booking.get({ id: $scope.booking.booking_id }).$promise.then(function(booking) {
 					$scope.booking = booking
-					//vm.reloadData()
 					$scope.bookingInstance._renderer.rerender()
 				})
 			})
