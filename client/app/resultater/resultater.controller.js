@@ -170,30 +170,6 @@ angular.module('dnalivApp')
 			$scope.resultat.isEdited = false
 		}
 						
-		$scope.showResultat = function(resultat_id) {
-			$scope.setResultat(resultat_id).then(function() {
-
-				$scope.lock(true)
-
-				$scope.resultatModal = $modal({
-					scope: $scope,
-					templateUrl: 'app/resultater/resultat.modal.html',
-					backdrop: 'static',
-					show: true
-				})
-
-				$scope.$on('modal.show', function(e, target) {
-					$('#unExcludeSelect').on('change', function() {
-						 $scope.includeTaxon($(this).val())
-					})
-				})
-				$scope.$on('modal.hide', function(e, target) {
-					$scope.lock(false);
-					$scope.resultaterInstance.reloadData();
-				})
-			})
-		}
-
 		$scope.$watch('resultat.datoForAnalyse', function(newVal, oldVal) {
 			var date = Date.parse(newVal)
 			if (newVal != oldVal && !isNaN(date)) {
@@ -275,9 +251,6 @@ angular.module('dnalivApp')
 			$scope.showResultat(resultat.resultat_id)
 		})
 
-		//$scope.resultaterColumnDefs = []
-
-	
 		/**
 			resultat item
 		 **/
@@ -293,7 +266,6 @@ angular.module('dnalivApp')
 			
 		$scope.rebuildResultatItems = function() {
 			var items = []
-			//$scope.taxon.forEach(function(taxon) {
 			for (var i = 0, len = $scope.taxon.length; i < len; i++) {
 				items[$scope.taxon[i].taxon_id] = []
 			}
@@ -322,28 +294,51 @@ angular.module('dnalivApp')
 			})
 		}
 
-		$scope.deleteResultat = function(resultat_id) {
-
-			var date = new Date($scope.resultat.created_timestamp).toLocaleString('da-DK', { hour12: false } ),
-					author = $scope.resultat.created_userName;
-			Alert.show($scope,'Slet Resultat?', 'Oprettet <b>'+date+'</b> af <b>'+author+'</b>.<br><br>Resultat samt tilhørende replikater vil blive slettet permanent. Vil du fortsætte?').then(function(confirm) {
-				if (confirm) {
-					$scope.resultat.resultat_items.forEach(function(item) {
-						if (item.length) {
-							Resultat_item.delete({ id: item[0].resultat_item_id })
-						}
+		$scope.showResultat = function(resultat_id) {
+			$scope.setResultat(resultat_id).then(function() {
+				$scope.lock(true)
+				$scope.resultatModal = $modal({
+					scope: $scope,
+					templateUrl: 'app/resultater/resultat.modal.html',
+					backdrop: 'static',
+					show: true
+				});
+				$scope.$on('modal.show', function(e, target) {
+					$('#unExcludeSelect').on('change', function() {
+						 $scope.includeTaxon($(this).val())
 					})
-					Resultat.delete({ id : resultat_id }).$promise.then(function() {	
-						$scope.resultatModal.hide()
-						//$scope.reloadData()
-					})
+				});
+				$scope.resultatModalClose = function() {
+					$scope.resultatModal.hide();
+					$scope.lock(false);
+					$scope.resultaterInstance.reloadData();
 				}
 			})
 		}
 
+		$scope.deleteResultat = function(resultat_id) {
+			var date = new Date($scope.resultat.created_timestamp).toLocaleString('da-DK', { hour12: false } );
+			var author = $scope.resultat.created_userName;
+			Alert.show($scope,'Slet Resultat?', 'Oprettet <b>'+date+'</b> af <b>'+author+'</b>.<br><br>Resultat samt tilhørende replikater vil blive slettet permanent. Vil du fortsætte?').then(function(confirm) {
+				if (confirm) {
+					Resultat_item.query({ where : { resultat_id : resultat_id }}).$promise.then(function(items) {
+						items.forEach(function(item) {
+							Resultat_item.delete({ id: item.resultat_item_id });
+						});
+						$scope.resultatModal.hide();
+						$timeout(function() {
+							Resultat.delete({ id : resultat_id }).$promise.then(function() {
+								$scope.resultaterInstance.reloadData();
+							});
+						});
+					});
+				}
+			});
+		}
+
 		//
 		$scope.updateResultatItem = function(item) {
-			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item )
+			Resultat_item.update( { resultat_item_id: item.resultat_item_id }, item );
 		}
 		$scope.resultatValueClick = function(item) {
 			if (item.isNull) {
@@ -398,14 +393,12 @@ angular.module('dnalivApp')
 					if (typeof proeve == 'number') {
 						resultat.proeve_id = proeve
 						Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
-							//$scope.reloadData()
 							$scope.newProeveNr = $scope.getProeveNr(proeve);
-							console.log('realod');
 							$scope.resultaterInstance.reloadData();
 						})
 					} else {
 						//create lokalitet for the proeve we are about to create
-						var lokalitet = LokalitetModal.defaultLokalitet
+						var lokalitet = LokalitetModal.defaultLokalitet;
 						Lokalitet.save({ lokalitet_id: '' }, lokalitet).$promise.then(function(lokalitet) {
 							var insert_proeve = {
 								proeve_nr: proeve,
@@ -418,8 +411,6 @@ angular.module('dnalivApp')
 								resultat.proeve_id = proeve.proeve_id
 								Resultat.save( { resultat_id: '' }, resultat ).$promise.then(function(resultat) {	
 									$scope.resultaterInstance.reloadData();
-									//$scope.reloadData()
-									//$scope.newProeveNr = proeve.proeve_nr
 								})
 							})
 						})
@@ -437,7 +428,6 @@ angular.module('dnalivApp')
 
 					Resultat.update( { resultat_id: $scope.resultat.resultat_id }, $scope.resultat ).$promise.then(function(resultat) {
 						$scope.resultat.sagsNo = response.sagsNo
-						//$scope.reloadData()
 						$timeout(function() {
 							$scope.resultaterInstance.rerender()
 						}, 200)

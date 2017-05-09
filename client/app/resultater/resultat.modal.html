@@ -3,10 +3,10 @@
 		<div class="modal-content">
 			
 			<div class="modal-header">
-				<button type="button" class="close" ng-click="$hide();">×</button>
+				<button type="button" class="close" ng-click="resultatModalClose()">×</button>
 				<h4 class="modal-title"> 
 					<span class="text-muted">
-						#{{ resultat.resultat_id | numberFixedLen:3 }}
+						#{{ resultat.resultat_id | numberFixedLen:4 }}
 					</span>
 					&nbsp;
 					<span class="text-info">
@@ -172,9 +172,8 @@
 							</tr>
 						</table>
 					</div>
-
 			</div>
-			
+
 			<div class="modal-footer">
 				<div class="form-inline form-group" style="float:left;">
 
@@ -188,7 +187,7 @@
 					</select>
 
 				</div>
-				<button type="button" class="btn btn-primary" ng-click="$hide();"> <i class="fa fa-ok"></i>Luk</button> 
+				<button type="button" class="btn btn-primary" ng-click="resultatModalClose()"> <i class="fa fa-ok"></i>Luk</button> 
 			</div>
 		</div>
 	</div>
