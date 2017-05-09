@@ -213,10 +213,10 @@ angular.module('dnalivApp')
 				})
 			})
 		}
-		$scope.$watch('proeve.indsamlingsdato', function(newVal, oldVal) {
+		$scope.$watch('proeve.indsamlingsDato', function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
-			$scope.proeve.indsamlingsdato_fixed = Utils.fixDate($scope.proeve.indsamlingsdato)
+			$scope.proeve.indsamlingsDato_fixed = Utils.fixDate($scope.proeve.indsamlingsDato)
 		})
 		$scope.$watch('proeve.ProeverModtaget', function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return

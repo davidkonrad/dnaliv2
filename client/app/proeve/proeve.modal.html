@@ -47,7 +47,16 @@
 
 								&nbsp;
 						  	<label for="indsamlingsdato" class="normal">Indsamlingsdato</label>
-						    <input type="text" ng-model="proeve.indsamlingsDato" class="form-control input-sm bold" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" id="indsamlingsdato" ng-change="proeve.edited = true" />
+						    <input type="text" 
+									ng-model="proeve.indsamlingsDato" 
+									class="form-control input-sm bold" 
+									data-date-format="dd-MM-yyyy" 
+									size="8" 
+									bs-datepicker 
+									data-timezone="UTC"
+									data-autoclose="true" 
+									id="indsamlingsdato" 
+									ng-change="proeve.edited = true" />
 
 								&nbsp;
 						  	<label for="filtreringsVolumen" class="normal">Filtreringsvolumen</label>
