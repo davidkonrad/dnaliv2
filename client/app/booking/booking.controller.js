@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('OversigtCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'TicketService',
+  .controller('BookingCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'TicketService',
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 			'DTDefaultOptions', '$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 'Db',  
 

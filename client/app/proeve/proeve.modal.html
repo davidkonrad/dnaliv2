@@ -8,7 +8,7 @@
 			</div>
 			<div class="modal-body">
 
-			<div bs-tabs class="control-group col-md-12">
+				<div bs-tabs class="control-group col-md-12 row">
 				<br>
 					<div bs-pane data-title="Stamdata">
 
@@ -111,14 +111,14 @@
 									</tr>
 								</table>
 							</div>
+						</form>
+					</div>
 
-						</div>
-
-						<div bs-pane data-title="Ekstra felter">
-							<form role="form" class="form-horizontal col-md-12">
-								<div ng-repeat="extra in extra_fields" class="form-group">
-							  	<label for="extra{{ extra.extras_id }}" class="control-label col-md-1 normal" title="Type: {{ extra.type }}">{{ extra.caption }} </label>
-									<div class="col-md-11">
+					<div bs-pane data-title="Ekstra felter">
+						<form role="form" class="form-horizontal col-md-12">
+							<div ng-repeat="extra in extra_fields" class="form-group">
+						  	<label for="extra{{ extra.extras_id }}" class="control-label col-md-1 normal" title="Type: {{ extra.type }}">{{ extra.caption }} </label>
+								<div class="col-md-11">
 									<div ng-if="extra.type == 'Dato'" class="col-md-3">
 								    <input ng-if="extra.type == 'Dato'" 
 											type="text" 
@@ -163,19 +163,18 @@
 											rows="3" cols="40"
 											dynamic-model="'proeve.extra' + extra.extras_id" 
 											class="form-control input-sm bold" 
-											ng-change="proeve.edited = true" />
+											ng-change="proeve.edited = true">
 										</textarea>
 									</div>
-								</div>
-								</div>
-								<div class="col-md-12">
-									<br><br><br>
-								</div>
-							</form>
-						</div>
+								</div> <!-- col-md-11 -->
+							</div> <!-- ng-repeat -->
 						</form>
-				</div>
-				</div>
+						<div class="col-md-12">
+							<br><br>
+						</div>
+					</div> <!-- bs-pane -->
+				</div> <!-- bs-tabs -->
+			</div> <!-- modal body -->
 			
 			<div class="modal-footer">
 				<span style="float:left;">
@@ -185,6 +184,8 @@
 				</span>
 				<button type="button" class="btn btn-primary" ng-click="$hide()" id="closeBtn">Luk</button> 
 			</div>
-		</div>
-	</div>
-</div>
+
+		</div> <!-- modal-content -->
+	</div> <!-- modal -dialog -->
+</div> <!-- modal -->
+
