@@ -380,21 +380,21 @@ angular.module('dnalivApp')
 					})
 				}
 			}
-		})
+		});
 
 		$scope.$watch('booking.besoegsDato', function(newVal, oldVal) {
-			if (newVal == oldVal || !$scope.booking.booking_id) return
-			Booking.update({ id: $scope.booking.booking_id }, { besoegsDato: $scope.booking.besoegsDato }).$promise.then(function(booking) {	
-				$scope.booking.besoegsDato_fixed = Utils.fixDate($scope.booking.besoegsDato)
-			})
-		})
+			if (newVal == oldVal || !$scope.booking.booking_id) return;
+			Booking.update({ id: $scope.booking.booking_id }, { besoegsDato: $scope.booking.besoegsDato }).$promise.then(function(booking) {
+				$scope.booking.besoegsDato_fixed = Utils.fixDate($scope.booking.besoegsDato);
+			});
+		});
 
 		$scope.$watch('booking.DatoForBooking', function(newVal, oldVal) {
 			if (newVal == oldVal || !$scope.booking.booking_id) return
 			Booking.update({ id: $scope.booking.booking_id }, { DatoForBooking: $scope.booking.DatoForBooking }).$promise.then(function(booking) {	
 				$scope.booking.DatoForBooking_fixed = Utils.fixDate($scope.booking.DatoForBooking)
 			})
-		})
+		});
 
 		/**
 			klasser
