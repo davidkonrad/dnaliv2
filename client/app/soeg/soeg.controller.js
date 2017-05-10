@@ -431,13 +431,14 @@ angular.module('dnalivApp')
 					analyseDato: Utils.fixDate(resultat.datoForAnalyse),
 					indsamlingsDato: resultat.Proeve && resultat.Proeve.indsamlingsDato ? Utils.fixDate(resultat.Proeve.indsamlingsDato) : '(ikke sat)',
 					indsamlerNavn: resultat.Proeve && resultat.Proeve.indsamlerNavn ? resultat.Proeve.indsamlerNavn : '(ikke sat)',
+					indsamlerInst: resultat.Proeve && resultat.Proeve.indsamlerInstitution ? ', '+resultat.Proeve.indsamlerInstitution : '',
 					institutioner: institutioner
 				}
 
 				var message = ''
 				message += '<b>' + exportItemBase.ProeveId + '</b><br>'
 				message += '<b>'+ exportItemBase.lokalitet + '</b><br>'
-				message += 'Indsamlingdato : <b>'+ exportItemBase.indsamlingsDato + ', ' + exportItemBase.indsamlerNavn +' </b><br>'
+				message += 'Indsamlingdato : <b>'+ exportItemBase.indsamlingsDato + ', ' + exportItemBase.indsamlerNavn + exportItemBase.indsamlerInst + ' </b><br>'
 				message += 'Analysedato : <b>'+ exportItemBase.analyseDato + ', ' + institutioner + '</b><br>'
 
 				taxonMap.forEach(function(item) {
