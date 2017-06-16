@@ -1,6 +1,6 @@
 {
   "name": "dnalivApp",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "server/app.js",
   "dependencies": {
     "express": "~4.0.0",
