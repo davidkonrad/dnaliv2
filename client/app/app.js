@@ -5,7 +5,6 @@ angular.module('dnalivApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'btford.socket-io',
 	'mgcrea.ngStrap', 
 	'cfp.hotkeys',
 	'LocalStorageModule',
