@@ -1,6 +1,6 @@
 <div class="container">
 
-	<div style="float:left;clear:left;width: 345px;xxwhite-space: nowrap;">
+	<div style="float:left;clear:left;width: 345px;">
 		<button class="btn btn-sm pull-right" 
 						style="margin-right:10px;" 
 						ng-class="{ 'btn-primary': soegHasParams() }" 
@@ -9,16 +9,6 @@
 				Download data
 		</button>
 
-		<!--
-		<button class="btn btn-sm pull-right" 
-						style="margin-right:10px;" 
-						ng-class="{ 'btn-primary': soegHasParams() }" 
-						ng-click="downloadCSV()"
-						ng-disabled="!soegHasParams()"
-						ng-click="downloadGBIF()">
-			CSV Download
-		</button>
-		-->
 		<button class="btn btn-sm pull-right" 
 						style="margin-right:10px;" 
 						ng-class="{ 'btn-primary': soegHasParams() }" 
@@ -33,17 +23,12 @@
 		<form class="form-inline" id="formSoeg">
 		  <div class="form-group">
 		  	<label for="sagsNr" class="normal">SagsNr</label>&nbsp;
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="sagsNr" />
-				-->
 				<input type="text" 
 							class="form-control input-sm bold" 
 							placeholder="" 
 							ng-model="soeg.sagsNo"
 						  bs3-typeahead
-							bs3-promise="sagsNoArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
+							bs3-promise="sagsNoArray"/>
 
 		  </div>
 
@@ -56,11 +41,6 @@
 							data-date-format="dd-MM-yyyy" 
 							size="8" 
 							bs-datepicker data-autoclose="true" />
-				<!--
-				<input type="text" ng-model="soeg.analyseDatoFra" class="form-control input-sm bold no-padding" size="7" placeholder="" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
-				-
-				<input type="text" ng-model="soeg.analyseDatoTil" class="form-control input-sm bold no-padding" size="7" placeholder="" data-date-format="dd-MM-yyyy" size="8" bs-datepicker data-autoclose="true" />
-				-->
 		  </div>
 
 		  <div class="form-group">
@@ -70,12 +50,7 @@
 							placeholder="" 
 							ng-model="soeg.institutionsNavn"
 						  bs3-typeahead
-							bs3-promise="institutionArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="institution" />
-				-->
+							bs3-promise="institutionArray" />
 		  </div>
 
 		  <div class="form-group">
@@ -85,41 +60,44 @@
 							placeholder="" 
 							ng-model="soeg.laererNavn"
 						  bs3-typeahead
-							bs3-promise="laererArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="laererNavn" />
-				-->
-		  </div>
-
-			<!--
-		  <div class="form-group">
-		  	<label for="kommune" class="normal">Kommune</label>&nbsp;
-				<input type="text" class="form-control input-sm bold" placeholder="" id="kommune" />
+							bs3-promise="laererArray"/>
 		  </div>
 
 		  <div class="form-group">
-		  	<label for="region" class="normal">Region</label>&nbsp;
-				<input type="text" class="form-control input-sm bold" placeholder="" id="region" />
+		  	<label for="kommune" class="normal">Kommune</label>
+				<input type="text" 
+							class="form-control input-sm bold" 
+							id="kommune"
+							placeholder="" 
+							ng-model="soeg.kommune"
+						  bs3-typeahead
+							bs3-promise="kommuneArray"
+							bs3-afterSelect="getKommunePolygon"/>
 		  </div>
-			-->
+
+		  <div class="form-group">
+		  	<label for="region" class="normal">Region</label>
+				<input type="text" 
+							class="form-control input-sm bold" 
+							id="region"
+							placeholder="" 
+							ng-model="soeg.region"
+						  bs3-typeahead
+							bs3-promise="regionArray"
+							bs3-afterSelect="loadRegion"/>
+		  </div>
+
 
 			<h4>Prøvedata</h4>
 
 		  <div class="form-group">
 		  	<label for="proeveId" class="normal">PrøveID</label>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="proeveId" />
-				-->
 				<input type="text" 
 							class="form-control input-sm bold" 
 							placeholder="" 
 							ng-model="soeg.proeveId"
 						  bs3-typeahead
-							bs3-promise="proeveIdArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
+							bs3-promise="proeveIdArray"/>
 
 		  </div>
 
@@ -132,103 +110,37 @@
 
 		  <div class="form-group">
 		  	<label for="indsamler" class="normal">Indsamler</label>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamler" />
-				-->
 				<input type="text" 
 							class="form-control input-sm bold" 
 							placeholder="" 
 							ng-model="soeg.indsamlerNavn"
 						  bs3-typeahead
-							bs3-promise="indsamlerArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
+							bs3-promise="indsamlerArray" />
 
 		  </div>
 
 		  <div class="form-group">
 		  	<label for="indsamlerInstitution" class="normal">Institution</label>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerInstitution" />
-				-->
 				<input type="text" 
 							class="form-control input-sm bold" 
 							placeholder="" 
 							ng-model="soeg.indsamlerInstitution"
 						  bs3-typeahead
-							bs3-promise="indsamlerInstitutionArray"
-							XXXbs3-showHintOnFocus="true"
-				/>
+							bs3-promise="indsamlerInstitutionArray"/>
 
 		  </div>
-
-		  <div class="form-group">
-		  	<label for="kommune" class="normal">Kommune</label>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="indsamlerKommune" />
-				-->
-				<input type="text" 
-							class="form-control input-sm bold" 
-							id="kommune"
-							placeholder="" 
-							ng-model="soeg.kommune"
-						  bs3-typeahead
-							bs3-promise="kommuneArray"
-							bs3-afterSelect="getKommunePolygon"
-							XXXbs3-showHintOnFocus="true"
-				/>
-
-		  </div>
-
-		  <div class="form-group">
-		  	<label for="region" class="normal">Region</label>
-				<!--
-				<input type="text" class="form-control input-sm bold" placeholder="" id="region" />
-				-->
-				<input type="text" 
-							class="form-control input-sm bold" 
-							id="region"
-							placeholder="" 
-							ng-model="soeg.region"
-						  bs3-typeahead
-							bs3-promise="regionArray"
-							bs3-afterSelect="loadRegion"
-							XXXbs3-showHintOnFocus="true"
-				/>
-
-		  </div>
-
-<!---
-			<h4>Artsdata</h4>
-
-		  <div class="form-group">
-		  	<label for="artDk" class="normal">Art (dansk navn)</label>
-				<select ng-model="soeg.taxon_id" class="form-control input-sm">
-					<option></option>
-					<option ng-repeat="taxon in taxons" value="{{ taxon.taxon_id }}"> {{ taxon.taxon_navn_dk }}</option>
-				</select>
-
-		  </div>
-
-		  <div class="form-group">
-		  	<label for="artLatin" class="normal">Art (latin)</label>
-				<input type="text" class="form-control input-sm bold" placeholder="" id="artLatin" />
-		  </div>
-
-		  <div class="form-group">
-				<div class="checkbox">
-			  	<label for="paalidelig" class="normal">Pålidelig / alt</label>
-					<input type="checkbox" style="position:relative;top:-3px;" class="form-control input-sm bold" placeholder="" id="paalidelig" />
-				</div>
-		  </div>
---->
 
 		</form>
 	</div>
 
-	<div style="float:left;clear:none;width:750px;" xxbs-tabs xxbs-active-pane="tabs.activeTab">
-		<div xxbs-pane data-title="Resultater" id="tab-resultater">
-			<table datatable="ng" class="table table-striped resultTable" dt-options="searchOptions" dt-columns="searchColumns" dt-instance="searchInstance" xxdt-column-defs="searchColumnDefs" style="max-width:100% !important;">
+	<div style="float:left;clear:none;width:750px;">
+		<div data-title="Resultater" id="tab-resultater">
+			<table datatable="ng" 
+				class="table table-striped resultTable" 
+				dt-options="searchOptions" 
+				dt-columns="searchColumns" 
+				dt-instance="searchInstance" 
+				style="max-width:100% !important;">
 				<tbody>
 					<tr ng-repeat="result in searchResults" >
 						<td> {{ result.proeve_nr }} </td>
@@ -240,10 +152,7 @@
 			</table>
 		</div>
 
-		<div xxbs-pane data-title="Kort" id="tab-kort">
-			<!--
-			<div id="proeve-map" style="height: 600px; width:100%;"></div>
-			-->
+		<div data-title="Kort" id="tab-kort">
 			<leaflet center="center" geojson="geojson" layers="layers" markers="markers" event-broadcast="events" id="proeve-map" style="height: 600px; width:100%;" style="border:1px solid #ccc;border-radius:5px;"></leaflet>
 			<i class="fa fa-check green"></i>&nbsp;Fundet i eDNA
 			&nbsp;&nbsp;&nbsp;
@@ -252,27 +161,5 @@
 			<i class="fa fa-question"></i>&nbsp;eDNA upålidelig
 		</div>
 
-<!---
-		<div bs-pane data-title="Arter">
-			<br>
-			<form class="form-inline" role="form">
-			  <div class="form-group checkbox">
-					<tags-input ng-model="arter" add-on-paste="true" placeholder="Tilføj art" class="col-sm-10" >
-			      <auto-complete source="taxonTags" min-length="1" ></auto-complete>
-			    </tags-input>
-
-					&nbsp;&nbsp;
-					<input type="checkbox" ng-model="arterFound" />
-			    <label for="arterFound" class="normal">Undersøgt og fundet</label>
-					&nbsp;&nbsp;
-					<input type="checkbox" ng-model="arterNotFound" />
-			    <label for="arterNotFound" class="normal">Undersøgt og ej fundet</label>
-			  </div>
-			</form>
-			<div class="col-sm-10" id="arter-map" style="height: 600px;"></div>
-		</div>
---->
-
 	</div>
-
 </div>
