@@ -241,10 +241,12 @@ angular.module('dnalivApp')
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
 		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
-			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10' ]
+			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
+			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20' ]
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
-			if (!$scope.proeve || !$scope.proeve.edited) return
-			$scope.saveProeve()
+			if (newVal == oldVal) return;
+			if (!$scope.proeve || !$scope.proeve.edited) return;
+			$scope.saveProeve();
 		})
 
 		/* modal events, declare only once */
