@@ -20,6 +20,7 @@ angular.module('dnalivApp', [
 	'bootstrap3-typeahead'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
+		L.Icon.Default.imagePath = '../assets/';
     $routeProvider
       .otherwise({
         redirectTo: '/'

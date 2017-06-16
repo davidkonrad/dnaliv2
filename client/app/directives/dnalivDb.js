@@ -122,7 +122,7 @@ angular.module('dnalivApp')
 			init: function() {
 				var deferred = $q.defer()
 				if (initialized) {
-					console.log('Db already initialized')
+					//console.log('Db already initialized')
 					deferred.resolve(false)
 				}
 			
@@ -147,7 +147,7 @@ angular.module('dnalivApp')
 
 				var stop = $interval(function() {
 					if (bookings && taxons && lokalitet_spot && proever) {
-						console.log('Db initialized first time')
+						//console.log('Db initialized first time')
 						$interval.cancel(stop);
 						initialized = true
 						deferred.resolve(true)
