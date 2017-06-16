@@ -7,7 +7,7 @@ angular.module('dnalivApp')
 	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Proeve, Booking, TicketService,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, Db, leafletData) {
 
-		Db.init()
+		Db.init();
 
 		angular.extend($scope, {
 			events: {
@@ -167,12 +167,7 @@ angular.module('dnalivApp')
 					resultat.Proeve = items
 				})
 				resultat.Booking = getBooking(resultat.booking_id)
-				/*
-				Booking.get( { id: resultat.booking_id }).$promise.then(function(items) {
-					resultat.Booking = items
-				})
-				*/
-				
+
 				return resultat
 			})
 
@@ -216,12 +211,12 @@ angular.module('dnalivApp')
 
 		$scope.$watchGroup(['soeg.kommune', 'soeg.region'], function(newVal, oldVal){
 			$scope.soeg.jsonIsReady = null;
-			if (newVal == oldVal) return
+			if (newVal == oldVal) return;
 			if ($scope.soegHasParams()) {
 				var watch = $scope.$watch('soeg.jsonIsReady', function(newVal, oldVal) {
 					if (newVal) {
-						watch() //clear $watch
-						$scope.performSearch()
+						watch(); //clear $watch
+						$scope.performSearch();
 					}
 				})
 			}
@@ -239,7 +234,7 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn(0).withTitle('PrøveID'),
       DTColumnBuilder.newColumn(1).withTitle('Lokalitet'),
       DTColumnBuilder.newColumn(2).withOption('type', 'dna').withTitle('Analysedato'),
-      DTColumnBuilder.newColumn(3).withTitle('Art'),
+      DTColumnBuilder.newColumn(3).withTitle('Art')
 		]
 
 		/** 
@@ -247,7 +242,7 @@ angular.module('dnalivApp')
 		*/
 		$scope.performSearch = function() {
 			$scope.searchResults = [
-				{ lokalitet: 'test', analyseDato: 'qwerty' }
+				{ lokalitet: 'Ukendt', analyseDato: 'Ukendt' }
 			]
 
 			var soeg = $scope.soeg,
@@ -274,7 +269,7 @@ angular.module('dnalivApp')
 				if (analyseDatoFra <= resAnalyseDato && analyseDatoTil >= resAnalyseDato) {
 					return resultat
 				}
-			})
+			});
 
 			//indsamlingsdatoFra
 			if (indsamlingsDatoFra) filter = filter.filter(function(resultat) {
@@ -282,21 +277,23 @@ angular.module('dnalivApp')
 				if (indsamlingsDatoFra <= resIndsamlingsDato) {
 					return resultat
 				}
-			})
+			});
+
 			//indsamlingsdatoTil
 			if (indsamlingsDatoTil) filter = filter.filter(function(resultat) {
 				var resIndsamlingsDato = resultat.Proeve ? Date.parse(resultat.Proeve.indsamlingsDato) : 0;
 				if (indsamlingsDatoTil >= resIndsamlingsDato) {
 					return resultat
 				}
-			})
+			});
 
 			//sagsNo
 			if (sagsNo) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.sagsNo === sagsNo) {
 					return resultat
 				}
-			})
+			});
+
 			//institutionsnavn
 			if (institutionsNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
@@ -304,7 +301,8 @@ angular.module('dnalivApp')
 						if (institutionsNavn == resultat.Booking.Klasse[i].institutionsnavn) return resultat
 					}
 				}
-			})
+			});
+
 			//laererNavn
 			if (laererNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
@@ -312,13 +310,15 @@ angular.module('dnalivApp')
 						if (laererNavn == resultat.Booking.Klasse[i].laererNavn) return resultat
 					}
 				}
-			})
+			});
+
 			//kommune
 			if (kommune) filter = filter.filter(function(resultat) {
 				if (resultat.Proeve && resultat.Proeve.Lokalitet) {
 					return $scope.pointInGeoJSON(resultat.Proeve.Lokalitet.latitude, resultat.Proeve.Lokalitet.longitude)
 				}
-			})
+			});
+
 			//region
 			if (region) filter = filter.filter(function(resultat) {
 				if (resultat.Booking && resultat.Booking.Klasse) {
@@ -326,7 +326,8 @@ angular.module('dnalivApp')
 						if (region == resultat.Booking.Klasse[i].region) return resultat
 					}
 				}
-			})
+			});
+
 			//taxon
 			if (taxon_id) filter = filter.filter(function(resultat) {
 				if (resultat.Resultat_items && resultat.Resultat_items.length) {
@@ -334,7 +335,7 @@ angular.module('dnalivApp')
 						if (taxon_id == resultat.Resultat_items[i].taxon_id) return resultat
 					}
 				}
-			})
+			});
 
 			//.................
 
@@ -343,31 +344,31 @@ angular.module('dnalivApp')
 				if (resultat.Proeve && resultat.Proeve.proeve_nr) {
 					if (resultat.Proeve.proeve_nr == proeveId) return resultat
 				}
-			})
+			});
+
 			//indsamlerNavn
 			if (indsamlerNavn) filter = filter.filter(function(resultat) {
 				if (resultat.Proeve && resultat.Proeve.indsamlerNavn == indsamlerNavn) {
 					return resultat
 				}
-			})
+			});
+
 			//indsamlerInstitution
 			if (indsamlerInstitution) filter = filter.filter(function(resultat) {
 				if (resultat.Proeve && resultat.Proeve.indsamlerInstitution) {
 					if (resultat.Proeve.indsamlerInstitution == indsamlerInstitution) return resultat
 				}
-			})
+			});
 
 			//create dataset
-			var dataset = [], 
-					exportDataset = [],
-					taxon = null;
+			var dataset = [];
+			var exportDataset = [];
+			var taxon = null;
 
-			$scope.markers = []
+			$scope.markers = [];
 
 			filter.forEach(function(resultat) {
 				dataset.push({
-					//taxon_navn_dk: taxon.taxon_navn_dk,
-					//taxon_navn: taxon.taxon_navn,
 					proeve_nr: resultat.Proeve ? resultat.Proeve.proeve_nr : '',
 					lokalitet: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.presentationString : '',
 					lat: resultat.Proeve && resultat.Proeve.Lokalitet ? resultat.Proeve.Lokalitet.latitude : null,
@@ -413,7 +414,6 @@ angular.module('dnalivApp')
 
 				//construct basic exportItem to use for exportDataset
 				var proeve_id = resultat.Proeve ? resultat.Proeve.proeve_id : null;
-				//var proeve_nr = resultat.Proeve ? resultat.Proeve.proeve_nr : null;
 						
 				var institutioner = resultat.Booking && resultat.Booking.Klasse 
 					? resultat.Booking.Klasse.map(function(klasse) {
@@ -435,14 +435,14 @@ angular.module('dnalivApp')
 					institutioner: institutioner
 				}
 
-				var message = ''
-				message += '<b>' + exportItemBase.ProeveId + '</b><br>'
-				message += '<b>'+ exportItemBase.lokalitet + '</b><br>'
-				message += 'Indsamlingdato : <b>'+ exportItemBase.indsamlingsDato + ', ' + exportItemBase.indsamlerNavn + exportItemBase.indsamlerInst + ' </b><br>'
-				message += 'Analysedato : <b>'+ exportItemBase.analyseDato + ', ' + institutioner + '</b><br>'
+				var message = '';
+				message += '<b>' + exportItemBase.ProeveId + '</b><br>';
+				message += '<b>'+ exportItemBase.lokalitet + '</b><br>';
+				message += 'Indsamlingdato : <b>'+ exportItemBase.indsamlingsDato + ', ' + exportItemBase.indsamlerNavn + exportItemBase.indsamlerInst + ' </b><br>';
+				message += 'Analysedato : <b>'+ exportItemBase.analyseDato + ', ' + institutioner + '</b><br>';
 
 				taxonMap.forEach(function(item) {
-					var exportItem = angular.copy(exportItemBase)
+					var exportItem = angular.copy(exportItemBase);
 		
 					exportItem.positivfound = item.found
 					exportItem.paalidelig = item.paalidelig
@@ -454,7 +454,6 @@ angular.module('dnalivApp')
 					exportItem.taxon = item.taxon
 					exportItem.taxon_dk = item.taxon_dk
 					
-
 					if (item.found && item.paalidelig) {
 						message += '<i class="fa fa-check green"></i>&nbsp;' 
 					} else if (!item.found && item.paalidelig) {
@@ -536,94 +535,10 @@ angular.module('dnalivApp')
 			}
 		}
 
-		/*
-		$scope.loadData = function() {
-			Proeve.query().$promise.then(function(proever) {
-				proever.forEach(function(proeve) {
-					if (proeve.Resultat && proeve.Resultat.length>0
-							&& proeve.Lokalitet
-							&& proeve.Lokalitet.latitude != ''
-							&& proeve.Lokalitet.longitude != '') {
-						
-						var bookingKlasse = $scope.getBookingKlasse(proeve.Resultat[0].booking_id)
-						var klasser = ''
-						var laerer = []
-						if (proeve.Resultat[0].booking_id) bookingKlasse.forEach(function(klasse) {
-							laerer.push(klasse.laererNavn)
-							if (klasser != '') klasser+='<br>'
-							klasser += klasse.institutionsnavn +', '+klasse.laererNavn + '&nbsp;&nbsp;&nbsp;'
-						})
-
-						var popup = ''
-						popup += '<h3>'+proeve.Lokalitet.presentationString+'</h3>'
-	
-						popup += '<table class="visualisering-popup">'
-						popup += '<tr><td>PrøveID</td><td>'+ proeve.proeve_nr +'</td></tr>'
-						popup += '<tr><td>Geolok.</td><td>'+ proeve.Lokalitet.latitude + ',' + proeve.Lokalitet.longitude +'</td></tr>'
-	
-						if (proeve.Indsamler && !~laerer.indexOf(proeve.Indsamler)) {
-							popup += '<tr><td>Indsamler</td><td>'+ proeve.Indsamler +'</td></tr>'
-						}
-
-						if (klasser != '') popup += '<tr><td>Institution</td><td>'+ klasser +'</td></tr>'
-						popup += '<tr><td>Indsamlingsdato</td><td>'+ Utils.fixDate(proeve.indsamlingsdato) +'</td></tr>'
-						popup += '<tr><td>Analysedato</td><td>'+ Utils.fixDate(proeve.Resultat[0].datoForAnalyse) +'</td></tr>'
-						popup += '</table>'
-						popup += '<br>'
-						popup += '<table>'
-						//
-						Resultat_item.query({ where: { resultat_id: proeve.Resultat[0].resultat_id }}).$promise.then(function(resultat_items) {	
-							var processedTaxons = [], found = [], notFound = [];
-							resultat_items.forEach(function(item) {
-								if (item.eDNA && item.database_result) {
-									if (found.indexOf(item.taxon_id) == -1) {
-										found.push(item.taxon_id)
-										var taxon  = $scope.getTaxon(item.taxon_id)
-										popup += '<tr><td><i class="fa fa-check green">&nbsp;</td><td>'+taxon.taxon_navn_dk+' <em style="color:gray;">'+taxon.taxon_navn+'</em></td></tr>'
-									}
-								}
-							})	
-
-							popup += '</table>'
-							popup += '<br>'
-
-							var marker = new L.marker(
-								[parseFloat(proeve.Lokalitet.latitude), parseFloat(proeve.Lokalitet.longitude)],
-								{ icon: redIcon }
-							).addTo(proeveMap)
-						   .bindPopup(popup)
-
-						})
-					} else if (proeve.Lokalitet	&& parseFloat(proeve.Lokalitet.latitude)>0 && parseFloat(proeve.Lokalitet.longitude)>0) {
-
-						var popup = ''
-						popup += '<h3>'+proeve.Lokalitet.presentationString+'</h3>'
-
-						popup += '<table class="visualisering-popup">'
-						popup += '<tr><td>PrøveID</td><td>'+ proeve.proeve_nr +'</td></tr>'
-						popup += '<tr><td>Geolok.</td><td>'+ proeve.Lokalitet.latitude+',' + proeve.Lokalitet.longitude +'</td></tr>'
-						popup += '<tr><td>Indsamler</td><td>'+ proeve.Indsamler +'</td></tr>'
-						popup += '<tr><td>Indsamlingsdato</td><td>'+ Utils.fixDate(proeve.indsamlingsdato) +'</td></tr>'
-						popup += '</table>'
-						popup += '<br>'
-	
-						var marker = new L.marker(
-								[parseFloat(proeve.Lokalitet.latitude), parseFloat(proeve.Lokalitet.longitude)]
-								//{ icon: grayIcon }
-							).addTo(proeveMap)
-						   .bindPopup(popup)
-					}					
-				})
-			})
-		}
-		*/
 
 		//taxon art DK
-		$scope.arter = []
+		$scope.arter = [];
 			
-		$scope.filterTaxons = function(query) {
-		}
-
 		/**
 			geoJSON
 		*/
@@ -777,5 +692,5 @@ angular.module('dnalivApp')
 			a.click();
 		}
 
-	}]);
+}]);
 
