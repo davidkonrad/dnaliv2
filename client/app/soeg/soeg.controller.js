@@ -661,6 +661,12 @@ angular.module('dnalivApp')
 			]]
 			for (var i=0, l=$scope.exportDataset.length; i<l; i++) {
 				var item = $scope.exportDataset[i];
+
+				//get rid of null values
+				for (var prop in item) {
+					if (item[prop] == null) item[prop] = '';
+				}
+
 				csv.push([
 					(i+1).toString().quote(),
 					item.ProeveId.quote(),
@@ -671,7 +677,7 @@ angular.module('dnalivApp')
 					item.lng.toString().quote(),
 					item.taxon.quote(),
 					item.taxon_dk.quote(),
-					item.eDNA && item.paalidelig ? 'present' : 'absent',
+					item.eDNA && item.paalidelig ? 'present'.quote() : 'absent'.quote(),
 					item.indsamlingsDato.quote(),
 					item.analyseDato.quote()
 				])

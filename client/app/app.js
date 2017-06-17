@@ -23,6 +23,7 @@ angular.module('dnalivApp', [
 
 		//L.Icon.Default.imagePath = 'http://dnaogliv.snm.ku.dk/assets/';
 		L.Icon.Default.imagePath = 'public/bower_components/leaflet/dist/images';
+		//L.Icon.Default.imagePath = '../assets/';
 
     $routeProvider
       .otherwise({
