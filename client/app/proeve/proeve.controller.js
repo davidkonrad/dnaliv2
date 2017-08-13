@@ -214,10 +214,13 @@ angular.module('dnalivApp')
 
 		$scope.saveProeve = function() {
 			Proeve.update({ id: $scope.proeve.proeve_id }, $scope.proeve).$promise.then(function(proeve) {	
-				$scope.proeve.edited = false
+				$scope.proeve.edited = false;
+				/*
+				not nessecary, is reloaded when the modal is closed
 				$timeout(function() {
 					$scope.dtProeveInstance.DataTable.draw()
 				})
+				*/
 			})
 		}
 		$scope.$watch('proeve.indsamlingsDato', function(newVal, oldVal) {
@@ -245,9 +248,10 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
-		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.Mailadresse', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl',
+		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
-			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20' ]
+			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20',
+			'proeve.extra21','proeve.extra22','proeve.extra23','proeve.extra24','proeve.extra25','proeve.extra26','proeve.extra27','proeve.extra28','proeve.extra29','proeve.extra30']
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
 			if (newVal == oldVal) return;
 			if (!$scope.proeve || !$scope.proeve.edited) return;
