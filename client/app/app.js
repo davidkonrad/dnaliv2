@@ -14,6 +14,7 @@ angular.module('dnalivApp', [
 	'datatables.buttons',
 	'datatables.bootstrap',
 	'datatables.fixedheader',
+	'datatables.responsive',
 	'datatables.options',
 	'dndLists',
 	'ngTagsInput',
