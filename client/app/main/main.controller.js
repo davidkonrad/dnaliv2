@@ -1,11 +1,25 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('MainCtrl', ['$scope', '$compile', '$timeout', 'TicketService', 'Lokalitet', 'Proeve', 'Db', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
+  .controller('MainCtrl', ['$scope', '$q', '$timeout', 'TicketService', 'Lokalitet', 'Proeve', 'Db', 'Utils', 'Booking', 'Resultat_item', 'Resultat', 'Taxon', 'Lokalitet_spot',
 						'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'leafletMarkersHelpers',
 
-	 function($scope, $compile, $timeout, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
+	 function($scope, $q, $timeout, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, leafletMarkersHelpers) {
+
+/*		
+		$scope.resultat_items = undefined;
+		var proever = undefined;
+			
+		function init() {
+			var	deferred = $q.defer();
+
+			function check() {
+				if 		      deferred.resolve();
+
+
+      return deferred.promise;
+*/
 
 
 		//new load of data
@@ -13,9 +27,7 @@ angular.module('dnalivApp')
 			$scope.resultat_items = items
 		})
 
-
 		Resultat.query().$promise.then(function(items) {
-
 			function lokalitetByResultatId(resultat_id) {
 				var proever = Db.proever()
 				for (var i=0, l=proever.length; i<l; i++) {

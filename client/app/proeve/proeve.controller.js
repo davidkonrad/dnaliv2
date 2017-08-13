@@ -225,6 +225,11 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.indsamlingsDato_fixed = Utils.fixDate($scope.proeve.indsamlingsDato)
 		})
+		$scope.$watch('proeve.modtagelsesDato', function(newVal, oldVal) {
+			if (!$scope.proeve || !$scope.proeve.edited) return
+			$scope.saveProeve()
+			$scope.proeve.modtagelsesDato_fixed = Utils.fixDate($scope.proeve.modtagelsesDato)
+		})
 		$scope.$watch('proeve.ProeverModtaget', function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
@@ -528,7 +533,6 @@ angular.module('dnalivApp')
 			$scope.proeveModal.hide()
 			$scope.lock(false)
 			$location.path('/resultater/'+resultat.resultat_id)
-			//$window.location.href = '/resultater/'+resultat.resultat_id
 		}
 
 		$scope.addResultat = function() {
