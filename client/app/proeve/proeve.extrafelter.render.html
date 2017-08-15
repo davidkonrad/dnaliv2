@@ -17,6 +17,7 @@
 								    <input ng-if="extra.type == 'Heltal'" 
 											only-numbers type="text" 
 											size="10" 
+											select-on-click
 											dynamic-model="'proeve.extra' + extra.extras_id" 
 											class="form-control input-sm bold" 
 											ng-change="proeve.edited = true" />
@@ -26,6 +27,7 @@
 								    <input ng-if="extra.type == 'Kommatal'" 
 											only-digits type="text" 
 											size="10" 
+											select-on-click
 											dynamic-model="'proeve.extra' + extra.extras_id" 
 											class="form-control input-sm bold" 
 											ng-change="proeve.edited = true" />
@@ -34,6 +36,7 @@
 									<div ng-if="extra.type == 'Tekst (50)'" class="col-md-12">
 								    <input ng-if="extra.type == 'Tekst (50)'" 
 											type="text" size="40" 
+											select-on-click
 											dynamic-model="'proeve.extra' + extra.extras_id" 
 											class="form-control input-sm bold" 
 											ng-change="proeve.edited = true" />
@@ -42,6 +45,7 @@
 									<div ng-if="extra.type == 'Tekst (memo)'" class="col-md-12">
 								    <textarea ng-if="extra.type == 'Tekst (memo)'" 
 											rows="3" cols="40"
+											select-on-click
 											dynamic-model="'proeve.extra' + extra.extras_id" 
 											class="form-control input-sm bold" 
 											ng-change="proeve.edited = true">
