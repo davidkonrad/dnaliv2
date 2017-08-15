@@ -143,16 +143,16 @@ angular.module('dnalivApp')
 							extra19: proever[i].extra19,
 							extra20: proever[i].extra20,
 
-							extra21: proever[i].extra11,
-							extra22: proever[i].extra12,
-							extra23: proever[i].extra13,
-							extra24: proever[i].extra14,
-							extra25: proever[i].extra15,
-							extra26: proever[i].extra16,
-							extra27: proever[i].extra17,
-							extra28: proever[i].extra18,
-							extra29: proever[i].extra19,
-							extra30: proever[i].extra20
+							extra21: proever[i].extra21,
+							extra22: proever[i].extra22,
+							extra23: proever[i].extra23,
+							extra24: proever[i].extra24,
+							extra25: proever[i].extra25,
+							extra26: proever[i].extra26,
+							extra27: proever[i].extra27,
+							extra28: proever[i].extra28,
+							extra29: proever[i].extra29,
+							extra30: proever[i].extra30
 
 					}
 				
