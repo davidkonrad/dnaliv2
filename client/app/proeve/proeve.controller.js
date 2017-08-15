@@ -152,7 +152,19 @@ angular.module('dnalivApp')
 							extra27: proever[i].extra27,
 							extra28: proever[i].extra28,
 							extra29: proever[i].extra29,
-							extra30: proever[i].extra30
+							extra30: proever[i].extra30,
+
+							extra31: proever[i].extra31,
+							extra32: proever[i].extra32,
+							extra33: proever[i].extra33,
+							extra34: proever[i].extra34,
+							extra35: proever[i].extra35,
+							extra36: proever[i].extra36,
+							extra37: proever[i].extra37,
+							extra38: proever[i].extra38,
+							extra39: proever[i].extra39,
+							extra40: proever[i].extra40
+
 
 					}
 				
@@ -264,7 +276,8 @@ angular.module('dnalivApp')
 		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.elueringsVolumen', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen', 'proeve.dataset',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
 			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20',
-			'proeve.extra21','proeve.extra22','proeve.extra23','proeve.extra24','proeve.extra25','proeve.extra26','proeve.extra27','proeve.extra28','proeve.extra29','proeve.extra30']
+			'proeve.extra21','proeve.extra22','proeve.extra23','proeve.extra24','proeve.extra25','proeve.extra26','proeve.extra27','proeve.extra28','proeve.extra29','proeve.extra30',
+			'proeve.extra31','proeve.extra32','proeve.extra33','proeve.extra34','proeve.extra35','proeve.extra36','proeve.extra37','proeve.extra38','proeve.extra39','proeve.extra40']
 		$scope.$watchGroup(fields, function(newVal, oldVal) {
 			if (newVal == oldVal) return;
 			if (!$scope.proeve || !$scope.proeve.edited) return;

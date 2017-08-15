@@ -147,7 +147,18 @@
 
 					<div bs-pane data-title="Ekstra felter 21-30">
 						<form role="form" class="form-horizontal col-md-12">
-							<div ng-repeat="extra in extra_fields" ng-if="$index > 19" class="form-group">
+							<div ng-repeat="extra in extra_fields" ng-if="$index > 19 && $index < 30" class="form-group">
+								<div ng-include="'app/proeve/proeve.extrafelter.render.html'"></div>
+							</div> <!-- ng-repeat -->
+						</form>
+						<div class="col-md-12">
+							<br>
+						</div>
+					</div> <!-- bs-pane -->
+
+					<div bs-pane data-title="Ekstra felter 31-40">
+						<form role="form" class="form-horizontal col-md-12">
+							<div ng-repeat="extra in extra_fields" ng-if="$index > 29" class="form-group">
 								<div ng-include="'app/proeve/proeve.extrafelter.render.html'"></div>
 							</div> <!-- ng-repeat -->
 						</form>

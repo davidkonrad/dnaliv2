@@ -204,6 +204,47 @@ module.exports = function(sequelize, DataTypes) {
 		extra30 : {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		//31-40
+		extra31 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra32 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra33 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra34 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra35 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra36 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra37 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra38 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra39 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra40 : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
 
 	}, {
