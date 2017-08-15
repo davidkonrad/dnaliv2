@@ -141,7 +141,18 @@ angular.module('dnalivApp')
 							extra17: proever[i].extra17,
 							extra18: proever[i].extra18,
 							extra19: proever[i].extra19,
-							extra20: proever[i].extra20
+							extra20: proever[i].extra20,
+
+							extra21: proever[i].extra11,
+							extra22: proever[i].extra12,
+							extra23: proever[i].extra13,
+							extra24: proever[i].extra14,
+							extra25: proever[i].extra15,
+							extra26: proever[i].extra16,
+							extra27: proever[i].extra17,
+							extra28: proever[i].extra18,
+							extra29: proever[i].extra19,
+							extra30: proever[i].extra20
 
 					}
 				
@@ -238,17 +249,19 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.ProeverModtaget_fixed = Utils.fixDate($scope.proeve.ProeverModtaget)
 		})
-		$scope.$watch('proeve.DatoForEkst', function(newVal, oldVal) {
+		$scope.$watch('proeve.ekstraktionsDato', function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
-			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
+			$scope.proeve.ekstraktionsDato_fixed = Utils.fixDate($scope.proeve.ekstraktionsDato)
 		})
+		/*
 		$scope.$watch('proeve.dataset', function(newVal, oldVal) {
 			if (!$scope.proeve || !$scope.proeve.edited) return
 			$scope.saveProeve()
 			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
 		})
-		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.ElueretI', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen',
+		*/
+		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.elueringsVolumen', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen', 'proeve.dataset',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
 			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20',
 			'proeve.extra21','proeve.extra22','proeve.extra23','proeve.extra24','proeve.extra25','proeve.extra26','proeve.extra27','proeve.extra28','proeve.extra29','proeve.extra30']

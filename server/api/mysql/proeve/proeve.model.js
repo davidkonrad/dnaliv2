@@ -123,6 +123,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: true
     },
+		//11-20
 		extra11 : {
       type: DataTypes.STRING,
       allowNull: true
@@ -162,8 +163,48 @@ module.exports = function(sequelize, DataTypes) {
 		extra20 : {
       type: DataTypes.STRING,
       allowNull: true
+    },
+		//21-30
+		extra21 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra22 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra23 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra24 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra25 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra26 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra27 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra28 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra29 : {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+		extra30 : {
+      type: DataTypes.STRING,
+      allowNull: true
     }
-
 
 	}, {
 		tableName: 'proeve',
