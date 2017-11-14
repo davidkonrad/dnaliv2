@@ -188,7 +188,6 @@ angular.module('dnalivApp')
 		})
 
 		$scope.arter = []
-
 		$scope.soeg = {
 		}
 
