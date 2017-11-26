@@ -266,7 +266,8 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.ekstraktionsDato_fixed = Utils.fixDate($scope.proeve.ekstraktionsDato)
 		})
-		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.elueringsVolumen', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen', 'proeve.dataset',
+		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.elueringsVolumen', 
+			'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen', 'proeve.dataset', 'proeve.filtreringsVolumen',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
 			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20',
 			'proeve.extra21','proeve.extra22','proeve.extra23','proeve.extra24','proeve.extra25','proeve.extra26','proeve.extra27','proeve.extra28','proeve.extra29','proeve.extra30',
