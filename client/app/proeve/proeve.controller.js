@@ -266,13 +266,6 @@ angular.module('dnalivApp')
 			$scope.saveProeve()
 			$scope.proeve.ekstraktionsDato_fixed = Utils.fixDate($scope.proeve.ekstraktionsDato)
 		})
-		/*
-		$scope.$watch('proeve.dataset', function(newVal, oldVal) {
-			if (!$scope.proeve || !$scope.proeve.edited) return
-			$scope.saveProeve()
-			$scope.proeve.DatoForEkst_fixed = Utils.fixDate($scope.proeve.DatoForEkst)
-		})
-		*/
 		var fields = ['proeve.Indsamler','proeve.indsamlerInstitution','proeve.indsamlerEmail', 'proeve.elueringsVolumen', 'proeve.ngUl', 'proeve.AntalMl', 'proeve.aliquotVolumen', 'proeve.dataset',
 			'proeve.extra1', 'proeve.extra2', 'proeve.extra3', 'proeve.extra4', 'proeve.extra5', 'proeve.extra6', 'proeve.extra7', 'proeve.extra8', 'proeve.extra9', 'proeve.extra10',
 			'proeve.extra11','proeve.extra12','proeve.extra13','proeve.extra14','proeve.extra15','proeve.extra16','proeve.extra17','proeve.extra18','proeve.extra19','proeve.extra20',
@@ -382,6 +375,21 @@ angular.module('dnalivApp')
 		])
 		.withLanguage(Utils.dataTables_daDk);
 
+		//AnalyserDatoer custom sort
+		jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+  		"analyseDato-pre": function(a) {
+				var d = !a || a.trim() == '' ? false : a.split('<br>')[0];
+				if (!d) {
+					return Number.NEGATIVE_INFINITY
+				} else {
+					d = d.split('-');
+					d = Date.parse(d[1]+'/'+d[0]+'/'+d[2]);
+					return d.valueOf();
+				}
+		  }
+		});
+		//-------
+
 		$scope.proeveColumns = [
       DTColumnBuilder.newColumn('proeve_id').withTitle('#'),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
@@ -399,7 +407,7 @@ angular.module('dnalivApp')
       DTColumnBuilder.newColumn('elueringsVolumen').withTitle('Elueringsvolumen'),
       DTColumnBuilder.newColumn('ngUl').withTitle('DNA ng/µl'),
       DTColumnBuilder.newColumn('aliquotVolumen').withTitle('Aliquot volumen'),
-			DTColumnBuilder.newColumn('analyseDatoer').withTitle('Analysedatoer'),
+			DTColumnBuilder.newColumn('analyseDatoer').withOption('type', 'analyseDato').withTitle('Analysedatoer'),
 
       DTColumnBuilder.newColumn('dataset').withTitle('Datasæt'),
       DTColumnBuilder.newColumn('kommentar_fixed').withOption('class', 'dt-note').withOption('type', 'locale-compare').withTitle('Note')
