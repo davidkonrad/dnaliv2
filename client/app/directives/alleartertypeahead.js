@@ -26,7 +26,7 @@ angular.module('dnalivApp')
 					}, 
 					items : 20,
 					source: function(query, process) {
-						var url='http://allearter-databasen.dk/api/?get=arter&query='+encodeURIComponent(query);
+						var url='https://allearter-databasen.dk/api/?get=arter&query='+encodeURIComponent(query);
 						return $.get(url, {}, function(data) {
 							return process(data.allearter);
 						})

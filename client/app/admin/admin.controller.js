@@ -4,7 +4,7 @@ angular.module('dnalivApp')
   .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Proeve_extras',
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function (ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
+	 function(ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 
@@ -216,7 +216,7 @@ angular.module('dnalivApp')
 		$scope.taxon = { Videnskabeligt_navn : '' };
 
 		$scope.loadArtInfo = function() {
-			$.get('http://allearter-databasen.dk/api/?get=art&query='+$scope.taxon.Videnskabeligt_navn, function(art) {
+			$.get('https://allearter-databasen.dk/api/?get=art&query='+$scope.taxon.Videnskabeligt_navn, function(art) {
 				$scope.artInfo = art.allearter[0];
 			})
 		}
@@ -276,86 +276,6 @@ angular.module('dnalivApp')
 			})
 		}
 
-		/**
-			system users
-		*/
-		/*
-		System_user.query().$promise.then(function(users) {
-			$scope.users = users
-		})
 
-		$scope.usersOptions = DTOptionsBuilder.newOptions()
-      .withPaginationType('full_numbers')
-      .withDisplayLength(-1)
-			.withDOM('t')
-			.withOption('destroy', true)
-			.withOption('initComplete', function() {
-
-				var fixedHeaderEle = document.getElementsByClassName('fixedHeader-floating');
-				console.log(fixedHeaderEle)
-				angular.element(fixedHeaderEle).remove();
-
-				$.fn.dataTable.ext.search = []
-				Utils.dtNormalizeLengthMenu()
-				Utils.dtNormalizeSearch()
-			})
-			.withLanguage(Utils.dataTables_daDk)
-
-		$scope.usersColumns = [
-      DTColumnBuilder.newColumn(0).withTitle('Navn'),
-      DTColumnBuilder.newColumn(1).withTitle('Email'),
-      DTColumnBuilder.newColumn(2).withTitle('Password'),
-      DTColumnBuilder.newColumn(3).withTitle('Role')
-    ];  
-
-		$scope.usersInstance = {}
-
-		$scope.showUser = function(user) {
-			if (user) {
-				$scope.userModalUser = user
-				$scope.userModalUser.title = "Rediger bruger <b>"+user.name+'</b>'
-			} else {
-				$scope.userModalUser = {
-					name: 'bruger'+($scope.users.length+1).toString(),
-					password: '',
-					email: '',
-					role: 'Gæst',
-					title: 'Opret ny bruger'
-				}
-			}
-			$scope.userModal = $modal({
-				scope: $scope,
-				templateUrl: 'app/admin/user.modal.html',
-				backdrop: 'static',
-				user: user,
-				show: true,
-				internalName: 'modalUser'
-			})
-			$scope.$on('modal.hide', function(e, target){
-				if (target.$options.internalName == 'modalUser') {
-				}
-			})
-			$scope.$on('modal.show', function(e, target){
-				if (target.$options.internalName == 'modalUser') {
-				}
-			})
-		}
-
-		$scope.saveUser = function() {
-			if ($scope.userModalUser.user_id) {
-				System_user.update({ id: $scope.userModalUser.user_id }, $scope.userModalUser).$promise.then(function(user) {
-				})
-			} else {
-				System_user.save({ id: '' }, $scope.userModalUser).$promise.then(function(user) {
-					$scope.users.push(user)
-				})
-			}
-		}
-
-		$scope.updateSystemUsers = function() {
-			console.log(User);
-		}			
-		*/
-	
 }]);
 
