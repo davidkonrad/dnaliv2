@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('AdminCtrl', ['ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Proeve_extras',
+  .controller('AdminCtrl', ['Db', 'ItemsService', '$scope', '$http', '$timeout', '$modal', 'User', 'Utils', 'Alert', 'Taxon', 'Proeve', 'Booking', 'Proeve_extras',
 			'Resultat', 'Resultat_item', 'System_user', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder',
 
-	 function(ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
+	 function(Db, ItemsService, $scope, $http, $timeout, $modal, User, Utils, Alert, Taxon, Proeve, Booking, Proeve_extras,
 			Resultat, Resultat_item, System_user, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder) {
 
 
@@ -182,7 +182,6 @@ angular.module('dnalivApp')
 			return true;
 		}
 
-
 		$scope.taxonOrderBy = 'taxon_prioritet';
 
 		$scope.taxonOrders = [
@@ -195,8 +194,8 @@ angular.module('dnalivApp')
 		$scope.prioritetList = [1,2,3,4,5]
 
 		$scope.reloadTaxons = function() {
+			Db.reloadTaxons(); //reload app wide
 			Taxon.query().$promise.then(function(taxons) {	
-
 				$scope.taxonsUnordered = taxons.map(function(taxon) {
 					return { 
 						taxon_id: taxon.taxon_id,
@@ -227,14 +226,19 @@ angular.module('dnalivApp')
 			}
 		}, true)
 
+		$scope.canCreateTaxon = function() {
+			return !$scope.taxon.Videnskabeligt_navn || !$scope.taxon.Dansk_navn
+		}
+
 		$scope.taxonCreate = function() {
 			Taxon.save({ taxon_id: '' }, {
-				taxon_navn: $scope.artInfo.Videnskabeligt_navn,
-				taxon_navn_dk: $scope.artInfo.Dansk_navn,
-				taxon_artsgruppe: $scope.artInfo.Artsgruppe_dk,
+				taxon_navn: $scope.artInfo.Videnskabeligt_navn || $scope.taxon.Dansk_navn,
+				taxon_navn_dk: $scope.artInfo.Dansk_navn || $scope.taxon.Videnskabeligt_navn,
+				taxon_artsgruppe: $scope.artInfo.Artsgruppe_dk || 'Ukendt',
 				taxon_prioritet: 0, //sæt to lowest prioritet prossible
 				taxon_basisliste: 1
 			}).$promise.then(function(taxon) {	
+				$scope.artInfo = {};
 				$scope.taxon.Videnskabeligt_navn = ''
 				$scope.taxon.Dansk_navn = ''
 				$scope.reloadTaxons();

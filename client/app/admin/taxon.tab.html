@@ -23,7 +23,7 @@
 				<input type="text" allearter-typeahead="dk" at-taxon="taxon" ng-model="taxon.Dansk_navn" class="form-control input-sm" id="new-taxon" size="50" />
 			</td>
 			<td>
-				<button type="button" class="btn btn-primary btn-sm" title="Tilføj art til basisliste" ng-click="taxonCreate()" ng-disabled="!taxon.Videnskabeligt_navn && !taxon.Dansk_navn ">
+				<button type="button" class="btn btn-primary btn-sm" title="Tilføj art til basisliste" ng-click="taxonCreate()" ng-disabled="canCreateTaxon()">
 					<i class="fa fa-plus"></i>
 				</button>
 			</td>
