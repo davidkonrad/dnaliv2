@@ -21,14 +21,9 @@ angular.module('dnalivApp', [
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
 
-		//L.Icon.Default.imagePath = 'http://dnaogliv.snm.ku.dk/assets/';
-		L.Icon.Default.imagePath = 'public/bower_components/leaflet/dist/images';
-		//L.Icon.Default.imagePath = '../assets/';
-
-    $routeProvider
-      .otherwise({
-        redirectTo: '/'
-      });
+    $routeProvider.otherwise({
+			redirectTo: '/'
+		});
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
@@ -38,7 +33,7 @@ angular.module('dnalivApp', [
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
     return {
       // Add authorization token to headers
-      request: function (config) {
+      request: function(config) {
         config.headers = config.headers || {};
         if ($cookieStore.get('token')) {
           config.headers.Authorization = 'Bearer ' + $cookieStore.get('token');
