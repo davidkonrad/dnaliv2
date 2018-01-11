@@ -19,7 +19,7 @@ angular.module('dnalivApp', [
 	'ngTagsInput',
 	'bootstrap3-typeahead'
 ])
-  .config(function ($routeProvider, $locationProvider, $httpProvider) {
+  .config(function ($routeProvider, $locationProvider, $httpProvider, $compileProvider) {
 
     $routeProvider.otherwise({
 			redirectTo: '/'
@@ -28,6 +28,7 @@ angular.module('dnalivApp', [
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
 
+		$compileProvider.debugInfoEnabled(false);
   })
 
   .factory('authInterceptor', function ($rootScope, $q, $cookieStore, $location) {
