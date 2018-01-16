@@ -7,54 +7,10 @@ angular.module('dnalivApp')
 	 function($scope, $q, $timeout, TicketService, Lokalitet, Proeve, Db, Utils, Booking, Resultat_item, Resultat, Taxon, Lokalitet_spot,
 					DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, leafletMarkersHelpers) {
 
-/*		
-		$scope.resultat_items = undefined;
-		var proever = undefined;
-			
-		function init() {
-			var	deferred = $q.defer();
-
-			function check() {
-				if 		      deferred.resolve();
-
-
-      return deferred.promise;
-*/
-
 
 		//new load of data
 		Resultat_item.query().$promise.then(function(items) {
 			$scope.resultat_items = items
-		})
-
-		Resultat.query().$promise.then(function(items) {
-			function lokalitetByResultatId(resultat_id) {
-				var proever = Db.proever()
-				for (var i=0, l=proever.length; i<l; i++) {
-					for (var ri=0, rl=proever[i].Resultat.length; ri<rl; ri++) {
-						if (proever[i].Resultat[ri].resultat_id == resultat_id) {
-							return proever[i].Lokalitet
-						}
-					}
-				}
-				return null
-			}
-
-			function bookingByBookingId(booking_id) {
-				var bookings = Db.bookings()
-				for (var i=0, l=bookings.length; i<l; i++) {
-					if (bookings[i].booking_id == booking_id) {
-						return bookings[i]
-					}
-				}
-				return null
-			}
-
-			$scope.resultat = items.filter(function(item) {
-				item.Lokalitet = lokalitetByResultatId(item.resultat_id)
-				item.Booking = bookingByBookingId(item.booking_id)
-				return item
-			})
 		})
 
 		var iconBlue = {
@@ -91,6 +47,37 @@ angular.module('dnalivApp')
 		}
 
 		Db.init().then(function() {
+
+			Resultat.query().$promise.then(function(items) {
+				function lokalitetByResultatId(resultat_id) {
+					var proever = Db.proever()
+					for (var i=0, l=proever.length; i<l; i++) {
+						for (var ri=0, rl=proever[i].Resultat.length; ri<rl; ri++) {
+							if (proever[i].Resultat[ri].resultat_id == resultat_id) {
+								return proever[i].Lokalitet
+							}
+						}
+					}
+					return null
+				}
+
+				function bookingByBookingId(booking_id) {
+					var bookings = Db.bookings()
+					for (var i=0, l=bookings.length; i<l; i++) {
+						if (bookings[i].booking_id == booking_id) {
+							return bookings[i]
+						}
+					}
+					return null
+				}
+
+				$scope.resultat = items.filter(function(item) {
+					item.Lokalitet = lokalitetByResultatId(item.resultat_id)
+					item.Booking = bookingByBookingId(item.booking_id)
+					return item
+				})
+			})
+
 			Resultat_item.query().$promise.then(function(resultat_items) {
 				$scope.resultat_items = resultat_items
 				$scope.replikatCount = resultat_items.length
@@ -286,61 +273,31 @@ angular.module('dnalivApp')
 				return 'Ikke sat'
 			}
 
-		Resultat_item.query({ where: { taxon_id: taxon.taxon_id }}).$promise.then(function(items) {
-			items.forEach(function(item) {
-				var resultat = resultatByResultatId(item.resultat_id)
-				if (resultat && resultat.Lokalitet) {
-					var trusty = item.negativ == false && item.positiv == true
-					var icon = trusty && item.eDNA ? iconGreen : iconRed
-					var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>';
-					message += getProeveNr(resultat.proeve_id) + '<br><br>';
-					message += 'Indsamlet af: ' + getIndsamlingsInstitution(resultat.proeve_id) + '<br>';
-					message += 'Dato for Indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
-					message += 'Analyseret af: '+ getInstitution(resultat.Booking) + '<br>';
-					message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse) + '<br>';
+			Resultat_item.query({ where: { taxon_id: taxon.taxon_id }}).$promise.then(function(items) {
+				items.forEach(function(item) {
+					var resultat = resultatByResultatId(item.resultat_id)
+					if (resultat && resultat.Lokalitet) {
+						var trusty = item.negativ == false && item.positiv == true
+						var icon = trusty && item.eDNA ? iconGreen : iconRed
+						var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>';
+						message += getProeveNr(resultat.proeve_id) + '<br><br>';
+						message += 'Indsamlet af: ' + getIndsamlingsInstitution(resultat.proeve_id) + '<br>';
+						message += 'Dato for Indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
+						message += 'Analyseret af: '+ getInstitution(resultat.Booking) + '<br>';
+						message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse) + '<br>';
 
-					if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
-						$scope.markers.push({
-							lat: parseFloat(resultat.Lokalitet.latitude),
-							lng: parseFloat(resultat.Lokalitet.longitude),
-							layer: 'indsamlingssted',
-							icon: icon,
-							message: message
-						})
-					}
-				}					
-			})
-		});
-
-/*			$timeout(function() {
-				$scope.resultat_items.forEach(function(item) {
-					if (item.taxon_id == taxon.taxon_id) {
-						var resultat = resultatByResultatId(item.resultat_id)
-
-						if (resultat && resultat.Lokalitet) {
-							var trusty = item.negativ == false && item.positiv == true
-							var icon = trusty && item.eDNA ? iconGreen : iconRed
-							var message = '<b>' + resultat.Lokalitet.presentationString + '</b><br>';
-							message += getProeveNr(resultat.proeve_id) + '<br><br>';
-							message += 'Indsamlet af: ' + getIndsamlingsInstitution(resultat.proeve_id) + '<br>';
-							message += 'Dato for Indsamling: ' + Utils.fixDate(getIndsamlingsDato(resultat.proeve_id)) + '<br>';
-							message += 'Analyseret af: '+ getInstitution(resultat.Booking) + '<br>';
-							message += 'Dato for Analyse: '+Utils.fixDate(resultat.datoForAnalyse) + '<br>';
-
-							if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
-								$scope.markers.push({
-									lat: parseFloat(resultat.Lokalitet.latitude),
-									lng: parseFloat(resultat.Lokalitet.longitude),
-									layer: 'indsamlingssted',
-									icon: icon,
-									message: message
-								})
-							}
-						}					
-					}
+						if (resultat.Lokalitet && resultat.Lokalitet.latitude && resultat.Lokalitet.longitude) {
+							$scope.markers.push({
+								lat: parseFloat(resultat.Lokalitet.latitude),
+								lng: parseFloat(resultat.Lokalitet.longitude),
+								layer: 'indsamlingssted',
+								icon: icon,
+								message: message
+							})
+						}
+					}					
 				})
-			})
-*/
+			});
 		}
 
 		/** **/

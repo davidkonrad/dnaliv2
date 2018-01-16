@@ -187,7 +187,6 @@ angular.module('dnalivApp')
 		$scope.resultaterOptions = DTOptionsBuilder.fromFnPromise(function() {
 				return vm.reloadData()
 	    })
-			//.withOption('destroy', true)
       .withPaginationType('full_numbers')
       .withDisplayLength(-1)
 			.withDOM('lBfrtip')
@@ -237,6 +236,7 @@ angular.module('dnalivApp')
 		$scope.resultaterInstance = {}
 
 		$scope.resultaterColumns = [
+      DTColumnBuilder.newColumn('resultat_id').withTitle('#'),
       DTColumnBuilder.newColumn('sagsNo').withTitle('Sagsnr.'),
       DTColumnBuilder.newColumn('proeve_nr').withTitle('PrøveID'),
       DTColumnBuilder.newColumn('lokalitet').withTitle('Lokalitet'),

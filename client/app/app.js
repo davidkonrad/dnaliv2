@@ -19,7 +19,11 @@ angular.module('dnalivApp', [
 	'ngTagsInput',
 	'bootstrap3-typeahead'
 ])
-  .config(function ($routeProvider, $locationProvider, $httpProvider, $compileProvider) {
+  .config(function ($routeProvider, $locationProvider, $httpProvider, $compileProvider, $logProvider) {
+		L.Icon.Default.imagePath = '../assets/';
+
+		//turn logs off, primarily due to heavy leaflet logging
+		$logProvider.debugEnabled(false);
 
     $routeProvider.otherwise({
 			redirectTo: '/'
@@ -28,6 +32,7 @@ angular.module('dnalivApp', [
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
 
+		//disable debug data to speed up performance 
 		$compileProvider.debugInfoEnabled(false);
   })
 
