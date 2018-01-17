@@ -5,13 +5,8 @@
 	max-width: 80% !important;
 	height: auto !important;
 }
-
-.rule {
-	width:100%;
-	display: block;
-	float: left;
-	clear: both;
-	height: 10px;
+#modal-proeve .modal-dialog .modal-body {
+	min-height: 500px !important;
 }
 
 .modal-body {
@@ -19,16 +14,8 @@
 	overflow: visible;
 }
 
-.inject-control {
-	height: auto !important;
-	padding : 0px;
-	display: inline;
-	float: none;
-	clear: none;
-}
 
 /* from lokalitet.modal.html */
-
 .typeahead {
 	z-index:10000;
 }
@@ -139,3 +126,15 @@ td.proeve-kommentar  {
 	white-space: nowrap;
 	word-break: keep-all;
 }
+
+/* extra felter */
+label.proeve-extra {
+	padding-right: 0px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+div.proeve-extra {
+	padding-left: 0px;
+}
+
+

@@ -1,55 +1,68 @@
-						  	<label for="extra{{ extra.extras_id }}" class="control-label col-md-1 normal" title="Type: {{ extra.type }}">{{ extra.caption }} </label>
-								<div class="col-md-11">
-									<div ng-if="extra.type == 'Dato'" class="col-md-3">
-								    <input ng-if="extra.type == 'Dato'" 
-											type="text" 
-											dynamic-model="'proeve.extra' + extra.extras_id" 
-											class="form-control input-sm bold" 
-											data-date-format="dd-MM-yyyy" 
-											size="8" 
-											bs-datepicker 
-											data-autoclose="true" 
-											data-container="body"
-											ng-change="proeve.edited = true"/>
-									</div>
+<label for="extra{{ extra.extras_id }}" class="control-label col-md-2 normal proeve-extra" title="{{ extra.caption }}">
+	{{ extra.caption }}
+</label>
+
+<div class="col-md-9 proeve-extra">
+	<div ng-if="extra.type == 'Dato'" class="col-md-3">
+    <input ng-if="extra.type == 'Dato'" 
+			type="text" 
+			title="Type: {{ extra.type }}"
+			dynamic-model="'proeve.extra' + extra.extras_id" 
+			class="form-control input-sm bold" 
+			data-date-format="dd-MM-yyyy" 
+			size="8" 
+			bs-datepicker 
+			data-autoclose="true" 
+			data-container="body"
+			ng-change="proeve.edited = true">
+	</div>
 								
-									<div ng-if="extra.type == 'Heltal'" class="col-md-3">
-								    <input ng-if="extra.type == 'Heltal'" 
-											only-numbers type="text" 
-											size="10" 
-											select-on-click
-											dynamic-model="'proeve.extra' + extra.extras_id" 
-											class="form-control input-sm bold" 
-											ng-change="proeve.edited = true" />
-									</div>
+	<div ng-if="extra.type == 'Heltal'" class="col-md-3">
+		<input ng-if="extra.type == 'Heltal'" 
+			title="Type: {{ extra.type }}"
+			only-numbers
+			type="text" 
+			size="10" 
+			select-on-click
+			dynamic-model="'proeve.extra' + extra.extras_id" 
+			class="form-control input-sm bold" 
+			ng-change="proeve.edited = true">
+	</div>
 
-									<div ng-if="extra.type == 'Kommatal'" class="col-md-3">
-								    <input ng-if="extra.type == 'Kommatal'" 
-											only-digits type="text" 
-											size="10" 
-											select-on-click
-											dynamic-model="'proeve.extra' + extra.extras_id" 
-											class="form-control input-sm bold" 
-											ng-change="proeve.edited = true" />
-									</div>
+	<div ng-if="extra.type == 'Kommatal'" class="col-md-3">
+		<input ng-if="extra.type == 'Kommatal'" 
+			title="Type: {{ extra.type }}"
+			only-digits 
+			type="text" 
+			size="10" 
+			select-on-click
+			dynamic-model="'proeve.extra' + extra.extras_id" 
+			class="form-control input-sm bold" 
+			ng-change="proeve.edited = true">
+	</div>
 	
-									<div ng-if="extra.type == 'Tekst (50)'" class="col-md-12">
-								    <input ng-if="extra.type == 'Tekst (50)'" 
-											type="text" size="40" 
-											select-on-click
-											dynamic-model="'proeve.extra' + extra.extras_id" 
-											class="form-control input-sm bold" 
-											ng-change="proeve.edited = true" />
-									</div>
+	<div ng-if="extra.type == 'Tekst (50)'" class="col-md-12">
+		<input ng-if="extra.type == 'Tekst (50)'" 
+			title="Type: {{ extra.type }}"
+			type="text" 
+			size="40" 
+			select-on-click
+			dynamic-model="'proeve.extra' + extra.extras_id" 
+			class="form-control input-sm bold" 
+			ng-change="proeve.edited = true" />
+	</div>
 
-									<div ng-if="extra.type == 'Tekst (memo)'" class="col-md-12">
-								    <textarea ng-if="extra.type == 'Tekst (memo)'" 
-											rows="3" cols="40"
-											select-on-click
-											dynamic-model="'proeve.extra' + extra.extras_id" 
-											class="form-control input-sm bold" 
-											ng-change="proeve.edited = true">
-										</textarea>
-									</div>
-								</div> <!-- col-md-11 -->
+	<div ng-if="extra.type == 'Tekst (memo)'" class="col-md-12">
+		<textarea ng-if="extra.type == 'Tekst (memo)'" 
+			title="Type: {{ extra.type }}"
+			rows="3" 
+			cols="40"
+			select-on-click
+			dynamic-model="'proeve.extra' + extra.extras_id" 
+			class="form-control input-sm bold" 
+			ng-change="proeve.edited = true">
+		</textarea>
+	</div>
+
+</div> <!-- col-md-9 -->
 
