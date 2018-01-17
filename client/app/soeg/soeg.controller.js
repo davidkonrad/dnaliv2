@@ -652,8 +652,10 @@ angular.module('dnalivApp')
 									'vernacularName',
 									'occurrenceStatus',
 									'eventDate',
-									'dateIdentified'
-			]]
+									'dateIdentified',
+									'Ct'
+			]];
+
 			for (var i=0, l=$scope.exportDataset.length; i<l; i++) {
 				var item = $scope.exportDataset[i];
 
@@ -674,7 +676,8 @@ angular.module('dnalivApp')
 					item.taxon_dk.quote(),
 					item.positivFound ? 'present'.quote() : 'absent'.quote(),
 					item.indsamlingsDato.quote(),
-					item.analyseDato.quote()
+					item.analyseDato.quote(),
+					item.Ct_vaerdi
 				])
 			}
 					
