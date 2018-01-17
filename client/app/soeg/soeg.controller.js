@@ -653,7 +653,7 @@ angular.module('dnalivApp')
 									'occurrenceStatus',
 									'eventDate',
 									'dateIdentified',
-									'Ct'
+									'amplificationSuccessDetails'
 			]];
 
 			for (var i=0, l=$scope.exportDataset.length; i<l; i++) {
