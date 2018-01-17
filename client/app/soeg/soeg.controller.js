@@ -400,7 +400,6 @@ angular.module('dnalivApp')
 						taxonMap[item.taxon_id].paalidelig = true
 					} 
 					if (item.eDNA == false && item.database_result) {
-						//taxonMap[item.taxon_id].found = false
 						taxonMap[item.taxon_id].paalidelig = true
 					} 
 				})
@@ -443,15 +442,15 @@ angular.module('dnalivApp')
 				taxonMap.forEach(function(item) {
 					var exportItem = angular.copy(exportItemBase);
 		
-					exportItem.positivfound = item.found
-					exportItem.paalidelig = item.paalidelig
-					exportItem.eDNA = item.eDNA
-					exportItem.negativ = item.negativ
-					exportItem.positiv = item.positiv
-					exportItem.Ct_vaerdi = item.Ct_vaerdi,
-					exportItem.analyseDato = Utils.fixDate(resultat.datoForAnalyse)
-					exportItem.taxon = item.taxon
-					exportItem.taxon_dk = item.taxon_dk
+					exportItem.positivFound = item.found;
+					exportItem.paalidelig = item.paalidelig;
+					exportItem.eDNA = item.eDNA;
+					exportItem.negativ = item.negativ;
+					exportItem.positiv = item.positiv;
+					exportItem.Ct_vaerdi = item.Ct_vaerdi;
+					exportItem.analyseDato = Utils.fixDate(resultat.datoForAnalyse);
+					exportItem.taxon = item.taxon;
+					exportItem.taxon_dk = item.taxon_dk;
 					
 					if (item.found && item.paalidelig) {
 						message += '<i class="fa fa-check green"></i>&nbsp;' 
@@ -577,9 +576,6 @@ angular.module('dnalivApp')
 
 		}
 
-//http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn=H
-//http://services.kortforsyningen.dk/?servicename=RestGeokeys_v2&method=kommune&komnavn=Ålborg&geometry=true&outgeoref=EPSG:4326&ticket=96a08ea2f739e0a643378527042b1957
-
 		$scope.loadKommune = function(kommune) {
 			$scope.soeg.region = ''; //reset region
 
@@ -676,7 +672,7 @@ angular.module('dnalivApp')
 					item.lng.toString().quote(),
 					item.taxon.quote(),
 					item.taxon_dk.quote(),
-					item.eDNA && item.paalidelig ? 'present'.quote() : 'absent'.quote(),
+					item.positivFound ? 'present'.quote() : 'absent'.quote(),
 					item.indsamlingsDato.quote(),
 					item.analyseDato.quote()
 				])
