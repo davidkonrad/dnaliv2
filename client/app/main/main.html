@@ -18,6 +18,11 @@
 				</tr>
 			</thead>
 			<tbody>
+				<tr ng-if="!replikater" rowspan="2">
+					<td col-span="3">
+						<img src="assets/ajax-loader.gif">
+					</td>
+				</tr>
 				<tr ng-repeat="taxon in replikater | orderBy:'taxon_prioritet' " 
 						style="line-height:16px;" 
 						ng-class=" { selected: currentTaxonId == taxon.taxon_id }">

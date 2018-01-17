@@ -192,8 +192,8 @@ angular.module('dnalivApp')
 					}
 				},
 				overlays: {
-					indsamlingssted: {
-          	name: 'Indsamlingssted',
+					taxon: {
+          	name: 'Prøver for art',
 						type: 'markercluster',
 						layerOptions: {
 							maxClusterRadius: function(zoom) { 
@@ -201,16 +201,6 @@ angular.module('dnalivApp')
 							}
 						},
 						visible: true
-					},
-					proever: {
-          	name: 'Samtlige prøver',
-						type: 'markercluster',
-						layerOptions: {
-							maxClusterRadius: function(zoom) { 
-								return -1; 
-							}
-						},
-						visible: false
 					}
 				}
 			}
@@ -290,7 +280,7 @@ angular.module('dnalivApp')
 							$scope.markers.push({
 								lat: parseFloat(resultat.Lokalitet.latitude),
 								lng: parseFloat(resultat.Lokalitet.longitude),
-								layer: 'indsamlingssted',
+								layer: 'taxon',
 								icon: icon,
 								message: message
 							})
@@ -304,6 +294,7 @@ angular.module('dnalivApp')
 		$scope.proeverClick = function() {
 			$scope.currentTaxonId = null;
 			$scope.markers = [];	
+			
 			$scope.center = {
 				lat: 56.126627523318206,
 				lng: 11.457741782069204,
@@ -312,7 +303,6 @@ angular.module('dnalivApp')
 			Proeve.query().$promise.then(function(proever) {
 				proever.forEach(function(proeve) {
 					if (proeve.Lokalitet && proeve.Lokalitet.latitude>0 && proeve.Lokalitet.longitude>0) {
-						//console.log(proeve);
 						var message = '<b>'+proeve.Lokalitet.presentationString+'</b><br>';
 						message += proeve.Lokalitet.latitude + ' ,' + proeve.Lokalitet.longitude +'<br>';
 						message += 'PrøveID: <strong>'+proeve.proeve_nr+'</strong><br>';
