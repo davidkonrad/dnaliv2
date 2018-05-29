@@ -178,6 +178,22 @@ angular.module('dnalivApp')
 				PROEVE: 3,
 				RESULTAT: 4,
 				LOKALITET: 5
+			},
+
+			/*
+				get a list of visible columns from a DataTable instance
+				proever, bookings, resultater
+			*/
+			visibleColumnNames: function(instance) {
+				var all_columns = instance._renderer.options.aoColumns;
+				var column_visibility = instance.DataTable.columns().visible();
+				var columns = [];
+				for (var column in all_columns) {
+					if (column_visibility[column]) {
+						columns.push(all_columns[column].mData);
+					}
+				}
+				return columns.join(',')
 			}
 	
 		}

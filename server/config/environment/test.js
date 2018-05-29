@@ -5,8 +5,12 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
+		/*
     uri: 'mongodb://localhost/dinacollections-dev',
-	database : 		'dinacollections-dev'
+		database : 		'dinacollections-dev'
+		*/
+    uri: 'mongodb://localhost/dnaliv',
+		database : 'dnaliv'
   },
 
   seedDB: true,

@@ -5,14 +5,9 @@
 // =================================
 module.exports = {
   // Server IP
-  ip:       process.env.OPENSHIFT_NODEJS_IP ||
-            process.env.IP ||
-            undefined,
-
+  ip: '0.0.0.0',
   // Server port
-  port:     process.env.OPENSHIFT_NODEJS_PORT ||
-            process.env.PORT ||
-            80,
+  port: 80,
 
   // MongoDB connection options
   mongo: {
@@ -20,7 +15,7 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/dnaliv',
-						database : 	'dnaliv'
+						database : 'dnaliv'
   },
   mysql: {
 	  host: process.env.OPENSHIFT_MYSQL_DB_HOST,

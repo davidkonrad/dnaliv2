@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ProeveCtrl', ['$scope', '$window', '$location', '$modal', '$timeout', '$q', 'Auth', 'Alert', 'Db', 'Utils',  'Geo', 
+  .controller('ProeveCtrl', ['$scope', '$window', '$location', '$modal', '$timeout', '$q', '$http', 'Auth', 'Alert', 'Db', 'Utils',  'Geo', 
 			'Proeve', 'Proeve_extras', 'ProeveNr', 'Resultat', 'Resultat_item', 'Taxon', 'LokalitetModal', 'Lokalitet', 'Kommentar', 'KommentarModal', 
 			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'DTDefaultOptions',
 
-	function ($scope, $window, $location, $modal, $timeout, $q, Auth, Alert, Db, Utils, Geo, 
+	function ($scope, $window, $location, $modal, $timeout, $q, $http, Auth, Alert, Db, Utils, Geo, 
 						Proeve, Proeve_extras, ProeveNr, Resultat, Resultat_item, Taxon, LokalitetModal, Lokalitet, Kommentar, KommentarModal, 
 						DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, DTDefaultOptions) {
+
 
 		Db.init(); //should not be neccesary, why did I do that?
 
@@ -164,8 +165,6 @@ angular.module('dnalivApp')
 							extra38: proever[i].extra38,
 							extra39: proever[i].extra39,
 							extra40: proever[i].extra40
-
-
 					}
 				
 					//extra fields
@@ -364,7 +363,7 @@ angular.module('dnalivApp')
 				extend : 'excelHtml5',
 				text: '<i class="fa fa-download" title="Download aktuelle rækker som Excel-regneark"></i>&nbsp;Excel',
 				filename: 'DNAogLiv_Proever_'+Utils.todayStr(),
-				className: 'btn btn-default btn-xs ml25px'
+				className: 'btn btn-default btn-xs ml25px',
 			},
 			{ 
 				text: 'Opret ny prøve',
@@ -375,6 +374,24 @@ angular.module('dnalivApp')
 			}
 		])
 		.withLanguage(Utils.dataTables_daDk);
+
+		//log download to udtraek.log
+		$('#dtProeve').on('buttons-action.dt', function(e, buttonApi, dataTable, node, config) {
+			if (config.className.match(/buttons-excel/)) {
+				var columns = Utils.visibleColumnNames($scope.dtProeveInstance);
+				var user = Auth.getCurrentUser();
+				var params = {
+					userName: user.name,
+					userEmail: user.email,
+					filter: 'Filter:"'+$scope.dtProeveInstance.DataTable.search()+'"',
+					type: 'Prøver',
+					fields: columns
+				}
+				$http.post('api/extras/log', params ).then(function(res) {
+					//console.log(res);
+				})
+			}
+		});
 
 		//AnalyserDatoer custom sort
 		jQuery.extend( jQuery.fn.dataTableExt.oSort, {

@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', 'Auth', 'Alert', 'SagsNo', 'Db', 'Utils', 'Resultat', 'Resultat_item', 
+  .controller('ResultaterCtrl', ['$scope', '$routeParams', '$timeout', '$q', '$modal', '$http', 'Auth', 'Alert', 'SagsNo', 'Db', 'Utils', 'Resultat', 'Resultat_item', 
 			'Kommentar', 'KommentarModal', 'Lokalitet', 'LokalitetModal', 'Proeve', 'ProeveNr', 'Taxon',	
 			'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 'DTDefaultOptions', 
 
-	function($scope, $routeParams, $timeout, $q, $modal, Auth, Alert, SagsNo, Db, Utils, Resultat, Resultat_item, 
+	function($scope, $routeParams, $timeout, $q, $modal, $http, Auth, Alert, SagsNo, Db, Utils, Resultat, Resultat_item, 
 			Kommentar, KommentarModal, Lokalitet, LokalitetModal, Proeve, ProeveNr, Taxon, 
 			DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, DTDefaultOptions) {
 
@@ -250,6 +250,24 @@ angular.module('dnalivApp')
 			var resultat = $scope.resultaterInstance.DataTable.row(this).data();
 			$scope.showResultat(resultat.resultat_id)
 		})
+
+		//log download to udtraek.log
+		$('#resultaterTable').on('buttons-action.dt', function(e, buttonApi, dataTable, node, config) {
+			if (config.className.match(/buttons-excel/)) {
+				var columns = Utils.visibleColumnNames($scope.resultaterInstance);
+				var user = Auth.getCurrentUser();
+				var params = {
+					userName: user.name,
+					userEmail: user.email,
+					filter: 'Filter:"'+$scope.resultaterInstance.DataTable.search()+'"',
+					type: 'Resultater',
+					fields: columns
+				}
+				$http.post('api/extras/log', params ).then(function(res) {
+					//console.log(res);
+				})
+			}
+		});
 
 		/**
 			resultat item

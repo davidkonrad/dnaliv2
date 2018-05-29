@@ -27,8 +27,6 @@ require('./routes')(app);
 // Expose app
 exports = module.exports = app;
 
-//console.log(app)
-
 // Start server
 server.listen(config.port, config.ip, function () {
 	console.log('DNA & Liv is running ...');

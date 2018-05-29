@@ -7,6 +7,7 @@ projectdata/
 projectdata/
 npm-debug.log
 dist
+client/udtraek.log
 server/config/local.env.js
 server/config/seed.js
 server/config/environment/development.js

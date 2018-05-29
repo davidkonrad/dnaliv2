@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dnalivApp')
-  .controller('BookingCtrl', ['$scope', '$q', '$compile', '$location', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'TicketService',
+  .controller('BookingCtrl', ['$scope', '$q', '$compile', '$location', '$http', 'Auth', 'Utils', 'Geo', 'Booking', 'Klasse', 'Lokalitet', 'TicketService',
 			'Fag', 'Klassetrin', 'Resultat', 'Taxon', 'LokalitetModal', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTColumnDefBuilder', 
 			'DTDefaultOptions', '$modal', '$timeout', '$datepicker', 'SagsNo', 'Alert', 'Kommentar', 'KommentarModal', 'User', 'Db',  
 
-	function ($scope, $q, $compile, $location, Auth, Utils, Geo, Booking, Klasse, Lokalitet, TicketService,
+	function ($scope, $q, $compile, $location, $http, Auth, Utils, Geo, Booking, Klasse, Lokalitet, TicketService,
 						Fag, Klassetrin, Resultat, Taxon, LokalitetModal, DTOptionsBuilder, DTColumnBuilder, DTColumnDefBuilder, 
 						DTDefaultOptions,	$modal, $timeout, $datepicker, SagsNo, Alert, Kommentar, KommentarModal, User, Db) {
 
@@ -274,6 +274,25 @@ angular.module('dnalivApp')
 			var booking = $scope.bookingInstance.DataTable.row(this).data()
 			$scope.showBooking(booking.booking_id)
 		})
+
+		//log download to udtraek.log
+		$('#bookingTable').on('buttons-action.dt', function(e, buttonApi, dataTable, node, config) {
+			if (config.className.match(/buttons-excel/)) {
+				var columns = Utils.visibleColumnNames($scope.bookingInstance);
+				var user = Auth.getCurrentUser();
+				var params = {
+					userName: user.name,
+					userEmail: user.email,
+					filter: 'Filter:"'+$scope.bookingInstance.DataTable.search()+'"',
+					type: 'Bookings',
+					fields: columns
+				}
+				$http.post('api/extras/log', params ).then(function(res) {
+					//console.log(res);
+				})
+			}
+		});
+
 				
 		$scope.bookingColumns = [
       DTColumnBuilder.newColumn('booking_id').withTitle('#').withOption('visible', false),
