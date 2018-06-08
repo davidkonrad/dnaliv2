@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+<style>
+	code {
+		font-size: 110%;
+		font-weight: 900;
+	}
+	pre {
+		margin-top: 0px;
+	}
+	table {
+		border-collapse: collapse;
+		margin-left: 50px;
+		width: 600px;
+		min-width: 600px;
+		max-width: 600px !important;
+	}
+	table, th, td {
+    border: 1px solid black;
+		font-family: arial;
+		vertical-align: top;
+	}
+	th, td {
+    text-align: left;
+		padding-left: 4px;
+		padding-right: 20px;
+	}
+	p {
+		margin: 0px;
+		font-family: arial;
+		padding-bottom: 15px;	
+		max-width: 800px;
+	}
+	h1,h2,h3,h4 {
+		font-family: arial;
+		margin: 0px;
+		padding: 0px;
+		padding-bottom: 5px;
+	}
+</style>
+</head>
+
+<body>
+
+<h1>Logsikring af felter i DNA & Liv</h2>
+<p>
+	Alle brugere kan downloade datasæt i Excel-format. Et download kan bestå af et valgfrit antal felter og records (poster).
+	Brugeren har en regnearkslignende visning af data, kan vælge hvilke felter der skal vises og filtrere datasættet. 
+	Dette gælder <code>bookings</code>, <code>prøver</code> og <code>resultater</code>. 
+  <code>Bookings</code> og <code>prøver</code> rummer hver især en række personhenførbare data.
+</p>
+<p>
+	Logsikringen sker ved at hver eneste download eller "udtræk" registreres i en log. Denne log kan tilgåes via
+	<code>dnaogliv.snm.ku.dk/udtraek.log</code>. 
+	Logfilen er en tabulator-separeret tekstfil der rummer følgende oplysninger:
+	<table>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Beskrivelse</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>Tidsstempel i ISO format</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Bruger navn</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Bruger email</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>Type, i.e Booking, Prøver eller Resultater</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>Filter, t.ex alle poster der rummer navnet "Alisa"</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>Kommasepareret liste af Felter der er inkluderet i downloadet. Disse felter korresponderer 1:1 til felter 
+i den underliggende databases tabeller <strong>&sup1;</strong>. Se nedenfor.</td>
+			</tr>
+		</tbody>
+	</table>
+</p>
+<p>
+	<br>
+	Oversigt over felter brugere har mulighed for at downloade fordelt på type :
+	<table>
+		<thead>
+			<tr>
+				<th>Type</th>
+				<th>Felter</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Bookings</td>
+				<td><code>booking_id, sagsNo, status, bookingDato_fixed, besoegsDato_fixed, klasser, adresser, postnr, by, kommune, region, 
+fag, niveau, laerer, telefon, email, antal_elever, antal_laerer, kitTilsendt, EANblanket, proeve_nr, created_userName</code></td>
+			</tr>
+			<tr>
+				<td>Prøver</td>
+				<td><code>proeve_id, proeve_nr, indsamlingsDato_fixed, lokalitet, latitude, longitude, antalIndsamlingsteder, indsamlerNavn, 
+indsamlerEmail, indsamlerInstitution, filtreringsVolumen, modtagelsesDato_fixed, ekstraktionsDato_fixed, elueringsVolumen, ngUl, 
+aliquotVolumen, analyseDatoer, dataset, kommentar_fixed, created_userName, extra1, extra2, extra3, extra4, extra5, extra6, 
+extra7, extra8, extra9, extra10, extra11, extra12, extra13, extra14, extra15, extra16, extra17, extra18, extra19, extra20</code></td>
+			</tr>
+			<tr>
+				<td>Resultater</td>
+				<td><code>resultat_id, sagsNo, proeve_nr, lokalitet, datoForAnalyse_fixed, dataset, noter, created_userName</code></td>
+			</tr>
+		</tbody>
+	</table>		
+
+<br>
+<strong>&sup1;</strong><small> En undtagelse er felter med navn der ender på <code>_fixed</code>.
+Det drejer sig om tidsstempler (tabellens feltnavn uden <code>_fixed</code>) tilpasset 
+<br>dansk tidszone samt dansk <code>dd/mm/yyyy</code> format uden klokkeslet. 
+Eksempel <code>2018-05-29T10:09:34.733Z</code> vises som <code>29/05/2018</code>.
+</small>
+<br><br><br><br><br><br><br><br><br>
+
+	
+</p>
+
+</body>
+</html>
+
+
