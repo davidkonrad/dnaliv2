@@ -20,7 +20,7 @@
     "angular-leaflet-directive": "~0.10.0",
     "angular-inview": "^1.5.6",
     "angular-datatables": "0.5.3",
-    "datatables.net-buttons": "1.1.2",
+    "datatables.net-buttons": "1.4.2",
     "Wicket": "*",
     "datatables.net-bs": "*",
     "jszip": "2.6.0",
