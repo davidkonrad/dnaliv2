@@ -436,7 +436,7 @@ angular.module('dnalivApp')
     ];  
 
 		//include active extra fields
-		for (var i=1;i<21;i++) {
+		for (var i=1;i<41;i++) {
 			var fieldName = 'extra'+i;
 			if (proeveExtraActive(fieldName)) {
 				$scope.proeveColumns.push(
