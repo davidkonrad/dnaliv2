@@ -344,8 +344,9 @@ angular.module('dnalivApp')
 						if ($scope.bookings[i].locked_by && $scope.bookings[i].locked_by != Auth.getCurrentUser().name) {
 							Alert.show($scope, 'Bookingen er låst', 'Denne booking redigeres pt. af <strong>'+$scope.bookings[i].locked_by+'</strong>.', true)
 						} else {
-							$scope.booking = $scope.bookings[i]
-							resolve(true)
+							$scope.booking = $scope.bookings[i];
+							$scope.loadBookingKommentarer(booking_id);
+							resolve(true);
 						}
 					}
 				}
@@ -563,6 +564,7 @@ angular.module('dnalivApp')
 			booking noter
 		*/
 		$scope.loadBookingKommentarer = function(booking_id) {
+			console.log('loader booking kommentyarer');
 			Kommentar.query( { where: { relation_id: booking_id, type_id: Utils.KOMMENTAR_TYPE.BOOKING }} ).$promise.then(function(kommentarer) {	
 				$scope.booking.kommentarer = kommentarer
 			})
