@@ -564,7 +564,6 @@ angular.module('dnalivApp')
 			booking noter
 		*/
 		$scope.loadBookingKommentarer = function(booking_id) {
-			console.log('loader booking kommentyarer');
 			Kommentar.query( { where: { relation_id: booking_id, type_id: Utils.KOMMENTAR_TYPE.BOOKING }} ).$promise.then(function(kommentarer) {	
 				$scope.booking.kommentarer = kommentarer
 			})
